@@ -1,3 +1,5 @@
+### 第一个示例
+```js
 import * as THREE from 'three';
 
 //创建场影
@@ -29,3 +31,5 @@ document.body.append(renderer.domElement);
 
 
 renderer.render(scene,camera);
+
+```
