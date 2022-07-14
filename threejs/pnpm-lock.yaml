@@ -1,6 +1,7 @@
 lockfileVersion: 5.4
 
 specifiers:
+  gsap: ^3.10.4
   html-webpack-plugin: ^5.5.0
   parcel-bundler: ^1.12.5
   three: ^0.142.0
@@ -9,6 +10,7 @@ specifiers:
   webpack-dev-server: ^4.9.3
 
 dependencies:
+  gsap: 3.10.4
   html-webpack-plugin: 5.5.0_webpack@5.73.0
   parcel-bundler: 1.12.5
   three: 0.142.0
@@ -3618,6 +3620,10 @@ packages:
     dependencies:
       brfs: 1.6.1
       unicode-trie: 0.3.1
+    dev: false
+
+  /gsap/3.10.4:
+    resolution: {integrity: sha512-6QatdkKxXCMfvCW4rM++0RqyLQAzFX5nwl3yHS0XPgkZBkiSEY3VZVbMltrdtsbER/xZonLtyHt684wRp4erlQ==}
     dev: false
 
   /handle-thing/2.0.1:
