@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import gsap from 'gsap';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
 // 创建场影
@@ -36,11 +37,13 @@ document.body.append(renderer.domElement);
 
 const clock = new THREE.Clock();
 
+// gsap.to(cube.position,{x:5,duration:5})
+
+
 function render() {
-    // let time = clock.getElapsedTime();
-    // let deltaTime = clock.getDelta();
-    // console.log('time',time);
-    // console.log('dat',deltaTime);
+
+    gsap.to(cube.position,{x:5,duration:5});
+    gsap.to(cube.rotation,{x:2 * Math.PI,duration:5})
     renderer.render(scene,camera);
     requestAnimationFrame(render);
 }
