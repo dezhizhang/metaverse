@@ -1,3 +1,12 @@
+/*
+ * :file description: 
+ * :name: /threejs/src/index.js
+ * :author: 张德志
+ * :copyright: (c) 2022, Tungee
+ * :date created: 2022-07-12 07:44:44
+ * :last editor: 张德志
+ * :date last edited: 2022-07-15 22:34:59
+ */
 import * as THREE from 'three';
 import gsap from 'gsap';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
@@ -26,6 +35,8 @@ renderer.setSize(window.innerWidth,window.innerHeight);
 
 // 创建控制器
 const controls = new OrbitControls(camera,renderer.domElement);
+controls.enableDamping = true;
+
 
 // 创建坐标系
 const axesHelper = new THREE.AxesHelper(10);
@@ -33,17 +44,22 @@ scene.add(axesHelper);
 
 document.body.append(renderer.domElement);
 
-
+window.addEventListener('resize',() => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth,window.innerHeight);
+    renderer.setPixelRatio(window.devicePixelRatio);
+    
+})
 
 const clock = new THREE.Clock();
 
-// gsap.to(cube.position,{x:5,duration:5})
+gsap.to(cube.position,{x:5,duration:5,repeat:-1});
+gsap.to(cube.rotation,{x:2 * Math.PI,duration:5,repeat:-1})
 
 
 function render() {
-
-    gsap.to(cube.position,{x:5,duration:5});
-    gsap.to(cube.rotation,{x:2 * Math.PI,duration:5})
+    controls.update();
     renderer.render(scene,camera);
     requestAnimationFrame(render);
 }
