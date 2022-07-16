@@ -1,3 +1,12 @@
+/*
+ * :file description: 
+ * :name: /threejs/src/index.js
+ * :author: 张德志
+ * :copyright: (c) 2022, Tungee
+ * :date created: 2022-07-12 07:44:44
+ * :last editor: 张德志
+ * :date last edited: 2022-07-16 09:54:05
+ */
 import * as THREE from 'three';
 
 // 创建场影
@@ -10,20 +19,22 @@ const camera = new THREE.PerspectiveCamera(75,window.innerWidth / window.innerHe
 camera.position.set(0,0,10);
 scene.add(camera);
 
-// 创建几何体
-const geometry = new THREE.BufferGeometry();
-const vertices = new Float32Array([
-    -1.0,-1.0,1.0,
-    1.0,-1.0,1.0,
-    1.0,1.0,1.0
-]);
-geometry.setAttribute('position',new THREE.BufferAttribute(vertices,3));
-const material = new THREE.MeshBasicMaterial({color:0xffff00});
-const cube = new THREE.Mesh(geometry,material);
+for(let i=0;i < 50;i++) {
+    const geometry = new THREE.BufferGeometry();
+    let positionArray = new Float32Array();
+    for(let j=0;j < 9;j++) {
+        positionArray[j] = Math.random() * 5;
 
+    }
+    let color = new THREE.Color(Math.random(),Math.random(),Math.random())
+    geometry.setAttribute('position',new THREE.BufferAttribute(positionArray,3));
+    const material = new THREE.MeshBasicMaterial(color);
+    const mesh = new THREE.Mesh(geometry,material);    
+    
+    // 将几何体添加到场影中
+    scene.add(mesh);
 
-// 将几何体添加到场影中
-scene.add(cube);
+}
 
 // 初始化渲染器
 const renderer = new THREE.WebGL1Renderer();
