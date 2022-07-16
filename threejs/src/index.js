@@ -1,43 +1,148 @@
 
 import * as THREE from 'three';
-//引入控制器
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'; 
+import * as dat from 'dat.gui';
 
-//创建场影
+// 创建场影
 const scene = new THREE.Scene();
 
-//创建相机
-const camera = new THREE.PerspectiveCamera(75,window.innerWidth / window.innerHeight,0.1,1000);
+// 创建gui
+const gui = new dat.GUI();
 
-// 设置相机位置
-camera.position.set(0,0,10);
+// 创建相机
+const camera = new THREE.PerspectiveCamera(45,window.innerWidth / window.innerHeight,0.1,1000);
 scene.add(camera);
 
-// 创建几何体
-const cubeGeometry = new THREE.BoxGeometry(1,1,1);
-const cubeMaterial = new THREE.MeshBasicMaterial({color:0xffff00});
-const cube = new THREE.Mesh(cubeGeometry,cubeMaterial);
-
-// 将几何体添加到场景中
-scene.add(cube);
-
-// 初始化渲染器
+// 创建渲染器
 const renderer = new THREE.WebGL1Renderer();
-
-// 设置渲染器大小
+renderer.setClearColor(new THREE.Color(0xEEEEEE,1.0));
 renderer.setSize(window.innerWidth,window.innerHeight);
+renderer.shadowMap = {
+    enabled:true,
+};
+
+
+
 
 document.body.append(renderer.domElement);
-
-//创建控制器
-const controls = new OrbitControls(camera,renderer.domElement);
-
-function render() {
-    renderer.render(scene,camera);
-    requestAnimationFrame(render);
-}
-
-render();
+renderer.render(scene,camera);
 
 
 
+
+
+// // create a scene, that will hold all our elements such as objects, cameras and lights.
+// var scene = new THREE.Scene();
+
+// // create a camera, which defines where we're looking at.
+// var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+// scene.add(camera);
+
+// // create a render and set the size
+// var renderer = new THREE.WebGLRenderer();
+
+// renderer.setClearColor(new THREE.Color(0xEEEEEE, 1.0));
+// renderer.setSize(window.innerWidth, window.innerHeight);
+// renderer.shadowMapEnabled = true;
+
+// // create the ground plane
+// var planeGeometry = new THREE.PlaneGeometry(60, 40, 1, 1);
+// var planeMaterial = new THREE.MeshLambertMaterial({color: 0xffffff});
+// var plane = new THREE.Mesh(planeGeometry, planeMaterial);
+// plane.receiveShadow = true;
+
+// // rotate and position the plane
+// plane.rotation.x = -0.5 * Math.PI;
+// plane.position.x = 0;
+// plane.position.y = 0;
+// plane.position.z = 0;
+
+// // add the plane to the scene
+// scene.add(plane);
+
+// // position and point the camera to the center of the scene
+// camera.position.x = -30;
+// camera.position.y = 40;
+// camera.position.z = 30;
+// camera.lookAt(scene.position);
+
+// // add subtle ambient lighting
+// var ambientLight = new THREE.AmbientLight(0x0c0c0c);
+// scene.add(ambientLight);
+
+// // add spotlight for the shadows
+// var spotLight = new THREE.SpotLight(0xffffff);
+// spotLight.position.set(-40, 60, -10);
+// spotLight.castShadow = true;
+// scene.add(spotLight);
+
+// // add the output of the renderer to the html element
+// document.getElementById("WebGL-output").appendChild(renderer.domElement);
+
+// // call the render function
+// var step = 0;
+
+// var controls = new function () {
+//     this.rotationSpeed = 0.02;
+//     this.numberOfObjects = scene.children.length;
+
+//     this.removeCube = function () {
+//         var allChildren = scene.children;
+//         var lastObject = allChildren[allChildren.length - 1];
+//         if (lastObject instanceof THREE.Mesh) {
+//             scene.remove(lastObject);
+//             this.numberOfObjects = scene.children.length;
+//         }
+//     };
+
+//     this.addCube = function () {
+
+//         var cubeSize = Math.ceil((Math.random() * 3));
+//         var cubeGeometry = new THREE.BoxGeometry(cubeSize, cubeSize, cubeSize);
+//         var cubeMaterial = new THREE.MeshLambertMaterial({color: Math.random() * 0xffffff});
+//         var cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
+//         cube.castShadow = true;
+//         cube.name = "cube-" + scene.children.length;
+
+
+//         // position the cube randomly in the scene
+
+//         cube.position.x = -30 + Math.round((Math.random() * planeGeometry.parameters.width));
+//         cube.position.y = Math.round((Math.random() * 5));
+//         cube.position.z = -20 + Math.round((Math.random() * planeGeometry.parameters.height));
+
+//         // add the cube to the scene
+//         scene.add(cube);
+//         this.numberOfObjects = scene.children.length;
+//     };
+
+//     this.outputObjects = function () {
+//         console.log(scene.children);
+//     }
+// };
+
+// var gui = new dat.GUI();
+// gui.add(controls, 'rotationSpeed', 0, 0.5);
+// gui.add(controls, 'addCube');
+// gui.add(controls, 'removeCube');
+// gui.add(controls, 'outputObjects');
+// gui.add(controls, 'numberOfObjects').listen();
+
+// render();
+
+// function render() {
+//     stats.update();
+
+//     // rotate the cubes around its axes
+//     scene.traverse(function (e) {
+//         if (e instanceof THREE.Mesh && e != plane) {
+
+//             e.rotation.x += controls.rotationSpeed;
+//             e.rotation.y += controls.rotationSpeed;
+//             e.rotation.z += controls.rotationSpeed;
+//         }
+//     });
+
+//     // render using requestAnimationFrame
+//     requestAnimationFrame(render);
+//     renderer.render(scene, camera);
+// }

@@ -5,6 +5,7 @@ specifiers:
   gsap: ^3.10.4
   html-webpack-plugin: ^5.5.0
   parcel-bundler: ^1.12.5
+  stats: ^1.0.0
   three: ^0.142.0
   webpack: ^5.73.0
   webpack-cli: ^4.10.0
@@ -15,6 +16,7 @@ dependencies:
   gsap: 3.10.4
   html-webpack-plugin: 5.5.0_webpack@5.73.0
   parcel-bundler: 1.12.5
+  stats: 1.0.0
   three: 0.142.0
   webpack: 5.73.0_webpack-cli@4.10.0
   webpack-cli: 4.10.0_6rc575xxn4hngez2jk2zkyfdoi
@@ -2404,6 +2406,11 @@ packages:
 
   /command-exists/1.2.9:
     resolution: {integrity: sha512-LTQ/SGc+s0Xc0Fu5WaKnR0YiygZkm9eKFvyS+fRsU7/ZWFF8ykFM6Pc9aCVf1+xasOOZpO3BAVgVrKvsqKHV7w==}
+    dev: false
+
+  /commander/0.5.2:
+    resolution: {integrity: sha512-/IKo89++b1UhClEhWvKk00gKgw6iwvwD8TOPTqqN9AyvjgPCnf9OrjnDNY3dPDOj+K+OhN9SRjYQH0AfX0bROw==}
+    engines: {node: '>= 0.4.x'}
     dev: false
 
   /commander/2.20.3:
@@ -6395,6 +6402,14 @@ packages:
       shallow-copy: 0.0.1
       static-eval: 2.1.0
       through2: 2.0.5
+    dev: false
+
+  /stats/1.0.0:
+    resolution: {integrity: sha512-YmKiMSrDaYA8Iu8/mPbZQmQLfzUrCstea60zPLkBMjpUveRh89GLipU/7AuMRAAX3aMmnseSuJtkgpPv29VoqA==}
+    engines: {node: '>=0.4.x'}
+    hasBin: true
+    dependencies:
+      commander: 0.5.2
     dev: false
 
   /statuses/1.5.0:
