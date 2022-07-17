@@ -6,117 +6,121 @@
  * :copyright: (c) 2022, Tungee
  * :date created: 2022-07-12 07:44:44
  * :last editor: 张德志
- * :date last edited: 2022-07-16 23:18:29
+ * :date last edited: 2022-07-17 08:46:26
  */
 
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+
 import * as dat from 'dat.gui';
 
-// 创建gui
-const gui = new dat.GUI();
-
+let step = 0;
 // 创建场影
 const scene = new THREE.Scene();
-scene.fog = new THREE.FogExp2(0xffffff, 0.015);
 
-// 创建相机
+// 创健相机
 const camera = new THREE.PerspectiveCamera(45,window.innerWidth / window.innerHeight,0.1,1000);
+camera.position.x = 120;
+camera.position.y = 60;
+camera.position.z = 180;
 
 // 创建渲染器
 const renderer = new THREE.WebGL1Renderer();
 renderer.setClearColor(new THREE.Color(0xEEEEEE));
 renderer.setSize(window.innerWidth,window.innerHeight);
-renderer.shadowMap = {
-    enabled:true
-}
+
+
+
 
 // 创建平面
-const planeGeometry = new THREE.PlaneGeometry(60,40,1,1);
-const planeMaterial = new THREE.MeshLambertMaterial({color:0xffffff});
+const planeGeometry = new THREE.PlaneGeometry(180, 180);
+const planeMaterial = new THREE.MeshLambertMaterial({color: 0xffffff});
 const plane = new THREE.Mesh(planeGeometry,planeMaterial);
-plane.receiveShadow = true;
 
-// 设置平面的位置
-plane.rotation.x = -0.5 *Math.PI;
+// 设置平面位置
+plane.rotation.x = -0.5 * Math.PI;
 plane.position.x = 0;
 plane.position.y = 0;
 plane.position.z = 0;
 
-// 将平面添加到场景中
+// 将平面添加场景中
 scene.add(plane);
 
-// 设置相机位置
-camera.position.x = -30;
-camera.position.y = 40;
-camera.position.z = 30;
-camera.lookAt(scene.position);
+const cubeGeometry = new THREE.BoxGeometry(4,4,4);
+const cubeMaterial = new THREE.MeshLambertMaterial({color: 0x00ee22});
+for(let i=0;i < (planeGeometry.parameters.width / 5);i++) {
+    for(let j=0;j < (planeGeometry.parameters.height / 5);j++) {
+        const cube = new THREE.Mesh(cubeGeometry,cubeMaterial);
+        cube.position.z = -((planeGeometry.parameters.height) / 2) + 2 + j * 5;
+        cube.position.x = -((planeGeometry.parameters.width) / 2) + 2 + (i *5);
+        scene.add(cube);
 
-// 创建平行光
-const ambientLight = new THREE.AmbientLight(0x0c0c0c);
+    }
+}
+
+
+const lookAtGeom = new THREE.SphereGeometry(2);
+const lookAtMesh = new THREE.Mesh(lookAtGeom,new THREE.MeshLambertMaterial({color:0xff0000}));
+scene.add(lookAtMesh);
+
+
+const directionalLight = new THREE.DirectionalLight(0xffffff,0.7);
+directionalLight.position.set(-20,40,60);
+scene.add(directionalLight);
+
+
+// 添加平行光
+const ambientLight = new THREE.AmbientLight(0x292929);
 scene.add(ambientLight);
 
-//创建点光源
-const spotLight = new THREE.SpotLight(0xeeeeee);
-spotLight.position.set(-40,60,10);
-spotLight.castShadow = true;
-scene.add(spotLight);
+
+
+//     var controls = new function () {
+//         this.perspective = "Perspective";
+//         this.switchCamera = function () {
+//             if (camera instanceof THREE.PerspectiveCamera) {
+//                 camera = new THREE.OrthographicCamera(window.innerWidth / -16, window.innerWidth / 16, window.innerHeight / 16, window.innerHeight / -16, -200, 500);
+//                 camera.position.x = 120;
+//                 camera.position.y = 60;
+//                 camera.position.z = 180;
+
+//                 camera.lookAt(scene.position);
+//                 this.perspective = "Orthographic";
+//             } else {
+//                 camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+//                 camera.position.x = 120;
+//                 camera.position.y = 60;
+//                 camera.position.z = 180;
+
+//                 camera.lookAt(scene.position);
+//                 this.perspective = "Perspective";
+//             }
+//         };
+//     };
+
+//     var gui = new dat.GUI();
+//     gui.add(controls, 'switchCamera');
+//     gui.add(controls, 'perspective').listen();
+
+//     // make sure that for the first time, the
+//     // camera is looking at the scene
+//     //   camera.lookAt(scene.position);
+//     render();
 
 
 
 
-//创建控制器
-var controls = new function () {
-    new OrbitControls(camera,renderer.domElement);
-    this.rotationSpeed = 0.02;
-    this.numberOfObjects = scene.children.length;
-
-    this.removeCube = function () {
-        var allChildren = scene.children;
-        var lastObject = allChildren[allChildren.length - 1];
-        if (lastObject instanceof THREE.Mesh) {
-            scene.remove(lastObject);
-            this.numberOfObjects = scene.children.length;
-        }
-    };
-
-    this.addCube = function() {
-        const cubeSize = Math.ceil((Math.random() * 3));
-        const cubeGeometry = new THREE.BoxGeometry(cubeSize,cubeSize,cubeSize);
-        const cubeMaterial = new THREE.MeshBasicMaterial({color:Math.random() * 0xffffff});
-        const cube = new THREE.Mesh(cubeGeometry,cubeMaterial);
-        cube.castShadow = true;
-
-        cube.position.x = - 30 + Math.round((Math.random() * planeGeometry.parameters.width));
-        cube.position.y = Math.round((Math.random() * 5));
-        cube.position.z = -20 + Math.round((Math.random() * planeGeometry.parameters.height));
-
-        // 添加场景中
-        scene.add(cube);
-        this.numberOfObjects = scene.children.length;
-    }
-
-    this.outputObjects = function() {
-        console.log(scene.children)
-    }
-};
-
-gui.add(controls, 'rotationSpeed', 0, 0.5);
-gui.add(controls, 'addCube');
-gui.add(controls, 'removeCube');
-gui.add(controls, 'outputObjects');
-gui.add(controls, 'numberOfObjects').listen();
 
 document.body.append(renderer.domElement);
 
+
 function render() {
-    scene.traverse((e) => {
-        if(e instanceof THREE.Mesh && e != plane) {
-            e.rotation.x += controls.rotationSpeed;
-            e.rotation.y += controls.rotationSpeed;
-            e.rotation.z += controls.rotationSpeed;
-        }
-    });
+    step += 0.2;
+    if(camera instanceof THREE.Camera) {
+        let x = 10 + (100 * (Math.sin(step)));
+        camera.lookAt(new THREE.Vector3(x,10,0));
+        lookAtMesh.position.copy(new THREE.Vector3(x,10,0));
+    }
     requestAnimationFrame(render);
     renderer.render(scene,camera);
 
