@@ -6,13 +6,16 @@
  * :copyright: (c) 2022, Tungee
  * :date created: 2022-07-12 07:44:44
  * :last editor: 张德志
- * :date last edited: 2022-07-17 08:46:26
+ * :date last edited: 2022-07-17 08:53:55
  */
 
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
 import * as dat from 'dat.gui';
+
+const gui = new dat.GUI();
+
 
 let step = 0;
 // 创建场影
@@ -74,39 +77,31 @@ const ambientLight = new THREE.AmbientLight(0x292929);
 scene.add(ambientLight);
 
 
+const controls = new function() {
+    this.perspective = "Perspective";
+    this.switchCamera = function () {
+        if (camera instanceof THREE.PerspectiveCamera) {
+            camera = new THREE.OrthographicCamera(window.innerWidth / -16, window.innerWidth / 16, window.innerHeight / 16, window.innerHeight / -16, -200, 500);
+            camera.position.x = 120;
+            camera.position.y = 60;
+            camera.position.z = 180;
 
-//     var controls = new function () {
-//         this.perspective = "Perspective";
-//         this.switchCamera = function () {
-//             if (camera instanceof THREE.PerspectiveCamera) {
-//                 camera = new THREE.OrthographicCamera(window.innerWidth / -16, window.innerWidth / 16, window.innerHeight / 16, window.innerHeight / -16, -200, 500);
-//                 camera.position.x = 120;
-//                 camera.position.y = 60;
-//                 camera.position.z = 180;
+            camera.lookAt(scene.position);
+            this.perspective = "Orthographic";
+        } else {
+            camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.x = 120;
+            camera.position.y = 60;
+            camera.position.z = 180;
 
-//                 camera.lookAt(scene.position);
-//                 this.perspective = "Orthographic";
-//             } else {
-//                 camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-//                 camera.position.x = 120;
-//                 camera.position.y = 60;
-//                 camera.position.z = 180;
+            camera.lookAt(scene.position);
+            this.perspective = "Perspective";
+        }
+    };
+}
 
-//                 camera.lookAt(scene.position);
-//                 this.perspective = "Perspective";
-//             }
-//         };
-//     };
-
-//     var gui = new dat.GUI();
-//     gui.add(controls, 'switchCamera');
-//     gui.add(controls, 'perspective').listen();
-
-//     // make sure that for the first time, the
-//     // camera is looking at the scene
-//     //   camera.lookAt(scene.position);
-//     render();
-
+gui.add(controls,'switchCamera');
+gui.add(controls,'perspective').listen();
 
 
 
