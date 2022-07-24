@@ -1,11 +1,11 @@
 /*
  * :file description: 
- * :name: /threejs/src/index.js
+ * :name: /threejs/examples/几何体/3cylinderGeometry.js
  * :author: 张德志
  * :copyright: (c) 2022, Tungee
- * :date created: 2022-07-12 07:44:44
+ * :date created: 2022-07-25 07:31:47
  * :last editor: 张德志
- * :date last edited: 2022-07-25 07:31:01
+ * :date last edited: 2022-07-25 07:31:48
  */
 import * as THREE from 'three';
 import * as dat from 'dat.gui';
@@ -77,6 +77,3 @@ function render() {
 }
 
 render();
-
-
-
