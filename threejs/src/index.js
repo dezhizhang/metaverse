@@ -5,102 +5,118 @@
  * :copyright: (c) 2022, Tungee
  * :date created: 2022-07-12 07:44:44
  * :last editor: 张德志
- * :date last edited: 2022-07-24 09:50:18
+ * :date last edited: 2022-07-24 15:36:38
  */
 import * as THREE from 'three';
 import * as dat from 'dat.gui';
 
-
 // 创建场影
-const scene = new THREE.Scene();
-
-scene.overrideMaterial = new THREE.MeshDepthMaterial();
-
-// 创建相机
-const camera = new THREE.PerspectiveCamera(75,window.innerWidth / window.innerHeight,0.1,1000);
-
-// 创建渲染器
-const renderer = new THREE.WebGL1Renderer();
-renderer.setClearColor(new THREE.Color(0x00000));
-renderer.setSize(window.innerWidth,window.innerHeight);
-renderer.shadowMap = {
-    enabled:true
-}
 
 
-// 设置相机的位置
-camera.position.x = -50;
-camera.position.y = 40;
-camera.position.z = 50;
-camera.lookAt(scene.position);
+// function init() {
+
+//     var stats = initStats();
+
+//     // create a scene, that will hold all our elements such as objects, cameras and lights.
+//     var scene = new THREE.Scene();
+
+//     // create a camera, which defines where we're looking at.
+//     var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+
+//     // create a render and set the size
+//     var webGLRenderer = new THREE.WebGLRenderer();
+//     webGLRenderer.setClearColor(new THREE.Color(0xEEEEEE, 1.0));
+//     webGLRenderer.setSize(window.innerWidth, window.innerHeight);
+//     webGLRenderer.shadowMapEnabled = true;
+
+//     var plane = createMesh(new THREE.PlaneGeometry(10, 14, 4, 4));
+//     // add the sphere to the scene
+//     scene.add(plane);
+
+//     // position and point the camera to the center of the scene
+//     camera.position.x = -20;
+//     camera.position.y = 30;
+//     camera.position.z = 40;
+//     camera.lookAt(new THREE.Vector3(10, 0, 0));
 
 
+//     // add spotlight for the shadows
+//     var spotLight = new THREE.SpotLight(0xffffff);
+//     spotLight.position.set(-40, 60, -10);
+//     scene.add(spotLight);
 
-document.body.append(renderer.domElement);
+//     // add the output of the renderer to the html element
+//     document.getElementById("WebGL-output").appendChild(webGLRenderer.domElement);
 
-
-let controls = new function() {
-    this.cameraNear = camera.near;
-    this.cameraFar = camera.far;
-    this.rotationSpeed = 0.02;
-    this.numberOfObjects = scene.children.length;
-
-    this.removeCube = function() {
-        let allChildren = scene.children;
-        let lastObject = allChildren[allChildren.length - 1];
-        if(lastObject instanceof THREE.Mesh) {
-            scene.remove(lastObject);
-            this.numberOfObjects = scene.children.length;
-        }
-    }
-
-    this.addCube = function() {
-        let cubeSize = Math.ceil(3 + (Math.random() *3));
-        let cubeGeometry = new THREE.BoxGeometry(cubeSize,cubeSize,cubeSize);
-        let cubeMaterial = new THREE.MeshLambertMaterial({color:Math.random() * 0xffffff});
-        let cube = new THREE.Mesh(cubeGeometry,cubeMaterial);
-        cube.castShadow = true;
-        
-        // 设置位置
-        cube.position.x = -60 + Math.random(Math.random() * 100);
-        cube.position.y = Math.round((Math.random() * 10));
-        cube.position.z = - 100 + Math.round((Math.random() *150));
-
-        scene.add(cube);
-        this.numberOfObjects = scene.children.length;
-    }
-}
+//     // call the render function
+//     var step = 0;
 
 
-const gui = new dat.GUI();
-gui.add(controls,'rotationSpeed',0,0.5);
-gui.add(controls,'addCube');
-gui.add(controls,'removeCube');
-gui.add(controls,'cameraNear',0,50).onChange(function(e) {
-    camera.near = e;
-});
-gui.add(controls,'cameraFar',50,200).onChange(function(e){
-    camera.far = e;
-});
+//     // setup the control gui
+//     var controls = new function () {
+//         // we need the first child, since it's a multimaterial
 
-let i=0;
-while(i < 10) {
-    controls.addCube();
-    i++;
-}
 
-function render() {
-    scene.traverse(function (e) {
-        if (e instanceof THREE.Mesh) {
+//         this.width = plane.children[0].geometry.parameters.width;
+//         this.height = plane.children[0].geometry.parameters.height;
 
-            e.rotation.x += controls.rotationSpeed;
-            e.rotation.y += controls.rotationSpeed;
-            e.rotation.z += controls.rotationSpeed;
-        }
-    });
-    requestAnimationFrame(render);
-    
-    renderer.render(scene,camera);
-}
+//         this.widthSegments = plane.children[0].geometry.parameters.widthSegments;
+//         this.heightSegments = plane.children[0].geometry.parameters.heightSegments;
 
-render();
+//         this.redraw = function () {
+//             // remove the old plane
+//             scene.remove(plane);
+//             // create a new one
+//             plane = createMesh(new THREE.PlaneGeometry(controls.width, controls.height, Math.round(controls.widthSegments), Math.round(controls.heightSegments)));
+//             // add it to the scene.
+//             scene.add(plane);
+//         };
+//     };
+
+//     var gui = new dat.GUI();
+//     gui.add(controls, 'width', 0, 40).onChange(controls.redraw);
+//     gui.add(controls, 'height', 0, 40).onChange(controls.redraw);
+//     gui.add(controls, 'widthSegments', 0, 10).onChange(controls.redraw);
+//     gui.add(controls, 'heightSegments', 0, 10).onChange(controls.redraw);
+//     render();
+
+//     function createMesh(geom) {
+
+//         // assign two materials
+//         var meshMaterial = new THREE.MeshNormalMaterial();
+//         meshMaterial.side = THREE.DoubleSide;
+//         var wireFrameMat = new THREE.MeshBasicMaterial();
+//         wireFrameMat.wireframe = true;
+
+//         // create a multimaterial
+//         var plane = THREE.SceneUtils.createMultiMaterialObject(geom, [meshMaterial, wireFrameMat]);
+
+//         return plane;
+//     }
+
+//     function render() {
+//         stats.update();
+
+//         plane.rotation.y = step += 0.01;
+
+//         // render using requestAnimationFrame
+//         requestAnimationFrame(render);
+//         webGLRenderer.render(scene, camera);
+//     }
+
+//     function initStats() {
+
+//         var stats = new Stats();
+//         stats.setMode(0); // 0: fps, 1: ms
+
+//         // Align top-left
+//         stats.domElement.style.position = 'absolute';
+//         stats.domElement.style.left = '0px';
+//         stats.domElement.style.top = '0px';
+
+//         document.getElementById("Stats-output").appendChild(stats.domElement);
+
+//         return stats;
+//     }
+// }
+// window.onload = init;
