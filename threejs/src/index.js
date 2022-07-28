@@ -5,13 +5,13 @@
  * :copyright: (c) 2022, Tungee
  * :date created: 2022-07-12 07:44:44
  * :last editor: 张德志
- * :date last edited: 2022-07-28 08:10:33
+ * :date last edited: 2022-07-28 08:12:48
  */
 
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
-// 创建场影
+// // 创建场影
 const scene = new THREE.Scene();
 
 // 创建相机
