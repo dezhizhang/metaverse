@@ -310,6 +310,18 @@ function render() {
 render();
 
 ```
+### 圆环几何体
+```js
+const torusGeometry = new THREE.TorusGeometry(10,2,10,10);
+const torusMaterial = new THREE.MeshLambertMaterial({color:0xff2288});
+const torus = new THREE.Mesh(torusGeometry,torusMaterial);
+torus.castShadow = true;
+torus.position.x = 0;
+torus.position.y = 10;
+torus.position.z = -10;
+scene.add(torus);
+
+```
 
 
 
