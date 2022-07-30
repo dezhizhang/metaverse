@@ -6,6 +6,7 @@ specifiers:
   html-webpack-plugin: ^5.5.0
   parcel-bundler: ^1.12.5
   stats: ^1.0.0
+  stats.js: ^0.17.0
   three: ^0.142.0
   webpack: ^5.73.0
   webpack-cli: ^4.10.0
@@ -17,6 +18,7 @@ dependencies:
   html-webpack-plugin: 5.5.0_webpack@5.73.0
   parcel-bundler: 1.12.5
   stats: 1.0.0
+  stats.js: 0.17.0
   three: 0.142.0
   webpack: 5.73.0_webpack-cli@4.10.0
   webpack-cli: 4.10.0_6rc575xxn4hngez2jk2zkyfdoi
@@ -6402,6 +6404,10 @@ packages:
       shallow-copy: 0.0.1
       static-eval: 2.1.0
       through2: 2.0.5
+    dev: false
+
+  /stats.js/0.17.0:
+    resolution: {integrity: sha512-hNKz8phvYLPEcRkeG1rsGmV5ChMjKDAWU7/OJJdDErPBNChQXxCo3WZurGpnWc6gZhAzEPFad1aVgyOANH1sMw==}
     dev: false
 
   /stats/1.0.0:

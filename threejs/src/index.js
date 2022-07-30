@@ -5,10 +5,11 @@
  * :copyright: (c) 2022, Tungee
  * :date created: 2022-07-12 07:44:44
  * :last editor: 张德志
- * :date last edited: 2022-07-28 08:12:48
+ * :date last edited: 2022-07-30 08:39:39
  */
 
 import * as THREE from 'three';
+import * as Stats from 'stats.js'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
 // // 创建场影
@@ -32,8 +33,12 @@ scene.add(cube);
 // 创建控制器
 const controls = new OrbitControls(camera,renderer.domElement);
 
+// const axes = new THREE.AxesHelper(50);
+// scene.add(axes);
+
 const axes = new THREE.AxesHelper(50);
 scene.add(axes);
+
 
 
 camera.position.z = 35;
@@ -72,13 +77,23 @@ spotLight.shadow.mapSize = new THREE.Vector2(1024,1024);
 spotLight.shadow.camera.far  = 130;
 spotLight.shadow.camera.near = 40;
 scene.add(spotLight);
-
+const stats = addStatus();
 
 function render() {
+    stats.update();
     cube.rotation.x += 0.01;
     cube.rotation.y += 0.01;
     requestAnimationFrame(render);
     renderer.render(scene,camera);
+}
+
+function addStatus() {
+    const stats = new Stats();
+    stats.domElement.style.position = 'absolute';
+    stats.domElement.style.left = '0px';
+    stats.domElement.style.top = '0px';
+    document.getElementById('status').appendChild(stats.domElement);
+    return stats;
 }
 
 render();
