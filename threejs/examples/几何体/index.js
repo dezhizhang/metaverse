@@ -41,7 +41,7 @@ function createMesh(geom) {
     const wireFrameMat = new THREE.MeshBasicMaterial;
     wireFrameMat.wireframe = true;
 
-    const mesh = SceneUtils.createMultiMaterialObject(geom,[meshMaterial,wireFrameMat]);
+    const mesh = SceneUtils.(geom,[meshMaterial,wireFrameMat]);
     return mesh
 }
 
