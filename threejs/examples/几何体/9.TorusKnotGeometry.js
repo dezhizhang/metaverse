@@ -1,11 +1,11 @@
 /*
  * :file description: 
- * :name: /threejs/src/index.js
+ * :name: /threejs/examples/几何体/9.TorusKnotGeometry.js
  * :author: 张德志
  * :copyright: (c) 2022, Tungee
  * :date created: 2022-07-12 07:44:44
  * :last editor: 张德志
- * :date last edited: 2022-07-30 17:41:54
+ * :date last edited: 2022-07-30 17:44:53
  */
 import * as THREE from 'three';
 import * as dat from 'dat.gui';
@@ -92,9 +92,6 @@ gui.add(controls,'radialSegments',0,400).step(1).onChange(controls.redraw);
 gui.add(controls,'tubularSegments',1,20).step(1).onChange(controls.redraw);
 gui.add(controls,'p',1,10).step(1).onChange(controls.redraw);
 gui.add(controls,'q',1,15).step(1).onChange(controls.redraw);
-// gui.add(controls,'heightScale',0,5).onChange(controls.redraw);
-
-
 
 
 function render() {
