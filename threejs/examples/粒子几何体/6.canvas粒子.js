@@ -1,11 +1,11 @@
 /*
  * :file description: 
- * :name: /threejs/src/index.js
+ * :name: /threejs/examples/粒子几何体/6,canvas粒子.js
  * :author: 张德志
  * :copyright: (c) 2022, Tungee
- * :date created: 2022-07-12 07:44:44
+ * :date created: 2022-08-02 07:43:20
  * :last editor: 张德志
- * :date last edited: 2022-08-02 07:42:55
+ * :date last edited: 2022-08-02 07:43:21
  */
 import * as THREE from 'three';
 import * as dat from 'dat.gui';
@@ -147,4 +147,3 @@ function render() {
 }
 
 render();
-
