@@ -1,11 +1,11 @@
 /*
  * :file description: 
- * :name: /threejs/src/index.js
+ * :name: /threejs/examples/动画/1.基本动画.js
  * :author: 张德志
  * :copyright: (c) 2022, Tungee
  * :date created: 2022-07-12 07:44:44
  * :last editor: 张德志
- * :date last edited: 2022-08-01 08:06:42
+ * :date last edited: 2022-08-01 07:59:17
  */
 import * as THREE from 'three';
 import * as dat from 'dat.gui';
@@ -83,50 +83,43 @@ camera.lookAt(scene.position);
 
 
 
-let step = 0;
-let scalingStep = 0;
+var step = 0;
+    var scalingStep = 0;
 
-let controls = new function() {
-    this.rotationSpeed = 0.02;
-    this.bouncingSpeed = 0.03;
-    this.scalingSpeed = 0.03;
-}
+    var controls = new function () {
+        this.rotationSpeed = 0.02;
+        this.bouncingSpeed = 0.03;
+        this.scalingSpeed = 0.03;
+    };
 
-let gui = new dat.GUI;
-gui.add(controls,'rotationSpeed',0,0.5);
-gui.add(controls,'bouncingSpeed',0,0.5);
-gui.add(controls,'scalingSpeed',0,0.5);
-
+    var gui = new dat.GUI();
+    gui.add(controls, 'rotationSpeed', 0, 0.5);
+    gui.add(controls, 'bouncingSpeed', 0, 0.5);
+    gui.add(controls, 'scalingSpeed', 0, 0.5);
 
 
 function render() {
+     // rotate the cube around its axes
+     cube.rotation.x += controls.rotationSpeed;
+     cube.rotation.y += controls.rotationSpeed;
+     cube.rotation.z += controls.rotationSpeed;
 
-    
+     // bounce the sphere up and down
+     step += controls.bouncingSpeed;
+     sphere.position.x = 20 + ( 10 * (Math.cos(step)));
+     sphere.position.y = 2 + ( 10 * Math.abs(Math.sin(step)));
+
+     // scale the cylinder
+
+     scalingStep += controls.scalingSpeed;
+     var scaleX = Math.abs(Math.sin(scalingStep / 4));
+     var scaleY = Math.abs(Math.cos(scalingStep / 5));
+     var scaleZ = Math.abs(Math.sin(scalingStep / 7));
+     cylinder.scale.set(scaleX, scaleY, scaleZ);
+
+    requestAnimationFrame(render);
+    renderer.render(scene,camera);
 }
-
-
-// function render() {
-//      // rotate the cube around its axes
-//      cube.rotation.x += controls.rotationSpeed;
-//      cube.rotation.y += controls.rotationSpeed;
-//      cube.rotation.z += controls.rotationSpeed;
-
-//      // bounce the sphere up and down
-//      step += controls.bouncingSpeed;
-//      sphere.position.x = 20 + ( 10 * (Math.cos(step)));
-//      sphere.position.y = 2 + ( 10 * Math.abs(Math.sin(step)));
-
-//      // scale the cylinder
-
-//      scalingStep += controls.scalingSpeed;
-//      var scaleX = Math.abs(Math.sin(scalingStep / 4));
-//      var scaleY = Math.abs(Math.cos(scalingStep / 5));
-//      var scaleZ = Math.abs(Math.sin(scalingStep / 7));
-//      cylinder.scale.set(scaleX, scaleY, scaleZ);
-
-//     requestAnimationFrame(render);
-//     renderer.render(scene,camera);
-// }
 
 render();
 
