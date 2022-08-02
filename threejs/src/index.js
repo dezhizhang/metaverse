@@ -5,146 +5,257 @@
  * :copyright: (c) 2022, Tungee
  * :date created: 2022-07-12 07:44:44
  * :last editor: 张德志
- * :date last edited: 2022-08-02 07:42:55
+ * :date last edited: 2022-08-03 07:17:25
  */
 import * as THREE from 'three';
 import * as dat from 'dat.gui';
 
-let step = 0;
-
-const scene = new THREE.Scene();
-
-const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-
-const renderer = new THREE.WebGLRenderer();
-renderer.setClearColor(new THREE.Color(0x000000));
-renderer.setSize(window.innerWidth, window.innerHeight);
-
-camera.position.x = 20;
-camera.position.y = 0;
-camera.position.z = 150;
-
-document.body.appendChild(renderer.domElement);
-
-let getTexture = function () {
-    var canvas = document.createElement('canvas');
-    canvas.width = 32;
-    canvas.height = 32;
-
-    var ctx = canvas.getContext('2d');
-    // the body
-    ctx.translate(-81, -84);
-
-    ctx.fillStyle = "orange";
-    ctx.beginPath();
-    ctx.moveTo(83, 116);
-    ctx.lineTo(83, 102);
-    ctx.bezierCurveTo(83, 94, 89, 88, 97, 88);
-    ctx.bezierCurveTo(105, 88, 111, 94, 111, 102);
-    ctx.lineTo(111, 116);
-    ctx.lineTo(106.333, 111.333);
-    ctx.lineTo(101.666, 116);
-    ctx.lineTo(97, 111.333);
-    ctx.lineTo(92.333, 116);
-    ctx.lineTo(87.666, 111.333);
-    ctx.lineTo(83, 116);
-    ctx.fill();
-
-    // the eyes
-    ctx.fillStyle = "white";
-    ctx.beginPath();
-    ctx.moveTo(91, 96);
-    ctx.bezierCurveTo(88, 96, 87, 99, 87, 101);
-    ctx.bezierCurveTo(87, 103, 88, 106, 91, 106);
-    ctx.bezierCurveTo(94, 106, 95, 103, 95, 101);
-    ctx.bezierCurveTo(95, 99, 94, 96, 91, 96);
-    ctx.moveTo(103, 96);
-    ctx.bezierCurveTo(100, 96, 99, 99, 99, 101);
-    ctx.bezierCurveTo(99, 103, 100, 106, 103, 106);
-    ctx.bezierCurveTo(106, 106, 107, 103, 107, 101);
-    ctx.bezierCurveTo(107, 99, 106, 96, 103, 96);
-    ctx.fill();
-
-    // the pupils
-    ctx.fillStyle = "blue";
-    ctx.beginPath();
-    ctx.arc(101, 102, 2, 0, Math.PI * 2, true);
-    ctx.fill();
-    ctx.beginPath();
-    ctx.arc(89, 102, 2, 0, Math.PI * 2, true);
-    ctx.fill();
+function init() {
 
 
-    var texture = new THREE.Texture(canvas);
-    texture.needsUpdate = true;
-    return texture;
-};
+
+    // create a scene, that will hold all our elements such as objects, cameras and lights.
+    var scene = new THREE.Scene();
+
+    // create a camera, which defines where we're looking at.
+    var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+
+    // create a render and set the size
+    var webGLRenderer = new THREE.WebGLRenderer();
+    webGLRenderer.setClearColor(new THREE.Color(0xEEEEEE, 1.0));
+    webGLRenderer.setSize(window.innerWidth, window.innerHeight);
+    webGLRenderer.shadowMapEnabled = true;
+
+    // add the sphere to the scene
+
+    // position and point the camera to the center of the scene
+    camera.position.x = 30;
+    camera.position.y = 30;
+    camera.position.z = 30;
+    camera.lookAt(new THREE.Vector3(0, 0, 0));
+
+    var ground = new THREE.PlaneGeometry(100, 100, 50, 50);
+
+    function createMultiMaterialObject ( geometry, materials ) {
+
+		var group = new THREE.Object3D();
+
+		for ( var i = 0, l = materials.length; i < l; i ++ ) {
+
+			group.add( new THREE.Mesh( geometry, materials[ i ] ) );
+
+		}
+
+		return group;
+
+	}
+
+    let material1 = new THREE.MeshBasicMaterial({wireframe: true, overdraw: true, color: 0x000000});
+    let material2 =  new THREE.MeshBasicMaterial({color: 0x00ff00, transparent: true, opacity: 0.5})
+    var groundMesh = createMultiMaterialObject(ground,[material1,material2])
+
+    groundMesh.rotation.x = -0.5 * Math.PI;
+    scene.add(groundMesh);
 
 
-var cloud;
+    // add the output of the renderer to the html element
+    document.body.appendChild(webGLRenderer.domElement);
 
-var controls = new function () {
-    this.size = 15;
-    this.transparent = true;
-    this.opacity = 0.6;
-    this.color = 0xffffff;
-    this.rotateSystem = true;
-    this.sizeAttenuation = true;
+    // call the render function
+    var step = 0.03;
 
-    this.redraw = function () {
-        if (scene.getObjectByName("pointcloud")) {
-            scene.remove(scene.getObjectByName("pointcloud"));
+    var sphere;
+    var cube;
+    var group;
+    var bboxMesh;
+
+    // setup the control gui
+    var controls = new function () {
+        // we need the first child, since it's a multimaterial
+        this.cubePosX = 0;
+        this.cubePosY = 3;
+        this.cubePosZ = 10;
+
+        this.spherePosX = 10;
+        this.spherePosY = 5;
+        this.spherePosZ = 0;
+
+        this.groupPosX = 10;
+        this.groupPosY = 5;
+        this.groupPosZ = 0;
+
+        this.grouping = false;
+        this.rotate = false;
+
+        this.groupScale = 1;
+        this.cubeScale = 1;
+        this.sphereScale = 1;
+
+
+        this.redraw = function () {
+            // remove the old plane
+            //scene.remove(sphere);
+            //scene.remove(cube);
+            scene.remove(group);
+
+            // create a new one
+            sphere = createMesh(new THREE.SphereGeometry(5, 10, 10));
+            cube = createMesh(new THREE.BoxGeometry(6, 6, 6));
+
+            sphere.position.set(controls.spherePosX, controls.spherePosY, controls.spherePosZ);
+            cube.position.set(controls.cubePosX, controls.cubePosY, controls.cubePosZ);
+            // add it to the scene.
+
+            // also create a group, only used for rotating
+            group = new THREE.Group();
+            group.add(sphere);
+            group.add(cube);
+
+            scene.add(group);
+            controls.positionBoundingBox();
+
+            var arrow = new THREE.ArrowHelper(new THREE.Vector3(0, 1, 0), group.position, 10, 0x0000ff);
+            scene.add(arrow);
+
+
+        };
+
+        this.positionBoundingBox = function () {
+            scene.remove(bboxMesh);
+            var box = setFromObject(group);
+            var width = box.max.x - box.min.x;
+            var height = box.max.y - box.min.y;
+            var depth = box.max.z - box.min.z;
+
+            var bbox = new THREE.BoxGeometry(width, height, depth);
+            bboxMesh = new THREE.Mesh(bbox, new THREE.MeshBasicMaterial({
+                color: 0x000000,
+                vertexColors: THREE.VertexColors,
+                wireframeLinewidth: 2,
+                wireframe: true
+            }));
+//            scene.add(bboxMesh);
+
+            bboxMesh.position.x = ((box.min.x + box.max.x) / 2);
+            bboxMesh.position.y = ((box.min.y + box.max.y) / 2);
+            bboxMesh.position.z = ((box.min.z + box.max.z) / 2);
         }
-        createPointCloud(controls.size, controls.transparent, controls.opacity, controls.sizeAttenuation, controls.color);
     };
-};
 
-var gui = new dat.GUI();
-gui.add(controls, 'size', 0, 20).onChange(controls.redraw);
-gui.add(controls, 'transparent').onChange(controls.redraw);
-gui.add(controls, 'opacity', 0, 1).onChange(controls.redraw);
-gui.addColor(controls, 'color').onChange(controls.redraw);
-gui.add(controls, 'sizeAttenuation').onChange(controls.redraw);
-
-gui.add(controls, 'rotateSystem');
-
-controls.redraw();
-
-function createPointCloud(size,transparent,opacity,sizeAttenuation,color) {
-    let geom = new THREE.Geometry();
-    let material = new THREE.PointCloudMaterial({
-        size,
-        transparent,
-        opacity,
-        map:getTexture(),
-        sizeAttenuation,
-        color
+    var gui = new dat.GUI();
+    var sphereFolder = gui.addFolder("sphere");
+    sphereFolder.add(controls, "spherePosX", -20, 20).onChange(function (e) {
+        sphere.position.x = e;
+        controls.positionBoundingBox()
+    });
+    sphereFolder.add(controls, "spherePosZ", -20, 20).onChange(function (e) {
+        sphere.position.z = e;
+        controls.positionBoundingBox()
+    });
+    sphereFolder.add(controls, "spherePosY", -20, 20).onChange(function (e) {
+        sphere.position.y = e;
+        controls.positionBoundingBox()
+    });
+    sphereFolder.add(controls, "sphereScale", 0, 3).onChange(function (e) {
+        sphere.scale.set(e, e, e);
+        controls.positionBoundingBox()
     });
 
-    let range = 500;
-    for(let  i=0;i < 5000;i++) {
-        let particle = new THREE.Vector3(Math.random() * range - range / 2, Math.random() * range - range / 2, Math.random() * range - range / 2);
-        geom.vertices.push(particle);
+    var cubeFolder = gui.addFolder("cube");
+    cubeFolder.add(controls, "cubePosX", -20, 20).onChange(function (e) {
+        cube.position.x = e;
+        controls.positionBoundingBox()
+    });
+    cubeFolder.add(controls, "cubePosZ", -20, 20).onChange(function (e) {
+        cube.position.z = e;
+        controls.positionBoundingBox()
+    });
+    cubeFolder.add(controls, "cubePosY", -20, 20).onChange(function (e) {
+        cube.position.y = e;
+        controls.positionBoundingBox()
+    });
+    cubeFolder.add(controls, "cubeScale", 0, 3).onChange(function (e) {
+        cube.scale.set(e, e, e);
+        controls.positionBoundingBox()
+    });
+
+    var cubeFolder = gui.addFolder("group");
+    cubeFolder.add(controls, "groupPosX", -20, 20).onChange(function (e) {
+        group.position.x = e;
+        controls.positionBoundingBox()
+    });
+    cubeFolder.add(controls, "groupPosZ", -20, 20).onChange(function (e) {
+        group.position.z = e;
+        controls.positionBoundingBox()
+    });
+    cubeFolder.add(controls, "groupPosY", -20, 20).onChange(function (e) {
+        group.position.y = e;
+        controls.positionBoundingBox()
+    });
+    cubeFolder.add(controls, "groupScale", 0, 3).onChange(function (e) {
+        group.scale.set(e, e, e);
+        controls.positionBoundingBox()
+    });
+
+    gui.add(controls, "grouping");
+    gui.add(controls, "rotate");
+    controls.redraw();
+    render();
+
+    function createMesh(geom) {
+
+        // assign two materials
+        var meshMaterial = new THREE.MeshNormalMaterial();
+        meshMaterial.side = THREE.DoubleSide;
+        var wireFrameMat = new THREE.MeshBasicMaterial();
+        wireFrameMat.wireframe = true;
+
+        // create a multimaterial
+        var plane = THREE.SceneUtils.createMultiMaterialObject(geom, [meshMaterial, wireFrameMat]);
+
+        return plane;
     }
-    cloud = new THREE.PointCloud(geom,material);
-    cloud.name = 'pointcloud';
-    cloud.sortParticles = true;
-    scene.add(cloud);
-}
+
+    function render() {
+   
 
 
-function render() {
-    if (controls.rotateSystem) {
-        step += 0.01;
+        if (controls.grouping && controls.rotate) {
+            group.rotation.y += step;
+        }
 
-        cloud.rotation.x = step;
-        cloud.rotation.z = step;
+        if (controls.rotate && !controls.grouping) {
+            sphere.rotation.y += step;
+            cube.rotation.y += step;
+        }
+
+//        controls.positionBoundingBox();
+        // render using requestAnimationFrame
+        requestAnimationFrame(render);
+        webGLRenderer.render(scene, camera);
     }
 
-    requestAnimationFrame(render);
-    renderer.render(scene,camera);
+   
 
-}
 
-render();
+    // http://jsfiddle.net/MREL4/
+    function setFromObject(object) {
+        var box = new THREE.Box3();
+        var v1 = new THREE.Vector3();
+        object.updateMatrixWorld(true);
+        box.makeEmpty();
+        object.traverse(function (node) {
+            if (node.geometry !== undefined && node.geometry.vertices !== undefined) {
+                var vertices = node.geometry.vertices;
+                for (var i = 0, il = vertices.length; i < il; i++) {
+                    v1.copy(vertices[i]);
+                    v1.applyMatrix4(node.matrixWorld);
+                    box.expandByPoint(v1);
+                }
+            }
+        });
+        return box;
+    }
+};
 
+window.onload = init;
