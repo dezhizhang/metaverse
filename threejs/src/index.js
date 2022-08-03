@@ -5,101 +5,102 @@
  * :copyright: (c) 2022, Tungee
  * :date created: 2022-07-12 07:44:44
  * :last editor: 张德志
- * :date last edited: 2022-08-03 08:24:24
+ * :date last edited: 2022-08-03 23:38:13
  */
 import * as THREE from 'three';
 import * as dat from 'dat.gui';
 
-
-let step = 0;
-let rotation = 0;
 const scene = new THREE.Scene();
 
+// 创建相机
 const camera = new THREE.PerspectiveCamera(45,window.innerWidth / window.innerHeight,0.1,1000);
 
-let renderer = new THREE.WebGLRenderer();
-renderer.setClearColor(new THREE.Color(0x00000));
+// 创建渲染器
+const renderer = new THREE.WebGLRenderer();
+renderer.setClearColor(new THREE.Color(0xEEEEEE));
 renderer.setSize(window.innerWidth,window.innerHeight);
 renderer.shadowMapEnabled = true;
 
-camera.position.x = 0;
+// 创建平面
+const planeGeometry = new THREE.PlaneGeometry(60,20,1,1);
+const planeMaterial = new THREE.MeshLambertMaterial({color:0xffffff});
+const plane = new THREE.Mesh(planeGeometry,planeMaterial);
+
+// 平面设置位置
+plane.rotation.x = -0.5 * Math.PI;
+plane.position.x = 15;
+plane.position.y = 0;
+plane.position.z = 0;
+
+// 添加到场影中
+scene.add(plane);
+
+// 创建几何体
+let cubeGeometry = new THREE.BoxGeometry(4,4,4);
+let cubeMaterial = new THREE.MeshLambertMaterial({color:0xff0000});
+let cube = new THREE.Mesh(cubeGeometry,cubeMaterial);
+
+// 设置几何体位置
+cube.position.x = -4;
+cube.position.y = 3;
+cube.position.z = 0;
+
+// 添加到场影中
+scene.add(cube);
+
+// 设置圆柱体
+let sphereGeometry = new THREE.SphereGeometry(4,20,20);
+let sphereMaterial = new THREE.MeshLambertMaterial({color:0x7777ff});
+let sphere = new THREE.Mesh(sphereGeometry,sphereMaterial);
+
+sphere.position.x = 20;
+sphere.position.y = 0;
+sphere.position.z = 2;
+
+// 添加到场景中
+scene.add(sphere);
+
+// 设置相机的位置
+camera.position.x = -30;
 camera.position.y = 40;
-camera.position.z = 50;
+camera.position.z = 30;
 camera.lookAt(scene.position);
 
-let cubeMaterial = new THREE.MeshNormalMaterial({color: 0x00ff00, transparent: true, opacity: 0.5});
+// 添加平行光
+let ambientLight = new THREE.AmbientLight(0x0c0c0c);
+scene.add(ambientLight);
+
+// 添加占光源
+let spotLight = new THREE.PointLight(0xffffff);
+spotLight.position.set(-40,60,-10);
+scene.add(spotLight);
+
+let step = 0;
 
 let controls = new function() {
-    this.cameraNear = camera.near;
-    this.cameraFar = camera.far;
-    this.rotationSpeed = 0.02;
-    this.combined = false;
-    
-    this.numberOfObjects = 500;
+    this.exportScene = function() {
+        let exporter = new THREE.SceneExporter();
+        let sceneJson = JSON.stringify(exporter.parse(scene));
+        localStorage.setItem('scene',sceneJson);
+    }
 
-    this.redraw = function () {
-        var toRemove = [];
-        scene.traverse(function (e) {
-            if (e instanceof THREE.Mesh) toRemove.push(e);
-        });
-        toRemove.forEach(function (e) {
-            scene.remove(e)
-        });
+    this.clearScene = function() {
+        scene = new THREE.Scene();
 
-        // add a large number of cubes
-        if (controls.combined) {
-            var geometry = new THREE.Geometry();
-            for (var i = 0; i < controls.numberOfObjects; i++) {
-                var cubeMesh = addcube();
-                cubeMesh.updateMatrix();
-                geometry.merge(cubeMesh.geometry, cubeMesh.matrix);
-            }
-            scene.add(new THREE.Mesh(geometry, cubeMaterial));
-
-        } else {
-            for (var i = 0; i < controls.numberOfObjects; i++) {
-                scene.add(controls.addCube());
-            }
-        }
-    };
-
-
-    this.addCube = addcube;
-
-    this.outputObjects = function () {
-        console.log(scene.children);
     }
 }
 
-function addcube() {
+let gui = new dat.GUI();
+gui.add(controls,'exportScene');
 
-    var cubeSize = 1.0;
-    var cubeGeometry = new THREE.BoxGeometry(cubeSize, cubeSize, cubeSize);
 
-    var cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
-    cube.castShadow = true;
-
-    // position the cube randomly in the scene
-    cube.position.x = -60 + Math.round((Math.random() * 100));
-    cube.position.y = Math.round((Math.random() * 10));
-    cube.position.z = -150 + Math.round((Math.random() * 175));
-
-    // add the cube to the scene
-    return cube;
-}
 
 document.body.append(renderer.domElement);
 
-
 function render() {
-    rotation +=  0.005;
-    camera.position.x = Math.sin(rotation) * 50;
-    camera.position.z = Math.sin(rotation) * 40;
-    camera.lookAt(scene.position);
-
     requestAnimationFrame(render);
     renderer.render(scene,camera);
 }
 
 render();
-controls.redraw();
+
