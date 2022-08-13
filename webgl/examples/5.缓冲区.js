@@ -1,11 +1,11 @@
 /*
  * :file description: 
- * :name: /webgl/src/index.js
+ * :name: /webgl/examples/5.缓冲区.js
  * :author: 张德志
  * :copyright: (c) 2022, Tungee
  * :date created: 2022-07-10 11:12:55
  * :last editor: 张德志
- * :date last edited: 2022-08-13 17:50:03
+ * :date last edited: 2022-08-13 17:51:17
  */
 
 
