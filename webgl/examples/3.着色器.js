@@ -1,14 +1,12 @@
 /*
  * :file description: 
- * :name: /webgl/src/index.js
+ * :name: /webgl/examples/3.着色器.js
  * :author: 张德志
  * :copyright: (c) 2022, Tungee
- * :date created: 2022-07-10 11:12:55
+ * :date created: 2022-08-13 15:47:48
  * :last editor: 张德志
- * :date last edited: 2022-08-13 16:26:24
+ * :date last edited: 2022-08-13 15:47:48
  */
-
-
 const canvas = document.getElementById('canvas');
 const gl = canvas.getContext('webgl');
 
@@ -27,32 +25,22 @@ const FRAG_SHADER =
 const vertex = gl.createShader(gl.VERTEX_SHADER);
 const frag = gl.createShader(gl.FRAGMENT_SHADER);
 
-// 引入shader
 gl.shaderSource(vertex,VERTEX_SHADER);
 gl.shaderSource(frag,FRAG_SHADER);
+
 
 // 编译
 gl.compileShader(vertex);
 gl.compileShader(frag);
 
-// 创建几何体
 const program = gl.createProgram();
 gl.attachShader(program,vertex);
 gl.attachShader(program,frag);
 
-// 链接几何体
 gl.linkProgram(program);
 gl.useProgram(program);
-
-
 
 gl.clearColor(0.0,0.0,0.0,1.0);
 gl.clear(gl.COLOR_BUFFER_BIT);
 
 gl.drawArrays(gl.POINTS,0,1);
-
-
-
-
-
-
