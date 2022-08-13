@@ -1,13 +1,3 @@
-/*
- * :file description: 
- * :name: /webgl/src/index.js
- * :author: 张德志
- * :copyright: (c) 2022, Tungee
- * :date created: 2022-07-10 11:12:55
- * :last editor: 张德志
- * :date last edited: 2022-08-13 21:10:56
- */
-
 const canvas = document.createElement('canvas');
 canvas.width = 500;
 canvas.height = 500;
