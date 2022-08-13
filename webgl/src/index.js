@@ -5,7 +5,7 @@
  * :copyright: (c) 2022, Tungee
  * :date created: 2022-07-10 11:12:55
  * :last editor: 张德志
- * :date last edited: 2022-08-13 16:45:29
+ * :date last edited: 2022-08-13 17:16:16
  */
 
 
@@ -25,16 +25,19 @@ const FRAG_SHADER =
     `void main() {\n\
     gl_FragColor = vec4(1, 0, 0, 1);\n\
 }`;
+
 const vertex = gl.createShader(gl.VERTEX_SHADER);
 const frag = gl.createShader(gl.FRAGMENT_SHADER);
 
 gl.shaderSource(vertex,VERTEX_SHADER);
 gl.shaderSource(frag,FRAG_SHADER);
 
+
 // 编译
 gl.compileShader(vertex);
 gl.compileShader(frag);
 
+// 创建几何体
 const program = gl.createProgram();
 gl.attachShader(program,vertex);
 gl.attachShader(program,frag);
@@ -43,9 +46,9 @@ gl.attachShader(program,frag);
 gl.linkProgram(program);
 gl.useProgram(program);
 
+
 gl.clearColor(0.0,0.0,0.0,1.0);
 gl.clear(gl.COLOR_BUFFER_BIT);
-
 
 
 const a_position = gl.getAttribLocation(program,'a_pos');
