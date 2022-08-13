@@ -5,7 +5,7 @@
  * :copyright: (c) 2022, Tungee
  * :date created: 2022-07-10 11:12:55
  * :last editor: 张德志
- * :date last edited: 2022-08-13 19:57:13
+ * :date last edited: 2022-08-13 20:21:46
  */
 
 
@@ -26,18 +26,19 @@ const FRAG_SHADER =
     gl_FragColor = vec4(1, 0, 0, 1);\n\
 }`;
 
-
 const vertex = gl.createShader(gl.VERTEX_SHADER);
 const frag = gl.createShader(gl.FRAGMENT_SHADER);
 
 gl.shaderSource(vertex,VERTEX_SHADER);
 gl.shaderSource(frag,FRAG_SHADER);
 
+
 // 编译
 gl.compileShader(vertex);
 gl.compileShader(frag);
 
 
+// 创建几何体
 const program = gl.createProgram();
 gl.attachShader(program,vertex);
 gl.attachShader(program,frag);
@@ -46,12 +47,12 @@ gl.attachShader(program,frag);
 gl.linkProgram(program);
 gl.useProgram(program);
 
-// 创建点
+// 创建顶点
 const dataVertices = new Float32Array([
     0.0,0.0,
     0.5,0.5,
     0.5,-0.5,
-]);
+])
 
 const buffer = gl.createBuffer();
 gl.bindBuffer(gl.ARRAY_BUFFER,buffer);
@@ -62,6 +63,13 @@ const a_pos = gl.getAttribLocation(program,'a_pos');
 gl.vertexAttribPointer(a_pos,2,gl.FLOAT,false,0,0);
 gl.enableVertexAttribArray(a_pos);
 
+const u_change = gl.getUniformLocation(program,'u_change');
+
+console.log('----',u_change)
+gl.uniform4f(u_change,1.0,1.0,0.0,0.0);
+// 清屏操作
+gl.clearColor(0.0,0.0,0.0,1.0);
+gl.clear(gl.COLOR_BUFFER_BIT);
+
+
 gl.drawArrays(gl.TRIANGLES,0,3);
-
-
