@@ -1,25 +1,15 @@
 #webgl
 
 ```js
-function init() {
-    const canvas = document.getElementById('canvas');
-    const webgl = canvas.getContext('webgl');
-    webgl.viewport(0,0,canvas.clientWidth,canvas.clientHeight);
-    webgl.clearColor(0.0,0.0,0.0,1.0);
-    webgl.clear(webgl.COLOR_BUFFER_BIT);
-}
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('webgl');
 
-init();
+ctx.viewport(0,0,canvas.clientWidth,canvas.clientHeight);
+
+ctx.clearColor(0.0,0.0,0.0,1.0);
+ctx.clear(ctx.COLOR_BUFFER_BIT);
+
 ```
 ### 背影颜色
-```js
-function init() {
-    const canvas = document.getElementById('canvas');
-    const webgl = canvas.getContext('webgl');
-    webgl.viewport(0,0,canvas.clientWidth,canvas.clientHeight);
-    webgl.clearColor(106/255,121/255,162/255,1.0);
-    webgl.clear(webgl.COLOR_BUFFER_BIT);
-}
-
-init();
+```
 ```

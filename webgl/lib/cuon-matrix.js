@@ -1,3 +1,12 @@
+/*
+ * :file description: 
+ * :name: /webgl/lib/cuon-matrix.js
+ * :author: 张德志
+ * :copyright: (c) 2022, Tungee
+ * :date created: 2022-08-06 21:43:26
+ * :last editor: 张德志
+ * :date last edited: 2022-08-13 11:45:18
+ */
 // cuon-matrix.js (c) 2012 kanda and matsuda
 /**
  * 4x4の行列を実装したクラス。
@@ -739,3 +748,6 @@ var Vector4 = function(opt_src) {
     }
     this.elements = v;
 }
+
+export default Matrix4;
+
