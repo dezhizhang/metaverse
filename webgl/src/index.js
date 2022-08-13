@@ -5,7 +5,7 @@
  * :copyright: (c) 2022, Tungee
  * :date created: 2022-07-10 11:12:55
  * :last editor: 张德志
- * :date last edited: 2022-08-13 21:10:56
+ * :date last edited: 2022-08-13 21:25:03
  */
 
 const canvas = document.createElement('canvas');
@@ -32,7 +32,6 @@ const FRAG_SHADER =
     gl_FragColor = vec4(1, 0, 0, 1);\n\
 }`;
 
-
 const vertex = gl.createShader(gl.VERTEX_SHADER);
 const frag = gl.createShader(gl.FRAGMENT_SHADER);
 
@@ -43,7 +42,7 @@ gl.shaderSource(frag,FRAG_SHADER);
 gl.compileShader(vertex);
 gl.compileShader(frag);
 
-//创建几何体
+// 创建几何体
 const program = gl.createProgram();
 gl.attachShader(program,vertex);
 gl.attachShader(program,frag);
@@ -59,11 +58,10 @@ const dataVertices = new Float32Array([
     0.6,0.0, 
 ]);
 
+// 创建buffer
 const buffer = gl.createBuffer();
 gl.bindBuffer(gl.ARRAY_BUFFER,buffer);
-
 gl.bufferData(gl.ARRAY_BUFFER,dataVertices,gl.STATIC_DRAW);
-
 
 const a_pos = gl.getAttribLocation(program,'a_pos');
 gl.vertexAttribPointer(a_pos,2,gl.FLOAT,false,0,0);
@@ -84,6 +82,5 @@ gl.uniform1f(u_cosB,cosB);
 // 清屏操作
 gl.clearColor(0.0,0.0,0.0,1.0);
 gl.clear(gl.COLOR_BUFFER_BIT);
-
 
 gl.drawArrays(gl.TRIANGLES,0,3);
