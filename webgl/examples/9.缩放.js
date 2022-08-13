@@ -68,8 +68,6 @@ gl.vertexAttribPointer(a_pos,2,gl.FLOAT,false,0,0);
 gl.enableVertexAttribArray(a_pos);
 
 const u_change = gl.getUniformLocation(program,'u_change');
-
-console.log('u_change',u_change);
 gl.uniform1f(u_change,0.8);
 
 
