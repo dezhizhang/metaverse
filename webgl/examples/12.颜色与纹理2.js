@@ -1,5 +1,14 @@
 /*
  * :file description: 
+ * :name: /webgl/examples/12.颜色与纹理2.js
+ * :author: 张德志
+ * :copyright: (c) 2022, Tungee
+ * :date created: 2022-08-14 17:00:24
+ * :last editor: 张德志
+ * :date last edited: 2022-08-14 17:21:55
+ */
+/*
+ * :file description: 
  * :name: /webgl/src/index.js
  * :author: 张德志
  * :copyright: (c) 2022, Tungee
