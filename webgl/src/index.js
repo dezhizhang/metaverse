@@ -1,19 +1,20 @@
 /*
  * :file description: 
- * :name: /webgl/examples/9.缩放.js
+ * :name: /webgl/src/index.js
  * :author: 张德志
  * :copyright: (c) 2022, Tungee
  * :date created: 2022-08-13 21:36:57
  * :last editor: 张德志
- * :date last edited: 2022-08-13 21:50:54
+ * :date last edited: 2022-08-14 15:37:25
  */
 const canvas = document.createElement('canvas');
 canvas.width = 500;
 canvas.height = 500;
 
-document.body.appendChild(canvas);
+document.body.append(canvas);
 
 const gl = canvas.getContext('webgl');
+
 
 const VERTEX_SHADER =
     `
@@ -30,7 +31,6 @@ const FRAG_SHADER =
     `void main() {\n\
     gl_FragColor = vec4(1, 0, 0, 1);\n\
 }`;
-
 
 const vertex = gl.createShader(gl.VERTEX_SHADER);
 const frag = gl.createShader(gl.FRAGMENT_SHADER);
@@ -68,8 +68,6 @@ gl.vertexAttribPointer(a_pos,2,gl.FLOAT,false,0,0);
 gl.enableVertexAttribArray(a_pos);
 
 const u_change = gl.getUniformLocation(program,'u_change');
-
-console.log('u_change',u_change);
 gl.uniform1f(u_change,0.8);
 
 
