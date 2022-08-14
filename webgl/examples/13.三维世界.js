@@ -1,5 +1,14 @@
 /*
  * :file description: 
+ * :name: /webgl/examples/13.三维世界.js
+ * :author: 张德志
+ * :copyright: (c) 2022, Tungee
+ * :date created: 2022-08-14 18:00:07
+ * :last editor: 张德志
+ * :date last edited: 2022-08-14 18:56:43
+ */
+/*
+ * :file description: 
  * :name: /webgl/src/index.js
  * :author: 张德志
  * :copyright: (c) 2022, Tungee
@@ -95,7 +104,6 @@ gl.enableVertexAttribArray(a_color);
 
 const matrix4 = new Matrix4();
 matrix4.setLookAt(0.2,0.2,0.25,0.0,0.0,0.0,0.0,1.0,0.0)
-console.log('Matrix4',matrix4);
 
 
 const u_ViewMatrix = gl.getUniformLocation(program,'u_ViewMatrix');
