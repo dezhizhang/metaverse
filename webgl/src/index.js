@@ -5,7 +5,7 @@
  * :copyright: (c) 2022, Tungee
  * :date created: 2022-08-13 21:36:57
  * :last editor: 张德志
- * :date last edited: 2022-08-14 18:50:53
+ * :date last edited: 2022-08-18 22:54:37
  */
 import Matrix4 from '../lib/cuon-matrix';
 
@@ -95,7 +95,6 @@ gl.enableVertexAttribArray(a_color);
 
 const matrix4 = new Matrix4();
 matrix4.setLookAt(0.2,0.2,0.25,0.0,0.0,0.0,0.0,1.0,0.0)
-console.log('Matrix4',matrix4);
 
 
 const u_ViewMatrix = gl.getUniformLocation(program,'u_ViewMatrix');
@@ -107,10 +106,3 @@ gl.clearColor(0.0,0.0,0.0,1.0);
 gl.clear(gl.COLOR_BUFFER_BIT);
 
 gl.drawArrays(gl.TRIANGLES,0,9);
-
-
-
-
-
-
-
