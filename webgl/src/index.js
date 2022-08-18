@@ -5,7 +5,7 @@
  * :copyright: (c) 2022, Tungee
  * :date created: 2022-08-13 21:36:57
  * :last editor: 张德志
- * :date last edited: 2022-08-18 22:54:37
+ * :date last edited: 2022-08-18 23:04:29
  */
 import Matrix4 from '../lib/cuon-matrix';
 
@@ -76,17 +76,17 @@ const dataVertices = new Float32Array([
     0.5,-0.5,0.0,0.4,0.4,1.4,
 ]);
 
+
 const FSIZE = dataVertices.BYTES_PER_ELEMENT;
 const buffer = gl.createBuffer();
 gl.bindBuffer(gl.ARRAY_BUFFER,buffer);
 gl.bufferData(gl.ARRAY_BUFFER,dataVertices,gl.STATIC_DRAW);
 
-
 const a_pos = gl.getAttribLocation(program,'a_pos');
 const a_color = gl.getAttribLocation(program,'a_color');
 
 gl.vertexAttribPointer(a_pos,3,gl.FLOAT,false, FSIZE * 6,0);
-gl.vertexAttribPointer(a_color,3,gl.FLOAT,false, FSIZE * 6,FSIZE * 3);
+gl.vertexAttribPointer(a_color,3,gl.FLOAT,false,FSIZE * 6,FSIZE * 3);
 
 
 gl.enableVertexAttribArray(a_pos);
