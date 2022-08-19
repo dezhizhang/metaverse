@@ -21,7 +21,7 @@
     "parcel-bundler": "^1.12.5",
     "stats": "^1.0.0",
     "stats.js": "^0.17.0",
-    "three": "^0.69.0",
+    "three": "^0.139.0",
     "tweenjs#v16.3.0": "link:@tweenjs/tweenjs#v16.3.0",
     "webpack": "^5.73.0",
     "webpack-cli": "^4.10.0",
