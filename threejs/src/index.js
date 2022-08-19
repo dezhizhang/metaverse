@@ -5,7 +5,7 @@
  * :copyright: (c) 2022, Tungee
  * :date created: 2022-07-12 07:44:44
  * :last editor: 张德志
- * :date last edited: 2022-08-19 20:58:26
+ * :date last edited: 2022-08-19 21:18:01
  */
 // import * as THREE from 'three';
 import * as THREE from 'three';
@@ -18,30 +18,24 @@ camera.position.y = 40;
 camera.position.z = 30;
 camera.lookAt(scene.position);
 
-
 const renderer = new THREE.WebGL1Renderer();
 renderer.setClearColor(new THREE.Color(0xEEEEEE));
 renderer.setSize(window.innerWidth,window.innerHeight);
-renderer.shadowMap.enabled = true;
+renderer.shadowMapEnabled = true;
 
-
-
-
-// 设置辅助工具
+// 创建辅助工具
 const axes = new THREE.AxesHelper(20);
 scene.add(axes);
 
 // 设置平面
-const planeGeometry = new THREE.PlaneGeometry(70,50,1,1);
+const planeGeometry = new THREE.PlaneBufferGeometry(70,50,1,1);
 const planeMaterial = new THREE.MeshLambertMaterial({color:new THREE.Color(0xcccccc)});
 const plane = new THREE.Mesh(planeGeometry,planeMaterial);
 plane.rotation.x = -0.5 * Math.PI;
 plane.position.x = 15;
 plane.position.y = 0;
-plane.position.z = 0;
+plane.position.z = 0
 plane.castShadow = true;
-
-
 scene.add(plane);
 
 // 设置立方体
@@ -64,26 +58,22 @@ sphere.position.z = -2;
 sphere.castShadow = true;
 scene.add(sphere);
 
+
 document.body.appendChild(renderer.domElement);
 
 // 设置点光源
 const spotLight = new THREE.SpotLight(0xffffff);
 spotLight.position.set(-40,60,-10);
-spotLight.castShadow = true;
 scene.add(spotLight);
-
-
-
 
 
 function render() {
 	requestAnimationFrame(render);
 	renderer.render(scene,camera);
+
 }
 
 render();
-
-
 
 
 
