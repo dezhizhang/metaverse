@@ -1,11 +1,11 @@
 /*
  * :file description: 
- * :name: /threejs/src/index.js
+ * :name: /threejs/examples/17.聚光灯光源.js
  * :author: 张德志
  * :copyright: (c) 2022, Tungee
  * :date created: 2022-07-12 07:44:44
  * :last editor: 张德志
- * :date last edited: 2022-08-21 15:38:27
+ * :date last edited: 2022-08-21 15:39:34
  */
 
 import * as THREE from 'three';
