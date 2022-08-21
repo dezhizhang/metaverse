@@ -1,5 +1,14 @@
 /*
  * :file description: 
+ * :name: /threejs/examples/16.点光源.js
+ * :author: 张德志
+ * :copyright: (c) 2022, Tungee
+ * :date created: 2022-08-21 15:01:07
+ * :last editor: 张德志
+ * :date last edited: 2022-08-21 15:01:08
+ */
+/*
+ * :file description: 
  * :name: /threejs/src/index.js
  * :author: 张德志
  * :copyright: (c) 2022, Tungee
