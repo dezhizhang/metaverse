@@ -1,11 +1,20 @@
 /*
  * :file description: 
+ * :name: /threejs/examples/18.平行光.js
+ * :author: 张德志
+ * :copyright: (c) 2022, Tungee
+ * :date created: 2022-08-21 16:33:20
+ * :last editor: 张德志
+ * :date last edited: 2022-08-21 16:33:20
+ */
+/*
+ * :file description: 
  * :name: /threejs/src/index.js
  * :author: 张德志
  * :copyright: (c) 2022, Tungee
  * :date created: 2022-07-12 07:44:44
  * :last editor: 张德志
- * :date last edited: 2022-08-21 16:52:04
+ * :date last edited: 2022-08-21 16:33:26
  */
 
 import * as THREE from 'three';
@@ -19,7 +28,6 @@ camera.position.y = 40;
 camera.position.z = 40;
 camera.lookAt(scene.position);
 
-
 // 创建渲染器
 const renderer = new THREE.WebGL1Renderer();
 renderer.setClearColor(new THREE.Color(0xEEEEEEE));
@@ -28,7 +36,7 @@ renderer.shadowMap.enabled = true;
 
 // 创建平面
 const planeGeometry = new THREE.PlaneGeometry(70,50,1,1);
-const planeMaterial = new THREE.MeshLambertMaterial({color:new THREE.Color(0xccccc)});
+const planeMaterial = new THREE.MeshLambertMaterial({color:new THREE.Color(0x000000)});
 const plane = new THREE.Mesh(planeGeometry,planeMaterial);
 plane.rotation.x = -0.5 * Math.PI;
 plane.position.x = 0;
@@ -36,7 +44,8 @@ plane.position.y = 0;
 plane.position.z = 0;
 scene.add(plane);
 
-// 添加环境光
+
+//添加环境光
 const ambientLight = new THREE.AmbientLight('#1c1c1c');
 scene.add(ambientLight);
 
@@ -56,7 +65,6 @@ directionLight.target = target;
 
 scene.add(directionLight);
 
-
 document.body.appendChild(renderer.domElement);
 
 const cubeGeometry = new THREE.BoxGeometry(5,5,5);
@@ -69,13 +77,15 @@ scene.add(cube);
 const sphereGeometry = new THREE.SphereGeometry(4,30,25);
 const sphereMaterial = new THREE.MeshLambertMaterial({color:0x7777ff});
 const sphere = new THREE.Mesh(sphereGeometry,sphereMaterial);
-sphere.position.set(-10,60,0);
+sphere.position.set(-10,6,0);
 scene.add(sphere);
 
 
+
 function render() {
-    requestAnimationFrame(render);
-    renderer.render(scene,camera);
+	
+	requestAnimationFrame(render);
+	renderer.render(scene,camera);
 }
 
 render();
