@@ -5,7 +5,7 @@
  * :copyright: (c) 2022, Tungee
  * :date created: 2022-08-21 15:01:07
  * :last editor: 张德志
- * :date last edited: 2022-08-27 15:15:14
+ * :date last edited: 2022-08-27 15:32:10
  */
 /*
  * :file description: 
@@ -19,7 +19,7 @@
 
 import * as THREE from 'three';
 
-
+// 创建场影
 const scene = new THREE.Scene();
 
 // 创建相机
@@ -29,7 +29,7 @@ camera.position.y = 40;
 camera.position.z = 40;
 camera.lookAt(scene.position);
 
-
+// 创建渲染器
 const renderer = new THREE.WebGL1Renderer();
 renderer.setClearColor(new THREE.Color(0xEEEEEEE));
 renderer.setSize(window.innerWidth,window.innerHeight);
@@ -45,21 +45,18 @@ plane.position.y = 0;
 plane.position.z = 0;
 scene.add(plane);
 
-
+// 创建点光源
 const pointLight = new THREE.PointLight(0xffffff);
 pointLight.position.set(-40,60,10);
 scene.add(pointLight);
 
-
-document.body.append(renderer.domElement);
-
+document.body.appendChild(renderer.domElement);
 
 const cubeGeometry = new THREE.BoxGeometry(5,5,5);
 const cubeMaterial = new THREE.MeshLambertMaterial({color:0xff0000});
 const cube = new THREE.Mesh(cubeGeometry,cubeMaterial);
 cube.position.set(0,5,0);
 scene.add(cube);
-
 
 const sphereGeometry = new THREE.SphereGeometry(4,30,25);
 const sphereMaterial = new THREE.MeshLambertMaterial({color:0x7777ff});
@@ -69,11 +66,9 @@ scene.add(sphere);
 
 
 function render() {
-	
-	requestAnimationFrame(render);
-	renderer.render(scene,camera);
+    requestAnimationFrame(render);
+    renderer.render(scene,camera);
 }
 
 render();
-
 
