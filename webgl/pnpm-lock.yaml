@@ -3,6 +3,7 @@ lockfileVersion: 5.4
 specifiers:
   '@babel/core': ^7.18.10
   babel-loader: ^8.2.5
+  gl-matrix: ^3.4.3
   html-webpack-plugin: ^5.5.0
   webpack: ^5.73.0
   webpack-cli: ^4.10.0
@@ -11,6 +12,7 @@ specifiers:
 dependencies:
   '@babel/core': 7.18.10
   babel-loader: 8.2.5_t5lqpictcry45jvv466griokye
+  gl-matrix: 3.4.3
   html-webpack-plugin: 5.5.0_webpack@5.73.0
   webpack: 5.73.0_webpack-cli@4.10.0
   webpack-cli: 4.10.0_6rc575xxn4hngez2jk2zkyfdoi
@@ -1290,6 +1292,10 @@ packages:
   /get-stream/6.0.1:
     resolution: {integrity: sha512-ts6Wi+2j3jQjqi70w5AlN8DFnkSwC+MqmxEzdEALB2qXZYV3X/b1CTfgPLGJNMeAWxdPfU8FO1ms3NUfaHCPYg==}
     engines: {node: '>=10'}
+    dev: false
+
+  /gl-matrix/3.4.3:
+    resolution: {integrity: sha512-wcCp8vu8FT22BnvKVPjXa/ICBWRq/zjFfdofZy1WSpQZpphblv12/bOQLBC1rMM7SGOFS9ltVmKOHil5+Ml7gA==}
     dev: false
 
   /glob-parent/5.1.2:
