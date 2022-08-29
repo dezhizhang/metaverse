@@ -5,7 +5,7 @@
  * :copyright: (c) 2022, Tungee
  * :date created: 2022-08-13 21:36:57
  * :last editor: 张德志
- * :date last edited: 2022-08-29 22:56:48
+ * :date last edited: 2022-08-29 23:11:28
  */
 
 const canvas = document.createElement('canvas');
@@ -15,6 +15,8 @@ canvas.height = 500;
 document.body.appendChild(canvas);
 
 const gl = canvas.getContext('webgl');
+
+
 
 const VERTEX_SHADER =
     `
@@ -38,21 +40,20 @@ gl.shaderSource(frag,FRAG_SHADER);
 gl.compileShader(vertex);
 gl.compileShader(frag);
 
-
 const program = gl.createProgram();
 gl.attachShader(program,vertex);
 gl.attachShader(program,frag);
-
 
 gl.linkProgram(program);
 gl.useProgram(program);
 
 
+const a_pos = gl.getAttribLocation(program,'a_pos');
+gl.vertexAttrib4f(a_pos,0,0,1,1);
+
 gl.clearColor(0,0,0,1);
 gl.clear(gl.COLOR_BUFFER_BIT);
 
-const a_pos = gl.getAttribLocation(program,'a_pos')
-gl.vertexAttrib4f(a_pos,0.0,0.0,1.0,1.0);
-
 
 gl.drawArrays(gl.POINTS,0,1);
+
