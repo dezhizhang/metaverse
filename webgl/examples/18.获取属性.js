@@ -1,11 +1,11 @@
 /*
  * :file description: 
- * :name: /webgl/src/index.js
+ * :name: /webgl/examples/18.获取属性.js
  * :author: 张德志
  * :copyright: (c) 2022, Tungee
  * :date created: 2022-08-13 21:36:57
  * :last editor: 张德志
- * :date last edited: 2022-08-29 22:56:48
+ * :date last edited: 2022-08-29 22:59:00
  */
 
 const canvas = document.createElement('canvas');
