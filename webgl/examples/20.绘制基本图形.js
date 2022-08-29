@@ -1,11 +1,11 @@
 /*
  * :file description: 
- * :name: /webgl/src/index.js
+ * :name: /webgl/examples/20.绘制基本图形.js
  * :author: 张德志
  * :copyright: (c) 2022, Tungee
  * :date created: 2022-08-13 21:36:57
  * :last editor: 张德志
- * :date last edited: 2022-08-30 07:27:07
+ * :date last edited: 2022-08-30 07:34:16
  */
 
 const canvas = document.createElement('canvas');
