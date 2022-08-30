@@ -18,10 +18,8 @@ gl.clearColor(0,0,0,1);
 gl.clear(gl.COLOR_BUFFER_BIT);
 
 ```
-### 引入threejs颜色库
+### 偏元着色器
 ```js
-import * as THREE from 'three';
-
 const canvas = document.createElement('canvas');
 canvas.width = 500;
 canvas.height = 500;
@@ -30,11 +28,41 @@ document.body.appendChild(canvas);
 
 const gl = canvas.getContext('webgl');
 
-// 实例化颜色
-const color = new THREE.Color(`rgba(255,0,0,1)`);
+const VERTEX_SHADER =
+    'void main() {\n\
+    gl_Position = vec4(-0.5, 0, 0, 1);\n\
+    gl_PointSize = 10.0;\n\
+}';
 
-gl.clearColor(color.r,color.g,color.b,1);
+const FRAG_SHADER =
+    'void main() {\n\
+    gl_FragColor = vec4(1, 0, 0, 1);\n\
+}';
+
+
+const vertex = gl.createShader(gl.VERTEX_SHADER);
+const frag = gl.createShader(gl.FRAGMENT_SHADER);
+
+gl.shaderSource(vertex,VERTEX_SHADER);
+gl.shaderSource(frag,FRAG_SHADER);
+
+
+gl.compileShader(vertex);
+gl.compileShader(frag);
+
+const program = gl.createProgram();
+gl.attachShader(program,vertex);
+gl.attachShader(program,frag);
+
+gl.linkProgram(program);
+gl.useProgram(program);
+
+gl.linkProgram(program);
+gl.useProgram(program);
+
+gl.clearColor(0,0,0,1);
 gl.clear(gl.COLOR_BUFFER_BIT);
 
+gl.drawArrays(gl.POINTS,0,1);
 
 ```
