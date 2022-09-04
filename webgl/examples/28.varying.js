@@ -5,7 +5,7 @@
  * :copyright: (c) 2022, Tungee
  * :date created: 2022-08-13 21:36:57
  * :last editor: 张德志
- * :date last edited: 2022-09-04 17:46:36
+ * :date last edited: 2022-09-04 17:32:25
  */
 
 const canvas = document.createElement('canvas');
@@ -14,6 +14,7 @@ canvas.height = 500;
 
 document.body.appendChild(canvas);
 
+const gl = canvas.getContext('webgl');
 
 const VERTEX_SHADER =
     `
@@ -34,25 +35,23 @@ const FRAG_SHADER =
     gl_FragColor = v_color;\n\
 }`;
 
-const gl = canvas.getContext('webgl');
 const vertex = gl.createShader(gl.VERTEX_SHADER);
 const frag = gl.createShader(gl.FRAGMENT_SHADER);
-
 
 gl.shaderSource(vertex,VERTEX_SHADER);
 gl.shaderSource(frag,FRAG_SHADER);
 
-
 gl.compileShader(vertex);
 gl.compileShader(frag);
+
 
 const program = gl.createProgram();
 gl.attachShader(program,vertex);
 gl.attachShader(program,frag);
 
+
 gl.linkProgram(program);
 gl.useProgram(program);
-
 
 const dataVerticesColor = new Float32Array([
     0.0,0.0,1.0,0.0,0.0,
@@ -66,17 +65,20 @@ const buffer = gl.createBuffer();
 gl.bindBuffer(gl.ARRAY_BUFFER,buffer);
 gl.bufferData(gl.ARRAY_BUFFER,dataVerticesColor,gl.STATIC_DRAW);
 
+
 const a_pos = gl.getAttribLocation(program,'a_pos');
 const a_color = gl.getAttribLocation(program,'a_color');
 
 gl.vertexAttribPointer(a_pos,2,gl.FLOAT,false,FSIZE * 5,0);
-gl.vertexAttribPointer(a_color,3,gl.FLOAT,false,FSIZE * 5, FSIZE * 2);
+gl.vertexAttribPointer(a_color,3,gl.FLOAT,false, FSIZE * 5,FSIZE * 2);
 
 gl.enableVertexAttribArray(a_pos);
 gl.enableVertexAttribArray(a_color);
 
 gl.clearColor(0,0,0,1);
 gl.clear(gl.COLOR_BUFFER_BIT);
+
+
 
 
 gl.drawArrays(gl.POINTS,0,3);
