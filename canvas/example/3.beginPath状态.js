@@ -1,11 +1,11 @@
 /*
  * :file description: 
- * :name: /canvas/src/index.js
+ * :name: /canvas/example/3.beginPath状态.js
  * :author: 张德志
  * :copyright: (c) 2022, Tungee
  * :date created: 2022-09-10 22:09:46
  * :last editor: 张德志
- * :date last edited: 2022-09-11 06:00:15
+ * :date last edited: 2022-09-11 06:01:18
  */
 
 const canvas = document.createElement('canvas');
