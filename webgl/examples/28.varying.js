@@ -1,11 +1,11 @@
 /*
  * :file description: 
- * :name: /webgl/src/index.js
+ * :name: /webgl/examples/28.varying.js
  * :author: 张德志
  * :copyright: (c) 2022, Tungee
  * :date created: 2022-08-13 21:36:57
  * :last editor: 张德志
- * :date last edited: 2022-09-04 17:32:25
+ * :date last edited: 2022-09-10 14:31:09
  */
 
 const canvas = document.createElement('canvas');
@@ -81,4 +81,4 @@ gl.clear(gl.COLOR_BUFFER_BIT);
 
 
 
-gl.drawArrays(gl.POINTS,0,3);
+gl.drawArrays(gl.TRIANGLES,0,3);
