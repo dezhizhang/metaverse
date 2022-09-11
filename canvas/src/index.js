@@ -5,23 +5,9 @@
  * :copyright: (c) 2022, Tungee
  * :date created: 2022-09-10 22:09:46
  * :last editor: 张德志
- * :date last edited: 2022-09-11 17:14:02
+ * :date last edited: 2022-09-11 17:48:06
  */
 
-
-const canvas = document.createElement('canvas');
-document.body.appendChild(canvas);
-
-canvas.width = 500;
-canvas.height = 500;
-canvas.style.border = '1px solid #eee';
-canvas.style.background = '#fff';
-
-const ctx = canvas.getContext('2d');
-
-ctx.font = '60px 宋体';
-ctx.textAlign = 'left';
-ctx.fillText('hello canvas',100,100);
 
 
 

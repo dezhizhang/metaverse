@@ -212,6 +212,26 @@ ctx.fillStyle = lg;
 ctx.fillRect(100,100,200,200)
 
 ```
+### 像素操作
+```js
+const canvas = document.createElement('canvas');
+document.body.appendChild(canvas);
+
+canvas.width = 500;
+canvas.height = 500;
+canvas.style.border = '1px solid #eee';
+canvas.style.background = '#fff';
+
+const ctx = canvas.getContext('2d');
+
+ctx.fillRect(0,0,100,100);
+const img = ctx.getImageData(0,0,100,100);
+for(let i=0;i < img.data.length;i++) {
+    img.data[i*4] = 255;
+}
+ctx.putImageData(img,100,100);
+
+```
 
 
 
