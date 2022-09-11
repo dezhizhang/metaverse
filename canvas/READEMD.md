@@ -193,6 +193,25 @@ ctx.arc(300,300,100,0,90 * Math.PI / 180);
 ctx.closePath();
 ctx.stroke();
 ```
+### 渐变
+```js
+const canvas = document.createElement('canvas');
+document.body.appendChild(canvas);
+
+canvas.width = 500;
+canvas.height = 500;
+canvas.style.border = '1px solid #eee';
+canvas.style.background = '#fff';
+
+const ctx = canvas.getContext('2d');
+
+const lg = ctx.createLinearGradient(100,100,100,300);
+lg.addColorStop(0,'blue');
+lg.addColorStop(1,'yellow')
+ctx.fillStyle = lg;
+ctx.fillRect(100,100,200,200)
+
+```
 
 
 
