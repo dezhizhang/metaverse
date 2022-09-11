@@ -5,12 +5,12 @@
  * :copyright: (c) 2022, Tungee
  * :date created: 2022-09-11 20:25:04
  * :last editor: 张德志
- * :date last edited: 2022-09-11 20:51:06
+ * :date last edited: 2022-09-11 21:13:24
  */
 const canvas = document.createElement('canvas');
 document.body.append(canvas);
 
-canvas.width = 500;
+canvas.width = 900;
 canvas.height = 500;
 
 canvas.style.background = '#fff';
