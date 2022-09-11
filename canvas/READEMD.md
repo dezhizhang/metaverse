@@ -282,6 +282,55 @@ function setXY(img,x,y,colors) {
     d[(y * w + x) * 4 + 3] = colors[3];
 }
 ```
+### 多泣子运动
+```js
+const canvas = document.createElement('canvas');
+document.body.append(canvas);
+
+canvas.width = 500;
+canvas.height = 500;
+
+canvas.style.background = '#fff';
+
+const ctx = canvas.getContext('2d');
+
+let arr = [];
+
+setInterval(() => {
+    ctx.save();
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    
+    for(let i=0;i < arr.length;i++) {
+        ctx.beginPath();
+        ctx.fillStyle =  arr[i].rgba;
+        ctx.arc(arr[i].x,arr[i].y,arr[i].r,0,360 *Math.PI / 180);
+        ctx.closePath();
+        ctx.fill();
+    }
+    ctx.restore();
+},1000/ 60);
+
+
+
+setInterval(() => {
+    let x = Math.floor(Math.random() * canvas.width);
+    let y = Math.floor(Math.random() * canvas.height);
+    let r = 10;
+    const c1 = Math.floor(Math.random() * 255);
+    const c2 = Math.floor(Math.random() * 255);
+    const c3 = Math.floor(Math.random() * 255);
+    const c4 = Math.floor(Math.random() * 255);
+    const rgba =  `rgba(${c1},${c2},${c3},${c4})`
+    arr.push({
+        x,
+        y,
+        r,
+        rgba
+    })
+
+},500)
+
+```
 
 
 

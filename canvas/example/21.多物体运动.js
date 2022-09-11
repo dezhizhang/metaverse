@@ -1,14 +1,12 @@
 /*
  * :file description: 
- * :name: /canvas/src/index.js
+ * :name: /canvas/example/21.多物体运动.js
  * :author: 张德志
  * :copyright: (c) 2022, Tungee
- * :date created: 2022-09-10 22:09:46
+ * :date created: 2022-09-11 20:25:04
  * :last editor: 张德志
- * :date last edited: 2022-09-11 20:50:42
+ * :date last edited: 2022-09-11 20:51:06
  */
-
-
 const canvas = document.createElement('canvas');
 document.body.append(canvas);
 
@@ -54,5 +52,3 @@ setInterval(() => {
     })
 
 },500)
-
-
