@@ -232,6 +232,56 @@ for(let i=0;i < img.data.length;i++) {
 ctx.putImageData(img,100,100);
 
 ```
+### 像素的封装
+```js
+const canvas = document.createElement('canvas');
+document.body.appendChild(canvas);
+
+canvas.width = 500;
+canvas.height = 500;
+canvas.style.background = '#fff';
+
+
+const ctx = canvas.getContext('2d');
+
+ctx.beginPath();
+ctx.fillRect(0,0,100,100);
+
+const img = ctx.getImageData(0,0,100,100);
+
+for(let i=0;i < img.width;i++) {
+    let colors = getXY(img,i,9);
+    colors[0] = 255;
+    setXY(img,i,9,colors);
+}
+
+ctx.putImageData(img,100,100);
+
+
+function getXY(img,x,y) {
+    const w = img.width;
+    const d = img.data;
+
+    let colors = [];
+    colors[0] = d[(y * w + x) * 4];
+    colors[1] = d[(y * w + x) * 4 + 1];
+    colors[2] = d[(y * w + x) * 4 + 2];
+    colors[3] = d[(y * w + x) * 4 + 3];
+
+    return colors;
+
+}
+
+function setXY(img,x,y,colors) {
+    const w = img.width;
+    const d = img.data;
+
+    d[(y * w + x) * 4] = colors[0];
+    d[(y * w + x) * 4 + 1] = colors[1];
+    d[(y * w + x) * 4 + 2] = colors[2];
+    d[(y * w + x) * 4 + 3] = colors[3];
+}
+```
 
 
 
