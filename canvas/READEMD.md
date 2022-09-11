@@ -98,4 +98,83 @@ for(let i=0;i < data.length;i++) {
 }
 
 ```
+### 作用域ctx.save()
+```js
+const canvas = document.createElement('canvas');
+document.body.appendChild(canvas);
+
+canvas.width = 500;
+canvas.height = 500;
+canvas.style.border = '1px solid #ccc';
+canvas.style.background = '#fff';
+
+const ctx = canvas.getContext('2d');
+
+
+ctx.save();
+
+ctx.beginPath();
+ctx.fillStyle = 'red';
+ctx.moveTo(100,100);
+ctx.lineTo(200,200);
+ctx.lineTo(300,200);
+ctx.lineTo(100,100);
+
+ctx.fill();
+ctx.closePath();
+ctx.restore();
+
+
+ctx.save();
+ctx.beginPath();
+ctx.fillStyle = 'green';
+ctx.moveTo(100,200);
+ctx.lineTo(200,300);
+ctx.lineTo(300,300);
+ctx.lineTo(100,200);
+ctx.fill();
+
+ctx.closePath();
+ctx.restore();
+
+```
+### 方块的移动
+```js
+const canvas = document.createElement('canvas');
+
+document.body.appendChild(canvas);
+
+canvas.width = 500;
+canvas.height = 500;
+canvas.style.border = '1px solid #ccc';
+canvas.style.background = '#fff';
+
+
+const ctx = canvas.getContext('2d');
+
+canvas.onmousedown = function(ev) {
+    
+    const x = ev.pageX - canvas.offsetLeft;
+    const y = ev.pageY - canvas.offsetTop;
+    ctx.beginPath();
+
+    ctx.moveTo(x,y);
+
+    canvas.onmousemove = function(ev) {
+        const x = ev.pageX - canvas.offsetLeft;
+        const y = ev.pageY - canvas.offsetTop;
+        console.log('ev',ev);
+        ctx.lineTo(x,y);
+        ctx.stroke();
+
+    }
+
+    canvas.onmouseup = function() {
+        canvas.onmousemove = null;
+        canvas.onmouseup = null;
+        
+    }
+}
+```
+
 
