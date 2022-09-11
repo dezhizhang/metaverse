@@ -176,5 +176,23 @@ canvas.onmousedown = function(ev) {
     }
 }
 ```
+### 绘制圆孤
+```js
+const canvas = document.createElement('canvas');
+document.body.appendChild(canvas);
+
+canvas.width = 500;
+canvas.height = 500;
+canvas.style.border = '1px solid #eee';
+canvas.style.background = '#fff';
+
+const ctx = canvas.getContext('2d');
+ctx.beginPath();
+ctx.moveTo(300,300);
+ctx.arc(300,300,100,0,90 * Math.PI / 180);
+ctx.closePath();
+ctx.stroke();
+```
+
 
 
