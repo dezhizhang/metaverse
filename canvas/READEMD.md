@@ -1,4 +1,4 @@
-# canvas
+# canvas相关文档
 ###
 ```js
 const canvas = document.createElement('canvas');
