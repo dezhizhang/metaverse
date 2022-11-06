@@ -5,14 +5,13 @@
  * :copyright: (c) 2022, Tungee
  * :date created: 2022-07-12 07:44:44
  * :last editor: 张德志
- * :date last edited: 2022-11-07 07:23:45
+ * :date last edited: 2022-11-07 07:12:29
  */
 
 import * as THREE from 'three';
 import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls';
 
-
-// 创建场景
+// 创建场影
 const scene = new THREE.Scene();
 
 // 创建相机
@@ -25,23 +24,19 @@ const cubeMaterial = new THREE.MeshBasicMaterial({color:0xffff00});
 const cube = new THREE.Mesh(cubeGeometry,cubeMaterial);
 scene.add(cube);
 
-// 创建沉浸器
+// 创建渲染器
 const renderer = new THREE.WebGL1Renderer();
 renderer.setClearColor(new THREE.Color(0x00000));
 renderer.setSize(window.innerWidth,window.innerHeight);
 
 document.body.appendChild(renderer.domElement);
 
-// 创建控制器
 const controls = new OrbitControls(camera,renderer.domElement);
 
-const axesHelper = new THREE.AxesHelper(5);
-scene.add(axesHelper);
 
 function render() {
     requestAnimationFrame(render);
     renderer.render(scene,camera);
-
 }
 
 render();
