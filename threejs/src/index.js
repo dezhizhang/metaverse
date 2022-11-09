@@ -5,9 +5,10 @@
  * :copyright: (c) 2022, Tungee
  * :date created: 2022-07-12 07:44:44
  * :last editor: 张德志
- * :date last edited: 2022-11-10 06:18:05
+ * :date last edited: 2022-11-10 07:20:58
  */
 import * as THREE from 'three';
+import gsap from "gsap";
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 
 // 创建场影
@@ -37,7 +38,15 @@ const controls = new OrbitControls(camera,renderer.domElement);
 const axesHelper = new THREE.AxesHelper(10);
 scene.add(axesHelper);
 
+const clock = new THREE.Clock();
+
+
+gsap.to(cube.position,{x:5,duration:5,ease:'power1.inOut'})
+
 function render() {
+
+    // const time = clock.getElapsedTime();
+    // console.log('time',time);
     cube.scale.set(3,2,1)
     renderer.render(scene,camera);
     requestAnimationFrame(render);
