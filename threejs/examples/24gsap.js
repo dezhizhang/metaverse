@@ -1,11 +1,20 @@
 /*
  * :file description: 
+ * :name: /threejs/examples/24gsap.js
+ * :author: 张德志
+ * :copyright: (c) 2022, Tungee
+ * :date created: 2022-11-10 07:42:13
+ * :last editor: 张德志
+ * :date last edited: 2022-11-10 07:42:30
+ */
+/*
+ * :file description: 
  * :name: /threejs/src/index.js
  * :author: 张德志
  * :copyright: (c) 2022, Tungee
  * :date created: 2022-07-12 07:44:44
  * :last editor: 张德志
- * :date last edited: 2022-11-10 08:04:13
+ * :date last edited: 2022-11-10 07:36:41
  */
 import * as THREE from 'three';
 import gsap from "gsap";
@@ -55,15 +64,6 @@ function render() {
 }
 
 render();
-
-
-window.addEventListener('resize',() => {
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateWorldMatrix();
-
-    renderer.setSize(window.innerWidth,window.innerHeight);
-    renderer.setPixelRatio(window.devicePixelRatio);
-})
 
 
 
