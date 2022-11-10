@@ -5,10 +5,11 @@
  * :copyright: (c) 2022, Tungee
  * :date created: 2022-07-12 07:44:44
  * :last editor: 张德志
- * :date last edited: 2022-11-10 08:04:13
+ * :date last edited: 2022-11-11 06:32:30
  */
 import * as THREE from 'three';
 import gsap from "gsap";
+import * as dat from 'dat.gui';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 
 // 创建场影
@@ -64,6 +65,7 @@ window.addEventListener('resize',() => {
     renderer.setSize(window.innerWidth,window.innerHeight);
     renderer.setPixelRatio(window.devicePixelRatio);
 })
+
 
 
 
