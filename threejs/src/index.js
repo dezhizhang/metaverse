@@ -5,7 +5,7 @@
  * :copyright: (c) 2022, Tungee
  * :date created: 2022-07-12 07:44:44
  * :last editor: 张德志
- * :date last edited: 2022-11-11 06:52:57
+ * :date last edited: 2022-11-12 06:52:53
  */
 import * as THREE from 'three';
 import gsap from "gsap";
@@ -24,10 +24,18 @@ camera.position.set(0,0,10);
 scene.add(camera);
 
 // 创建几何体
-const cubeGeometry = new THREE.BoxGeometry(1,1,1);
-const cubeMaterial = new THREE.MeshBasicMaterial({color:0xffff00});
-const cube = new THREE.Mesh(cubeGeometry,cubeMaterial);
+const geometry = new THREE.BufferGeometry();
+const vert = new Float32Array([
+    -1.0,-1.0,1.0,
+    1.0,-1.0,1.0,
+    1.0,1.0,1.0,
+]);
+
+geometry.setAttribute('position',new THREE.BufferAttribute(vert,3))
+const material = new THREE.MeshBasicMaterial({color:0xffff00});
+const cube = new THREE.Mesh(geometry,material);
 scene.add(cube);
+
 
 // 创建渲染器 
 const renderer = new THREE.WebGL1Renderer();
@@ -57,20 +65,9 @@ gui.add({color:'#ffff00'},'color').onChange((value) => {
     cube.material.color.set(value);
 });
 
-// const params = {
-//   fn:() => {
-//     gsap.to(cube.position,{x:5,duration:5,ease:'power1.inOut',repeat:-1,yoyo:true})
-//   }  
-// }
-// gui.add(params)
-
 gui.add(cube,'visible').name('是否显示');
 
 function render() {
-
-    // const time = clock.getElapsedTime();
-    // console.log('time',time);
-    // cube.scale.set(3,2,1)
     renderer.render(scene,camera);
     requestAnimationFrame(render);
 }
