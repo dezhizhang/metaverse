@@ -5,12 +5,15 @@
  * :copyright: (c) 2022, Tungee
  * :date created: 2022-07-12 07:44:44
  * :last editor: 张德志
- * :date last edited: 2022-11-11 06:32:30
+ * :date last edited: 2022-11-11 06:52:57
  */
 import * as THREE from 'three';
 import gsap from "gsap";
 import * as dat from 'dat.gui';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
+
+// 创建gui
+const gui = new dat.GUI();
 
 // 创建场影
 const scene = new THREE.Scene();
@@ -42,15 +45,32 @@ scene.add(axesHelper);
 const clock = new THREE.Clock();
 
 
-gsap.to(cube.position,{x:5,duration:5,ease:'power1.inOut',repeat:-1,yoyo:true,onComplete:() => {
-    console.log('hello')
-}})
+
+
+gui.add(cube.position,'x').min(0).max(5).step(0.01).name("x坐标").onChange((value) => {
+    console.log('value',value);
+}).onFinishChange((value) => {
+    console.log('完全停下来')
+});
+
+gui.add({color:'#ffff00'},'color').onChange((value) => {
+    cube.material.color.set(value);
+});
+
+// const params = {
+//   fn:() => {
+//     gsap.to(cube.position,{x:5,duration:5,ease:'power1.inOut',repeat:-1,yoyo:true})
+//   }  
+// }
+// gui.add(params)
+
+gui.add(cube,'visible').name('是否显示');
 
 function render() {
 
     // const time = clock.getElapsedTime();
     // console.log('time',time);
-    cube.scale.set(3,2,1)
+    // cube.scale.set(3,2,1)
     renderer.render(scene,camera);
     requestAnimationFrame(render);
 }
