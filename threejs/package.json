@@ -12,6 +12,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "cannon-es": "^0.20.0",
     "dat.gui": "0.7.9",
     "file-loader": "^6.2.0",
     "gsap": "^3.11.3",
