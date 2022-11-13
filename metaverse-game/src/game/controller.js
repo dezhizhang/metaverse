@@ -5,7 +5,7 @@
  * :copyright: (c) 2022, Tungee
  * :date created: 2022-11-13 19:41:21
  * :last editor: 张德志
- * :date last edited: 2022-11-13 20:19:39
+ * :date last edited: 2022-11-13 21:22:47
  */
 
 import gameView from './view';
@@ -19,7 +19,6 @@ class GameController {
 
   showGameOverPage = () => {
     this.gameView.showGameOverPage();
-    console.log('hello')
   }
 
   restartGame = () => {
@@ -34,8 +33,9 @@ class GameController {
     const gameOverPageCallbacks = {
         gameRestart:this.restartGame
     }
-    this.gameView.initGameOverPage(gameOverPageCallbacks)
     this.gameView.initGamePage(gamePageCallbacks)
+    this.gameView.initGameOverPage(gameOverPageCallbacks)
+    
   }
 }
 
