@@ -5,7 +5,7 @@
  * :copyright: (c) 2022, Tungee
  * :date created: 2022-07-12 07:44:44
  * :last editor: 张德志
- * :date last edited: 2022-11-13 10:57:36
+ * :date last edited: 2022-11-13 13:30:53
  */
 import * as THREE from 'three';
 
@@ -30,7 +30,7 @@ const map = textureLoader.load(soil_normal);
 
 
 const cubeGeometry = new THREE.BoxGeometry(1,1,1);
-const cubeMaterial = new THREE.MeshBasicMaterial({
+const cubeMaterial = new THREE.MeshStandardMaterial({
     color:'#ffff00',
     map,
     opacity:1,
@@ -39,6 +39,16 @@ const cubeMaterial = new THREE.MeshBasicMaterial({
 
 const mesh = new THREE.Mesh(cubeGeometry,cubeMaterial);
 scene.add(mesh);
+
+// 添加灯光
+const litht = new THREE.AmbientLight(0xffffff);
+scene.add(litht);
+
+// 设置平行光
+const directionalLight = new THREE.DirectionalLight(0xffffff);
+directionalLight.position.set(10,10,10);
+scene.add(directionalLight);
+
 
 // 创建渲染器
 const renderer = new THREE.WebGL1Renderer();
