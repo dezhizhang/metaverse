@@ -5,7 +5,7 @@
  * :copyright: (c) 2022, Tungee
  * :date created: 2022-11-13 20:00:40
  * :last editor: 张德志
- * :date last edited: 2022-11-13 21:27:58
+ * :date last edited: 2022-11-13 21:31:56
  */
 
 import * as THREE from '../../js/libs/three';
@@ -16,7 +16,7 @@ class GameOverPage {
   init(scene) {
     this.initGameOverCanvas(scene);
   };
-  
+
   initGameOverCanvas(scene) {
     const aspect = window.innerWidth / window.innerHeight;
     this.canvas = document.createElement('canvas');
@@ -43,6 +43,10 @@ class GameOverPage {
       200,
       100,
     );
+   
+    this.context.fillStyle = '#eee';
+    this.context.font = '20px Georgia';
+    this.context.fillText('Game over',(window.innerWidth - 200) / 2 + 50,(window.innerHeight - 100) / 2 + 50);
     this.texture.needsUpdate = true;
     scene.scene.add(this.obj);
   }
