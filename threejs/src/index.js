@@ -5,10 +5,11 @@
  * :copyright: (c) 2022, Tungee
  * :date created: 2022-07-12 07:44:44
  * :last editor: 张德志
- * :date last edited: 2022-11-13 10:25:37
+ * :date last edited: 2022-11-13 10:57:36
  */
 import * as THREE from 'three';
-import soil_normal from './soil_normal.jpg';
+
+import soil_normal from './starry-deep-outer-space-galaxy.jpg';
 import * as dat from 'dat.gui';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 
@@ -26,16 +27,14 @@ scene.add(camera);
 // 加载财质
 const textureLoader = new THREE.TextureLoader();
 const map = textureLoader.load(soil_normal);
-map.offset.x = 0.5;
-map.offset.y = 0.5;
-map.rotation = Math.PI / 4;
-map.center.set(0.5,0.5);
-map.repeat.set(2,0);
+
 
 const cubeGeometry = new THREE.BoxGeometry(1,1,1);
 const cubeMaterial = new THREE.MeshBasicMaterial({
     color:'#ffff00',
-    map
+    map,
+    opacity:1,
+    transparent:true
 });
 
 const mesh = new THREE.Mesh(cubeGeometry,cubeMaterial);
