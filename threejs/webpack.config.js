@@ -5,7 +5,7 @@
  * :copyright: (c) 2022, Tungee
  * :date created: 2022-07-12 07:38:33
  * :last editor: 张德志
- * :date last edited: 2022-07-31 20:16:34
+ * :date last edited: 2022-11-15 06:25:53
  */
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
@@ -26,6 +26,10 @@ module.exports = {
             {
                 test:/\.(png|svg|jpg|gif)$/,
                 use:['file-loader']
+            },
+            {
+                test:/\.glsl$/,
+                use: ['webpack-glsl-loader']
             }
         ]
     },

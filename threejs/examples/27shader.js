@@ -5,13 +5,13 @@
  * :copyright: (c) 2022, Tungee
  * :date created: 2022-07-12 07:44:44
  * :last editor: 张德志
- * :date last edited: 2022-11-15 06:13:08
+ * :date last edited: 2022-11-15 06:27:47
  */
 import * as THREE from 'three';
-import * as CANNON from 'cannon-es';
 import * as dat from 'dat.gui';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
-
+import vertex from './shader/vertex.glsl';
+import fragment from './shader/fragment.glsl';
 //创建gui
 const gui = new dat.GUI();
 
@@ -26,21 +26,11 @@ scene.add(camera);
 
 const planceGeometry = new THREE.PlaneGeometry(1,1,64,64);
 const planceMaterial = new THREE.ShaderMaterial({
-    vertexShader:`
-        void main() {
-            gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4(position,1.0);
-        }
-    `,
-    fragmentShader:`
-        void main() {
-            gl_FragColor = vec4(1.0,0.0,0.0,1.0);
-        }
-    `
+    vertexShader:vertex,
+    fragmentShader:fragment
 })
 const plane = new THREE.Mesh(planceGeometry,planceMaterial);
 scene.add(plane);
-
-
 
 
 // 添加灯光
