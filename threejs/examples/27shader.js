@@ -1,11 +1,11 @@
 /*
  * :file description: 
- * :name: /threejs/src/index.js
+ * :name: /threejs/examples/27shader.js
  * :author: 张德志
  * :copyright: (c) 2022, Tungee
  * :date created: 2022-07-12 07:44:44
  * :last editor: 张德志
- * :date last edited: 2022-11-15 06:11:54
+ * :date last edited: 2022-11-15 06:13:08
  */
 import * as THREE from 'three';
 import * as CANNON from 'cannon-es';
