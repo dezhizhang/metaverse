@@ -5,7 +5,7 @@
  * :copyright: (c) 2022, Tungee
  * :date created: 2022-08-27 16:29:41
  * :last editor: 张德志
- * :date last edited: 2022-11-17 07:12:33
+ * :date last edited: 2022-11-17 07:21:05
  */
 import * as Cesium from 'cesium';
 import './index.css';
@@ -28,7 +28,18 @@ Cesium.Camera.DEFAULT_VIEW_RECTANGLE = Cesium.Rectangle.fromDegrees(
 )
 
 const viewer = new Cesium.Viewer('root',{
+    // 是否显示搜索
+    geocoder:false,
     baseLayerPicker:false,
+    homeButton:false,
+    sceneModePicker:false,
+    baseLayerPicker:false,
+    // 是否显示帮助
+    navigationHelpButton:false,
+    // 是否显示动画
+    animation:false,
+    // 时否时显时间
+    timeline:false
 });
 // viewer.imageryLayers.addImageryProvider(atLayer);
 
