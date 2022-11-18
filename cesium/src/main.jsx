@@ -5,7 +5,7 @@
  * :copyright: (c) 2022, Tungee
  * :date created: 2022-08-27 16:29:41
  * :last editor: 张德志
- * :date last edited: 2022-11-19 06:15:21
+ * :date last edited: 2022-11-19 06:53:05
  */
 import * as Cesium from 'cesium';
 import './index.css';
@@ -101,12 +101,3 @@ const point = viewer.entities.add({
 const osm = viewer.scene.primitives.add(
     new Cesium.createOsmBuildings()
 )
-
-
-
-
-
-// viewer.scene.globe.show = true;
-// viewer.scene.camera.setView({
-//     destination:Cesium.Cartesian3.fromDegrees(116.39,39.9,1500)
-// })
