@@ -5,62 +5,105 @@
  * :copyright: (c) 2022, Tungee
  * :date created: 2022-07-12 07:44:44
  * :last editor: 张德志
- * :date last edited: 2022-11-20 14:32:39
+ * :date last edited: 2022-11-21 06:20:32
  */
 import * as THREE from 'three';
-import * as dat from 'dat.gui';
+import gsap from 'gsap';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
-import vertex from './shader/vertex.glsl';
-import fragment from './shader/fragment.glsl';
-//创建gui
-const gui = new dat.GUI();
+import * as dat from 'dat.gui';
 
-const scene = new THREE.Scene();
+// const matrix4 = new THREE.Matrix4();
 
-// 创建相机
-const camera = new THREE.PerspectiveCamera(75,window.innerWidth / window.innerHeight,0.1,1000);
-camera.position.set(0,0,10);
-scene.add(camera);
+// console.log(matrix4);
+
+// const line3 = new THREE.Line3();
+// line3.start = new THREE.Vector3(0,0,0);
+// line3.end = new THREE.Vector3(10,10,10);
+ 
+
+// const center = new THREE.Vector3();
 
 
-// 创建平面
-const planceGeometry = new THREE.PlaneGeometry(1,1,64,64);
-const planceMaterial = new THREE.ShaderMaterial({
-    vertexShader:vertex,
-    fragmentShader:fragment
-});
+// line3.getCenter(center);
 
-const plane = new THREE.Mesh(planceGeometry,planceMaterial);
-scene.add(plane);
+// const distance = line3.distance();
 
-// 添加灯光
-const litht = new THREE.AmbientLight(0xffffff,0.5);
-scene.add(litht);
 
-// 设置平行光
-const directionalLight = new THREE.DirectionalLight(0xffffff,0.5);
-directionalLight.position.set(10,10,10);
-directionalLight.castShadow = true;
-scene.add(directionalLight);
+// console.log(center);
 
-// 创建渲染器
-const renderer = new THREE.WebGL1Renderer();
-renderer.setSize(window.innerWidth,window.innerHeight);
+// console.log('distance',distance);
 
-const controls = new OrbitControls(camera,renderer.domElement);
+// const line3 = new THREE.Line3();
+// line3.start = new THREE.Vector3(0,0,0);
+// line3.end = new THREE.Vector3(10,10,10);
 
-document.body.appendChild(renderer.domElement);
 
-// 创建坐标系
-const axesHelper = new THREE.AxesHelper(10);
-scene.add(axesHelper);
+// const center = new THREE.Vector3();
+// line3.getCenter(center);
 
-function render() {
-    renderer.render(scene,camera);
-    requestAnimationFrame(render);
-}
+// const distance = line3.distance();
 
-render();
+// console.log('center',center);
+// console.log('distance',distance);
+
+// const ray = new THREE.Ray();
+
+// ray.origin = new THREE.Vector3(10,0,3);
+
+// ray.direction = new THREE.Vector3(1,1,1).normalize();
+
+// const p1 = new THREE.Vector3(20,0,0);
+// const p2 = new THREE.Vector3(0,0,10);
+// const p3 = new THREE.Vector3(0,30,0);
+
+// const result = ray.intersectTriangle(p1,p2,p3);
+// console.log('是否相交',result);
+
+// const  triangle = new THREE.Triangle();
+// triangle.a = new THREE.Vector3(20,0,0);
+// triangle.b = new THREE.Vector3(0,0,10);
+// triangle.c = new THREE.Vector3(0,30,0);
+
+
+// const s = triangle.getArea();
+// const normal = new THREE.Vector3();
+// triangle.getNormal(normal);
+// console.log('三角形面和',s);
+// console.log('三角形法线',normal);
+
+// const triangle = new THREE.Triangle();
+// triangle.a = new THREE.Vector3(20,0,0);
+// triangle.b = new THREE.Vector3(0,0,10);
+// triangle.c = new THREE.Vector3(0,30,0);
+
+// const s = triangle.getArea();
+// const normal = new THREE.Vector3();
+// triangle.getNormal(normal);
+
+// console.log('三角形面和',s);
+// console.log('三角形法线',normal);
+
+const plane = new THREE.Plane();
+
+
+const p1 = new THREE.Vector3(20,0,0);
+const p2 = new THREE.Vector3(0,0,10);
+const p3 = new THREE.Vector3(10,30,0);
+
+
+plane.setFromCoplanarPoints(p1,p2,p3);
+
+const point = new THREE.Vector3(20,100,300);
+
+const l = plane.distanceToPoint(point);
+
+
+console.log(plane.constant);
+
+console.log('点到平面的距离',l);
+
+
+
 
 
 

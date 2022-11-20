@@ -381,3 +381,56 @@ function render() {
 render();
 
 ```
+### 线段中心点和距离
+```js
+const line3 = new THREE.Line3();
+line3.start = new THREE.Vector3(0,0,0);
+line3.end = new THREE.Vector3(10,10,10);
+
+
+const center = new THREE.Vector3();
+line3.getCenter(center);
+
+const distance = line3.distance();
+
+console.log('center',center);
+console.log('distance',distance);
+
+```
+### 三角形面积和法线
+```js
+const  triangle = new THREE.Triangle();
+triangle.a = new THREE.Vector3(20,0,0);
+triangle.b = new THREE.Vector3(0,0,10);
+triangle.c = new THREE.Vector3(0,30,0);
+
+
+const s = triangle.getArea();
+const normal = new THREE.Vector3();
+triangle.getNormal(normal);
+console.log('三角形面和',s);
+console.log('三角形法线',normal);
+
+```
+### 平面
+```js
+const plane = new THREE.Plane();
+
+
+const p1 = new THREE.Vector3(20,0,0);
+const p2 = new THREE.Vector3(0,0,10);
+const p3 = new THREE.Vector3(10,30,0);
+
+
+plane.setFromCoplanarPoints(p1,p2,p3);
+
+const point = new THREE.Vector3(20,100,300);
+
+const l = plane.distanceToPoint(point);
+
+
+console.log(plane.constant);
+
+console.log('点到平面的距离',l);
+
+```
