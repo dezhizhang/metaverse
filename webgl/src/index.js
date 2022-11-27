@@ -5,7 +5,7 @@
  * :copyright: (c) 2022, Tungee
  * :date created: 2022-07-10 11:12:55
  * :last editor: 张德志
- * :date last edited: 2022-11-27 20:30:17
+ * :date last edited: 2022-11-27 20:54:37
  */
 
 const canvas = document.createElement('canvas')
@@ -17,9 +17,15 @@ const gl = canvas.getContext('webgl');
 const VERTEX_SHADER =
     `
     attribute vec4 a_Position;\n\
-    uniform vec4 u_translation;\n
+    // float angle = radians(30.0);\n\
+    uniform float u_sinB;\n\
+    uniform float u_cosB;\n\
     void main() {\n\
-    gl_Position = a_Position + u_translation;\n\
+    // gl_Position = a_Position + u_translation;\n\
+    gl_Position.x = a_Position.x * u_cosB - a_Position.y *u_sinB;\n
+    gl_Position.y = a_Position.y * u_cosB + a_Position.x * u_sinB;\n
+    gl_Position.z = a_Position.z;\n
+    gl_Position.w = 1.0;\n
     gl_PointSize = 10.0;\n\
 }`;
 
@@ -67,9 +73,13 @@ gl.bindBuffer(gl.ARRAY_BUFFER,vertexBuffer);
 gl.bufferData(gl.ARRAY_BUFFER,vertices,gl.STATIC_DRAW);
 
 const a_Position = gl.getAttribLocation(program,"a_Position");
-const u_translation = gl.getUniformLocation(program,'u_translation');
+const u_sinB = gl.getUniformLocation(program,'u_sinB');
+const u_cosB = gl.getUniformLocation(program,'u_cosB');
 
-gl.uniform4f(u_translation,0,0.5,0,0);
+const angle = 0.1;
+gl.uniform1f(u_sinB,Math.sin(angle));
+gl.uniform1f(u_cosB,Math.cos(angle));
+
 gl.vertexAttribPointer(a_Position,2,gl.FLOAT,false,0,0);
 
 gl.enableVertexAttribArray(a_Position);
@@ -79,16 +89,5 @@ gl.clear(gl.COLOR_BUFFER_BIT);
 
 gl.drawArrays(gl.TRIANGLES,0,3);
 
-let y = 0;
-!(function ani() {
-    y += 0.02;
-    if(y >=1) {
-        y =- 1;
-    }
-    gl.uniform4f(u_translation,0,y,0,0);
-    gl.clear(gl.COLOR_BUFFER_BIT);
-    gl.drawArrays(gl.TRIANGLES,0,3);
-    requestAnimationFrame(ani);
-})()
 
 document.body.appendChild(canvas);
