@@ -5,35 +5,33 @@
  * :copyright: (c) 2022, Tungee
  * :date created: 2022-07-10 11:12:55
  * :last editor: 张德志
- * :date last edited: 2022-11-28 23:06:59
+ * :date last edited: 2022-11-29 06:18:53
  */
+
 
 const canvas = document.createElement('canvas');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
-
 const gl = canvas.getContext('webgl');
 
-const VERTEX_SHADER = `
-    attribute vec4 a_Position;\n
-    attribute vec2 a_Pin;\n
-    varying vec2 v_Pin;\n
-    uniform float u_Scale;\n\
-    void main() {
-        gl_Position = a_Position;\n
-        v_Pin = a_Pin;\n
-    }
-`;
+// gl.viewport(0,0,canvas.clientWidth,canvas.clientHeight);
 
-const FRAG_SHADER = `
-    precision mediump float;\n\
-    uniform sampler2D u_Sampler;\n
-    uniform vec4 u_color;\n\
-    varying vec2 v_Pin;\n
-    void main() {
-        gl_FragColor = texture2D(u_Sampler,v_Pin);
-    }
-`;
+
+
+
+const VERTEX_SHADER =
+    `
+    attribute vec4 a_pos;\n\
+    void main() {\n\
+    gl_Position = a_pos;\n\
+    gl_PointSize = 25.0;\n\
+}`;
+
+const FRAG_SHADER =
+    `void main() {\n\
+    gl_FragColor = vec4(1, 0, 0, 1);\n\
+}`;
+
 
 const vertex = gl.createShader(gl.VERTEX_SHADER);
 const frag = gl.createShader(gl.FRAGMENT_SHADER);
@@ -41,70 +39,42 @@ const frag = gl.createShader(gl.FRAGMENT_SHADER);
 gl.shaderSource(vertex,VERTEX_SHADER);
 gl.shaderSource(frag,FRAG_SHADER);
 
+
 // 编译
 gl.compileShader(vertex);
 gl.compileShader(frag);
 
-// 生成链接
+// 创建对像
 const program = gl.createProgram();
 gl.attachShader(program,vertex);
 gl.attachShader(program,frag);
 
+// 连接几何体
 gl.linkProgram(program);
 gl.useProgram(program);
 
+// 创建点
+const dataVertices = new Float32Array([
+    0.0,0.0,
+    0.5,0.5,
+    0.5,-0.5,
+    -0.5,-0.5,
+    -0.5,0.5
+]);
 gl.clearColor(0.0,0.0,0.0,1.0);
 gl.clear(gl.COLOR_BUFFER_BIT);
 
-const vertices = new Float32Array([
-    0.0,0.1,
-    -0.1,-0.1,
-    0.1,-0.1 
-]);
 
+const buffer = gl.createBuffer();
+gl.bindBuffer(gl.ARRAY_BUFFER,buffer);
 
-const vertexBuffer = gl.createBuffer();
-gl.bindBuffer(gl.ARRAY_BUFFER,vertexBuffer);
+gl.bufferData(gl.ARRAY_BUFFER,dataVertices,gl.STATIC_DRAW);
 
-gl.bufferData(gl.ARRAY_BUFFER,vertices,gl.STATIC_DRAW);
+const a_position = gl.getAttribLocation(program,'a_pos');
+gl.vertexAttribPointer(a_position,2,gl.FLOAT,false,0,0);
+gl.enableVertexAttribArray(a_position);
 
-const a_Position = gl.getAttribLocation(program,'a_Position');
-const u_Scale = gl.getUniformLocation(program,'u_Scale');
-gl.uniform1f(u_Scale,0.2);
-
-
-gl.vertexAttribPointer(a_Position,2,gl.FLOAT,false,0,0);
-
-gl.enableVertexAttribArray(a_Position);
-
-gl.clearColor(0,0,0,1);
-gl.clear(gl.COLOR_BUFFER_BIT);
-
-
-const source = new Float32Array([
-    -0.5,0.5,0,1,
-    -0.5,-0.5,0,0,
-    0.5,0.5,1,1,
-    0.5,-0.5,1,0
-]);
-
-const FSIZE = source.BYTES_PER_ELEMENT;
-// 元素字节数
-const elementBytes = source.BYTES_PER_ELEMENT;
-
-const posSize = 2;
-const pinSize = 2;
-
-// 类目尺寸
-const categorySize = posSize + pinSize;
-
-// 类目字节数
-const categoryBytes = categorySize * elementBytes;
-
-
-
-
-gl.drawArrays(gl.TRIANGLES,0,3);
+gl.drawArrays(gl.POINTS,0,5);
 
 document.body.appendChild(canvas);
 
