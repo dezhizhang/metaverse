@@ -5,8 +5,9 @@
  * :copyright: (c) 2022, Tungee
  * :date created: 2022-08-13 15:47:48
  * :last editor: 张德志
- * :date last edited: 2022-12-03 06:12:55
+ * :date last edited: 2022-12-03 06:24:13
  */
+import { initShader } from '../lib/common';
 const canvas = document.createElement('canvas');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
@@ -29,23 +30,7 @@ const FRAG_SHADER = `
     }
 `;
 
-
-const vertex = gl.createShader(gl.VERTEX_SHADER);
-const frag = gl.createShader(gl.FRAGMENT_SHADER);
-
-gl.shaderSource(vertex,VERTEX_SHADER);
-gl.shaderSource(frag,FRAG_SHADER);
-
-
-gl.compileShader(vertex);
-gl.compileShader(frag);
-
-const program = gl.createProgram();
-gl.attachShader(program,vertex);
-gl.attachShader(program,frag);
-
-gl.linkProgram(program);
-gl.useProgram(program);
+const program = initShader(gl,VERTEX_SHADER,FRAG_SHADER);
 
 const a_position = gl.getAttribLocation(program,'a_position');
 const u_color = gl.getUniformLocation(program,'u_color');

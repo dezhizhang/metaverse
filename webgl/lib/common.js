@@ -5,39 +5,26 @@
  * :copyright: (c) 2022, Tungee
  * :date created: 2022-08-08 08:04:32
  * :last editor: 张德志
- * :date last edited: 2022-08-08 22:40:30
+ * :date last edited: 2022-12-03 06:22:44
  */
-export function initShaders(gl, vShader_s, fShader_s) {
-    const vertexShader = createShader(gl, gl.VERTEX_SHADER, vShader_s)
-    const fragmentShader = createShader(gl, gl.FRAGMENT_SHADER, fShader_s)
-   
-    const program = createProgram(gl, vertexShader, fragmentShader)
-    // 使用程序对象
-    gl.useProgram(program)
 
-    gl.program = program
-}
-
-export function createShader(gl, type, shaderSource) {
-    // 创建shader
-    const shader = gl.createShader(type)
-    // 填充source
-    gl.shaderSource(shader, shaderSource)
-    // 编译shader
-    gl.compileShader(shader)
-
-    return shader
-}
-
-export function createProgram(gl, vShader, fShader) {
-    // 创建程序对象
-    const program = gl.createProgram()
-
-    // 为程序对象分配着色器对象
-    gl.attachShader(program, vShader)
-    gl.attachShader(program, fShader)
-
-    // 连接程序对象
-    gl.linkProgram(program)
+export function initShader(gl,VERTEX_SHADER,FRAG_SHADER) {
+    const vertex = gl.createShader(gl.VERTEX_SHADER);
+    const frag = gl.createShader(gl.FRAGMENT_SHADER);
+    
+    gl.shaderSource(vertex,VERTEX_SHADER);
+    gl.shaderSource(frag,FRAG_SHADER);
+    
+    
+    gl.compileShader(vertex);
+    gl.compileShader(frag);
+    
+    const program = gl.createProgram();
+    gl.attachShader(program,vertex);
+    gl.attachShader(program,frag);
+    
+    gl.linkProgram(program);
+    gl.useProgram(program);
     return program
 }
+
