@@ -3,11 +3,10 @@
  * :name: /webgl/src/index.js
  * :author: 张德志
  * :copyright: (c) 2022, Tungee
- * :date created: 2022-07-10 11:12:55
+ * :date created: 2022-12-04 20:30:27
  * :last editor: 张德志
- * :date last edited: 2022-12-04 21:58:59
+ * :date last edited: 2022-12-04 21:33:19
  */
-
 const canvas = document.createElement('canvas');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
@@ -16,65 +15,62 @@ const gl = canvas.getContext('webgl');
 
 const VERTEX_SHADER =
     `
-    attribute vec4 a_pos;\n
-    attribute vec4 a_color;\n
-    varying vec4 v_color;\n
+    attribute vec4 a_pos;\n\
+    attribute float a_size;\n
     void main() {\n\
     gl_Position = a_pos;\n\
-    v_color = a_color;\n\
-    gl_PointSize = 25.0;\n\
+    gl_PointSize = a_size;\n\
 }`;
 
 const FRAG_SHADER =
-    `
-    precision lowp float;\n
-    varying vec4 v_color;\n
-    void main() {\n\
-    gl_FragColor = v_color;\n\
+    `void main() {\n\
+    gl_FragColor = vec4(1, 0, 0, 1);\n\
 }`;
 
 const vertex = gl.createShader(gl.VERTEX_SHADER);
 const frag = gl.createShader(gl.FRAGMENT_SHADER);
 
+// 加载源文件
 gl.shaderSource(vertex,VERTEX_SHADER);
 gl.shaderSource(frag,FRAG_SHADER);
 
+// 编译
 gl.compileShader(vertex);
 gl.compileShader(frag);
 
+// 创建对像
 const program = gl.createProgram();
 gl.attachShader(program,vertex);
 gl.attachShader(program,frag);
 
-
+// 连接几何体
 gl.linkProgram(program);
 gl.useProgram(program);
 
-const dataVerticesColor = new Float32Array([
-    0.0,0.0,1.0,0.0,0.0,
-    -0.5,0.6,0.0,1.0,0.0,
-    0.5,0.5,0.0,0.0,1.0
+// 创建点
+const dataVertices = new Float32Array([
+    0.0,0.0,10.0,
+    0.5,0.5,20.0,
+    0.5,-0.5,30.0
 ])
 
-const FSIZE = dataVerticesColor.BYTES_PER_ELEMENT;
 const buffer = gl.createBuffer();
 gl.bindBuffer(gl.ARRAY_BUFFER,buffer);
-gl.bufferData(gl.ARRAY_BUFFER,dataVerticesColor,gl.STATIC_DRAW);
+gl.bufferData(gl.ARRAY_BUFFER,dataVertices,gl.STATIC_DRAW);
 
-const a_pos = gl.getAttribLocation(program,'a_pos');
-const a_color = gl.getAttribLocation(program,'a_color');
+const FSIZE = dataVertices.BYTES_PER_ELEMENT;
+const a_position = gl.getAttribLocation(program,'a_pos');
+const a_size = gl.getAttribLocation(program,'a_size');
+gl.vertexAttribPointer(a_position,2,gl.FLOAT,false, FSIZE * 3,0);
+gl.vertexAttribPointer(a_size,1,gl.FLOAT,false, FSIZE * 3,FSIZE * 2);
 
-gl.vertexAttribPointer(a_pos,2,gl.FLOAT,false,FSIZE * 5,0);
-gl.vertexAttribPointer(a_color,3,gl.FLOAT,false,FSIZE * 5,FSIZE * 2);
+gl.enableVertexAttribArray(a_position);
+gl.enableVertexAttribArray(a_size);
 
-
-gl.enableVertexAttribArray(a_pos);
-gl.enableVertexAttribArray(a_color);
-
-gl.clearColor(0,0,0,1);
+gl.clearColor(0.0,0.0,0.0,1.0);
 gl.clear(gl.COLOR_BUFFER_BIT);
-
 
 gl.drawArrays(gl.POINTS,0,3);
 
 document.body.appendChild(canvas);
+
