@@ -5,9 +5,9 @@
  * :copyright: (c) 2022, Tungee
  * :date created: 2022-07-10 11:12:55
  * :last editor: 张德志
- * :date last edited: 2022-12-04 21:58:59
+ * :date last edited: 2022-12-05 05:56:17
  */
-
+import Matrix4 from '../lib/cuon-matrix.js'
 const canvas = document.createElement('canvas');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
@@ -17,20 +17,16 @@ const gl = canvas.getContext('webgl');
 const VERTEX_SHADER =
     `
     attribute vec4 a_pos;\n
-    attribute vec4 a_color;\n
-    varying vec4 v_color;\n
+    uniform vec4 u_translate;\n
+    uniform vec4 u_rotate;\n
     void main() {\n\
-    gl_Position = a_pos;\n\
-    v_color = a_color;\n\
-    gl_PointSize = 25.0;\n\
+    gl_Position = u_rotate*u_translate*a_pos;\n\
 }`;
 
 const FRAG_SHADER =
     `
-    precision lowp float;\n
-    varying vec4 v_color;\n
     void main() {\n\
-    gl_FragColor = v_color;\n\
+    gl_FragColor = vec4(1.0,0.0,0.0,1.0);\n\
 }`;
 
 const vertex = gl.createShader(gl.VERTEX_SHADER);
@@ -50,31 +46,42 @@ gl.attachShader(program,frag);
 gl.linkProgram(program);
 gl.useProgram(program);
 
-const dataVerticesColor = new Float32Array([
-    0.0,0.0,1.0,0.0,0.0,
-    -0.5,0.6,0.0,1.0,0.0,
-    0.5,0.5,0.0,0.0,1.0
+const dataVertices = new Float32Array([
+    0.0,0.0,
+    0.3,0.3,
+    0.6,0.0,
 ])
 
-const FSIZE = dataVerticesColor.BYTES_PER_ELEMENT;
+
 const buffer = gl.createBuffer();
 gl.bindBuffer(gl.ARRAY_BUFFER,buffer);
-gl.bufferData(gl.ARRAY_BUFFER,dataVerticesColor,gl.STATIC_DRAW);
+gl.bufferData(gl.ARRAY_BUFFER,dataVertices,gl.STATIC_DRAW);
 
 const a_pos = gl.getAttribLocation(program,'a_pos');
-const a_color = gl.getAttribLocation(program,'a_color');
-
-gl.vertexAttribPointer(a_pos,2,gl.FLOAT,false,FSIZE * 5,0);
-gl.vertexAttribPointer(a_color,3,gl.FLOAT,false,FSIZE * 5,FSIZE * 2);
-
-
+gl.vertexAttribPointer(a_pos,2,gl.FLOAT,false,0,0);
 gl.enableVertexAttribArray(a_pos);
-gl.enableVertexAttribArray(a_color);
+
+
+const u_translate = gl.getUniformLocation(program,'u_translate');
+const u_rotate = gl.getUniformLocation(program,'u_rotate')
+
+
+const matrix4 = new Matrix4('elements');
+const translate = matrix4.translate(0,0,0);
+const rotate = matrix4.rotate(0);
+console.log('translate',translate.elements)
+console.log(matrix4)
+gl.uniformMatrix4fv(u_translate,false,translate.elements);
+gl.uniformMatrix4fv(u_rotate,false,rotate.elements);
+console.log(matrix4)
+
+
+
 
 gl.clearColor(0,0,0,1);
 gl.clear(gl.COLOR_BUFFER_BIT);
 
 
-gl.drawArrays(gl.POINTS,0,3);
+gl.drawArrays(gl.TRIANGLES,0,3);
 
 document.body.appendChild(canvas);
