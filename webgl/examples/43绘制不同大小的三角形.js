@@ -1,16 +1,15 @@
 /*
  * :file description: 
- * :name: /webgl/src/index.js
+ * :name: /webgl/examples/43绘制不同大小的三角形.js
  * :author: 张德志
  * :copyright: (c) 2022, Tungee
  * :date created: 2022-12-04 20:30:27
  * :last editor: 张德志
- * :date last edited: 2022-12-04 21:21:15
+ * :date last edited: 2022-12-04 20:30:37
  */
 const canvas = document.createElement('canvas');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
-
 const gl = canvas.getContext('webgl');
 
 
@@ -28,11 +27,13 @@ const FRAG_SHADER =
     gl_FragColor = vec4(1, 0, 0, 1);\n\
 }`;
 
+
 const vertex = gl.createShader(gl.VERTEX_SHADER);
 const frag = gl.createShader(gl.FRAGMENT_SHADER);
 
 gl.shaderSource(vertex,VERTEX_SHADER);
 gl.shaderSource(frag,FRAG_SHADER);
+
 
 // 编译
 gl.compileShader(vertex);
@@ -49,31 +50,38 @@ gl.useProgram(program);
 
 // 创建点
 const dataVertices = new Float32Array([
-    0.0,0.0,10.0,
-    0.5,0.5,20.0,
-    0.5,-0.5,30.0
+    0.0,0.0,
+    0.5,0.5,
+    0.5,-0.5,
 ]);
 
 const buffer = gl.createBuffer();
 gl.bindBuffer(gl.ARRAY_BUFFER,buffer);
+
 gl.bufferData(gl.ARRAY_BUFFER,dataVertices,gl.STATIC_DRAW);
 
-const FSIZE = dataVertices.BYTES_PER_ELEMENT;
-
 const a_position = gl.getAttribLocation(program,'a_pos');
-const a_size = gl.getAttribLocation(program,'a_size');
-gl.vertexAttribPointer(a_position,2,gl.FLOAT,false,FSIZE * 3,0);
-gl.vertexAttribPointer(a_size,1,gl.FLOAT,false,FSIZE * 3,FSIZE * 2);
-
+gl.vertexAttribPointer(a_position,2,gl.FLOAT,false,0,0);
 gl.enableVertexAttribArray(a_position);
+
+const dataSize = new Float32Array([
+    10.0,
+    20.0,
+    30.0
+]);
+
+const bufferSize = gl.createBuffer();
+gl.bindBuffer(gl.ARRAY_BUFFER,bufferSize);
+gl.bufferData(gl.ARRAY_BUFFER,dataSize,gl.STATIC_DRAW);
+
+const a_size = gl.getAttribLocation(program,'a_size');
+gl.vertexAttribPointer(a_size,1,gl.FLOAT,false,0,0);
 gl.enableVertexAttribArray(a_size);
 
 
 gl.clearColor(0.0,0.0,0.0,1.0);
 gl.clear(gl.COLOR_BUFFER_BIT);
 
-
 gl.drawArrays(gl.POINTS,0,3);
 
 document.body.appendChild(canvas);
-
