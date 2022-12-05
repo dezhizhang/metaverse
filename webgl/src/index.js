@@ -5,83 +5,89 @@
  * :copyright: (c) 2022, Tungee
  * :date created: 2022-07-10 11:12:55
  * :last editor: 张德志
- * :date last edited: 2022-12-05 05:56:17
+ * :date last edited: 2022-12-05 21:05:33
  */
-import Matrix4 from '../lib/cuon-matrix.js'
-const canvas = document.createElement('canvas');
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
-
-const gl = canvas.getContext('webgl');
-
-const VERTEX_SHADER =
-    `
-    attribute vec4 a_pos;\n
-    uniform vec4 u_translate;\n
-    uniform vec4 u_rotate;\n
-    void main() {\n\
-    gl_Position = u_rotate*u_translate*a_pos;\n\
-}`;
-
-const FRAG_SHADER =
-    `
-    void main() {\n\
-    gl_FragColor = vec4(1.0,0.0,0.0,1.0);\n\
-}`;
-
-const vertex = gl.createShader(gl.VERTEX_SHADER);
-const frag = gl.createShader(gl.FRAGMENT_SHADER);
-
-gl.shaderSource(vertex,VERTEX_SHADER);
-gl.shaderSource(frag,FRAG_SHADER);
-
-gl.compileShader(vertex);
-gl.compileShader(frag);
-
-const program = gl.createProgram();
-gl.attachShader(program,vertex);
-gl.attachShader(program,frag);
+// ClickedPints.js (c) 2012 matsuda
+// Vertex shader program
+import '../lib/webgl-utils';
+import '../lib/webgl-debug';
+import {getWebGLContext,initShaders} from  '../lib/cuon-utils'
 
 
-gl.linkProgram(program);
-gl.useProgram(program);
+var VSHADER_SOURCE =
+  'attribute vec4 a_Position;\n' +
+  'void main() {\n' +
+  '  gl_Position = a_Position;\n' +
+  '  gl_PointSize = 10.0;\n' +
+  '}\n';
 
-const dataVertices = new Float32Array([
-    0.0,0.0,
-    0.3,0.3,
-    0.6,0.0,
-])
+// Fragment shader program
+var FSHADER_SOURCE =
+  'void main() {\n' +
+  '  gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);\n' +
+  '}\n';
 
+function main() {
+  // Retrieve <canvas> element
+  var canvas = document.createElement('canvas');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  
 
-const buffer = gl.createBuffer();
-gl.bindBuffer(gl.ARRAY_BUFFER,buffer);
-gl.bufferData(gl.ARRAY_BUFFER,dataVertices,gl.STATIC_DRAW);
+  // Get the rendering context for WebGL
+  var gl = getWebGLContext(canvas);
+  if (!gl) {
+    console.log('Failed to get the rendering context for WebGL');
+    return;
+  }
 
-const a_pos = gl.getAttribLocation(program,'a_pos');
-gl.vertexAttribPointer(a_pos,2,gl.FLOAT,false,0,0);
-gl.enableVertexAttribArray(a_pos);
+  // Initialize shaders
+  if (!initShaders(gl, VSHADER_SOURCE, FSHADER_SOURCE)) {
+    console.log('Failed to intialize shaders.');
+    return;
+  }
 
+  // // Get the storage location of a_Position
+  var a_Position = gl.getAttribLocation(gl.program, 'a_Position');
+  if (a_Position < 0) {
+    console.log('Failed to get the storage location of a_Position');
+    return;
+  }
 
-const u_translate = gl.getUniformLocation(program,'u_translate');
-const u_rotate = gl.getUniformLocation(program,'u_rotate')
+  // Register function (event handler) to be called on a mouse press
+  canvas.onmousedown = function(ev){ click(ev, gl, canvas, a_Position); };
 
+  // Specify the color for clearing <canvas>
+  gl.clearColor(0.0, 0.0, 0.0, 1.0);
 
-const matrix4 = new Matrix4('elements');
-const translate = matrix4.translate(0,0,0);
-const rotate = matrix4.rotate(0);
-console.log('translate',translate.elements)
-console.log(matrix4)
-gl.uniformMatrix4fv(u_translate,false,translate.elements);
-gl.uniformMatrix4fv(u_rotate,false,rotate.elements);
-console.log(matrix4)
+  // Clear <canvas>
+  gl.clear(gl.COLOR_BUFFER_BIT);
+  document.body.appendChild(canvas);
+}
 
+var g_points = []; // The array for the position of a mouse press
+function click(ev, gl, canvas, a_Position) {
+  var x = ev.clientX; // x coordinate of a mouse pointer
+  var y = ev.clientY; // y coordinate of a mouse pointer
+  var rect = ev.target.getBoundingClientRect() ;
 
+  x = ((x - rect.left) - canvas.width/2)/(canvas.width/2);
+  y = (canvas.height/2 - (y - rect.top))/(canvas.height/2);
+  // Store the coordinates to g_points array
+  g_points.push(x); g_points.push(y);
 
+  // Clear <canvas>
+  gl.clear(gl.COLOR_BUFFER_BIT);
 
-gl.clearColor(0,0,0,1);
-gl.clear(gl.COLOR_BUFFER_BIT);
+  var len = g_points.length;
+  for(var i = 0; i < len; i += 2) {
+    // Pass the position of a point to a_Position variable
+    gl.vertexAttrib3f(a_Position, g_points[i], g_points[i+1], 0.0);
 
+    // Draw
+    gl.drawArrays(gl.POINTS, 0, 1);
+  }
+ 
+}
 
-gl.drawArrays(gl.TRIANGLES,0,3);
-
-document.body.appendChild(canvas);
+main();

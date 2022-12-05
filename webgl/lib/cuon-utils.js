@@ -1,3 +1,12 @@
+/*
+ * :file description: 
+ * :name: /webgl/lib/cuon-utils.js
+ * :author: 张德志
+ * :copyright: (c) 2022, Tungee
+ * :date created: 2022-08-06 21:43:26
+ * :last editor: 张德志
+ * :date last edited: 2022-12-05 21:03:21
+ */
 // cuon-utils.js (c) 2012 kanda and matsuda
 /**
  * プログラムオブジェクトを生成し、カレントに設定する
@@ -6,7 +15,7 @@
  * @param fshader フラグメントシェーダのプログラム(文字列)
  * @return プログラムオブジェクトを生成し、カレントの設定に成功したらtrue
  */
-function initShaders(gl, vshader, fshader) {
+export function initShaders(gl, vshader, fshader) {
     var program = createProgram(gl, vshader, fshader);
     if (!program) {
         console.log('failed to create program');
@@ -130,7 +139,7 @@ function loadVariableLocations(gl, program) {
  * @param opt_debug デバッグ用の初期化をするか
  * @return 初期化を完了したGLコンテキスト
  */
-function getWebGLContext(canvas, opt_debug) {
+export function getWebGLContext(canvas, opt_debug) {
     // コンテキストを取得する
     var gl = WebGLUtils.setupWebGL(canvas);
     if (!gl) return null;
