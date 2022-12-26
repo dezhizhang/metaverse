@@ -1,112 +1,163 @@
 /*
- * :file description: 
+ * :file description:
  * :name: /threejs/src/index.js
  * :author: 张德志
  * :copyright: (c) 2022, Tungee
  * :date created: 2022-07-12 07:44:44
  * :last editor: 张德志
- * :date last edited: 2022-11-21 06:20:32
+ * :date last edited: 2022-12-26 09:23:36
  */
 import * as THREE from 'three';
-import gsap from 'gsap';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
-import * as dat from 'dat.gui';
 
-// const matrix4 = new THREE.Matrix4();
+let camera = null;
+let scene = null;
+let renderer = null;
 
-// console.log(matrix4);
+const AMOUNT = 6;
 
-// const line3 = new THREE.Line3();
-// line3.start = new THREE.Vector3(0,0,0);
-// line3.end = new THREE.Vector3(10,10,10);
- 
+function init() {
+    const aspect_ratio = window.innerWidth / window.innerHeight;
 
-// const center = new THREE.Vector3();
+    const width = (window.innerWidth / AMOUNT) * window.devicePixelRatio;
+    const height = (window.innerHeight / AMOUNT) * window.devicePixelRatio;
 
+    const cameras = [];
 
-// line3.getCenter(center);
+    for(let i=0;i < AMOUNT;i++) {
+        for(let j= 0;j < AMOUNT;j++) {
+            const subcamera = new THREE.PerspectiveCamera(45,aspect_ratio,0.1,10);
+            subcamera.viewport = new THREE.Vector4(
+                Math.floor(j * width),
+                Math.floor(i * height),
+                Math.ceil(width),
+                Math.ceil(height)
+            );
+            subcamera.position.x = j / AMOUNT - 0.5;
+            subcamera.position.y = 0.5 - i / AMOUNT;
+            subcamera.position.z = 1.5;
+            subcamera.position.multiplyScalar(2);
+            subcamera.lookAt(0,0,0);
+            subcamera.updateMatrixWorld();
+            cameras.push(subcamera);
+        }
+    }
 
-// const distance = line3.distance();
+    camera = new THREE.ArrayCamera(cameras);
+    camera.position.z  = 3;
 
-
-// console.log(center);
-
-// console.log('distance',distance);
-
-// const line3 = new THREE.Line3();
-// line3.start = new THREE.Vector3(0,0,0);
-// line3.end = new THREE.Vector3(10,10,10);
-
-
-// const center = new THREE.Vector3();
-// line3.getCenter(center);
-
-// const distance = line3.distance();
-
-// console.log('center',center);
-// console.log('distance',distance);
-
-// const ray = new THREE.Ray();
-
-// ray.origin = new THREE.Vector3(10,0,3);
-
-// ray.direction = new THREE.Vector3(1,1,1).normalize();
-
-// const p1 = new THREE.Vector3(20,0,0);
-// const p2 = new THREE.Vector3(0,0,10);
-// const p3 = new THREE.Vector3(0,30,0);
-
-// const result = ray.intersectTriangle(p1,p2,p3);
-// console.log('是否相交',result);
-
-// const  triangle = new THREE.Triangle();
-// triangle.a = new THREE.Vector3(20,0,0);
-// triangle.b = new THREE.Vector3(0,0,10);
-// triangle.c = new THREE.Vector3(0,30,0);
+    scene = new THREE.Scene();
+    // scene.add(new )
+    console.log(width,height);
 
 
-// const s = triangle.getArea();
-// const normal = new THREE.Vector3();
-// triangle.getNormal(normal);
-// console.log('三角形面和',s);
-// console.log('三角形法线',normal);
+}
 
-// const triangle = new THREE.Triangle();
-// triangle.a = new THREE.Vector3(20,0,0);
-// triangle.b = new THREE.Vector3(0,0,10);
-// triangle.c = new THREE.Vector3(0,30,0);
-
-// const s = triangle.getArea();
-// const normal = new THREE.Vector3();
-// triangle.getNormal(normal);
-
-// console.log('三角形面和',s);
-// console.log('三角形法线',normal);
-
-const plane = new THREE.Plane();
-
-
-const p1 = new THREE.Vector3(20,0,0);
-const p2 = new THREE.Vector3(0,0,10);
-const p3 = new THREE.Vector3(10,30,0);
-
-
-plane.setFromCoplanarPoints(p1,p2,p3);
-
-const point = new THREE.Vector3(20,100,300);
-
-const l = plane.distanceToPoint(point);
-
-
-console.log(plane.constant);
-
-console.log('点到平面的距离',l);
+init();
 
 
 
+// import * as THREE from 'three';
 
+// let camera, scene, renderer;
+// let mesh;
+// const AMOUNT = 6;
 
+// init();
+// animate();
 
+// function init() {
 
+//   for (let y = 0; y < AMOUNT; y++) {
+//     for (let x = 0; x < AMOUNT; x++) {
+//       const subcamera = new THREE.PerspectiveCamera(40, ASPECT_RATIO, 0.1, 10);
+//       subcamera.viewport = new THREE.Vector4(
+//         Math.floor(x * WIDTH),
+//         Math.floor(y * HEIGHT),
+//         Math.ceil(WIDTH),
+//         Math.ceil(HEIGHT),
+//       );
+//       subcamera.position.x = x / AMOUNT - 0.5;
+//       subcamera.position.y = 0.5 - y / AMOUNT;
+//       subcamera.position.z = 1.5;
+//       subcamera.position.multiplyScalar(2);
+//       subcamera.lookAt(0, 0, 0);
+//       subcamera.updateMatrixWorld();
+//       cameras.push(subcamera);
+//     }
+//   }
 
+//   camera = new THREE.ArrayCamera(cameras);
+//   camera.position.z = 3;
 
+//   scene = new THREE.Scene();
+
+//   scene.add(new THREE.AmbientLight(0x222244));
+
+//   const light = new THREE.DirectionalLight();
+//   light.position.set(0.5, 0.5, 1);
+//   light.castShadow = true;
+//   light.shadow.camera.zoom = 4; // tighter shadow map
+//   scene.add(light);
+
+//   const geometryBackground = new THREE.PlaneGeometry(100, 100);
+//   const materialBackground = new THREE.MeshPhongMaterial({ color: 0x000066 });
+
+//   const background = new THREE.Mesh(geometryBackground, materialBackground);
+//   background.receiveShadow = true;
+//   background.position.set(0, 0, -1);
+//   scene.add(background);
+
+//   const geometryCylinder = new THREE.CylinderGeometry(0.5, 0.5, 1, 32);
+//   const materialCylinder = new THREE.MeshPhongMaterial({ color: 0xff0000 });
+
+//   mesh = new THREE.Mesh(geometryCylinder, materialCylinder);
+//   mesh.castShadow = true;
+//   mesh.receiveShadow = true;
+//   scene.add(mesh);
+
+//   renderer = new THREE.WebGLRenderer();
+//   renderer.setPixelRatio(window.devicePixelRatio);
+//   renderer.setSize(window.innerWidth, window.innerHeight);
+//   renderer.shadowMap.enabled = true;
+//   document.body.appendChild(renderer.domElement);
+
+//   //
+
+//   window.addEventListener('resize', onWindowResize);
+// }
+
+// function onWindowResize() {
+//   const ASPECT_RATIO = window.innerWidth / window.innerHeight;
+//   const WIDTH = (window.innerWidth / AMOUNT) * window.devicePixelRatio;
+//   const HEIGHT = (window.innerHeight / AMOUNT) * window.devicePixelRatio;
+
+//   camera.aspect = ASPECT_RATIO;
+//   camera.updateProjectionMatrix();
+
+//   for (let y = 0; y < AMOUNT; y++) {
+//     for (let x = 0; x < AMOUNT; x++) {
+//       const subcamera = camera.cameras[AMOUNT * y + x];
+
+//       subcamera.viewport.set(
+//         Math.floor(x * WIDTH),
+//         Math.floor(y * HEIGHT),
+//         Math.ceil(WIDTH),
+//         Math.ceil(HEIGHT),
+//       );
+
+//       subcamera.aspect = ASPECT_RATIO;
+//       subcamera.updateProjectionMatrix();
+//     }
+//   }
+
+//   renderer.setSize(window.innerWidth, window.innerHeight);
+// }
+
+// function animate() {
+//   mesh.rotation.x += 0.005;
+//   mesh.rotation.z += 0.01;
+
+//   renderer.render(scene, camera);
+
+//   requestAnimationFrame(animate);
+// }
