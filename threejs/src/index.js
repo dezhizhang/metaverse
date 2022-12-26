@@ -1,163 +1,198 @@
-/*
- * :file description:
- * :name: /threejs/src/index.js
- * :author: 张德志
- * :copyright: (c) 2022, Tungee
- * :date created: 2022-07-12 07:44:44
- * :last editor: 张德志
- * :date last edited: 2022-12-26 09:23:36
- */
 import * as THREE from 'three';
 
-let camera = null;
-let scene = null;
-let renderer = null;
 
-const AMOUNT = 6;
+let container,stats;
 
-function init() {
-    const aspect_ratio = window.innerWidth / window.innerHeight;
+let camera,scene,renderer
 
-    const width = (window.innerWidth / AMOUNT) * window.devicePixelRatio;
-    const height = (window.innerHeight / AMOUNT) * window.devicePixelRatio;
-
-    const cameras = [];
-
-    for(let i=0;i < AMOUNT;i++) {
-        for(let j= 0;j < AMOUNT;j++) {
-            const subcamera = new THREE.PerspectiveCamera(45,aspect_ratio,0.1,10);
-            subcamera.viewport = new THREE.Vector4(
-                Math.floor(j * width),
-                Math.floor(i * height),
-                Math.ceil(width),
-                Math.ceil(height)
-            );
-            subcamera.position.x = j / AMOUNT - 0.5;
-            subcamera.position.y = 0.5 - i / AMOUNT;
-            subcamera.position.z = 1.5;
-            subcamera.position.multiplyScalar(2);
-            subcamera.lookAt(0,0,0);
-            subcamera.updateMatrixWorld();
-            cameras.push(subcamera);
-        }
-    }
-
-    camera = new THREE.ArrayCamera(cameras);
-    camera.position.z  = 3;
-
-    scene = new THREE.Scene();
-    // scene.add(new )
-    console.log(width,height);
-
-
-}
+let mesh;
 
 init();
 
+animate();
+
+function init() {
+    
+}
 
 
-// import * as THREE from 'three';
+// let container, stats;
 
 // let camera, scene, renderer;
+
 // let mesh;
-// const AMOUNT = 6;
 
 // init();
 // animate();
 
 // function init() {
+//   container = document.getElementById('container');
 
-//   for (let y = 0; y < AMOUNT; y++) {
-//     for (let x = 0; x < AMOUNT; x++) {
-//       const subcamera = new THREE.PerspectiveCamera(40, ASPECT_RATIO, 0.1, 10);
-//       subcamera.viewport = new THREE.Vector4(
-//         Math.floor(x * WIDTH),
-//         Math.floor(y * HEIGHT),
-//         Math.ceil(WIDTH),
-//         Math.ceil(HEIGHT),
-//       );
-//       subcamera.position.x = x / AMOUNT - 0.5;
-//       subcamera.position.y = 0.5 - y / AMOUNT;
-//       subcamera.position.z = 1.5;
-//       subcamera.position.multiplyScalar(2);
-//       subcamera.lookAt(0, 0, 0);
-//       subcamera.updateMatrixWorld();
-//       cameras.push(subcamera);
-//     }
-//   }
+//   //
 
-//   camera = new THREE.ArrayCamera(cameras);
-//   camera.position.z = 3;
+//   camera = new THREE.PerspectiveCamera(
+//     27,
+//     window.innerWidth / window.innerHeight,
+//     1,
+//     3500,
+//   );
+//   camera.position.z = 2750;
 
 //   scene = new THREE.Scene();
+//   scene.background = new THREE.Color(0x050505);
+//   scene.fog = new THREE.Fog(0x050505, 2000, 3500);
 
-//   scene.add(new THREE.AmbientLight(0x222244));
+//   //
 
-//   const light = new THREE.DirectionalLight();
-//   light.position.set(0.5, 0.5, 1);
-//   light.castShadow = true;
-//   light.shadow.camera.zoom = 4; // tighter shadow map
-//   scene.add(light);
+//   scene.add(new THREE.AmbientLight(0x444444));
 
-//   const geometryBackground = new THREE.PlaneGeometry(100, 100);
-//   const materialBackground = new THREE.MeshPhongMaterial({ color: 0x000066 });
+//   const light1 = new THREE.DirectionalLight(0xffffff, 0.5);
+//   light1.position.set(1, 1, 1);
+//   scene.add(light1);
 
-//   const background = new THREE.Mesh(geometryBackground, materialBackground);
-//   background.receiveShadow = true;
-//   background.position.set(0, 0, -1);
-//   scene.add(background);
+//   const light2 = new THREE.DirectionalLight(0xffffff, 1.5);
+//   light2.position.set(0, -1, 0);
+//   scene.add(light2);
 
-//   const geometryCylinder = new THREE.CylinderGeometry(0.5, 0.5, 1, 32);
-//   const materialCylinder = new THREE.MeshPhongMaterial({ color: 0xff0000 });
+//   //
 
-//   mesh = new THREE.Mesh(geometryCylinder, materialCylinder);
-//   mesh.castShadow = true;
-//   mesh.receiveShadow = true;
+//   const triangles = 500000;
+
+//   const geometry = new THREE.BufferGeometry();
+
+//   const positions = [];
+//   const normals = [];
+//   const colors = [];
+
+//   const color = new THREE.Color();
+
+//   const n = 800,
+//     n2 = n / 2; // triangles spread in the cube
+//   const d = 12,
+//     d2 = d / 2; // individual triangle size
+
+//   const pA = new THREE.Vector3();
+//   const pB = new THREE.Vector3();
+//   const pC = new THREE.Vector3();
+
+//   const cb = new THREE.Vector3();
+//   const ab = new THREE.Vector3();
+
+//   for (let i = 0; i < triangles; i++) {
+//     // positions
+
+//     const x = Math.random() * n - n2;
+//     const y = Math.random() * n - n2;
+//     const z = Math.random() * n - n2;
+
+//     const ax = x + Math.random() * d - d2;
+//     const ay = y + Math.random() * d - d2;
+//     const az = z + Math.random() * d - d2;
+
+//     const bx = x + Math.random() * d - d2;
+//     const by = y + Math.random() * d - d2;
+//     const bz = z + Math.random() * d - d2;
+
+//     const cx = x + Math.random() * d - d2;
+//     const cy = y + Math.random() * d - d2;
+//     const cz = z + Math.random() * d - d2;
+
+//     positions.push(ax, ay, az);
+//     positions.push(bx, by, bz);
+//     positions.push(cx, cy, cz);
+
+//     // flat face normals
+
+//     pA.set(ax, ay, az);
+//     pB.set(bx, by, bz);
+//     pC.set(cx, cy, cz);
+
+//     cb.subVectors(pC, pB);
+//     ab.subVectors(pA, pB);
+//     cb.cross(ab);
+
+//     cb.normalize();
+
+//     const nx = cb.x;
+//     const ny = cb.y;
+//     const nz = cb.z;
+
+//     normals.push(nx * 32767, ny * 32767, nz * 32767);
+//     normals.push(nx * 32767, ny * 32767, nz * 32767);
+//     normals.push(nx * 32767, ny * 32767, nz * 32767);
+
+//     // colors
+
+//     const vx = x / n + 0.5;
+//     const vy = y / n + 0.5;
+//     const vz = z / n + 0.5;
+
+//     color.setRGB(vx, vy, vz);
+
+//     colors.push(color.r * 255, color.g * 255, color.b * 255);
+//     colors.push(color.r * 255, color.g * 255, color.b * 255);
+//     colors.push(color.r * 255, color.g * 255, color.b * 255);
+//   }
+
+//   const positionAttribute = new THREE.Float32BufferAttribute(positions, 3);
+//   const normalAttribute = new THREE.Int16BufferAttribute(normals, 3);
+//   const colorAttribute = new THREE.Uint8BufferAttribute(colors, 3);
+
+//   normalAttribute.normalized = true; // this will map the buffer values to 0.0f - +1.0f in the shader
+//   colorAttribute.normalized = true;
+
+//   geometry.setAttribute('position', positionAttribute);
+//   geometry.setAttribute('normal', normalAttribute);
+//   geometry.setAttribute('color', colorAttribute);
+
+//   geometry.computeBoundingSphere();
+
+//   const material = new THREE.MeshPhongMaterial({
+//     color: 0xaaaaaa,
+//     specular: 0xffffff,
+//     shininess: 250,
+//     side: THREE.DoubleSide,
+//     vertexColors: true,
+//   });
+
+//   mesh = new THREE.Mesh(geometry, material);
 //   scene.add(mesh);
+
+//   //
 
 //   renderer = new THREE.WebGLRenderer();
 //   renderer.setPixelRatio(window.devicePixelRatio);
 //   renderer.setSize(window.innerWidth, window.innerHeight);
-//   renderer.shadowMap.enabled = true;
-//   document.body.appendChild(renderer.domElement);
+//   renderer.outputEncoding = THREE.sRGBEncoding;
 
-//   //
+//  document.body.appendChild(renderer.domElement);
+
+
 
 //   window.addEventListener('resize', onWindowResize);
 // }
 
 // function onWindowResize() {
-//   const ASPECT_RATIO = window.innerWidth / window.innerHeight;
-//   const WIDTH = (window.innerWidth / AMOUNT) * window.devicePixelRatio;
-//   const HEIGHT = (window.innerHeight / AMOUNT) * window.devicePixelRatio;
-
-//   camera.aspect = ASPECT_RATIO;
+//   camera.aspect = window.innerWidth / window.innerHeight;
 //   camera.updateProjectionMatrix();
-
-//   for (let y = 0; y < AMOUNT; y++) {
-//     for (let x = 0; x < AMOUNT; x++) {
-//       const subcamera = camera.cameras[AMOUNT * y + x];
-
-//       subcamera.viewport.set(
-//         Math.floor(x * WIDTH),
-//         Math.floor(y * HEIGHT),
-//         Math.ceil(WIDTH),
-//         Math.ceil(HEIGHT),
-//       );
-
-//       subcamera.aspect = ASPECT_RATIO;
-//       subcamera.updateProjectionMatrix();
-//     }
-//   }
 
 //   renderer.setSize(window.innerWidth, window.innerHeight);
 // }
 
+// //
+
 // function animate() {
-//   mesh.rotation.x += 0.005;
-//   mesh.rotation.z += 0.01;
+//   requestAnimationFrame(animate);
+
+//   render();
+//   stats.update();
+// }
+
+// function render() {
+//   const time = Date.now() * 0.001;
+
+//   mesh.rotation.x = time * 0.25;
+//   mesh.rotation.y = time * 0.5;
 
 //   renderer.render(scene, camera);
-
-//   requestAnimationFrame(animate);
 // }
