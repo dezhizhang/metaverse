@@ -1,198 +1,368 @@
 import * as THREE from 'three';
+import Stats from 'stats.js';
+import dat from 'dat.gui';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
 
-let container,stats;
 
-let camera,scene,renderer
+function planesFromMesh(vertices,indices) {
+  const n = indices.length / 3;
+  const result = new Array(n);
 
-let mesh;
+  for (let i = 0, j = 0; i < n; ++i, j += 3) {
+    const a = vertices[indices[j]],
+      b = vertices[indices[j + 1]],
+      c = vertices[indices[j + 2]];
 
-init();
+    result[i] = new THREE.Plane().setFromCoplanarPoints(a, b, c);
+  }
+  return result;
 
-animate();
+}
 
-function init() {
-    
+function createPlanes(n) {
+  const result = new Array(n);
+
+  for(let i=0;i !==n;++i) result[i] = new THREE.Plane();
+
+  return result;
 }
 
 
-// let container, stats;
-
-// let camera, scene, renderer;
-
-// let mesh;
-
-// init();
-// animate();
-
-// function init() {
-//   container = document.getElementById('container');
-
-//   //
-
-//   camera = new THREE.PerspectiveCamera(
-//     27,
-//     window.innerWidth / window.innerHeight,
-//     1,
-//     3500,
-//   );
-//   camera.position.z = 2750;
-
-//   scene = new THREE.Scene();
-//   scene.background = new THREE.Color(0x050505);
-//   scene.fog = new THREE.Fog(0x050505, 2000, 3500);
-
-//   //
-
-//   scene.add(new THREE.AmbientLight(0x444444));
-
-//   const light1 = new THREE.DirectionalLight(0xffffff, 0.5);
-//   light1.position.set(1, 1, 1);
-//   scene.add(light1);
-
-//   const light2 = new THREE.DirectionalLight(0xffffff, 1.5);
-//   light2.position.set(0, -1, 0);
-//   scene.add(light2);
-
-//   //
-
-//   const triangles = 500000;
-
-//   const geometry = new THREE.BufferGeometry();
-
-//   const positions = [];
-//   const normals = [];
-//   const colors = [];
-
-//   const color = new THREE.Color();
-
-//   const n = 800,
-//     n2 = n / 2; // triangles spread in the cube
-//   const d = 12,
-//     d2 = d / 2; // individual triangle size
-
-//   const pA = new THREE.Vector3();
-//   const pB = new THREE.Vector3();
-//   const pC = new THREE.Vector3();
-
-//   const cb = new THREE.Vector3();
-//   const ab = new THREE.Vector3();
-
-//   for (let i = 0; i < triangles; i++) {
-//     // positions
-
-//     const x = Math.random() * n - n2;
-//     const y = Math.random() * n - n2;
-//     const z = Math.random() * n - n2;
-
-//     const ax = x + Math.random() * d - d2;
-//     const ay = y + Math.random() * d - d2;
-//     const az = z + Math.random() * d - d2;
-
-//     const bx = x + Math.random() * d - d2;
-//     const by = y + Math.random() * d - d2;
-//     const bz = z + Math.random() * d - d2;
-
-//     const cx = x + Math.random() * d - d2;
-//     const cy = y + Math.random() * d - d2;
-//     const cz = z + Math.random() * d - d2;
-
-//     positions.push(ax, ay, az);
-//     positions.push(bx, by, bz);
-//     positions.push(cx, cy, cz);
-
-//     // flat face normals
-
-//     pA.set(ax, ay, az);
-//     pB.set(bx, by, bz);
-//     pC.set(cx, cy, cz);
-
-//     cb.subVectors(pC, pB);
-//     ab.subVectors(pA, pB);
-//     cb.cross(ab);
-
-//     cb.normalize();
-
-//     const nx = cb.x;
-//     const ny = cb.y;
-//     const nz = cb.z;
-
-//     normals.push(nx * 32767, ny * 32767, nz * 32767);
-//     normals.push(nx * 32767, ny * 32767, nz * 32767);
-//     normals.push(nx * 32767, ny * 32767, nz * 32767);
-
-//     // colors
-
-//     const vx = x / n + 0.5;
-//     const vy = y / n + 0.5;
-//     const vz = z / n + 0.5;
-
-//     color.setRGB(vx, vy, vz);
-
-//     colors.push(color.r * 255, color.g * 255, color.b * 255);
-//     colors.push(color.r * 255, color.g * 255, color.b * 255);
-//     colors.push(color.r * 255, color.g * 255, color.b * 255);
-//   }
-
-//   const positionAttribute = new THREE.Float32BufferAttribute(positions, 3);
-//   const normalAttribute = new THREE.Int16BufferAttribute(normals, 3);
-//   const colorAttribute = new THREE.Uint8BufferAttribute(colors, 3);
-
-//   normalAttribute.normalized = true; // this will map the buffer values to 0.0f - +1.0f in the shader
-//   colorAttribute.normalized = true;
-
-//   geometry.setAttribute('position', positionAttribute);
-//   geometry.setAttribute('normal', normalAttribute);
-//   geometry.setAttribute('color', colorAttribute);
-
-//   geometry.computeBoundingSphere();
-
-//   const material = new THREE.MeshPhongMaterial({
-//     color: 0xaaaaaa,
-//     specular: 0xffffff,
-//     shininess: 250,
-//     side: THREE.DoubleSide,
-//     vertexColors: true,
-//   });
-
-//   mesh = new THREE.Mesh(geometry, material);
-//   scene.add(mesh);
-
-//   //
-
-//   renderer = new THREE.WebGLRenderer();
-//   renderer.setPixelRatio(window.devicePixelRatio);
-//   renderer.setSize(window.innerWidth, window.innerHeight);
-//   renderer.outputEncoding = THREE.sRGBEncoding;
-
-//  document.body.appendChild(renderer.domElement);
+function assignTransformedPlanes(planesOut,planesIn,matrix) {
+  for (let i = 0, n = planesIn.length; i !== n; ++i)
+  planesOut[i].copy(planesIn[i]).applyMatrix4(matrix);
+}
 
 
+function cylindricalPlanes(n,innerRadius) {
+  const result = createPlanes(n);
+  for (let i = 0; i !== n; ++i) {
+    const plane = result[i],
+      angle = (i * Math.PI * 2) / n;
 
-//   window.addEventListener('resize', onWindowResize);
-// }
+    plane.normal.set(Math.cos(angle), 0, Math.sin(angle));
 
-// function onWindowResize() {
-//   camera.aspect = window.innerWidth / window.innerHeight;
-//   camera.updateProjectionMatrix();
+    plane.constant = innerRadius;
+  }
+  return result;
 
-//   renderer.setSize(window.innerWidth, window.innerHeight);
-// }
+}
 
-// //
+const planeToMatrix = (function () {
+  // creates a matrix that aligns X/Y to a given plane
 
-// function animate() {
-//   requestAnimationFrame(animate);
+  // temporaries:
+  const xAxis = new THREE.Vector3(),
+    yAxis = new THREE.Vector3(),
+    trans = new THREE.Vector3();
 
-//   render();
-//   stats.update();
-// }
+  return function planeToMatrix(plane) {
+    const zAxis = plane.normal,
+      matrix = new THREE.Matrix4();
 
-// function render() {
-//   const time = Date.now() * 0.001;
+    // Hughes & Moeller '99
+    // "Building an Orthonormal Basis from a Unit Vector."
 
-//   mesh.rotation.x = time * 0.25;
-//   mesh.rotation.y = time * 0.5;
+    if (Math.abs(zAxis.x) > Math.abs(zAxis.z)) {
+      yAxis.set(-zAxis.y, zAxis.x, 0);
+    } else {
+      yAxis.set(0, -zAxis.z, zAxis.y);
+    }
 
-//   renderer.render(scene, camera);
-// }
+    xAxis.crossVectors(yAxis.normalize(), zAxis);
+
+    plane.coplanarPoint(trans);
+    return matrix.set(
+      xAxis.x,
+      yAxis.x,
+      zAxis.x,
+      trans.x,
+      xAxis.y,
+      yAxis.y,
+      zAxis.y,
+      trans.y,
+      xAxis.z,
+      yAxis.z,
+      zAxis.z,
+      trans.z,
+      0,
+      0,
+      0,
+      1,
+    );
+  };
+})();
+
+// A regular tetrahedron for the clipping volume:
+
+const Vertices = [
+    new THREE.Vector3(+1, 0, +Math.SQRT1_2),
+    new THREE.Vector3(-1, 0, +Math.SQRT1_2),
+    new THREE.Vector3(0, +1, -Math.SQRT1_2),
+    new THREE.Vector3(0, -1, -Math.SQRT1_2),
+  ],
+  Indices = [0, 1, 2, 0, 2, 3, 0, 3, 1, 1, 3, 2],
+  Planes = planesFromMesh(Vertices, Indices),
+  PlaneMatrices = Planes.map(planeToMatrix),
+  GlobalClippingPlanes = cylindricalPlanes(5, 2.5),
+  Empty = Object.freeze([]);
+
+let camera,
+  scene,
+  renderer,
+  startTime,
+  stats,
+  object,
+  clipMaterial,
+  volumeVisualization,
+  globalClippingPlanes;
+
+function init() {
+  camera = new THREE.PerspectiveCamera(
+    36,
+    window.innerWidth / window.innerHeight,
+    0.25,
+    16,
+  );
+
+  camera.position.set(0, 1.5, 3);
+
+  scene = new THREE.Scene();
+
+  // Lights
+
+  scene.add(new THREE.AmbientLight(0xffffff, 0.3));
+
+  const spotLight = new THREE.SpotLight(0xffffff, 0.5);
+  spotLight.angle = Math.PI / 5;
+  spotLight.penumbra = 0.2;
+  spotLight.position.set(2, 3, 3);
+  spotLight.castShadow = true;
+  spotLight.shadow.camera.near = 3;
+  spotLight.shadow.camera.far = 10;
+  spotLight.shadow.mapSize.width = 1024;
+  spotLight.shadow.mapSize.height = 1024;
+  scene.add(spotLight);
+
+  const dirLight = new THREE.DirectionalLight(0xffffff, 0.5);
+  dirLight.position.set(0, 2, 0);
+  dirLight.castShadow = true;
+  dirLight.shadow.camera.near = 1;
+  dirLight.shadow.camera.far = 10;
+
+  dirLight.shadow.camera.right = 1;
+  dirLight.shadow.camera.left = -1;
+  dirLight.shadow.camera.top = 1;
+  dirLight.shadow.camera.bottom = -1;
+
+  dirLight.shadow.mapSize.width = 1024;
+  dirLight.shadow.mapSize.height = 1024;
+  scene.add(dirLight);
+
+  // Geometry
+
+  clipMaterial = new THREE.MeshPhongMaterial({
+    color: 0xee0a10,
+    shininess: 100,
+    side: THREE.DoubleSide,
+    // Clipping setup:
+    clippingPlanes: createPlanes(Planes.length),
+    clipShadows: true,
+  });
+
+  object = new THREE.Group();
+
+  const geometry = new THREE.BoxGeometry(0.18, 0.18, 0.18);
+
+  for (let z = -2; z <= 2; ++z)
+    for (let y = -2; y <= 2; ++y)
+      for (let x = -2; x <= 2; ++x) {
+        const mesh = new THREE.Mesh(geometry, clipMaterial);
+        mesh.position.set(x / 5, y / 5, z / 5);
+        mesh.castShadow = true;
+        object.add(mesh);
+      }
+
+  scene.add(object);
+
+  const planeGeometry = new THREE.PlaneGeometry(3, 3, 1, 1),
+    color = new THREE.Color();
+
+  volumeVisualization = new THREE.Group();
+  volumeVisualization.visible = false;
+
+  for (let i = 0, n = Planes.length; i !== n; ++i) {
+    const material = new THREE.MeshBasicMaterial({
+      color: color.setHSL(i / n, 0.5, 0.5).getHex(),
+      side: THREE.DoubleSide,
+
+      opacity: 0.2,
+      transparent: true,
+
+      // clip to the others to show the volume (wildly
+      // intersecting transparent planes look bad)
+      clippingPlanes: clipMaterial.clippingPlanes.filter(function (_, j) {
+        return j !== i;
+      }),
+
+      // no need to enable shadow clipping - the plane
+      // visualization does not cast shadows
+    });
+
+    const mesh = new THREE.Mesh(planeGeometry, material);
+    mesh.matrixAutoUpdate = false;
+
+    volumeVisualization.add(mesh);
+  }
+
+  scene.add(volumeVisualization);
+
+  const ground = new THREE.Mesh(
+    planeGeometry,
+    new THREE.MeshPhongMaterial({
+      color: 0xa0adaf,
+      shininess: 10,
+    }),
+  );
+  ground.rotation.x = -Math.PI / 2;
+  ground.scale.multiplyScalar(3);
+  ground.receiveShadow = true;
+  scene.add(ground);
+
+  // Renderer
+
+  const container = document.body;
+
+  renderer = new THREE.WebGLRenderer();
+  renderer.shadowMap.enabled = true;
+  renderer.setPixelRatio(window.devicePixelRatio);
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  window.addEventListener('resize', onWindowResize);
+  container.appendChild(renderer.domElement);
+  // Clipping setup:
+  globalClippingPlanes = createPlanes(GlobalClippingPlanes.length);
+  renderer.clippingPlanes = Empty;
+  renderer.localClippingEnabled = true;
+
+  // Stats
+
+  stats = new Stats();
+  container.appendChild(stats.dom);
+
+  // Controls
+
+  const controls = new OrbitControls(camera, renderer.domElement);
+  controls.minDistance = 1;
+  controls.maxDistance = 8;
+  controls.target.set(0, 1, 0);
+  controls.update();
+
+  // GUI
+
+  const gui = new dat.GUI(),
+    folder = gui.addFolder('Local Clipping'),
+    props = {
+      get Enabled() {
+        return renderer.localClippingEnabled;
+      },
+      set Enabled(v) {
+        renderer.localClippingEnabled = v;
+        if (!v) volumeVisualization.visible = false;
+      },
+
+      get Shadows() {
+        return clipMaterial.clipShadows;
+      },
+      set Shadows(v) {
+        clipMaterial.clipShadows = v;
+      },
+
+      get Visualize() {
+        return volumeVisualization.visible;
+      },
+      set Visualize(v) {
+        if (renderer.localClippingEnabled) volumeVisualization.visible = v;
+      },
+    };
+
+  folder.add(props, 'Enabled');
+  folder.add(props, 'Shadows');
+  folder.add(props, 'Visualize').listen();
+
+  gui.addFolder('Global Clipping').add(
+    {
+      get Enabled() {
+        return renderer.clippingPlanes !== Empty;
+      },
+      set Enabled(v) {
+        renderer.clippingPlanes = v ? globalClippingPlanes : Empty;
+      },
+    },
+    'Enabled',
+  );
+
+  // Start
+
+  startTime = Date.now();
+}
+
+function onWindowResize() {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+
+  renderer.setSize(window.innerWidth, window.innerHeight);
+}
+
+function setObjectWorldMatrix(object, matrix) {
+  // set the orientation of an object based on a world matrix
+
+  const parent = object.parent;
+  scene.updateMatrixWorld();
+  object.matrix.copy(parent.matrixWorld).invert();
+  object.applyMatrix4(matrix);
+}
+
+const transform = new THREE.Matrix4(),
+  tmpMatrix = new THREE.Matrix4();
+
+function animate() {
+  const currentTime = Date.now(),
+    time = (currentTime - startTime) / 1000;
+
+  requestAnimationFrame(animate);
+
+  object.position.y = 1;
+  object.rotation.x = time * 0.5;
+  object.rotation.y = time * 0.2;
+
+  object.updateMatrix();
+  transform.copy(object.matrix);
+
+  const bouncy = Math.cos(time * 0.5) * 0.5 + 0.7;
+  transform.multiply(tmpMatrix.makeScale(bouncy, bouncy, bouncy));
+
+  assignTransformedPlanes(clipMaterial.clippingPlanes, Planes, transform);
+
+  const planeMeshes = volumeVisualization.children;
+
+  for (let i = 0, n = planeMeshes.length; i !== n; ++i) {
+    tmpMatrix.multiplyMatrices(transform, PlaneMatrices[i]);
+    setObjectWorldMatrix(planeMeshes[i], tmpMatrix);
+  }
+
+  transform.makeRotationY(time * 0.1);
+
+  assignTransformedPlanes(
+    globalClippingPlanes,
+    GlobalClippingPlanes,
+    transform,
+  );
+
+  stats.begin();
+  renderer.render(scene, camera);
+  stats.end();
+}
+
+init();
+animate();
