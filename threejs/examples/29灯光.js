@@ -1,3 +1,12 @@
+/*
+ * :file description: 
+ * :name: /threejs/examples/29灯光.js
+ * :author: 张德志
+ * :copyright: (c) 2022, Tungee
+ * :date created: 2022-12-30 06:13:11
+ * :last editor: 张德志
+ * :date last edited: 2022-12-30 06:16:33
+ */
 // import * as THREE from 'three';
 // import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 // let scene,cube,camera,renderer;
@@ -109,7 +118,7 @@ function init() {
 
   renderer = new THREE.WebGLRenderer();
   renderer.setSize(window.innerWidth,window.innerHeight);
-
+  renderer.setPixelRatio(window.devicePixelRatio);
   
   controls = new OrbitControls(camera,renderer.domElement);
 
