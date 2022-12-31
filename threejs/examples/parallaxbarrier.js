@@ -1,3 +1,12 @@
+/*
+ * :file description: 
+ * :name: /threejs/examples/parallaxbarrier.js
+ * :author: 张德志
+ * :copyright: (c) 2022, Tungee
+ * :date created: 2022-12-31 19:31:23
+ * :last editor: 张德志
+ * :date last edited: 2022-12-31 19:45:31
+ */
 import * as THREE from 'three';
 
 import { ParallaxBarrierEffect } from 'three/examples/jsm/effects/ParallaxBarrierEffect.js';

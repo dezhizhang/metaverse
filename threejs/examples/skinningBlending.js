@@ -5,7 +5,7 @@
  * :copyright: (c) 2022, Tungee
  * :date created: 2022-12-31 15:36:52
  * :last editor: 张德志
- * :date last edited: 2022-12-31 16:48:12
+ * :date last edited: 2022-12-31 17:04:43
  */
 import * as THREE from 'three';
 import Stats from 'stats.js';
@@ -49,7 +49,7 @@ function init() {
 
   const mesh = new THREE.Mesh(
     new THREE.PlaneGeometry(100,100),
-    new THREE.MeshPhongMaterial({color:0x999999,depthWrite:false})
+    new THREE.MeshPhongMaterial({color:0x00000,depthWrite:false})
   )
   mesh.rotation.x = -Math.PI / 2;
   mesh.receiveShadow = true;
@@ -65,6 +65,9 @@ function init() {
     model.traverse(function (object) {
       if (object.isMesh) object.castShadow = true;
     });
+
+    model.position.set( 0, 0, 0 );
+		model.scale.set( 0.01, 0.01, 0.01 );
 
     skeleton = new THREE.SkeletonHelper(model);
     skeleton.visible = false;
@@ -84,6 +87,7 @@ function init() {
   renderer = new THREE.WebGLRenderer({ antialias: true });
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.background =  new THREE.Color(0x000000)
   renderer.outputEncoding = THREE.sRGBEncoding;
   renderer.shadowMap.enabled = true;
 
