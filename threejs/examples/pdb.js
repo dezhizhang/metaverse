@@ -1,3 +1,12 @@
+/*
+ * :file description: 
+ * :name: /threejs/examples/pdb.js
+ * :author: 张德志
+ * :copyright: (c) 2022, Tungee
+ * :date created: 2022-12-31 23:20:03
+ * :last editor: 张德志
+ * :date last edited: 2022-12-31 23:41:32
+ */
 import * as THREE from 'three';
 
 import { TrackballControls } from 'three/examples/jsm/controls/TrackballControls.js';
@@ -179,44 +188,6 @@ function loadMolecule(model) {
 
   })
 }
-
-
-// function loadMolecule(model) {
-
-
-//     positions = geometryBonds.getAttribute('position');
-
-//     const start = new THREE.Vector3();
-//     const end = new THREE.Vector3();
-
-//     for (let i = 0; i < positions.count; i += 2) {
-//       start.x = positions.getX(i);
-//       start.y = positions.getY(i);
-//       start.z = positions.getZ(i);
-
-//       end.x = positions.getX(i + 1);
-//       end.y = positions.getY(i + 1);
-//       end.z = positions.getZ(i + 1);
-
-//       start.multiplyScalar(75);
-//       end.multiplyScalar(75);
-
-//       const object = new THREE.Mesh(
-//         boxGeometry,
-//         new THREE.MeshPhongMaterial(0xffffff),
-//       );
-//       object.position.copy(start);
-//       object.position.lerp(end, 0.5);
-//       object.scale.set(5, 5, start.distanceTo(end));
-//       object.lookAt(end);
-//       root.add(object);
-//     }
-
-//     render();
-//   });
-// }
-
-//
 
 function onWindowResize() {
   camera.aspect = window.innerWidth / window.innerHeight;
