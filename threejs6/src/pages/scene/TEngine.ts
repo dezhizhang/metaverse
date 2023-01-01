@@ -5,7 +5,7 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-01-01 21:46:05
  * :last editor: 张德志
- * :date last edited: 2023-01-01 23:14:44
+ * :date last edited: 2023-01-01 23:26:53
  */
 import {
   WebGLRenderer,
@@ -18,8 +18,10 @@ import {
   AmbientLight,
   AxesHelper,
   GridHelper,
+  MOUSE,
 } from 'three';
 import Stats from 'stats.js';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 
 class TEngine {
   private dom: HTMLElement;
@@ -71,6 +73,14 @@ class TEngine {
     this.stats = new Stats();
     this.dom.appendChild(this.stats.dom);
 
+    // 初始化
+    const controls= new OrbitControls(this.camera,this.renderer.domElement);
+    controls.autoRotate = true;
+    controls.enableDamping = true;
+    controls.mouseButtons = {
+        LEFT:null as unknown as MOUSE,
+
+    }
 
 
     this.dom.appendChild(this.renderer.domElement);
@@ -81,6 +91,7 @@ class TEngine {
     const renderFn = () => {
         box.rotation.x += 0.001;
         this.stats.update();
+        controls.update();
         this.renderer.render(this.scene, this.camera);
         requestAnimationFrame(renderFn);
     }
