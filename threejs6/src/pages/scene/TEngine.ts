@@ -5,7 +5,7 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-01-01 21:46:05
  * :last editor: 张德志
- * :date last edited: 2023-01-01 22:22:19
+ * :date last edited: 2023-01-01 23:14:44
  */
 import {
   WebGLRenderer,
@@ -19,11 +19,13 @@ import {
   AxesHelper,
   GridHelper,
 } from 'three';
+import Stats from 'stats.js';
 
 class TEngine {
   private dom: HTMLElement;
   private renderer: WebGLRenderer;
   private scene: Scene;
+  private stats:Stats;
   private camera: PerspectiveCamera;
   constructor(dom: HTMLElement) {
     this.dom = dom;
@@ -65,6 +67,11 @@ class TEngine {
     const gridHelper:GridHelper = new GridHelper(500,10,'rgb(200,200,200)','rgb(100,100,100)');
     this.scene.add(gridHelper);
 
+    // 添加性能监控
+    this.stats = new Stats();
+    this.dom.appendChild(this.stats.dom);
+
+
 
     this.dom.appendChild(this.renderer.domElement);
     // this.render();
@@ -73,6 +80,7 @@ class TEngine {
 
     const renderFn = () => {
         box.rotation.x += 0.001;
+        this.stats.update();
         this.renderer.render(this.scene, this.camera);
         requestAnimationFrame(renderFn);
     }
