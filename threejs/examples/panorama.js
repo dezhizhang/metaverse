@@ -1,3 +1,12 @@
+/*
+ * :file description: 
+ * :name: /threejs/examples/panorama.js
+ * :author: 张德志
+ * :copyright: (c) 2023, Tungee
+ * :date created: 2023-01-01 19:09:41
+ * :last editor: 张德志
+ * :date last edited: 2023-01-01 19:17:28
+ */
 import * as THREE from 'three';
 
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
