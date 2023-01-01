@@ -5,7 +5,7 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-01-01 21:46:05
  * :last editor: 张德志
- * :date last edited: 2023-01-01 22:04:26
+ * :date last edited: 2023-01-01 22:22:19
  */
 import {
   WebGLRenderer,
@@ -15,6 +15,9 @@ import {
   BoxGeometry,
   MeshBasicMaterial,
   Vector3,
+  AmbientLight,
+  AxesHelper,
+  GridHelper,
 } from 'three';
 
 class TEngine {
@@ -46,18 +49,45 @@ class TEngine {
 
     const box: Mesh = new Mesh(
       new BoxGeometry(10, 10, 10),
-      new MeshBasicMaterial(),
+      new MeshBasicMaterial({color:'rgb(255,255,0)'}),
     );
 
+    const ambientLight:AmbientLight = new AmbientLight('rgb(255,255,255)',1);
+    this.scene.add(ambientLight);
+
     this.scene.add(box);
+    
+    // 添加坐标线
+    const axesHelper:AxesHelper = new AxesHelper(500);
+    this.scene.add(axesHelper);
+    
+    // 添加网格
+    const gridHelper:GridHelper = new GridHelper(500,10,'rgb(200,200,200)','rgb(100,100,100)');
+    this.scene.add(gridHelper);
+
 
     this.dom.appendChild(this.renderer.domElement);
-    this.render();
+    // this.render();
+  
+    window.addEventListener('resize',this.onWindowResize);
+
+    const renderFn = () => {
+        box.rotation.x += 0.001;
+        this.renderer.render(this.scene, this.camera);
+        requestAnimationFrame(renderFn);
+    }
+    renderFn();
   }
-  render() {
-    // requestAnimationFrame(this.render);
-    this.renderer.render(this.scene, this.camera);
+  onWindowResize() {
+    this.camera.aspect = window.innerWidth / window.innerHeight;
+	this.camera.updateProjectionMatrix();
+	this.renderer.setSize( window.innerWidth, window.innerHeight );
   }
+//   render() {
+   
+//     this.renderer.render(this.scene, this.camera);
+//     requestAnimationFrame(this.render);
+//   }
 }
 
 export default TEngine;
