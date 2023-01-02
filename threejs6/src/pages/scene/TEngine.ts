@@ -5,7 +5,7 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-01-01 21:46:05
  * :last editor: 张德志
- * :date last edited: 2023-01-02 22:21:46
+ * :date last edited: 2023-01-03 05:54:32
  */
 import {
   WebGLRenderer,
@@ -22,6 +22,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { basicObjectList } from './TBasicObject';
 import { lightsList } from './TLights';
 import { helperList } from './THelper';
+import { codeModelList } from './TCodeModel';
 
 class TEngine {
   private dom: HTMLElement;
@@ -53,7 +54,8 @@ class TEngine {
     this.camera.up = new Vector3(0, 1, 0);
 
     this.addObject(...lightsList);
-    this.addObject(...basicObjectList);
+    this.addObject(...codeModelList);
+    // this.addObject(...basicObjectList);
 
 
     // 添加坐标线
