@@ -5,7 +5,7 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-01-01 21:46:05
  * :last editor: 张德志
- * :date last edited: 2023-01-02 22:05:46
+ * :date last edited: 2023-01-02 22:21:46
  */
 import {
   WebGLRenderer,
@@ -35,6 +35,8 @@ class TEngine {
     this.renderer = new WebGLRenderer({ antialias: true });
     this.renderer.setSize(window.innerWidth, window.innerHeight);
     this.renderer.setPixelRatio(window.devicePixelRatio);
+    this.renderer.shadowMap.enabled = true;
+    
 
     // 创建场影
     this.scene = new Scene();
@@ -64,7 +66,7 @@ class TEngine {
 
     // 初始化
     const controls = new OrbitControls(this.camera, this.renderer.domElement);
-    
+
     this.dom.appendChild(this.renderer.domElement);
 
     window.addEventListener('resize', () => {
