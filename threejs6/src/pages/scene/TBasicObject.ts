@@ -5,7 +5,7 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-01-02 20:34:14
  * :last editor: 张德志
- * :date last edited: 2023-01-02 22:22:07
+ * :date last edited: 2023-01-02 22:33:20
  */
 
 import {
@@ -19,7 +19,7 @@ export const basicObjectList:Object3D[] = [];
 
 const stage:Mesh = new Mesh(
     new BoxGeometry(200,10,200),
-    new MeshStandardMaterial({color:'rgb(150,150,150)'})
+    new MeshStandardMaterial({color:'rgb(150,150,150)',roughness:0})
 );
 stage.receiveShadow = true;
 
