@@ -5,16 +5,13 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-01-01 21:46:05
  * :last editor: 张德志
- * :date last edited: 2023-01-03 05:54:32
+ * :date last edited: 2023-01-03 06:08:28
  */
 import {
   WebGLRenderer,
   Scene,
   PerspectiveCamera,
   Vector3,
-  AxesHelper,
-  GridHelper,
-  MOUSE,
   Object3D,
 } from 'three';
 import Stats from 'stats.js';

@@ -6,17 +6,58 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-01-03 05:49:44
  * :last editor: 张德志
- * :date last edited: 2023-01-03 05:51:52
+ * :date last edited: 2023-01-03 06:41:52
  */
-import { BufferGeometry, Mesh, MeshStandardMaterial, Object3D } from 'three';
+import { BufferAttribute, BufferGeometry, Mesh, MeshStandardMaterial, Object3D } from 'three';
 
+const size:number = 10;
 
 export const codeModelList:Object3D[] = [];
 
-const geometry:BufferGeometry = new BufferGeometry();
+const points:Float32List = new Float32Array( [
+    -size,size,size,
+    size,size,size,
+    size,size,-size,
+    -size,size,-size,
 
-const material:MeshStandardMaterial = new MeshStandardMaterial();
+    -size,-size,size,
+    size,-size,size,
+    size,-size,-size,
+    -size,-size,-size,
+
+]);
+
+const index:number[] = [
+    0,1,2,
+    2,3,0,
+
+    0,4,5,
+    5,1,0,
+
+    1,5,6,
+    6,2,1,
+
+    2,6,7,
+    7,3,2,
+
+    0,7,4,
+    0,3,7,
+
+    4,6,5,
+    7,6,4
+]
+
+const geometry:BufferGeometry = new BufferGeometry();
+geometry.setAttribute('position',new BufferAttribute(points,3));
+geometry.setAttribute('normal',new BufferAttribute(points,3));
+geometry.setIndex(index);
+
+const material:MeshStandardMaterial = new MeshStandardMaterial({
+    color:'white'
+});
 
 const codeBox:Mesh = new Mesh(geometry,material);
+codeBox.position.y = 10;
+
 
 codeModelList.push(codeBox);
