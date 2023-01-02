@@ -5,34 +5,33 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-01-01 21:46:05
  * :last editor: 张德志
- * :date last edited: 2023-01-01 23:26:53
+ * :date last edited: 2023-01-02 20:51:06
  */
 import {
   WebGLRenderer,
   Scene,
   PerspectiveCamera,
-  Mesh,
-  BoxGeometry,
-  MeshBasicMaterial,
   Vector3,
   AmbientLight,
   AxesHelper,
   GridHelper,
   MOUSE,
+  Object3D,
 } from 'three';
 import Stats from 'stats.js';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import { basicObjectList } from './TBasicObject';
 
 class TEngine {
   private dom: HTMLElement;
   private renderer: WebGLRenderer;
   private scene: Scene;
-  private stats:Stats;
+  private stats: Stats;
   private camera: PerspectiveCamera;
   constructor(dom: HTMLElement) {
     this.dom = dom;
     // 创建渲染器
-    this.renderer = new WebGLRenderer();
+    this.renderer = new WebGLRenderer({ antialias: true });
     this.renderer.setSize(window.innerWidth, window.innerHeight);
     this.renderer.setPixelRatio(window.devicePixelRatio);
 
@@ -46,27 +45,26 @@ class TEngine {
       0.1,
       1000,
     );
-    this.camera.position.set(20,20,20);
-    this.camera.lookAt(new Vector3(0,0,0));
-    this.camera.up = new Vector3(0,1,0);
-    
+    this.camera.position.set(20, 20, 20);
+    this.camera.lookAt(new Vector3(0, 0, 0));
+    this.camera.up = new Vector3(0, 1, 0);
 
-    const box: Mesh = new Mesh(
-      new BoxGeometry(10, 10, 10),
-      new MeshBasicMaterial({color:'rgb(255,255,0)'}),
-    );
-
-    const ambientLight:AmbientLight = new AmbientLight('rgb(255,255,255)',1);
+    const ambientLight: AmbientLight = new AmbientLight('rgb(255,255,255)', 1);
     this.scene.add(ambientLight);
+    this.addObject(...basicObjectList);
 
-    this.scene.add(box);
-    
+
     // 添加坐标线
-    const axesHelper:AxesHelper = new AxesHelper(500);
+    const axesHelper: AxesHelper = new AxesHelper(500);
     this.scene.add(axesHelper);
-    
+
     // 添加网格
-    const gridHelper:GridHelper = new GridHelper(500,10,'rgb(200,200,200)','rgb(100,100,100)');
+    const gridHelper: GridHelper = new GridHelper(
+      500,
+      10,
+      'rgb(200,200,200)',
+      'rgb(100,100,100)',
+    );
     this.scene.add(gridHelper);
 
     // 添加性能监控
@@ -74,39 +72,36 @@ class TEngine {
     this.dom.appendChild(this.stats.dom);
 
     // 初始化
-    const controls= new OrbitControls(this.camera,this.renderer.domElement);
+    const controls = new OrbitControls(this.camera, this.renderer.domElement);
     controls.autoRotate = true;
     controls.enableDamping = true;
     controls.mouseButtons = {
-        LEFT:null as unknown as MOUSE,
-
-    }
-
+      LEFT: (null as unknown) as MOUSE,
+    };
 
     this.dom.appendChild(this.renderer.domElement);
-    // this.render();
-  
-    window.addEventListener('resize',this.onWindowResize);
+
+    window.addEventListener('resize', () => {
+      this.camera.aspect = window.innerWidth / window.innerHeight;
+      this.camera.updateProjectionMatrix();
+      this.renderer.setSize(window.innerWidth, window.innerHeight);
+    });
 
     const renderFn = () => {
-        box.rotation.x += 0.001;
-        this.stats.update();
-        controls.update();
-        this.renderer.render(this.scene, this.camera);
-        requestAnimationFrame(renderFn);
-    }
+
+      this.stats.update();
+      controls.update();
+      this.renderer.render(this.scene, this.camera);
+      requestAnimationFrame(renderFn);
+    };
     renderFn();
   }
-  onWindowResize() {
-    this.camera.aspect = window.innerWidth / window.innerHeight;
-	this.camera.updateProjectionMatrix();
-	this.renderer.setSize( window.innerWidth, window.innerHeight );
+  // 添加几何体
+  addObject(...object: Object3D[]) {
+    object.forEach((element) => {
+      this.scene.add(element);
+    });
   }
-//   render() {
-   
-//     this.renderer.render(this.scene, this.camera);
-//     requestAnimationFrame(this.render);
-//   }
 }
 
 export default TEngine;
