@@ -5,14 +5,13 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-01-01 21:46:05
  * :last editor: 张德志
- * :date last edited: 2023-01-02 20:51:06
+ * :date last edited: 2023-01-02 22:05:46
  */
 import {
   WebGLRenderer,
   Scene,
   PerspectiveCamera,
   Vector3,
-  AmbientLight,
   AxesHelper,
   GridHelper,
   MOUSE,
@@ -21,6 +20,8 @@ import {
 import Stats from 'stats.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { basicObjectList } from './TBasicObject';
+import { lightsList } from './TLights';
+import { helperList } from './THelper';
 
 class TEngine {
   private dom: HTMLElement;
@@ -49,23 +50,13 @@ class TEngine {
     this.camera.lookAt(new Vector3(0, 0, 0));
     this.camera.up = new Vector3(0, 1, 0);
 
-    const ambientLight: AmbientLight = new AmbientLight('rgb(255,255,255)', 1);
-    this.scene.add(ambientLight);
+    this.addObject(...lightsList);
     this.addObject(...basicObjectList);
 
 
     // 添加坐标线
-    const axesHelper: AxesHelper = new AxesHelper(500);
-    this.scene.add(axesHelper);
-
-    // 添加网格
-    const gridHelper: GridHelper = new GridHelper(
-      500,
-      10,
-      'rgb(200,200,200)',
-      'rgb(100,100,100)',
-    );
-    this.scene.add(gridHelper);
+    this.addObject(...helperList);
+  
 
     // 添加性能监控
     this.stats = new Stats();
@@ -73,12 +64,7 @@ class TEngine {
 
     // 初始化
     const controls = new OrbitControls(this.camera, this.renderer.domElement);
-    controls.autoRotate = true;
-    controls.enableDamping = true;
-    controls.mouseButtons = {
-      LEFT: (null as unknown) as MOUSE,
-    };
-
+    
     this.dom.appendChild(this.renderer.domElement);
 
     window.addEventListener('resize', () => {
