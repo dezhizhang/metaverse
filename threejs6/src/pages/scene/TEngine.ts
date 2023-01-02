@@ -5,7 +5,7 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-01-01 21:46:05
  * :last editor: 张德志
- * :date last edited: 2023-01-03 06:08:28
+ * :date last edited: 2023-01-03 07:43:04
  */
 import {
   WebGLRenderer,
@@ -20,6 +20,7 @@ import { basicObjectList } from './TBasicObject';
 import { lightsList } from './TLights';
 import { helperList } from './THelper';
 import { codeModelList } from './TCodeModel';
+import { framePromise } from './TLoadModel';
 
 class TEngine {
   private dom: HTMLElement;
@@ -51,8 +52,12 @@ class TEngine {
     this.camera.up = new Vector3(0, 1, 0);
 
     this.addObject(...lightsList);
-    this.addObject(...codeModelList);
+    // this.addObject(...codeModelList);
     // this.addObject(...basicObjectList);
+    framePromise.then((group)=> {
+      // group.position.y = 10;
+      this.addObject(group as any);
+    });
 
 
     // 添加坐标线
