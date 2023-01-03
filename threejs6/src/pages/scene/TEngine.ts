@@ -5,7 +5,7 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-01-01 21:46:05
  * :last editor: 张德志
- * :date last edited: 2023-01-03 23:37:31
+ * :date last edited: 2023-01-04 05:53:19
  */
 import {
   WebGLRenderer,
@@ -14,6 +14,7 @@ import {
   Vector3,
   Object3D,
   Vector2,
+  Raycaster,
 } from 'three';
 import Stats from 'stats.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
@@ -74,10 +75,13 @@ class TEngine {
     const controls = new OrbitControls(this.camera, this.renderer.domElement);
 
     const transformControls = new TransformControls(this.camera,this.renderer.domElement);
+    this.scene.add(transformControls);
+
+    const raycaster = new Raycaster()
     // const target = new Object3D();
     // transformControls.attach(target);
     // this.scene.add(target);
-    // this.scene.add(transformControls);
+
     const mouse = new Vector2();
     this.renderer.domElement.addEventListener('mousemove',(event) => {
       const x = event.offsetX;
@@ -89,8 +93,21 @@ class TEngine {
       mouse.x = x / width * 2 - 1;
       mouse.y = -y * 2 / height + 1;
       
-      
-      const vector2 = new Vector2();
+      raycaster.setFromCamera(mouse,this.camera);
+      const intersect = raycaster.intersectObjects(this.scene.children);
+      if(intersect.length > 0) {
+        console.log(intersect)
+      }
+    });
+    
+    this.renderer.domElement.addEventListener('click',(event) => {
+      raycaster.setFromCamera(mouse,this.camera);
+      const intersect = raycaster.intersectObjects(this.scene.children);
+      if(intersect.length > 0) {
+        const object = intersect[0].object;
+        transformControls.attach(object);
+        console.log(intersect)
+      }
     })
     
 
