@@ -5,7 +5,7 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-01-01 21:46:05
  * :last editor: 张德志
- * :date last edited: 2023-01-03 07:43:04
+ * :date last edited: 2023-01-03 23:37:31
  */
 import {
   WebGLRenderer,
@@ -13,9 +13,11 @@ import {
   PerspectiveCamera,
   Vector3,
   Object3D,
+  Vector2,
 } from 'three';
 import Stats from 'stats.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import { TransformControls } from 'three/examples/jsm/controls/TransformControls';
 import { basicObjectList } from './TBasicObject';
 import { lightsList } from './TLights';
 import { helperList } from './THelper';
@@ -70,6 +72,28 @@ class TEngine {
 
     // 初始化
     const controls = new OrbitControls(this.camera, this.renderer.domElement);
+
+    const transformControls = new TransformControls(this.camera,this.renderer.domElement);
+    // const target = new Object3D();
+    // transformControls.attach(target);
+    // this.scene.add(target);
+    // this.scene.add(transformControls);
+    const mouse = new Vector2();
+    this.renderer.domElement.addEventListener('mousemove',(event) => {
+      const x = event.offsetX;
+      const y = event.offsetY;
+      
+      const width = this.renderer.domElement.offsetWidth;
+      const height = this.renderer.domElement.offsetHeight;
+
+      mouse.x = x / width * 2 - 1;
+      mouse.y = -y * 2 / height + 1;
+      
+      
+      const vector2 = new Vector2();
+    })
+    
+
 
     this.dom.appendChild(this.renderer.domElement);
 
