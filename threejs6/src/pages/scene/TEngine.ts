@@ -5,7 +5,7 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-01-01 21:46:05
  * :last editor: 张德志
- * :date last edited: 2023-01-04 05:53:19
+ * :date last edited: 2023-01-04 06:07:00
  */
 import {
   WebGLRenderer,
@@ -77,6 +77,9 @@ class TEngine {
     const transformControls = new TransformControls(this.camera,this.renderer.domElement);
     this.scene.add(transformControls);
 
+
+    let transing = false;
+
     const raycaster = new Raycaster()
     // const target = new Object3D();
     // transformControls.attach(target);
@@ -93,17 +96,23 @@ class TEngine {
       mouse.x = x / width * 2 - 1;
       mouse.y = -y * 2 / height + 1;
       
-      raycaster.setFromCamera(mouse,this.camera);
-      const intersect = raycaster.intersectObjects(this.scene.children);
-      if(intersect.length > 0) {
-        console.log(intersect)
-      }
+      // raycaster.setFromCamera(mouse,this.camera);
+      // const intersect = raycaster.intersectObjects(this.scene.children);
+      // if(intersect.length > 0) {
+      //   console.log(intersect)
+      // }
     });
     
     this.renderer.domElement.addEventListener('click',(event) => {
+      if(transing){
+        transing = false;
+        return;
+      } 
       raycaster.setFromCamera(mouse,this.camera);
+      this.scene.remove(transformControls);
       const intersect = raycaster.intersectObjects(this.scene.children);
-      if(intersect.length > 0) {
+      this.scene.remove(transformControls);
+      if(intersect.length) {
         const object = intersect[0].object;
         transformControls.attach(object);
         console.log(intersect)
