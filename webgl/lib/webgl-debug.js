@@ -1,10 +1,19 @@
+/*
+ * :file description: 
+ * :name: /webgl/lib/webgl-debug.js
+ * :author: 张德志
+ * :copyright: (c) 2023, Tungee
+ * :date created: 2022-08-06 21:43:26
+ * :last editor: 张德志
+ * :date last edited: 2023-01-04 23:33:14
+ */
 //Copyright (c) 2009 The Chromium Authors. All rights reserved.
 //Use of this source code is governed by a BSD-style license that can be
 //found in the LICENSE file.
 
 // Various functions for helping debug WebGL apps.
 
-WebGLDebugUtils = function() {
+const WebGLDebugUtils = function() {
 
     /**
      * Wrapped logging function.
@@ -674,3 +683,6 @@ WebGLDebugUtils = function() {
     };
 
 }();
+
+export default WebGLDebugUtils;
+

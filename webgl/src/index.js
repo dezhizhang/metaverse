@@ -2,46 +2,43 @@
  * :file description: 
  * :name: /webgl/src/index.js
  * :author: 张德志
- * :copyright: (c) 2022, Tungee
+ * :copyright: (c) 2023, Tungee
  * :date created: 2022-07-10 11:12:55
  * :last editor: 张德志
- * :date last edited: 2022-12-07 12:28:39
+ * :date last edited: 2023-01-04 23:35:19
  */
-// MultiTexture.js (c) 2012 matsuda and kanda
+// LookAtTriangles.js (c) 2012 matsuda
 // Vertex shader program
-const canvas = document.createElement('canvas');
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
-
-const VSHADER_SOURCE =
+var VSHADER_SOURCE =
   'attribute vec4 a_Position;\n' +
-  'attribute vec2 a_TexCoord;\n' +
-  'varying vec2 v_TexCoord;\n' +
+  'attribute vec4 a_Color;\n' +
+  'uniform mat4 u_ViewMatrix;\n' +
+  'varying vec4 v_Color;\n' +
   'void main() {\n' +
-  '  gl_Position = a_Position;\n' +
-  '  v_TexCoord = a_TexCoord;\n' +
+  '  gl_Position = u_ViewMatrix * a_Position;\n' +
+  '  v_Color = a_Color;\n' +
   '}\n';
 
 // Fragment shader program
-const FSHADER_SOURCE =
+var FSHADER_SOURCE =
   '#ifdef GL_ES\n' +
   'precision mediump float;\n' +
   '#endif\n' +
-  'uniform sampler2D u_Sampler0;\n' +
-  'uniform sampler2D u_Sampler1;\n' +
-  'varying vec2 v_TexCoord;\n' +
+  'varying vec4 v_Color;\n' +
   'void main() {\n' +
-  '  vec4 color0 = texture2D(u_Sampler0, v_TexCoord);\n' +
-  '  vec4 color1 = texture2D(u_Sampler1, v_TexCoord);\n' +
-  '  gl_FragColor = color0 * color1;\n' +
+  '  gl_FragColor = v_Color;\n' +
   '}\n';
+
+  import { initShaders } from '../lib/cuon-utils';
+  import Matrix4 from '../lib/cuon-matrix';
+  
 
 function main() {
   // Retrieve <canvas> element
   var canvas = document.getElementById('webgl');
 
   // Get the rendering context for WebGL
-  var gl = getWebGLContext(canvas);
+  const gl = canvas.getContext('webgl');
   if (!gl) {
     console.log('Failed to get the rendering context for WebGL');
     return;
@@ -53,7 +50,7 @@ function main() {
     return;
   }
 
-  // Set the vertex information
+  // Set the vertex coordinates and color (the blue triangle is in the front)
   var n = initVertexBuffers(gl);
   if (n < 0) {
     console.log('Failed to set the vertex information');
@@ -61,117 +58,81 @@ function main() {
   }
 
   // Specify the color for clearing <canvas>
-  gl.clearColor(0.0, 0.0, 0.0, 1.0);
+  gl.clearColor(0, 0, 0, 1);
 
-  // Set texture
-  if (!initTextures(gl, n)) {
-    console.log('Failed to intialize the texture.');
+  // Get the storage location of u_ViewMatrix
+  var u_ViewMatrix = gl.getUniformLocation(gl.program, 'u_ViewMatrix');
+  if (!u_ViewMatrix) { 
+    console.log('Failed to get the storage locations of u_ViewMatrix');
     return;
   }
+
+  // Set the matrix to be used for to set the camera view
+  var viewMatrix = new Matrix4();
+  viewMatrix.setLookAt(0.20, 0.25, 0.25, 0, 0, 0, 0, 1, 0);
+
+  // Set the view matrix
+  gl.uniformMatrix4fv(u_ViewMatrix, false, viewMatrix.elements);
+
+  // Clear <canvas>
+  gl.clear(gl.COLOR_BUFFER_BIT);
+
+  // Draw the rectangle
+  gl.drawArrays(gl.TRIANGLES, 0, n);
 }
 
 function initVertexBuffers(gl) {
-  var verticesTexCoords = new Float32Array([
-    // Vertex coordinate, Texture coordinate
-    -0.5,  0.5,   0.0, 1.0,
-    -0.5, -0.5,   0.0, 0.0,
-     0.5,  0.5,   1.0, 1.0,
-     0.5, -0.5,   1.0, 0.0,
+  var verticesColors = new Float32Array([
+    // Vertex coordinates and color(RGBA)
+     0.0,  0.5,  -0.4,  0.4,  1.0,  0.4, // The back green one
+    -0.5, -0.5,  -0.4,  0.4,  1.0,  0.4,
+     0.5, -0.5,  -0.4,  1.0,  0.4,  0.4, 
+   
+     0.5,  0.4,  -0.2,  1.0,  0.4,  0.4, // The middle yellow one
+    -0.5,  0.4,  -0.2,  1.0,  1.0,  0.4,
+     0.0, -0.6,  -0.2,  1.0,  1.0,  0.4, 
+
+     0.0,  0.5,   0.0,  0.4,  0.4,  1.0,  // The front blue one 
+    -0.5, -0.5,   0.0,  0.4,  0.4,  1.0,
+     0.5, -0.5,   0.0,  1.0,  0.4,  0.4, 
   ]);
-  var n = 4; // The number of vertices
+  var n = 9;
 
   // Create a buffer object
-  var vertexTexCoordBuffer = gl.createBuffer();
-  if (!vertexTexCoordBuffer) {
+  var vertexColorbuffer = gl.createBuffer();  
+  if (!vertexColorbuffer) {
     console.log('Failed to create the buffer object');
     return -1;
   }
 
-  // Write the positions of vertices to a vertex shader
-  gl.bindBuffer(gl.ARRAY_BUFFER, vertexTexCoordBuffer);
-  gl.bufferData(gl.ARRAY_BUFFER, verticesTexCoords, gl.STATIC_DRAW);
+  // Write the vertex coordinates and color to the buffer object
+  gl.bindBuffer(gl.ARRAY_BUFFER, vertexColorbuffer);
+  gl.bufferData(gl.ARRAY_BUFFER, verticesColors, gl.STATIC_DRAW);
 
-  var FSIZE = verticesTexCoords.BYTES_PER_ELEMENT;
-  //Get the storage location of a_Position, assign and enable buffer
+  var FSIZE = verticesColors.BYTES_PER_ELEMENT;
+  // Assign the buffer object to a_Position and enable the assignment
   var a_Position = gl.getAttribLocation(gl.program, 'a_Position');
-  if (a_Position < 0) {
+  if(a_Position < 0) {
     console.log('Failed to get the storage location of a_Position');
     return -1;
   }
-  gl.vertexAttribPointer(a_Position, 2, gl.FLOAT, false, FSIZE * 4, 0);
-  gl.enableVertexAttribArray(a_Position);  // Enable the assignment of the buffer object
+  gl.vertexAttribPointer(a_Position, 3, gl.FLOAT, false, FSIZE * 6, 0);
+  gl.enableVertexAttribArray(a_Position);
 
-  // Get the storage location of a_TexCoord
-  var a_TexCoord = gl.getAttribLocation(gl.program, 'a_TexCoord');
-  if (a_TexCoord < 0) {
-    console.log('Failed to get the storage location of a_TexCoord');
+  // Assign the buffer object to a_Color and enable the assignment
+  var a_Color = gl.getAttribLocation(gl.program, 'a_Color');
+  if(a_Color < 0) {
+    console.log('Failed to get the storage location of a_Color');
     return -1;
   }
-  gl.vertexAttribPointer(a_TexCoord, 2, gl.FLOAT, false, FSIZE * 4, FSIZE * 2);
-  gl.enableVertexAttribArray(a_TexCoord);  // Enable the buffer assignment
+  gl.vertexAttribPointer(a_Color, 3, gl.FLOAT, false, FSIZE * 6, FSIZE * 3);
+  gl.enableVertexAttribArray(a_Color);
+
+  // Unbind the buffer object
+  gl.bindBuffer(gl.ARRAY_BUFFER, null);
 
   return n;
 }
 
-function initTextures(gl, n) {
-  // Create a texture object
-  var texture0 = gl.createTexture(); 
-  var texture1 = gl.createTexture();
-  if (!texture0 || !texture1) {
-    console.log('Failed to create the texture object');
-    return false;
-  }
+main();
 
-  // Get the storage location of u_Sampler0 and u_Sampler1
-  var u_Sampler0 = gl.getUniformLocation(gl.program, 'u_Sampler0');
-  var u_Sampler1 = gl.getUniformLocation(gl.program, 'u_Sampler1');
-  if (!u_Sampler0 || !u_Sampler1) {
-    console.log('Failed to get the storage location of u_Sampler');
-    return false;
-  }
-
-  // Create the image object
-  var image0 = new Image();
-  var image1 = new Image();
-  if (!image0 || !image1) {
-    console.log('Failed to create the image object');
-    return false;
-  }
-  // Register the event handler to be called when image loading is completed
-  image0.onload = function(){ loadTexture(gl, n, texture0, u_Sampler0, image0, 0); };
-  image1.onload = function(){ loadTexture(gl, n, texture1, u_Sampler1, image1, 1); };
-  // Tell the browser to load an Image
-  image0.src = '../resources/sky.jpg';
-  image1.src = '../resources/circle.gif';
-
-  return true;
-}
-// Specify whether the texture unit is ready to use
-var g_texUnit0 = false, g_texUnit1 = false; 
-function loadTexture(gl, n, texture, u_Sampler, image, texUnit) {
-  gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1);// Flip the image's y-axis
-  // Make the texture unit active
-  if (texUnit == 0) {
-    gl.activeTexture(gl.TEXTURE0);
-    g_texUnit0 = true;
-  } else {
-    gl.activeTexture(gl.TEXTURE1);
-    g_texUnit1 = true;
-  }
-  // Bind the texture object to the target
-  gl.bindTexture(gl.TEXTURE_2D, texture);   
-
-  // Set texture parameters
-  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-  // Set the image to texture
-  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
-  
-  gl.uniform1i(u_Sampler, texUnit);   // Pass the texure unit to u_Sampler
-  
-  // Clear <canvas>
-  gl.clear(gl.COLOR_BUFFER_BIT);
-
-  if (g_texUnit0 && g_texUnit1) {
-    gl.drawArrays(gl.TRIANGLE_STRIP, 0, n);   // Draw the rectangle
-  }
-}

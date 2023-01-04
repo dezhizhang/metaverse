@@ -1,4 +1,13 @@
 /*
+ * :file description: 
+ * :name: /webgl/lib/webgl-utils.js
+ * :author: 张德志
+ * :copyright: (c) 2023, Tungee
+ * :date created: 2022-08-06 21:43:26
+ * :last editor: 张德志
+ * :date last edited: 2023-01-04 23:32:23
+ */
+/*
  * Copyright 2010, Google Inc.
  * All rights reserved.
  *
@@ -57,7 +66,7 @@
  * visible.
  */
 
-WebGLUtils = function() {
+const WebGLUtils = function() {
 
     /**
      * Creates the HTLM for a failure message
@@ -195,3 +204,6 @@ if (!window.cancelAnimationFrame) {
             window.oCancelAnimationFrame || window.oCancelRequestAnimationFrame ||
             window.clearTimeout);
 }
+
+
+export default WebGLUtils

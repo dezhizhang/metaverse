@@ -5,7 +5,7 @@
  * :copyright: (c) 2022, Tungee
  * :date created: 2022-08-06 21:43:26
  * :last editor: 张德志
- * :date last edited: 2022-12-05 21:03:21
+ * :date last edited: 2023-01-04 23:34:07
  */
 // cuon-utils.js (c) 2012 kanda and matsuda
 /**
@@ -15,6 +15,9 @@
  * @param fshader フラグメントシェーダのプログラム(文字列)
  * @return プログラムオブジェクトを生成し、カレントの設定に成功したらtrue
  */
+import  WebGLUtils from './webgl-utils'
+import WebGLDebugUtils from './webgl-debug';
+
 export function initShaders(gl, vshader, fshader) {
     var program = createProgram(gl, vshader, fshader);
     if (!program) {
