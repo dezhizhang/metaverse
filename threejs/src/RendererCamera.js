@@ -1,17 +1,7 @@
-/*
- * :file description:
- * :name: /threejs/src/index.js
- * :author: 张德志
- * :copyright: (c) 2023, Tungee
- * :date created: 2022-07-12 07:44:44
- * :last editor: 张德志
- * :date last edited: 2023-01-10 07:46:52
- */
+// 引入Three.js
 import * as THREE from 'three';
-import { model } from './model.js';
-
+// 引入Three.js扩展库
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-
 
 // width和height用来设置Three.js输出Canvas画布尺寸，同时用来辅助设置相机渲染范围
 var width = window.innerWidth; //窗口文档显示区的宽度
@@ -56,34 +46,4 @@ window.onresize=function(){
   // 如果相机的一些属性发生了变化，需要执行updateProjectionMatrix ()方法更新相机的投影矩阵
   camera.updateProjectionMatrix ();
 };
-/**
- * 创建场景对象Scene
- */
-var scene = new THREE.Scene();
-scene.add(model); //三维模型添加到场景中
-/**
- * 光源设置
- */
-// 平行光1
-var directionalLight = new THREE.DirectionalLight(0xffffff, 0.3);
-directionalLight.position.set(400, 200, 300);
-scene.add(directionalLight);
-// 平行光2
-var directionalLight2 = new THREE.DirectionalLight(0xffffff, 0.6);
-directionalLight2.position.set(-300, 600, -300);
-scene.add(directionalLight2);
-//环境光
-var ambient = new THREE.AmbientLight(0xffffff, 0.5);
-scene.add(ambient);
-
-// Three.js三维坐标轴 三个坐标轴颜色RGB分别对应xyz轴
-var axesHelper = new THREE.AxesHelper(250);
-scene.add(axesHelper);
-
-// 渲染循环
-function render() {
-  renderer.render(scene, camera); //执行渲染操作
-  requestAnimationFrame(render); //请求再次执行渲染函数render，渲染下一帧
-  // console.log(camera.position);//通过相机控件OrbitControls旋转相机，选择一个合适场景渲染角度
-}
-render();
+export { renderer, camera };
