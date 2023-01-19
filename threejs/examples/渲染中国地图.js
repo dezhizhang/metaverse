@@ -3,29 +3,20 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { line } from './line.js';
 import { ExtrudeMesh } from './ExtrudeMesh.js';
-import { cityPointMesh } from './cityPointMesh.js';
 
-
-const mapHeight = 0.8;//拉伸高度
-//  创建场景
 const scene = new THREE.Scene();
-// 创建加载器
 const loader = new THREE.FileLoader();
 loader.setResponseType('json');
-
 const mapGroup = new THREE.Group();
 scene.add(mapGroup);
 
-// 创建线的group
 const lineGroup = new THREE.Group();
 mapGroup.add(lineGroup);
 
 const meshGroup = new THREE.Group();
 mapGroup.add(meshGroup);
-lineGroup.position.z = mapHeight * 0.1;
-
-loader.load('https://tugua.oss-cn-hangzhou.aliyuncs.com/model/china.json', function (data) {
-  // 访问所有省份边界坐标数据：data.features
+lineGroup.position.z = 1 + 0.1;
+loader.load('https://tugua.oss-cn-hangzhou.aliyuncs.com/model/china.json',function(data) {
   data.features.forEach(function (area) {
     // "Polygon"：省份area有一个封闭轮廓
     //"MultiPolygon"：省份area有多个封闭轮廓
@@ -35,26 +26,21 @@ loader.load('https://tugua.oss-cn-hangzhou.aliyuncs.com/model/china.json', funct
     }
     // 解析所有封闭轮廓边界坐标area.geometry.coordinates
     lineGroup.add(line(area.geometry.coordinates));//省份边界轮廓插入组对象mapGroup
-    // mapHeight：根据行政区尺寸范围设置，比如高度设置为地图尺寸范围的2%、5%等，过小感觉不到高度，过大太高了
-    meshGroup.add(ExtrudeMesh(area.geometry.coordinates, mapHeight));//省份轮廓拉伸Mesh插入组对象mapGroup
+    // height：根据行政区尺寸范围设置，比如高度设置为地图尺寸范围的2%、5%等，过小感觉不到高度，过大太高了
+    var height = 1;//拉伸高度
 
-    console.log(area);
-
-    // 标注出来省份的行政中心
-    var pos = area.properties.cp;//每个省份行政中心位置经纬度
-    var size = 1.2;//大小根据地图尺寸范围设置或者说相机渲染范围
-    console.log(pos);
-    var mesh = cityPointMesh(size, pos[0], pos[1]);
-    mesh.position.z = mapHeight + mapHeight * 0.01;
-    // mapGroup.add(mesh);
+    var mesh = ExtrudeMesh(area.geometry.coordinates, height)
+    // mesh.material.transparent = true;
+    // mesh.material.opacity = 0.6;// 半透明效果/
+    meshGroup.add(mesh);//省份轮廓拉伸Mesh插入组对象mapGroup
   });
   // 地图底部边界线
   var lineGroup2 = lineGroup.clone();
   mapGroup.add(lineGroup2);
-  lineGroup2.position.z = -mapHeight * 0.1;//适当偏移解决深度冲突
+  lineGroup2.position.z = -0.1;//适当偏移解决深度冲突
 });
 
-// 平行光1
+// 设置光线
 const directionalLight = new THREE.DirectionalLight(0xffffff,0.6);
 directionalLight.position.set(400,200,300);
 scene.add(directionalLight);
@@ -64,21 +50,26 @@ const directionalLight2 = new THREE.DirectionalLight(0xffffff,0.6);
 directionalLight2.position.set(-400,-200,-300);
 scene.add(directionalLight2);
 
+// 设置环境光
 const ambient = new THREE.AmbientLight(0xffffff,0.6);
 scene.add(ambient);
 
+// 辅助坐标
 const axesHelper = new THREE.AxesHelper(300);
 scene.add(axesHelper);
 
+
 const width = window.innerWidth;
 const height = window.innerHeight;
-
 const k = width / height;
-const s = 200;
+// const s = 200;
+const s = 15;
 const camera = new THREE.OrthographicCamera(-s * k, s * k, s, -s, 1, 1000);
-camera.position.set(104,-105,200);
-camera.lookAt(104,35,0);
+camera.position.set(104, -105, 200);
+camera.lookAt(104, 35, 0);
 
+
+// 创建沉浸器
 const renderer = new THREE.WebGLRenderer({
   antialias:true
 });
@@ -89,10 +80,11 @@ document.body.appendChild(renderer.domElement);
 function render() {
   renderer.render(scene,camera);
   requestAnimationFrame(render);
+
 }
 
 render();
-
 const controls = new OrbitControls(camera,renderer.domElement);
-controls.target.set(109,35,0);
+controls.target.set(104,35,0);
 controls.update();
+
