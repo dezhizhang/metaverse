@@ -17,47 +17,40 @@ scene.add(directionalLight2);
 const ambient = new THREE.AmbientLight(0xffffff,0.3);
 scene.add(ambient);
 
-
 // 三维坐标轴
 const axesHelper = new THREE.AxesHelper(300);
 scene.add(axesHelper);
 
-const model = new THREE.Group();
-const geometry = new THREE.CylinderGeometry(50, 50, 20, 40, 1, true);
-geometry.translate(0, 10, 0);
-const material = new THREE.MeshLambertMaterial({
-  color: 0x00ffff, //颜色
-  side: THREE.DoubleSide, //两面可见
-});
-const mesh = new THREE.Mesh(geometry,material);
-scene.add(mesh);
-scene.add(model);
-
-function plane() {
-  const gridHelper = new THREE.GridHelper(300, 15, 0x003333, 0x003333);
-  model.add(gridHelper);
-  const geometry = new THREE.PlaneGeometry(310,310);
+function createConeMesh(size) {
+  const height = size * 4;
+  const geometry = new THREE.ConeGeometry(size,height,4);
+  geometry.rotateX(-Math.PI / 2);
+  geometry.translate(0,0,height / 2);
   const material = new THREE.MeshLambertMaterial({
-    color:0xffffff,
-    transparent:true,
-    opacity:0.1,
-    side:THREE.DoubleSide
+    color:0x22ffcc
   });
   const mesh = new THREE.Mesh(geometry,material);
-  mesh.position.y = 1;
-  model.add(mesh);
-  mesh.rotateX(-Math.PI / 2);
+
+  function animation() {
+    mesh.rotateZ(0.05);
+    requestAnimationFrame(animation);
+  }
+  animation();
+  return mesh;
 }
+
+const model = new THREE.Group();
+const coneMesh = createConeMesh(10);
+model.add(coneMesh);
+scene.add(model);
 
 const width = window.innerWidth;
 const height = window.innerHeight;
 
 const camera = new THREE.PerspectiveCamera(30, width / height,1,3000);
-camera.position.set(292,233,185);
+camera.position.set(292,233,285);
 camera.lookAt(scene.position);
 
-
-// 创建沉浸对像
 const renderer = new THREE.WebGLRenderer({
   antialias:true
 });
@@ -71,8 +64,8 @@ const controls = new OrbitControls(camera,renderer.domElement);
 window.onresize = function() {
   renderer.setSize(window.innerWidth,window.innerHeight);
   camera.aspect = window.innerWidth / window.innerHeight;
-
   camera.updateProjectionMatrix();
+
 }
 
 function render() {
@@ -81,3 +74,4 @@ function render() {
 }
 
 render();
+
