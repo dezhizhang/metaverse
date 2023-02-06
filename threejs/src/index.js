@@ -1,153 +1,241 @@
+/*
+ * :file description: 
+ * :name: /threejs/src/index.js
+ * :author: 张德志
+ * :copyright: (c) 2023, Tungee
+ * :date created: 2022-07-12 07:44:44
+ * :last editor: 张德志
+ * :date last edited: 2023-02-06 23:34:46
+ */
 import  * as THREE from 'three';
 import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls.js';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import output_fragment from './output_fragment.glsl.js';
 
 
 const scene = new THREE.Scene();
-// 平行光1
+
+// 光源设置
 const directionalLight = new THREE.DirectionalLight(0xffffff,0.8);
-directionalLight.position.set(400, 200, 300);
+directionalLight.position.set(200, 400, 300);
 scene.add(directionalLight);
 
+// 平行光1
+const directionalLight2 = new THREE.DirectionalLight(0xffffff,0.8);
+directionalLight2.position.set(-200, -400, 300);
+scene.add(directionalLight2);
 
-// // 平行光2
-// var directionalLight2 = new THREE.DirectionalLight(0xffffff, 0.8);
-// directionalLight2.position.set(-400, -200, -300);
-// scene.add(directionalLight2);
-// //环境光
-// var ambient = new THREE.AmbientLight(0xffffff, 0.3);
-// scene.add(ambient);
+// 环境光
+const ambient = new THREE.AmbientLight(0xffffff,0.3);
+scene.add(ambient);
 
-// // Three.js三维坐标轴 三个坐标轴颜色RGB分别对应xyz轴
-// var axesHelper = new THREE.AxesHelper(250);
-// scene.add(axesHelper);
+//三维坐标轴
+const axesHelper = new THREE.AxesHelper(3000);
+const E = 121.49526536464691; 
+const N =  31.24189350905988;
+const xy = lon2xy(E, N);
+const x = xy.x;
+const y = xy.y;
+axesHelper.position.set(x,y,0);
+scene.add(axesHelper);
 
-var model = new THREE.Group(); //声明一个组对象
-/**
- * 创建线条模型
- */
-var geometry = new THREE.BufferGeometry(); //创建一个缓冲类型几何体
-// 三维样条曲线
-var curve = new THREE.CatmullRomCurve3([
-  new THREE.Vector3(100, 0, -100),
-  new THREE.Vector3(0, 80, 0),
-  new THREE.Vector3(-100, 0, 100),
-]);
-//曲线上等间距返回多个顶点坐标
-var points = curve.getSpacedPoints(100); //分段数100，返回101个顶点
-// setFromPoints方法从points中提取数据赋值给attributes.position
-geometry.setFromPoints(points);
-var material = new THREE.LineBasicMaterial({
-  color: 0x006666, //轨迹颜色
+function lon2xy(longitude,latitude) {
+  const E = longitude;
+  const N = latitude;
+  const x = E * 20037508.34 / 180;
+  let y = Math.log(Math.tan((90 + N) * Math.PI / 360)) / (Math.PI / 180);
+  y = y *  20037508.34 / 180;
+  return {
+    x,
+    y
+  }
+}
+
+const model = new THREE.Group();
+const loader = new THREE.FileLoader();
+loader.setResponseType('json');
+loader.load('https://tugua.oss-cn-hangzhou.aliyuncs.com/model/shanghai.json',function(data) {
+  const buildGroup = new THREE.Group();
+  data.features.forEach(build => {
+    if(build.geometry) {
+      if(build.geometry.type === 'Polygon') {
+        build.geometry.coordinates = [build.geometry.coordinates];
+      }
+      const height = build.properties.Floor * 3;
+      buildGroup.add(ExtrudeMesh(build.geometry.coordinates,height));
+    }
+  });
+  model.add(buildGroup);
+  
 });
-//线条模型对象
-var line = new THREE.Line(geometry, material);
-model.add(line);
+
+//黄浦江
+loader.load('https://tugua.oss-cn-hangzhou.aliyuncs.com/model/huangpu-river.json',function(data) {
+  const buildGroup = new THREE.Group();
+  data.features.forEach(build => {
+    if(build.geometry) {
+      if(build.geometry.type === 'Polygon') {
+        build.geometry.coordinates = [build.geometry.coordinates];
+      }
+      buildGroup.add(ShapeMesh(build.geometry.coordinates));
+    }
+  });
+  model.add(buildGroup);
+});
+
+function ShapeMesh(pointsArrs) {
+  let shapeArr = [];
+  pointsArrs.forEach(pointsArr => {
+    let vector2Arr = [];
+    pointsArr[0].forEach(elem => {
+      let xy = lon2xy(elem[0],elem[1]);
+      vector2Arr.push(new THREE.Vector2(xy.x,xy.y));
+    });
+    const shape = new THREE.Shape(vector2Arr);
+    shapeArr.push(shape);
+  });
+
+  const geometry = new THREE.ShapeGeometry(shapeArr);
+  const material = new THREE.MeshLambertMaterial({
+    color:0x001c1a
+  });
+  const mesh = new THREE.Mesh(geometry,material);
+  return mesh
+}
+
+const flyGroup = new THREE.Group();
+const mixer = null;
+const loader1 = new GLTFLoader();
+loader1.load('https://tugua.oss-cn-hangzhou.aliyuncs.com/model/fly.glb',function(gltf) {
+  const fly = gltf.scene();
+
+  fly.scale.set(4,4,4);
+  fly.position.x = -28 * 4;
+  flyGroup.add(fly);
+  fly.traverse(function(child) {
+    if(child.isMesh) {
+      const material = child.material;
+      child.material = new THREE.MeshLambertMaterial({
+        color:material.color
+      })
+    }
+  });
+  mixer = new THREE.AnimationMixer(fly);
+  const AnimationAction = mixer.clipAction(gltf.animations[0]);
+  AnimationAction.timeScale = 15;
+  AnimationAction.play();
+  model.add(flyGroup);
+})
+
+
 scene.add(model);
 
 
 
-var index = 20; //取点索引位置
-var num = 15; //从曲线上获取点数量
-var points2 = points.slice(index, index + num); //从曲线上获取一段
-var curve = new THREE.CatmullRomCurve3(points2);
-var newPoints2 = curve.getSpacedPoints(100); //获取更多的点数
-var geometry2 = new THREE.BufferGeometry();
-geometry2.setFromPoints(newPoints2);
-// 每个顶点对应一个百分比数据attributes.percent 用于控制点的渲染大小
-var percentArr = []; //attributes.percent的数据
-for (var i = 0; i < newPoints2.length; i++) {
-  percentArr.push(i / newPoints2.length);
+var clock = new THREE.Clock();
+function UpdateLoop() {
+    if (mixer !== null) {
+        //clock.getDelta()方法获得两帧的时间间隔
+        mixer.update(clock.getDelta());
+    }
+    requestAnimationFrame(UpdateLoop);
 }
-var percentAttribue = new THREE.BufferAttribute(new Float32Array(percentArr), 1);
-geometry2.attributes.percent = percentAttribue;
-// 批量计算所有顶点颜色数据
-var colorArr = [];
-for (var i = 0; i < newPoints2.length; i++) {
-  var color1 = new THREE.Color(0x006666); //轨迹线颜色 青色
-  var color2 = new THREE.Color(0xffff00); //黄色
-  var color = color1.lerp(color2, i / newPoints2.length)
-  colorArr.push(color.r, color.g, color.b);
-}
-// 设置几何体顶点颜色数据
-geometry2.attributes.color = new THREE.BufferAttribute(new Float32Array(colorArr), 3);
+UpdateLoop();
 
-// 点模型渲染几何体每个顶点
-var PointsMaterial = new THREE.PointsMaterial({
-  // color: 0xffff00,
-  size: 5.0, //点大小
-  vertexColors: THREE.VertexColors, //使用顶点颜色渲染
+// 一直无人机数据：经纬度和高度
+var height = 300;//无人机飞行高度300米
+// var E = 121.49526536464691; //无人机经纬度坐标
+// var N = 31.24189350905988;
+// var xy = lon2xy(E, N);
+// var x = xy.x;
+// var y = xy.y;
+// 设置无人机坐标
+flyGroup.position.set(x, y, height);
+
+// 姿态调整
+flyGroup.rotateX(Math.PI/2);
+
+
+var material = new THREE.MeshLambertMaterial({
+  color: 0x00ffff, //颜色
 });
-var flyPoints = new THREE.Points(geometry2, PointsMaterial);
-model.add(flyPoints);
-// 修改点材质的着色器源码(注意：不同版本细节可能会稍微会有区别，不过整体思路是一样的)
-PointsMaterial.onBeforeCompile = function (shader) {
-  // 顶点着色器中声明一个attribute变量:百分比
+// GPU执行material对应的着色器代码前，通过.onBeforeCompile()插入新的代码，修改已有的代码
+material.onBeforeCompile = function (shader) {
+  // 浏览器控制台打印着色器代码
+  // console.log('shader.fragmentShader', shader.fragmentShader)
+  // 顶点位置坐标position类似uv坐标进行插值计算，用于在片元着色器中控制片元像素
   shader.vertexShader = shader.vertexShader.replace(
     'void main() {',
-    [
-      'attribute float percent;', //顶点大小百分比变量，控制点渲染大小
+    ['varying vec3 vPosition;',
       'void main() {',
+      'vPosition = position;',
     ].join('\n') // .join()把数组元素合成字符串
   );
-  // 调整点渲染大小计算方式
-  shader.vertexShader = shader.vertexShader.replace(
-    'gl_PointSize = size;',
-    [
-      'gl_PointSize = percent * size;',
-    ].join('\n') // .join()把数组元素合成字符串
+  shader.fragmentShader = shader.fragmentShader.replace(
+    'void main() {',
+    ['varying vec3 vPosition;',
+      'void main() {',
+    ].join('\n')
   );
+  shader.fragmentShader = shader.fragmentShader.replace('#include <output_fragment>', output_fragment);
 };
-// 飞线动画
-var indexMax = points.length - num; //飞线取点索引范围
-function animation() {
-  if (index > indexMax) index = 0;
-  index += 1
-  points2 = points.slice(index, index + num); //从曲线上获取一段
-  var curve = new THREE.CatmullRomCurve3(points2);
-  var newPoints2 = curve.getSpacedPoints(100); //获取更多的点数
-  geometry2.setFromPoints(newPoints2);
-
-  requestAnimationFrame(animation);
-}
-animation();
-
-plane();//设置一个地面
-function plane() {
-    var gridHelper = new THREE.GridHelper(300, 15, 0x003333, 0x003333);
-    model.add(gridHelper);
-    var geometry = new THREE.PlaneGeometry(310, 310); 
-    var material = new THREE.MeshLambertMaterial({
-        // map: texture,
-        color: 0xffffff,
-        transparent: true,
-        opacity: 0.1,
-        side: THREE.DoubleSide,
+// pointsArrs：多个轮廓，一个轮廓对应pointsArrs的一个元素
+function ExtrudeMesh(pointsArrs, height) {
+  var shapeArr = []; //轮廓形状Shape集合
+  pointsArrs.forEach(pointsArr => {
+    var vector2Arr = [];
+    // 转化为Vector2构成的顶点数组
+    pointsArr[0].forEach(elem => {
+      var xy = lon2xy(elem[0], elem[1]); //经纬度转墨卡托坐标
+      vector2Arr.push(new THREE.Vector2(xy.x, xy.y));
     });
-    var mesh = new THREE.Mesh(geometry, material);
-    mesh.position.y = 1
-    model.add(mesh);
-    mesh.rotateX(-Math.PI / 2);
+    var shape = new THREE.Shape(vector2Arr);
+    shapeArr.push(shape);
+  });
+
+  var geometry = new THREE.ExtrudeGeometry( //拉伸造型
+    shapeArr, //多个多边形二维轮廓
+    //拉伸参数
+    {
+      depth: height, //拉伸高度
+      bevelEnabled: false, //无倒角
+    }
+  );
+  var mesh = new THREE.Mesh(geometry, material); //网格模型对象
+  return mesh;
 }
 
 // width和height用来设置Three.js输出Canvas画布尺寸，同时用来辅助设置相机渲染范围
 var width = window.innerWidth; //窗口文档显示区的宽度
 var height = window.innerHeight; //窗口文档显示区的高度
 /**
-* 透视投影相机设置
-*/
+ * 透视投影相机设置
+ */
 // 30:视场角度, width / height:Canvas画布宽高比, 1:近裁截面, 3000：远裁截面
-var camera = new THREE.PerspectiveCamera(30, width / height, 1, 3000);
-camera.position.set(292, 223, 185);//相机在Three.js三维坐标系中的位置
-camera.lookAt(0, 0, 0);//相机指向Three.js坐标系原点
+// var camera = new THREE.PerspectiveCamera(30, width / height, 1, 3000);
+// 根据需要调整远裁截面 
+var camera = new THREE.PerspectiveCamera(30, width / height,1, 30000);
+// camera.position.set(292, 223, 185);//相机在Three.js三维坐标系中的位置
+// camera.lookAt(0, 0, 0); //相机指向Three.js坐标系原点
+// var E = 121.49131393432617;// 黄浦江几何中心坐标
+// var N = 31.232206344604492;
+// var E = 121.49526536464691;//东方明珠经纬度坐标
+// var N = 31.24189350905988;
+// var xy = lon2xy(E,N);
+// var x = xy.x;
+// var y = xy.y;
+// camera.position.set(x+5000, y+5000, 5000);//5000是根据建筑物尺寸范围设置  数量级对应即可 具体数值不用精准
+camera.position.set(13524797, 3662134, 1220);//利用OrbitControls重新设置相机参数 调整视角
+camera.lookAt(x,y,0);//根据黄浦江几何中心坐标或附近某个经纬度坐标设置
 /**
  * 创建渲染器对象
  */
 var renderer = new THREE.WebGLRenderer({
-    antialias: true, //开启锯齿
+  antialias: true, //开启锯齿
 });
-renderer.setPixelRatio(window.devicePixelRatio);//设置设备像素比率,防止Canvas画布输出模糊。
+renderer.setPixelRatio(window.devicePixelRatio); //设置设备像素比率,防止Canvas画布输出模糊。
 renderer.setSize(width, height); //设置渲染区域尺寸
-// renderer.setClearColor(0xffffff, 1); //设置背景颜色
+renderer.setClearColor(0x001111, 1); //设置背景颜色
 // renderer.domElement表示Three.js渲染结果,也就是一个HTML元素(Canvas画布)
 document.body.appendChild(renderer.domElement); //body元素中插入canvas对象
 
@@ -157,16 +245,20 @@ document.body.appendChild(renderer.domElement); //body元素中插入canvas对�
 // 平移：拖动鼠标右键
 var controls = new OrbitControls(camera, renderer.domElement);
 
+// 相机控件与.lookAt()无效( .target属性 )
+controls.target.set(x,y,0);
+controls.update(); //update()函数内会执行camera.lookAt(controls.targe)
+
 // onresize 事件会在窗口被调整大小时发生
-window.onresize=function(){
+window.onresize = function () {
   // 重置渲染器输出画布canvas尺寸
-  renderer.setSize(window.innerWidth,window.innerHeight);
+  renderer.setSize(window.innerWidth, window.innerHeight);
   // 全屏情况下：设置观察范围长宽比aspect为窗口宽高比
-  camera.aspect = window.innerWidth/window.innerHeight;
+  camera.aspect = window.innerWidth / window.innerHeight;
   // 渲染器执行render方法的时候会读取相机对象的投影矩阵属性projectionMatrix
   // 但是不会每渲染一帧，就通过相机的属性计算投影矩阵(节约计算资源)
   // 如果相机的一些属性发生了变化，需要执行updateProjectionMatrix ()方法更新相机的投影矩阵
-  camera.updateProjectionMatrix ();
+  camera.updateProjectionMatrix();
 };
 
 function render() {

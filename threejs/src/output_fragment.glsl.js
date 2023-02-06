@@ -1,3 +1,12 @@
+/*
+ * :file description: 
+ * :name: /threejs/src/output_fragment.glsl.js
+ * :author: 张德志
+ * :copyright: (c) 2023, Tungee
+ * :date created: 2023-02-04 06:15:48
+ * :last editor: 张德志
+ * :date last edited: 2023-02-06 22:48:15
+ */
 export default /* glsl */`
 #ifdef OPAQUE
 diffuseColor.a = 1.0;
