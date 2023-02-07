@@ -1,13 +1,12 @@
 /*
- * :file description:
- * :name: /webgl/src/index.js
+ * :file description: 
+ * :name: /webgl/examples/49attribute.js
  * :author: 张德志
  * :copyright: (c) 2023, Tungee
- * :date created: 2022-07-10 11:12:55
+ * :date created: 2023-02-08 05:22:48
  * :last editor: 张德志
- * :date last edited: 2023-02-08 05:21:26
+ * :date last edited: 2023-02-08 05:23:11
  */
-
 const canvas = document.createElement('canvas');
 canvas.width = 400;
 canvas.height = 400;
