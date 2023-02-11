@@ -1,11 +1,11 @@
 /*
  * :file description: 
- * :name: /webgl/src/index.js
+ * :name: /webgl/examples/52animation.js
  * :author: 张德志
  * :copyright: (c) 2023, Tungee
  * :date created: 2022-07-10 11:12:55
  * :last editor: 张德志
- * :date last edited: 2023-02-12 05:54:44
+ * :date last edited: 2023-02-12 05:55:29
  */
 
 const canvas = document.createElement('canvas');
@@ -68,9 +68,6 @@ const u_translate = gl.getUniformLocation(program,'u_translate');
 
 gl.vertexAttribPointer(a_position,2,gl.FLOAT,false,0,0);
 gl.enableVertexAttribArray(a_position);
-
-
-
 
 function tick() {
     tx += 0.01;
