@@ -5,14 +5,15 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2022-07-10 11:12:55
  * :last editor: 张德志
- * :date last edited: 2023-02-14 21:45:29
+ * :date last edited: 2023-02-14 23:55:10
  */
 
 const canvas = document.createElement('canvas');
 canvas.width = 400;
 canvas.height = 400;
-                                                                                                      
+
 const gl = canvas.getContext('webgl');
+
 
 const VERTEX_SHADER = `
     attribute vec3 a_position;
@@ -25,7 +26,6 @@ const VERTEX_SHADER = `
         gl_PointSize = 10.0;
     }
 `;
-
 const FRAG_SHADER = `
     precision mediump float;
     varying vec2 v_uv;
@@ -53,7 +53,6 @@ gl.attachShader(program,frag);
 gl.linkProgram(program);
 gl.useProgram(program);
 
-
 // 创建点
 const dataVertices = new Float32Array([
     -0.5,-0.5,0.0,
@@ -67,7 +66,7 @@ const uvs = new Float32Array([
     1.0,0.0,
     1.0,1.0,
     0.0,1.0,
-])
+]);
 
 const buffer = gl.createBuffer();
 gl.bindBuffer(gl.ARRAY_BUFFER,buffer);
@@ -78,7 +77,6 @@ gl.vertexAttribPointer(a_position,3,gl.FLOAT,false,0,0);
 gl.enableVertexAttribArray(a_position);
 
 
-
 const buffer1 = gl.createBuffer();
 gl.bindBuffer(gl.ARRAY_BUFFER,buffer1);
 gl.bufferData(gl.ARRAY_BUFFER,uvs,gl.STATIC_DRAW);
@@ -87,13 +85,9 @@ const a_uv = gl.getAttribLocation(program,'a_uv');
 gl.vertexAttribPointer(a_uv,2,gl.FLOAT,false,0,0);
 gl.enableVertexAttribArray(a_uv);
 
-
-
 gl.clearColor(0.0,0.0,0.0,1.0);
 gl.clear(gl.COLOR_BUFFER_BIT);
 
 gl.drawArrays(gl.TRIANGLE_FAN,0,4);
 
-
 document.body.appendChild(canvas);
-
