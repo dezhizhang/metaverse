@@ -1,11 +1,11 @@
 /*
  * :file description: 
- * :name: /webgl/src/index.js
+ * :name: /webgl/examples/56纹理贴图.js
  * :author: 张德志
  * :copyright: (c) 2023, Tungee
  * :date created: 2022-07-10 11:12:55
  * :last editor: 张德志
- * :date last edited: 2023-02-14 21:45:29
+ * :date last edited: 2023-02-14 21:46:01
  */
 
 const canvas = document.createElement('canvas');
