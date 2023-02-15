@@ -5,7 +5,7 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2022-07-10 11:12:55
  * :last editor: 张德志
- * :date last edited: 2023-02-14 23:55:10
+ * :date last edited: 2023-02-15 22:49:57
  */
 
 const canvas = document.createElement('canvas');
@@ -13,7 +13,6 @@ canvas.width = 400;
 canvas.height = 400;
 
 const gl = canvas.getContext('webgl');
-
 
 const VERTEX_SHADER = `
     attribute vec3 a_position;
@@ -26,6 +25,7 @@ const VERTEX_SHADER = `
         gl_PointSize = 10.0;
     }
 `;
+
 const FRAG_SHADER = `
     precision mediump float;
     varying vec2 v_uv;
@@ -40,20 +40,20 @@ const frag = gl.createShader(gl.FRAGMENT_SHADER);
 gl.shaderSource(vertex,VERTEX_SHADER);
 gl.shaderSource(frag,FRAG_SHADER);
 
-// 编译
 gl.compileShader(vertex);
 gl.compileShader(frag);
+
 
 // 创建对像
 const program = gl.createProgram();
 gl.attachShader(program,vertex);
 gl.attachShader(program,frag);
 
+
 // 连接几何体
 gl.linkProgram(program);
 gl.useProgram(program);
 
-// 创建点
 const dataVertices = new Float32Array([
     -0.5,-0.5,0.0,
     0.5,-0.5,0.0,
@@ -91,3 +91,4 @@ gl.clear(gl.COLOR_BUFFER_BIT);
 gl.drawArrays(gl.TRIANGLE_FAN,0,4);
 
 document.body.appendChild(canvas);
+
