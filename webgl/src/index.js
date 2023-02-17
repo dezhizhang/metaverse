@@ -4,25 +4,24 @@ canvas.height = 400;
 
 const gl = canvas.getContext('webgl');
 
-
-const VSHADER_SOURCE = `
-   attribute vec4 a_Position;
-   void main() {
+const VERTEX_SHADER = `
+    attribute vec4  a_Position;
+    void main() {
         gl_Position = a_Position;
-   }
+    }
 `;
 
-const FSHADER_SOURCE = `
-   void main() {
-    gl_FragColor = vec4(1.0,0.0,0.0,1.0);
-   }
+const FRAGMENT_SHADER = `
+    void main() {
+        gl_FragColor = vec4(1.0,0.0,0.0,1.0);
+    }
 `;
 
 const vertex = gl.createShader(gl.VERTEX_SHADER);
 const frag = gl.createShader(gl.FRAGMENT_SHADER);
 
-gl.shaderSource(vertex,VSHADER_SOURCE);
-gl.shaderSource(frag,FSHADER_SOURCE);
+gl.shaderSource(vertex,VERTEX_SHADER);
+gl.shaderSource(frag,FRAGMENT_SHADER);
 
 // 编译
 gl.compileShader(vertex);
@@ -41,6 +40,7 @@ const n = 3;
 const vertices = new Float32Array([
     0, 0.5,   -0.5, -0.5,   0.5, -0.5 
 ]);
+
 const buffer = gl.createBuffer();
 gl.bindBuffer(gl.ARRAY_BUFFER,buffer);
 gl.bufferData(gl.ARRAY_BUFFER,vertices,gl.STATIC_DRAW);
@@ -54,5 +54,5 @@ gl.clear(gl.COLOR_BUFFER_BIT);
 
 gl.drawArrays(gl.TRIANGLES,0,n);
 
-
 document.body.appendChild(canvas);
+
