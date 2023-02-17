@@ -434,3 +434,27 @@ console.log(plane.constant);
 console.log('点到平面的距离',l);
 
 ```
+### 计算两点间的距离
+```js
+const p1 = new THREE.Vector3(0,0,0);
+const p2 = new THREE.Vector3(10,10,10);
+
+const length = p1.distanceTo(p2);
+
+console.log('两点间的距离',length);
+
+```
+### 计算三角形面积
+```js
+const triangle = new THREE.Triangle();
+
+triangle.a = new THREE.Vector3(20,0,0);
+
+triangle.b = new THREE.Vector3(0,0,10);
+
+triangle.c = new THREE.Vector3(0,30,0);
+
+const s = triangle.getArea();
+
+console.log('三角形面积',s);
+```
