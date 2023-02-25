@@ -68,11 +68,8 @@ function initVertexBuffers(gl) {
 
     gl.enableVertexAttribArray(a_Position);
 
-    return n;
-    
+    return n;   
 }
-
-
 function draw(gl,n,currentAngle,modelMatrix,u_ModelMatrix) {
     modelMatrix.setRotate(currentAngle,0,0,1);
 
@@ -83,8 +80,6 @@ function draw(gl,n,currentAngle,modelMatrix,u_ModelMatrix) {
     gl.drawArrays(gl.TRIANGLES,0,n);
     
 }
-
-
 
 let g_last = Date.now();
 function animate(angle) {
