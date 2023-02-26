@@ -1,11 +1,11 @@
 /*
  * :file description: 
- * :name: /webgl/src/index.js
+ * :name: /webgl/examples/65绘制三维三角形.js
  * :author: 张德志
  * :copyright: (c) 2023, Tungee
- * :date created: 2022-07-10 11:12:55
+ * :date created: 2023-02-26 15:54:46
  * :last editor: 张德志
- * :date last edited: 2023-02-26 15:53:56
+ * :date last edited: 2023-02-26 15:54:53
  */
 // LookAtTriangles.js (c) 2012 matsuda
 import Matrix4 from '../lib/cuon-matrix';

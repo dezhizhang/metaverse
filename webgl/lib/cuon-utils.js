@@ -5,7 +5,7 @@
  * :copyright: (c) 2022, Tungee
  * :date created: 2022-08-06 21:43:26
  * :last editor: 张德志
- * :date last edited: 2023-01-04 23:34:07
+ * :date last edited: 2023-02-26 15:23:44
  */
 // cuon-utils.js (c) 2012 kanda and matsuda
 /**
@@ -38,7 +38,7 @@ export function initShaders(gl, vshader, fshader) {
  * @param fshader フラグメントシェーダのプログラム(文字列)
  * @return 作成したプログラムオブジェクト。作成に失敗した場合はnull
  */
-function createProgram(gl, vshader, fshader) {
+export function createProgram(gl, vshader, fshader) {
     // シェーダオブジェクトを作成する
     var vertexShader = loadShader(gl, gl.VERTEX_SHADER, vshader);
     var fragmentShader = loadShader(gl, gl.FRAGMENT_SHADER, fshader);
