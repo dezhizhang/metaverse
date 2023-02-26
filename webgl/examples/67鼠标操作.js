@@ -1,3 +1,12 @@
+/*
+ * :file description: 
+ * :name: /webgl/examples/67鼠标操作.js
+ * :author: 张德志
+ * :copyright: (c) 2023, Tungee
+ * :date created: 2023-02-26 17:32:10
+ * :last editor: 张德志
+ * :date last edited: 2023-02-26 17:32:18
+ */
 
 // LookAtTriangles.js (c) 2012 matsuda
 import Matrix4 from '../lib/cuon-matrix';
