@@ -5,7 +5,7 @@
  * :copyright: (c) 2022, Tungee
  * :date created: 2022-08-06 21:43:26
  * :last editor: 张德志
- * :date last edited: 2022-11-27 22:41:18
+ * :date last edited: 2023-02-27 06:42:00
  */
 // cuon-matrix.js (c) 2012 kanda and matsuda
 /**
@@ -749,5 +749,10 @@ var Vector4 = function(opt_src) {
     this.elements = v;
 }
 
-export default Matrix4;
+export {
+    Vector3,
+    Matrix4
+}
+
+
 
