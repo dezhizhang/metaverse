@@ -5,7 +5,7 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2022-07-10 11:12:55
  * :last editor: 张德志
- * :date last edited: 2023-03-02 09:13:05
+ * :date last edited: 2023-03-02 07:10:31
  */
 
 // LookAtTriangles.js (c) 2012 matsuda
@@ -253,14 +253,18 @@ function initTextures(gl) {
   return true;
 }
 
-
-function loadTexture(gl,texture,u_Sampler,image) {
-  gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL,1);
+function loadTexture(gl, texture, u_Sampler, image) {
+  gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1);  // Flip the image Y coordinate
+  // Activate texture unit0
   gl.activeTexture(gl.TEXTURE0);
-  gl.bindTexture(gl.TEXTURE_2D,texture);
+  // Bind the texture object to the target
+  gl.bindTexture(gl.TEXTURE_2D, texture);
 
-  gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR);
-  gl.texImage2D(gl.TEXTURE_2D,0,gl.RGB,gl.RGB,gl.UNSIGNED_BYTE,image);
+  // Set texture parameters
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+  // Set the image to texture
+  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, image);
 
-  gl.uniform1i(u_Sampler,0);
+  // Pass the texure unit 0 to u_Sampler
+  gl.uniform1i(u_Sampler, 0);
 }
