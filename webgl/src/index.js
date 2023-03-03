@@ -5,27 +5,28 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2022-07-10 11:12:55
  * :last editor: 张德志
- * :date last edited: 2023-03-02 09:13:05
+ * :date last edited: 2023-03-04 07:10:17
  */
 
 // LookAtTriangles.js (c) 2012 matsuda
-import { Matrix4 } from '../lib/cuon-matrix';
+import { Matrix4,Vector4 } from '../lib/cuon-matrix';
 import {
   initShaders
 } from '../lib/cuon-utils';
-import sky from './sky.jpg';
 
 
-// RotateObject.js (c) 2012 matsuda and kanda
+// LookAtBlendedTriangles.js (c) 2012 matsuda and ohnishi
+// LookAtTrianglesWithKey_ViewVolume.js is the original
 // Vertex shader program
 var VSHADER_SOURCE =
   'attribute vec4 a_Position;\n' +
-  'attribute vec2 a_TexCoord;\n' +
-  'uniform mat4 u_MvpMatrix;\n' +
-  'varying vec2 v_TexCoord;\n' +
+  'attribute vec4 a_Color;\n' +
+  'uniform mat4 u_ViewMatrix;\n' +
+  'uniform mat4 u_ProjMatrix;\n' +
+  'varying vec4 v_Color;\n' +
   'void main() {\n' +
-  '  gl_Position = u_MvpMatrix * a_Position;\n' +
-  '  v_TexCoord = a_TexCoord;\n' +
+  '  gl_Position = u_ProjMatrix * u_ViewMatrix * a_Position;\n' +
+  '  v_Color = a_Color;\n' +
   '}\n';
 
 // Fragment shader program
@@ -33,234 +34,136 @@ var FSHADER_SOURCE =
   '#ifdef GL_ES\n' +
   'precision mediump float;\n' +
   '#endif\n' +
-  'uniform sampler2D u_Sampler;\n' +
-  'varying vec2 v_TexCoord;\n' +
+  'varying vec4 v_Color;\n' +
   'void main() {\n' +
-  '  gl_FragColor = texture2D(u_Sampler, v_TexCoord);\n' +
+  '  gl_FragColor = v_Color;\n' +
   '}\n';
 
-function main() {
-  const canvas = document.createElement('canvas');
-  canvas.width = 400;
-  canvas.height = 400;
-  const gl = canvas.getContext('webgl');
-  document.body.appendChild(canvas);
+  main();
 
+  function main() {
+    const canvas = document.getElementById('webgl');
 
-  if (!gl) {
-    console.log('Failed to get the rendering context for WebGL');
-    return;
-  }
-
-  // Initialize shaders
-  if (!initShaders(gl, VSHADER_SOURCE, FSHADER_SOURCE)) {
-    console.log('Failed to intialize shaders.');
-    return;
-  }
-
-  // Set the vertex information
-  var n = initVertexBuffers(gl);
-  if (n < 0) {
-    console.log('Failed to set the vertex information');
-    return;
-  }
-
-  // Set the clear color and enable the depth test
-  gl.clearColor(0.0, 0.0, 0.0, 1.0);
-  gl.enable(gl.DEPTH_TEST);
-
-  // Get the storage locations of uniform variables
-  var u_MvpMatrix = gl.getUniformLocation(gl.program, 'u_MvpMatrix');
-  if (!u_MvpMatrix) { 
-    console.log('Failed to get the storage location of uniform variable');
-    return;
-  }
-
-  // Calculate the view projection matrix
-  var viewProjMatrix = new Matrix4();
-  viewProjMatrix.setPerspective(30.0, canvas.width / canvas.height, 1.0, 100.0);
-  viewProjMatrix.lookAt(3.0, 3.0, 7.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
-
-  // Register the event handler
-  var currentAngle = [0.0, 0.0]; // Current rotation angle ([x-axis, y-axis] degrees)
-  initEventHandlers(canvas, currentAngle);
-
-  // Set texture
-  if (!initTextures(gl)) {
-    console.log('Failed to intialize the texture.');
-    return;
-  }
-
-  var tick = function() {   // Start drawing
-    draw(gl, n, viewProjMatrix, u_MvpMatrix, currentAngle);
-    requestAnimationFrame(tick, canvas);
-  };
-  tick();
-}
-
-main();
-
-function initVertexBuffers(gl) {
-  // Create a cube
-  //    v6----- v5
-  //   /|      /|
-  //  v1------v0|
-  //  | |     | |
-  //  | |v7---|-|v4
-  //  |/      |/
-  //  v2------v3
-  var vertices = new Float32Array([   // Vertex coordinates
-     1.0, 1.0, 1.0,  -1.0, 1.0, 1.0,  -1.0,-1.0, 1.0,   1.0,-1.0, 1.0,    // v0-v1-v2-v3 front
-     1.0, 1.0, 1.0,   1.0,-1.0, 1.0,   1.0,-1.0,-1.0,   1.0, 1.0,-1.0,    // v0-v3-v4-v5 right
-     1.0, 1.0, 1.0,   1.0, 1.0,-1.0,  -1.0, 1.0,-1.0,  -1.0, 1.0, 1.0,    // v0-v5-v6-v1 up
-    -1.0, 1.0, 1.0,  -1.0, 1.0,-1.0,  -1.0,-1.0,-1.0,  -1.0,-1.0, 1.0,    // v1-v6-v7-v2 left
-    -1.0,-1.0,-1.0,   1.0,-1.0,-1.0,   1.0,-1.0, 1.0,  -1.0,-1.0, 1.0,    // v7-v4-v3-v2 down
-     1.0,-1.0,-1.0,  -1.0,-1.0,-1.0,  -1.0, 1.0,-1.0,   1.0, 1.0,-1.0     // v4-v7-v6-v5 back
-  ]);
-
-  var texCoords = new Float32Array([   // Texture coordinates
-      1.0, 1.0,   0.0, 1.0,   0.0, 0.0,   1.0, 0.0,    // v0-v1-v2-v3 front
-      0.0, 1.0,   0.0, 0.0,   1.0, 0.0,   1.0, 1.0,    // v0-v3-v4-v5 right
-      1.0, 0.0,   1.0, 1.0,   0.0, 1.0,   0.0, 0.0,    // v0-v5-v6-v1 up
-      1.0, 1.0,   0.0, 1.0,   0.0, 0.0,   1.0, 0.0,    // v1-v6-v7-v2 left
-      0.0, 0.0,   1.0, 0.0,   1.0, 1.0,   0.0, 1.0,    // v7-v4-v3-v2 down
-      0.0, 0.0,   1.0, 0.0,   1.0, 1.0,   0.0, 1.0     // v4-v7-v6-v5 back
-  ]);
-
-  // Indices of the vertices
-  var indices = new Uint8Array([
-     0, 1, 2,   0, 2, 3,    // front
-     4, 5, 6,   4, 6, 7,    // right
-     8, 9,10,   8,10,11,    // up
-    12,13,14,  12,14,15,    // left
-    16,17,18,  16,18,19,    // down
-    20,21,22,  20,22,23     // back
-  ]);
-
-  // Create a buffer object
-  var indexBuffer = gl.createBuffer();
-  if (!indexBuffer) {
-    return -1;
-  }
-
-  // Write vertex information to buffer object
-  if (!initArrayBuffer(gl, vertices, 3, gl.FLOAT, 'a_Position')) return -1; // Vertex coordinates
-  if (!initArrayBuffer(gl, texCoords, 2, gl.FLOAT, 'a_TexCoord')) return -1;// Texture coordinates
-
-  // Unbind the buffer object
-  gl.bindBuffer(gl.ARRAY_BUFFER, null);
-
-  // Write the indices to the buffer object
-  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
-  gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, indices, gl.STATIC_DRAW);
-
-  return indices.length;
-}
-
-function initEventHandlers(canvas, currentAngle) {
-  var dragging = false;         // Dragging or not
-  var lastX = -1, lastY = -1;   // Last position of the mouse
-
-  canvas.onmousedown = function(ev) {   // Mouse is pressed
-    var x = ev.clientX, y = ev.clientY;
-    // Start dragging if a moue is in <canvas>
-    var rect = ev.target.getBoundingClientRect();
-    if (rect.left <= x && x < rect.right && rect.top <= y && y < rect.bottom) {
-      lastX = x; lastY = y;
-      dragging = true;
+    const gl = canvas.getContext('webgl');
+    if(!gl) {
+      console.log('Failed to get the rendering context for WebGL');
+      return
     }
-  };
 
-  canvas.onmouseup = function(ev) { dragging = false;  }; // Mouse is released
-
-  canvas.onmousemove = function(ev) { // Mouse is moved
-    var x = ev.clientX, y = ev.clientY;
-    if (dragging) {
-      var factor = 100/canvas.height; // The rotation ratio
-      var dx = factor * (x - lastX);
-      var dy = factor * (y - lastY);
-      // Limit x-axis rotation angle to -90 to 90 degrees
-      currentAngle[0] = Math.max(Math.min(currentAngle[0] + dy, 90.0), -90.0);
-      currentAngle[1] = currentAngle[1] + dx;
+    if(!initShaders(gl,VSHADER_SOURCE,FSHADER_SOURCE)) {
+      console.log('Failed to intialize shaders');
+      return;
     }
-    lastX = x, lastY = y;
-  };
-}
 
-// console.log('g_MvpMatrix',g_MvpMatrix);
-function draw(gl, n, viewProjMatrix, u_MvpMatrix, currentAngle) {
-  // Caliculate The model view projection matrix and pass it to u_MvpMatr
+    const n = initVertexBuffers(gl);
+    if(n < 0) {
+      console.log('Failed to set the vertex information');
+      return;
+    }
+
+    gl.clearColor(0,0,0,1);
+    gl.enable(gl.BLEND);
+
+    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+
+    // get the storage locations of u_ViewMatrix and u_ProjMatrix
+    var u_ViewMatrix = gl.getUniformLocation(gl.program, 'u_ViewMatrix');
+    var u_ProjMatrix = gl.getUniformLocation(gl.program, 'u_ProjMatrix');
+    if (!u_ViewMatrix || !u_ProjMatrix) { 
+      console.log('Failed to get the storage location of u_ViewMatrix and/or u_ProjMatrix');
+      return;
+    }
+
+
+    // Create the view projection matrix
+    var viewMatrix = new Matrix4();
+    // Register the event handler to be called on key press
+    window.onkeydown = function(ev){ keydown(ev, gl, n, u_ViewMatrix, viewMatrix); };
+
+    // Create Projection matrix and set to u_ProjMatrix
+    var projMatrix = new Matrix4();
+    projMatrix.setOrtho(-1, 1, -1, 1, 0, 2);
+    gl.uniformMatrix4fv(u_ProjMatrix, false, projMatrix.elements);
+
+    // Draw
+    draw(gl, n, u_ViewMatrix, viewMatrix);
+    
+  }
+
+  function initVertexBuffers(gl) {
+    const verticesColors = new Float32Array([
+      0.0,  0.5,  -0.4,  0.4,  1.0,  0.4,  0.4, // The back green one
+      -0.5, -0.5,  -0.4,  0.4,  1.0,  0.4,  0.4,
+       0.5, -0.5,  -0.4,  1.0,  0.4,  0.4,  0.4, 
+      
+       0.5,  0.4,  -0.2,  1.0,  0.4,  0.4,  0.4, // The middle yerrow one
+      -0.5,  0.4,  -0.2,  1.0,  1.0,  0.4,  0.4,
+       0.0, -0.6,  -0.2,  1.0,  1.0,  0.4,  0.4, 
+   
+       0.0,  0.5,   0.0,  0.4,  0.4,  1.0,  0.4,  // The front blue one 
+      -0.5, -0.5,   0.0,  0.4,  0.4,  1.0,  0.4,
+       0.5, -0.5,   0.0,  1.0,  0.4,  0.4,  0.4, 
+    ]);
+
+    const n = 9;
+    const vertexColorbuffer = gl.createBuffer();
+    if(!vertexColorbuffer) {
+      console.log('Failed to create the buffer object');
+      return -1;
+    }
+
+    gl.bindBuffer(gl.ARRAY_BUFFER,vertexColorbuffer);
+    gl.bufferData(gl.ARRAY_BUFFER,verticesColors,gl.STATIC_DRAW);
+
+    const FSIZE = verticesColors.BYTES_PER_ELEMENT;
+
+    const a_Position = gl.getAttribLocation(gl.program,'a_Position');
+    if(a_Position) {
+      console.log('Failed to get the storage location of a_Position');
+      return -1;
+    }
+
+    gl.vertexAttribPointer(a_Position,3,gl.FLOAT,false,FSIZE * 7,0);
+    gl.enableVertexAttribArray(a_Position);
+
+    const a_Color = gl.getAttribLocation(gl.program,'a_Color');
+    if(a_Color < 0) {
+      console.log('Failed to get the storage location of a_Color');
+      return -1;
+    }
+
+    gl.vertexAttribPointer(a_Color,4,gl.FLOAT,false, FSIZE * 7,FSIZE * 3);
+    gl.enableVertexAttribArray(a_Color);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER,null);
+
+    return n;
   
-  var g_MvpMatrix = new Matrix4(); // Model view projection matrixix
-  g_MvpMatrix.set(viewProjMatrix);
-  g_MvpMatrix.rotate(currentAngle[0], 1.0, 0.0, 0.0); // Rotation around x-axis
-  g_MvpMatrix.rotate(currentAngle[1], 0.0, 1.0, 0.0); // Rotation around y-axis
-  gl.uniformMatrix4fv(u_MvpMatrix, false, g_MvpMatrix.elements);
+  }
 
-  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);     // Clear buffers
-  gl.drawElements(gl.TRIANGLES, n, gl.UNSIGNED_BYTE, 0);   // Draw the cube
+
+function keydown(ev, gl, n, u_ViewMatrix, viewMatrix) {
+    if(ev.keyCode == 39) { // The right arrow key was pressed
+      g_EyeX += 0.01;
+    } else 
+    if (ev.keyCode == 37) { // The left arrow key was pressed
+      g_EyeX -= 0.01;
+    } else return;
+    draw(gl, n, u_ViewMatrix, viewMatrix);    
 }
 
-function initArrayBuffer(gl, data, num, type, attribute) {
-  // Create a buffer object
-  var buffer = gl.createBuffer();
-  if (!buffer) {
-    console.log('Failed to create the buffer object');
-    return false;
-  }
-  // Write date into the buffer object
-  gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-  gl.bufferData(gl.ARRAY_BUFFER, data, gl.STATIC_DRAW);
-  // Assign the buffer object to the attribute variable
-  var a_attribute = gl.getAttribLocation(gl.program, attribute);
-  if (a_attribute < 0) {
-    console.log('Failed to get the storage location of ' + attribute);
-    return false;
-  }
-  gl.vertexAttribPointer(a_attribute, num, type, false, 0, 0);
-  // Enable the assignment to a_attribute variable
-  gl.enableVertexAttribArray(a_attribute);
+// Eye position
+var g_EyeX = 0.20, g_EyeY = 0.25, g_EyeZ = 0.25;
+function draw(gl, n, u_ViewMatrix, viewMatrix) {
+  // Set the matrix to be used for to set the camera view
+  viewMatrix.setLookAt(g_EyeX, g_EyeY, g_EyeZ, 0, 0, 0, 0, 1, 0);
 
-  return true;
-}
+  // Pass the view projection matrix
+  gl.uniformMatrix4fv(u_ViewMatrix, false, viewMatrix.elements);
 
-function initTextures(gl) {
-  // Create a texture object
-  var texture = gl.createTexture();
-  if (!texture) {
-    console.log('Failed to create the texture object');
-    return false;
-  }
+  // Clear <canvas>
+  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-  // Get the storage location of u_Sampler
-  var u_Sampler = gl.getUniformLocation(gl.program, 'u_Sampler');
-  if (!u_Sampler) {
-    console.log('Failed to get the storage location of u_Sampler');
-    return false;
-  }
-
-  // Create the image object
-  var image = new Image();
-  if (!image) {
-    console.log('Failed to create the image object');
-    return false;
-  }
-  // Register the event handler to be called when image loading is completed
-  image.onload = function(){ loadTexture(gl, texture, u_Sampler, image); };
-  // Tell the browser to load an Image
-  image.src = sky;
-
-  return true;
-}
-
-
-function loadTexture(gl,texture,u_Sampler,image) {
-  gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL,1);
-  gl.activeTexture(gl.TEXTURE0);
-  gl.bindTexture(gl.TEXTURE_2D,texture);
-
-  gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR);
-  gl.texImage2D(gl.TEXTURE_2D,0,gl.RGB,gl.RGB,gl.UNSIGNED_BYTE,image);
-
-  gl.uniform1i(u_Sampler,0);
+  // Draw the rectangle
+  gl.drawArrays(gl.TRIANGLES, 0, n);
 }
