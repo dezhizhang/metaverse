@@ -1,10 +1,11 @@
-
 const canvas = document.createElement('canvas');
-const ctx = canvas.getContext('2d');
+canvas.width = 400;
+canvas.height = 400;
 
-ctx.moveTo(50,100);
-ctx.lineTo(150,50);
-ctx.stroke();
+const ctx = canvas.getContext('2d');
+ctx.strokeStyle = 'red';
+ctx.strokeRect(50,50,80,80);
 
 document.body.appendChild(canvas);
+
 
