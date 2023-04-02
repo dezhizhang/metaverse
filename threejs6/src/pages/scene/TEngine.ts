@@ -5,7 +5,7 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-01-01 21:46:05
  * :last editor: 张德志
- * :date last edited: 2023-04-02 18:39:31
+ * :date last edited: 2023-04-02 19:06:24
  */
 import {
   AmbientLight,
@@ -19,6 +19,7 @@ import {
   Vector3,
   WebGLRenderer,
 } from 'three';
+import Stats from 'stats.js';
 
 class TEngine {
   private scene: Scene;
@@ -43,7 +44,7 @@ class TEngine {
     this.dom.appendChild(this.renderer.domElement);
     this.renderer.setSize(window.innerWidth, window.innerHeight);
 
-    const box: Mesh = new Mesh(
+    let box: Mesh = new Mesh(
       new BoxGeometry(10, 10, 10),
       new MeshStandardMaterial({
         color: 'rgb(255,0,255)',
@@ -53,27 +54,43 @@ class TEngine {
     this.scene.add(box);
 
     // 添加灯光
-    const ambientLight: AmbientLight = new AmbientLight('rgb(0,255,255)', 1);
+    const ambientLight:AmbientLight = new AmbientLight('rgb(0,255,255)',1);
     this.scene.add(ambientLight);
 
-    // 增加坐标
-    const axesHelper: AxesHelper = new AxesHelper(500);
+    // 添加坐标
+    const axesHelper:AxesHelper = new AxesHelper(500);
     this.scene.add(axesHelper);
 
-    // 添加网络线
-    const gridHelper: GridHelper = new GridHelper(
+    // 添加网格
+    const gridHelper:GridHelper = new GridHelper(
       20,
       20,
       'rgb(200,200,200)',
-      'rbg(100,100,100)',
-    );
-
+      'rgb(100,100,100)'
+    )
     this.scene.add(gridHelper);
+
+    const stats:any = new Stats();
+    const statsDom = stats.domElement;
+    statsDom.style.position = 'fixed';
+    statsDom.style.top = '0px';
+    statsDom.style.right = '5px';
+    statsDom.style.left = 'unset';
+
+    dom.appendChild(statsDom);
+
+    
 
 
     this.renderer.setClearColor('rgb(0,0,0)');
 
-    this.renderer.render(this.scene, this.camera);
+    const renderFn = () => {
+      box.rotation.x += 0.01;
+      stats.update();
+      this.renderer.render(this.scene,this.camera);
+      requestAnimationFrame(renderFn);
+    }
+    renderFn();
   }
 }
 
