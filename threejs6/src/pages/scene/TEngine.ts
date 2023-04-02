@@ -5,7 +5,7 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-01-01 21:46:05
  * :last editor: 张德志
- * :date last edited: 2023-04-02 19:31:59
+ * :date last edited: 2023-04-02 20:43:12
  */
 import {
   AmbientLight,
@@ -49,17 +49,13 @@ class TEngine {
     this.renderer.setSize(window.innerWidth, window.innerHeight);
 
   
-    // 添加灯光
-    const ambientLight:AmbientLight = new AmbientLight('rgb(0,255,255)',1);
-    this.scene.add(ambientLight);
-
     // 添加坐标
     const axesHelper:AxesHelper = new AxesHelper(500);
     this.scene.add(axesHelper);
 
     // 添加网格
     const gridHelper:GridHelper = new GridHelper(
-      20,
+      500,
       20,
       'rgb(200,200,200)',
       'rgb(100,100,100)'
