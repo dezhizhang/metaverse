@@ -5,50 +5,76 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-01-01 21:46:05
  * :last editor: 张德志
- * :date last edited: 2023-04-02 18:34:20
+ * :date last edited: 2023-04-02 18:39:31
  */
-import { AmbientLight, BoxGeometry, Mesh, MeshStandardMaterial, PerspectiveCamera, Scene, Vector3, WebGLRenderer } from 'three';
+import {
+  AmbientLight,
+  AxesHelper,
+  BoxGeometry,
+  GridHelper,
+  Mesh,
+  MeshStandardMaterial,
+  PerspectiveCamera,
+  Scene,
+  Vector3,
+  WebGLRenderer,
+} from 'three';
 
 class TEngine {
-  private scene:Scene;
-  private dom:HTMLElement;
-  private renderer:WebGLRenderer;
-  private camera:PerspectiveCamera;
+  private scene: Scene;
+  private dom: HTMLElement;
+  private renderer: WebGLRenderer;
+  private camera: PerspectiveCamera;
 
-  constructor(dom:HTMLElement) {
+  constructor(dom: HTMLElement) {
     this.dom = dom;
     this.scene = new Scene();
     this.renderer = new WebGLRenderer();
-    this.camera = new PerspectiveCamera(75, window.innerWidth / window.innerHeight,0.1,1000);
-    this.camera.position.set(20,20,20);
-    this.camera.lookAt(new Vector3(0,0,0));
-    this.camera.up = new Vector3(0,1,0);
+    this.camera = new PerspectiveCamera(
+      75,
+      window.innerWidth / window.innerHeight,
+      0.1,
+      1000,
+    );
+    this.camera.position.set(20, 20, 20);
+    this.camera.lookAt(new Vector3(0, 0, 0));
+    this.camera.up = new Vector3(0, 1, 0);
 
     this.dom.appendChild(this.renderer.domElement);
-    this.renderer.setSize(window.innerWidth,window.innerHeight);
+    this.renderer.setSize(window.innerWidth, window.innerHeight);
 
-    const box:Mesh = new Mesh(
-      new BoxGeometry(10,10,10),
+    const box: Mesh = new Mesh(
+      new BoxGeometry(10, 10, 10),
       new MeshStandardMaterial({
-        color:'rgb(255,0,255)'
+        color: 'rgb(255,0,255)',
       }),
-    )
+    );
 
     this.scene.add(box);
 
     // 添加灯光
-    const ambientLight:AmbientLight = new AmbientLight('rgb(0,255,255)',1);
+    const ambientLight: AmbientLight = new AmbientLight('rgb(0,255,255)', 1);
     this.scene.add(ambientLight);
+
+    // 增加坐标
+    const axesHelper: AxesHelper = new AxesHelper(500);
+    this.scene.add(axesHelper);
+
+    // 添加网络线
+    const gridHelper: GridHelper = new GridHelper(
+      20,
+      20,
+      'rgb(200,200,200)',
+      'rbg(100,100,100)',
+    );
+
+    this.scene.add(gridHelper);
 
 
     this.renderer.setClearColor('rgb(0,0,0)');
 
-    this.renderer.render(this.scene,this.camera);
-
-
+    this.renderer.render(this.scene, this.camera);
   }
-  
-
 }
 
 export default TEngine;
