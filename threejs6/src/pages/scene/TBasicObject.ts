@@ -5,7 +5,7 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-01-02 20:34:14
  * :last editor: 张德志
- * :date last edited: 2023-04-02 20:43:34
+ * :date last edited: 2023-04-02 21:05:45
  */
 
 import {
@@ -29,7 +29,7 @@ stage.position.y = -5;
 // 立方体
 const box:Mesh = new Mesh(
   new BoxGeometry(20,20,20),
-  new MeshStandardMaterial({color:'rgb(0,255,255)'})  
+  new MeshStandardMaterial({color:'rgb(255,0,0)'})  
 )
 
 box.position.y = 10
@@ -39,7 +39,7 @@ box.position.y = 10
 
 
 
-basicObjectList.push(box,stage);
+basicObjectList.push(stage,box);
 
 
 

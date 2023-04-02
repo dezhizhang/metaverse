@@ -5,15 +5,9 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-01-01 21:46:05
  * :last editor: 张德志
- * :date last edited: 2023-04-02 20:43:12
+ * :date last edited: 2023-04-02 20:55:48
  */
 import {
-  AmbientLight,
-  AxesHelper,
-  BoxGeometry,
-  GridHelper,
-  Mesh,
-  MeshStandardMaterial,
   Object3D,
   PerspectiveCamera,
   Scene,
@@ -47,20 +41,7 @@ class TEngine {
 
     this.dom.appendChild(this.renderer.domElement);
     this.renderer.setSize(window.innerWidth, window.innerHeight);
-
   
-    // 添加坐标
-    const axesHelper:AxesHelper = new AxesHelper(500);
-    this.scene.add(axesHelper);
-
-    // 添加网格
-    const gridHelper:GridHelper = new GridHelper(
-      500,
-      20,
-      'rgb(200,200,200)',
-      'rgb(100,100,100)'
-    )
-    this.scene.add(gridHelper);
 
     // 添加性能监控
     const stats:any = new Stats();
@@ -75,9 +56,6 @@ class TEngine {
     const orbitControls:OrbitControls = new OrbitControls(this.camera,this.renderer.domElement);
     orbitControls.autoRotate = true;
     orbitControls.enableDamping = true;
-
-    
-
 
     this.renderer.setClearColor('rgb(0,0,0)');
 
