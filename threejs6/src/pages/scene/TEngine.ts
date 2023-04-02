@@ -5,7 +5,7 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-01-01 21:46:05
  * :last editor: 张德志
- * :date last edited: 2023-04-02 20:55:48
+ * :date last edited: 2023-04-02 21:24:49
  */
 import {
   Object3D,
@@ -40,6 +40,7 @@ class TEngine {
     this.camera.up = new Vector3(0, 1, 0);
 
     this.dom.appendChild(this.renderer.domElement);
+    this.renderer.shadowMap.enabled = true;
     this.renderer.setSize(window.innerWidth, window.innerHeight);
   
 
