@@ -5,7 +5,7 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-01-01 21:46:05
  * :last editor: 张德志
- * :date last edited: 2023-04-02 19:06:24
+ * :date last edited: 2023-04-02 19:31:59
  */
 import {
   AmbientLight,
@@ -14,12 +14,14 @@ import {
   GridHelper,
   Mesh,
   MeshStandardMaterial,
+  Object3D,
   PerspectiveCamera,
   Scene,
   Vector3,
   WebGLRenderer,
 } from 'three';
 import Stats from 'stats.js';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
 class TEngine {
   private scene: Scene;
@@ -30,7 +32,9 @@ class TEngine {
   constructor(dom: HTMLElement) {
     this.dom = dom;
     this.scene = new Scene();
-    this.renderer = new WebGLRenderer();
+    this.renderer = new WebGLRenderer({
+      antialias:true
+    });
     this.camera = new PerspectiveCamera(
       75,
       window.innerWidth / window.innerHeight,
@@ -44,15 +48,7 @@ class TEngine {
     this.dom.appendChild(this.renderer.domElement);
     this.renderer.setSize(window.innerWidth, window.innerHeight);
 
-    let box: Mesh = new Mesh(
-      new BoxGeometry(10, 10, 10),
-      new MeshStandardMaterial({
-        color: 'rgb(255,0,255)',
-      }),
-    );
-
-    this.scene.add(box);
-
+  
     // 添加灯光
     const ambientLight:AmbientLight = new AmbientLight('rgb(0,255,255)',1);
     this.scene.add(ambientLight);
@@ -70,6 +66,7 @@ class TEngine {
     )
     this.scene.add(gridHelper);
 
+    // 添加性能监控
     const stats:any = new Stats();
     const statsDom = stats.domElement;
     statsDom.style.position = 'fixed';
@@ -79,18 +76,28 @@ class TEngine {
 
     dom.appendChild(statsDom);
 
+    const orbitControls:OrbitControls = new OrbitControls(this.camera,this.renderer.domElement);
+    orbitControls.autoRotate = true;
+    orbitControls.enableDamping = true;
+
     
 
 
     this.renderer.setClearColor('rgb(0,0,0)');
 
     const renderFn = () => {
-      box.rotation.x += 0.01;
       stats.update();
+      // orbitControls.update();
+
       this.renderer.render(this.scene,this.camera);
       requestAnimationFrame(renderFn);
     }
     renderFn();
+  }
+  addObject(...object:Object3D[]) {
+    object.forEach(elem => {
+      this.scene.add(elem)
+    })
   }
 }
 
