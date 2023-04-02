@@ -6,7 +6,7 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-01-03 05:49:44
  * :last editor: 张德志
- * :date last edited: 2023-01-03 06:41:52
+ * :date last edited: 2023-04-03 07:10:37
  */
 import { BufferAttribute, BufferGeometry, Mesh, MeshStandardMaterial, Object3D } from 'three';
 
@@ -53,7 +53,7 @@ geometry.setAttribute('normal',new BufferAttribute(points,3));
 geometry.setIndex(index);
 
 const material:MeshStandardMaterial = new MeshStandardMaterial({
-    color:'white'
+    color:'rgb(255,0,0)'
 });
 
 const codeBox:Mesh = new Mesh(geometry,material);
