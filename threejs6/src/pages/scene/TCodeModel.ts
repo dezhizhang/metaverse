@@ -6,15 +6,19 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-01-03 05:49:44
  * :last editor: 张德志
- * :date last edited: 2023-04-03 07:10:37
+ * :date last edited: 2023-04-03 07:34:37
  */
-import { BufferAttribute, BufferGeometry, Mesh, MeshStandardMaterial, Object3D } from 'three';
+// import { BufferAttribute, BufferGeometry, Mesh, MeshStandardMaterial, Object3D } from 'three';
+// import { pictureTexture } from './TTextures';
+
+import { BufferAttribute, BufferGeometry, Mesh, MeshStandardMaterial, Object3D } from "three";
+import { pictureTexture } from "./TTextures";
+
 
 const size:number = 10;
-
 export const codeModelList:Object3D[] = [];
 
-const points:Float32List = new Float32Array( [
+const points:Float32List = new Float32Array([
     -size,size,size,
     size,size,size,
     size,size,-size,
@@ -23,8 +27,7 @@ const points:Float32List = new Float32Array( [
     -size,-size,size,
     size,-size,size,
     size,-size,-size,
-    -size,-size,-size,
-
+    -size,-size,-size, 
 ]);
 
 const index:number[] = [
@@ -53,11 +56,12 @@ geometry.setAttribute('normal',new BufferAttribute(points,3));
 geometry.setIndex(index);
 
 const material:MeshStandardMaterial = new MeshStandardMaterial({
-    color:'rgb(255,0,0)'
-});
+    color:'rgb(255,0,0)',
+    map:pictureTexture
+})
 
 const codeBox:Mesh = new Mesh(geometry,material);
 codeBox.position.y = 10;
-
-
 codeModelList.push(codeBox);
+
+
