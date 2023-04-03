@@ -5,7 +5,7 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-01-01 21:33:33
  * :last editor: 张德志
- * :date last edited: 2023-04-03 06:54:20
+ * :date last edited: 2023-04-03 23:04:21
  */
 import React, { useRef, useEffect } from 'react';
 import styles from './index.less';
@@ -14,6 +14,7 @@ import { lightsList } from './TLights';
 import {helperList} from './THelper';
 import { basicObjectList } from './TBasicObject';
 import { codeModelList } from './TCodeModel';
+import { framePromise } from './TLoadModel';
 
 const Scene: React.FC = () => {
   const ref = useRef(null);
@@ -23,7 +24,11 @@ const Scene: React.FC = () => {
     // TE.addObject(...basicObjectList);
     TE.addObject(...lightsList);
     TE.addObject(...helperList);
-    TE.addObject(...codeModelList)
+    TE.addObject(...codeModelList);
+
+    framePromise.then(group => {
+      TE.addObject(group);
+    })
 
   }, []);
 

@@ -5,7 +5,7 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-01-01 21:46:05
  * :last editor: 张德志
- * :date last edited: 2023-04-02 21:24:49
+ * :date last edited: 2023-04-04 06:37:04
  */
 import {
   Object3D,
@@ -16,13 +16,14 @@ import {
 } from 'three';
 import Stats from 'stats.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import { TransformControls } from 'three/examples/jsm/controls/TransformControls'
 
 class TEngine {
   private scene: Scene;
   private dom: HTMLElement;
   private renderer: WebGLRenderer;
   private camera: PerspectiveCamera;
-
+  protected tramsformControls:TransformControls;
   constructor(dom: HTMLElement) {
     this.dom = dom;
     this.scene = new Scene();
@@ -35,7 +36,7 @@ class TEngine {
       0.1,
       1000,
     );
-    this.camera.position.set(20, 20, 20);
+    this.camera.position.set(200, 200, 200);
     this.camera.lookAt(new Vector3(0, 0, 0));
     this.camera.up = new Vector3(0, 1, 0);
 
@@ -58,6 +59,13 @@ class TEngine {
     orbitControls.autoRotate = true;
     orbitControls.enableDamping = true;
 
+
+    const tramsformControls = new TransformControls(this.camera,this.renderer.domElement);
+    const target = new Object3D();
+    tramsformControls.attach(target);
+    this.scene.add(target);
+    this.scene.add(tramsformControls);
+
     this.renderer.setClearColor('rgb(0,0,0)');
 
     const renderFn = () => {
@@ -68,6 +76,8 @@ class TEngine {
       requestAnimationFrame(renderFn);
     }
     renderFn();
+
+    this.tramsformControls = tramsformControls;
   }
   addObject(...object:Object3D[]) {
     object.forEach(elem => {
