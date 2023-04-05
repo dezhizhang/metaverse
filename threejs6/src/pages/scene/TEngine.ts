@@ -5,7 +5,7 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-01-01 21:46:05
  * :last editor: 张德志
- * :date last edited: 2023-04-04 07:21:01
+ * :date last edited: 2023-04-05 09:51:34
  */
 import {
   Object3D,
@@ -82,15 +82,15 @@ class TEngine {
 
     });
 
-    this.renderer.domElement.addEventListener('click',event => {
-      raycaster.setFromCamera(mouse,this.camera);
-      const intersect = raycaster.intersectObjects(this.scene.children);
-      if(intersect.length) {
-        const object = intersect[0].object;
-        console.log('object',object)
-        tramsformControls.add(object);
-      }
-    })
+    // this.renderer.domElement.addEventListener('click',event => {
+    //   raycaster.setFromCamera(mouse,this.camera);
+    //   const intersect = raycaster.intersectObjects(this.scene.children);
+    //   if(intersect.length) {
+    //     const object = intersect[0].object;
+    //     console.log('object',object)
+    //     tramsformControls.add(object);
+    //   }
+    // })
     
 
     this.renderer.setClearColor('rgb(0,0,0)');

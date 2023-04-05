@@ -5,7 +5,7 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-01-01 21:33:33
  * :last editor: 张德志
- * :date last edited: 2023-04-03 23:04:21
+ * :date last edited: 2023-04-06 04:30:29
  */
 import React, { useRef, useEffect } from 'react';
 import styles from './index.less';
@@ -27,6 +27,10 @@ const Scene: React.FC = () => {
     TE.addObject(...codeModelList);
 
     framePromise.then(group => {
+      group.position.y = 45;
+      group.position.z = -1;
+      group.rotation.y = Math.PI / 180 * -90;
+      group.scale.set(2,2,2)
       TE.addObject(group);
     })
 
