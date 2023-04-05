@@ -5,7 +5,7 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-01-01 21:46:05
  * :last editor: 张德志
- * :date last edited: 2023-04-06 05:08:43
+ * :date last edited: 2023-04-06 06:19:30
  */
 import {
   Object3D,
@@ -55,13 +55,17 @@ class TEngine {
 
     dom.appendChild(statsDom);
 
-    const orbitControls:OrbitControls = new OrbitControls(this.camera,this.renderer.domElement);
-    orbitControls.autoRotate = true;
-    orbitControls.enableDamping = true;
+    // const orbitControls:OrbitControls = new OrbitControls(this.camera,this.renderer.domElement);
+    // orbitControls.autoRotate = true;
+    // orbitControls.enableDamping = true;
 
 
-
+    
+    // 初始化变换控制器
     const tramsformControls = new TransformControls(this.camera,this.renderer.domElement);
+    const target = new Object3D();
+    tramsformControls.attach(target);
+    this.scene.add(target);
     this.scene.add(tramsformControls);
     
     
@@ -76,7 +80,6 @@ class TEngine {
       requestAnimationFrame(renderFn);
     }
     renderFn();
-
     this.tramsformControls = tramsformControls;
   }
   addObject(...object:Object3D[]) {
