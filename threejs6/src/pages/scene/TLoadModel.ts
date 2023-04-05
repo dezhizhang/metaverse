@@ -5,31 +5,21 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-01-03 07:12:16
  * :last editor: 张德志
- * :date last edited: 2023-04-06 04:29:51
+ * :date last edited: 2023-04-06 04:49:12
  */
 import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader';
-import { MTLLoader } from 'three/examples/jsm/loaders/MTLLoader';
-import { Group } from 'three';
+import { MeshStandardMaterial } from 'three';
+import { frameColorTexture, frameRoughnessTexture,frameDispTexture } from './TTextures';
 
 const url = 'https://tugua.oss-cn-hangzhou.aliyuncs.com/model';
 
 const objLoader: OBJLoader = new OBJLoader();
-const mtlLoader: MTLLoader = new MTLLoader();
 
-export const framePromise = new Promise<Group>((resolve, reject) => {
-  mtlLoader
-    .loadAsync(`${url}/frame.mtl`).then((materialCreator) => {
-      objLoader
-        .setMaterials(materialCreator)
-        .loadAsync(`${url}/frame.obj`)
-        .then((group) => {
-          resolve(group);
-        })
-        .catch((err) => {
-          reject(err);
-        });
-    })
-    .catch((err) => {
-      reject(err);
-    });
-});
+export const framePromise = objLoader.loadAsync(`${url}/frame.obj`);
+
+export const frameMaterial:MeshStandardMaterial = new MeshStandardMaterial({
+  map:frameColorTexture,
+  roughnessMap:frameRoughnessTexture,
+  bumpMap:frameDispTexture
+})
+
