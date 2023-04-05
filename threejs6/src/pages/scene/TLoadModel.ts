@@ -5,7 +5,7 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-01-03 07:12:16
  * :last editor: 张德志
- * :date last edited: 2023-04-06 05:03:23
+ * :date last edited: 2023-04-06 06:03:40
  */
 import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader';
 import { Material, Mesh, MeshStandardMaterial, Object3D } from 'three';
@@ -28,8 +28,8 @@ export const framePromise = new Promise<Object3D>((resolve,reject) => {
     (frame.material as Material).dispose();
     frame.material = frameMaterial;
     
-    frame.position.y = 45;
-    frame.position.z = -1;
+    frame.position.y = 120;
+    frame.position.z = -70;
     frame.rotation.y = Math.PI / 180 * -90;
     frame.scale.set(2,2,2)
 

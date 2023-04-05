@@ -5,7 +5,7 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-01-02 21:37:09
  * :last editor: 张德志
- * :date last edited: 2023-04-06 05:22:04
+ * :date last edited: 2023-04-06 06:02:17
  */
 
 import { AmbientLight, Object3D, PointLight, SpotLight } from 'three';
@@ -31,12 +31,12 @@ pointLight.position.set(20, 20, 20);
 export const spotLight: SpotLight = new SpotLight(
   'rgb(255,255,255)',
   1,
-  400,
+  200,
   (Math.PI / 180) * 45,
   0,
   0,
 );
-spotLight.position.set(0, 100, 0);
+spotLight.position.set(0, 100, 400);
 spotLight.castShadow = true;
 spotLight.target = well;
 

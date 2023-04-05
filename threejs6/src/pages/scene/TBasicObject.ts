@@ -5,7 +5,7 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-01-02 20:34:14
  * :last editor: 张德志
- * :date last edited: 2023-04-06 05:22:38
+ * :date last edited: 2023-04-06 06:07:46
  */
 
 import {
@@ -31,16 +31,17 @@ stage.receiveShadow = true;
 stage.position.y = -5;
 
 
-// 平面
-const plane:Mesh = new Mesh(
+// 图片
+const preture:Mesh = new Mesh(
   new PlaneGeometry(192,108),
   new MeshStandardMaterial({
     map:pictureTexture
   })
 )
+preture.position.y = 120;
+preture.position.z = -70;
+preture.scale.set(0.3,0.3,0.3);
 
-plane.position.y = 45;
-plane.scale.set(0.3,0.3,0.3);
 
 // 墙面
 export const well:Mesh = new Mesh(
@@ -52,13 +53,11 @@ export const well:Mesh = new Mesh(
 well.position.y = 100;
 well.position.z = -80;
 
+well.updateMatrix();
+well.updateMatrixWorld();
 
 
-
-
-
-
-basicObjectList.push(stage,well,plane);
+basicObjectList.push(stage,well,preture);
 
 
 
