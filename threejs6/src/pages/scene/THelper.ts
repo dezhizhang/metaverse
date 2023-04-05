@@ -5,7 +5,7 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-01-02 21:59:52
  * :last editor: 张德志
- * :date last edited: 2023-04-02 21:29:28
+ * :date last edited: 2023-04-06 05:07:32
  */
 
 import { AxesHelper, GridHelper, Object3D, PointLightHelper, SpotLightHelper } from "three";
@@ -26,7 +26,7 @@ const pointLighthHelper:PointLightHelper = new PointLightHelper(pointLight,point
 
 const spotLightHelper:SpotLightHelper = new SpotLightHelper(spotLight)
 
-helperList.push(axesHelper,gridHelper,pointLighthHelper,spotLightHelper);
+helperList.push(axesHelper,gridHelper,spotLightHelper);
 
 
 

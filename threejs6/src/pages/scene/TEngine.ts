@@ -5,14 +5,12 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-01-01 21:46:05
  * :last editor: 张德志
- * :date last edited: 2023-04-05 09:51:34
+ * :date last edited: 2023-04-06 05:08:43
  */
 import {
   Object3D,
   PerspectiveCamera,
-  Raycaster,
   Scene,
-  Vector2,
   Vector3,
   WebGLRenderer,
 } from 'three';
@@ -22,9 +20,7 @@ import { TransformControls } from 'three/examples/jsm/controls/TransformControls
 
 class TEngine {
   private scene: Scene;
-  private mouse:Vector2
   private dom: HTMLElement;
-  private raycaster:Raycaster;
   private renderer: WebGLRenderer;
   private camera: PerspectiveCamera;
   protected tramsformControls:TransformControls;
@@ -68,29 +64,6 @@ class TEngine {
     const tramsformControls = new TransformControls(this.camera,this.renderer.domElement);
     this.scene.add(tramsformControls);
     
-    const raycaster = new Raycaster(); 
-
-    const mouse = new Vector2();
-    this.renderer.domElement.addEventListener('mousemove',(event) => {
-      const domX = event.offsetX;
-      const domY = event.offsetY;
-      const width  = this.renderer.domElement.offsetWidth;
-      const height = this.renderer.domElement.offsetHeight;
-
-      mouse.x = domX / width * 2 - 1;
-      mouse.y = -domY * 2 / height + 1;
-
-    });
-
-    // this.renderer.domElement.addEventListener('click',event => {
-    //   raycaster.setFromCamera(mouse,this.camera);
-    //   const intersect = raycaster.intersectObjects(this.scene.children);
-    //   if(intersect.length) {
-    //     const object = intersect[0].object;
-    //     console.log('object',object)
-    //     tramsformControls.add(object);
-    //   }
-    // })
     
 
     this.renderer.setClearColor('rgb(0,0,0)');
@@ -103,7 +76,7 @@ class TEngine {
       requestAnimationFrame(renderFn);
     }
     renderFn();
-    this.mouse = mouse;
+
     this.tramsformControls = tramsformControls;
   }
   addObject(...object:Object3D[]) {
