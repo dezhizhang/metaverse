@@ -5,11 +5,11 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-01-02 21:37:09
  * :last editor: 张德志
- * :date last edited: 2023-04-06 05:19:22
+ * :date last edited: 2023-04-06 05:22:04
  */
 
 import { AmbientLight, Object3D, PointLight, SpotLight } from 'three';
-
+import { well } from './TBasicObject';
 export const lightsList: Object3D[] = [];
 
 // 环境光
@@ -38,6 +38,6 @@ export const spotLight: SpotLight = new SpotLight(
 );
 spotLight.position.set(0, 100, 0);
 spotLight.castShadow = true;
-spotLight.rotation.x = -Math.PI / 180
+spotLight.target = well;
 
 lightsList.push(ambientLight, spotLight);

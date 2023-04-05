@@ -5,7 +5,7 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-01-02 20:34:14
  * :last editor: 张德志
- * :date last edited: 2023-04-06 05:15:49
+ * :date last edited: 2023-04-06 05:22:38
  */
 
 import {
@@ -43,7 +43,7 @@ plane.position.y = 45;
 plane.scale.set(0.3,0.3,0.3);
 
 // 墙面
-const well:Mesh = new Mesh(
+export const well:Mesh = new Mesh(
   new BoxGeometry(600,200,10),
   new MeshStandardMaterial({
     color:'rgb(255,255,255)'
