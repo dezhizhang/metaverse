@@ -5,7 +5,7 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-01-01 21:46:05
  * :last editor: 张德志
- * :date last edited: 2023-04-07 06:00:11
+ * :date last edited: 2023-04-07 06:38:47
  */
 import {
   MOUSE,
@@ -90,6 +90,7 @@ class TEngine {
     let y = 0;
     let width = 0;
     let height = 0;
+    let cacheObject:Object3D | null= null;
     this.renderer.domElement.addEventListener('mousemove', (event) => {
       x = event.offsetX;
       y = event.offsetY;
@@ -99,6 +100,37 @@ class TEngine {
 
       this.mouse.x = (x / width) * 2 - 1;
       this.mouse.y = (-y * 2) / height + 1;
+
+      this.raycaster.setFromCamera(this.mouse,this.camera);
+      this.scene.remove(tramsformControls);
+      const intersection =  this.raycaster.intersectObjects(this.scene.children,false);
+      this.scene.add(tramsformControls);
+      if(intersection.length) {
+        const object = intersection[0].object;
+        if(object !== cacheObject) {
+          if(cacheObject) {
+            cacheObject.dispatchEvent({
+              type:'mouseleave'
+            })
+          }
+          object.dispatchEvent({
+            type:'mouseenter'
+          })
+        }else if(object === cacheObject) {
+          object.dispatchEvent({
+            type:'mousemove'
+          })
+        }
+        cacheObject = object;
+      }else {
+        if(cacheObject) {
+          cacheObject.dispatchEvent({
+            type:'mouseleave'
+          })
+        }
+        cacheObject = null;
+      }
+
       
     });
 
@@ -113,6 +145,22 @@ class TEngine {
       }
     });
     this.scene.add(tramsformControls);
+
+    document.addEventListener('keyup',(event) => {
+      console.log(event.key);
+      if(event.key === 'e') {
+        tramsformControls.mode = 'scale';
+        return
+      }
+      if(event.key ==='r') {
+        tramsformControls.mode = 'rotate';
+        return
+      }
+      if(event.key == 't') {
+        tramsformControls.mode = 'translate';
+        return;
+      }
+    })
    
 
     this.renderer.setClearColor('rgb(0,0,0)');

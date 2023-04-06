@@ -5,7 +5,7 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-01-02 20:34:14
  * :last editor: 张德志
- * :date last edited: 2023-04-06 06:07:46
+ * :date last edited: 2023-04-07 06:43:46
  */
 
 import {
@@ -14,6 +14,7 @@ import {
   MeshStandardMaterial,
   Object3D,
   PlaneGeometry,
+  Color,
 } from 'three';
 import { pictureTexture } from './TTextures';
 
@@ -55,6 +56,17 @@ well.position.z = -80;
 
 well.updateMatrix();
 well.updateMatrixWorld();
+
+well.addEventListener('mouseenter',() => {
+  (well.material as MeshStandardMaterial).color = new Color('rgb(255,0,0)');
+});
+
+well.addEventListener('mousemove',() => {
+  console.log('mousemove')
+});
+well.addEventListener('mouseleave',() => {
+  (well.material as MeshStandardMaterial).color = new Color('rgb(255,255,255)');
+})
 
 
 basicObjectList.push(stage,well,preture);
