@@ -5,9 +5,10 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-01-01 21:46:05
  * :last editor: 张德志
- * :date last edited: 2023-04-06 07:48:17
+ * :date last edited: 2023-04-07 05:14:07
  */
 import {
+  MOUSE,
   Object3D,
   PerspectiveCamera,
   Raycaster,
@@ -58,9 +59,12 @@ class TEngine {
 
     dom.appendChild(statsDom);
 
-    // const orbitControls:OrbitControls = new OrbitControls(this.camera,this.renderer.domElement);
-    // orbitControls.autoRotate = true;
-    // orbitControls.enableDamping = true;
+    const orbitControls:OrbitControls = new OrbitControls(this.camera,this.renderer.domElement);
+    orbitControls.mouseButtons = {
+      LEFT:null as unknown as MOUSE,
+      MIDDLE:MOUSE.DOLLY,
+      RIGHT:MOUSE.ROTATE
+    }
 
     // 初始化变换控制器
     const tramsformControls = new TransformControls(
@@ -68,11 +72,20 @@ class TEngine {
       this.renderer.domElement,
     );
 
+    
+    let transing = false;
+    tramsformControls.addEventListener("mouseDown",()=> {
+      console.log('mouseDown');
+      transing = true;
+    });
+
+  
+
     // 初始射线发射器
-    const raycaster = new Raycaster();
+    this.raycaster = new Raycaster();
 
 
-    const mouse = new Vector2();
+     this.mouse = new Vector2();
     let x = 0;
     let y = 0;
     let width = 0;
@@ -84,15 +97,16 @@ class TEngine {
       width = this.renderer.domElement.offsetWidth;
       height = this.renderer.domElement.offsetHeight;
 
-      mouse.x = (x / width) * 2 - 1;
-      mouse.y = (-y * 2) / height + 1;
-
-
+      this.mouse.x = (x / width) * 2 - 1;
+      this.mouse.y = (-y * 2) / height + 1;
+      
     });
 
     this.renderer.domElement.addEventListener('click',(event) => {
-      raycaster.setFromCamera(mouse,this.camera);
-      const intersection =  raycaster.intersectObjects(this.scene.children);
+      this.raycaster.setFromCamera(this.mouse,this.camera);
+      this.scene.remove(tramsformControls);
+      const intersection =  this.raycaster.intersectObjects(this.scene.children);
+      this.scene.add(tramsformControls);
       if (intersection.length) {
         const object = intersection[0].object;
         tramsformControls.attach(object);
@@ -105,7 +119,7 @@ class TEngine {
 
     const renderFn = () => {
       stats.update();
-      // orbitControls.update();
+      orbitControls.update();
 
       this.renderer.render(this.scene, this.camera);
       requestAnimationFrame(renderFn);
