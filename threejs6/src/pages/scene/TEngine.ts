@@ -5,7 +5,7 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-01-01 21:46:05
  * :last editor: 张德志
- * :date last edited: 2023-04-07 05:14:07
+ * :date last edited: 2023-04-07 06:00:11
  */
 import {
   MOUSE,
@@ -105,7 +105,7 @@ class TEngine {
     this.renderer.domElement.addEventListener('click',(event) => {
       this.raycaster.setFromCamera(this.mouse,this.camera);
       this.scene.remove(tramsformControls);
-      const intersection =  this.raycaster.intersectObjects(this.scene.children);
+      const intersection =  this.raycaster.intersectObjects(this.scene.children,false);
       this.scene.add(tramsformControls);
       if (intersection.length) {
         const object = intersection[0].object;
