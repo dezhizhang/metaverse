@@ -5,26 +5,23 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-01-01 21:46:05
  * :last editor: 张德志
- * :date last edited: 2023-04-07 06:38:47
+ * :date last edited: 2023-04-09 14:19:12
  */
 import {
   MOUSE,
   Object3D,
   PerspectiveCamera,
-  Raycaster,
   Scene,
-  Vector2,
   Vector3,
   WebGLRenderer,
 } from 'three';
 import Stats from 'stats.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { TransformControls } from 'three/examples/jsm/controls/TransformControls';
+import { TEventManager } from './TEventManager';
 
 class TEngine {
   private scene: Scene;
-  private mouse: Vector2;
-  private raycaster:Raycaster;
   private dom: HTMLElement;
   private renderer: WebGLRenderer;
   private camera: PerspectiveCamera;
@@ -73,77 +70,15 @@ class TEngine {
     );
 
     
-    let transing = false;
-    tramsformControls.addEventListener("mouseDown",()=> {
-      console.log('mouseDown');
-      transing = true;
+    const eventManager = new TEventManager({
+      dom:this.renderer.domElement,
+      scene:this.scene,
+      camera:this.camera
     });
 
+    
   
 
-    // 初始射线发射器
-    this.raycaster = new Raycaster();
-
-
-     this.mouse = new Vector2();
-    let x = 0;
-    let y = 0;
-    let width = 0;
-    let height = 0;
-    let cacheObject:Object3D | null= null;
-    this.renderer.domElement.addEventListener('mousemove', (event) => {
-      x = event.offsetX;
-      y = event.offsetY;
-
-      width = this.renderer.domElement.offsetWidth;
-      height = this.renderer.domElement.offsetHeight;
-
-      this.mouse.x = (x / width) * 2 - 1;
-      this.mouse.y = (-y * 2) / height + 1;
-
-      this.raycaster.setFromCamera(this.mouse,this.camera);
-      this.scene.remove(tramsformControls);
-      const intersection =  this.raycaster.intersectObjects(this.scene.children,false);
-      this.scene.add(tramsformControls);
-      if(intersection.length) {
-        const object = intersection[0].object;
-        if(object !== cacheObject) {
-          if(cacheObject) {
-            cacheObject.dispatchEvent({
-              type:'mouseleave'
-            })
-          }
-          object.dispatchEvent({
-            type:'mouseenter'
-          })
-        }else if(object === cacheObject) {
-          object.dispatchEvent({
-            type:'mousemove'
-          })
-        }
-        cacheObject = object;
-      }else {
-        if(cacheObject) {
-          cacheObject.dispatchEvent({
-            type:'mouseleave'
-          })
-        }
-        cacheObject = null;
-      }
-
-      
-    });
-
-    this.renderer.domElement.addEventListener('click',(event) => {
-      this.raycaster.setFromCamera(this.mouse,this.camera);
-      this.scene.remove(tramsformControls);
-      const intersection =  this.raycaster.intersectObjects(this.scene.children,false);
-      this.scene.add(tramsformControls);
-      if (intersection.length) {
-        const object = intersection[0].object;
-        tramsformControls.attach(object);
-      }
-    });
     this.scene.add(tramsformControls);
 
     document.addEventListener('keyup',(event) => {
