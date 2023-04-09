@@ -5,7 +5,7 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-01-02 20:34:14
  * :last editor: 张德志
- * :date last edited: 2023-04-07 06:43:46
+ * :date last edited: 2023-04-09 14:39:54
  */
 
 import {
@@ -13,10 +13,9 @@ import {
   BoxGeometry,
   MeshStandardMaterial,
   Object3D,
-  PlaneGeometry,
   Color,
 } from 'three';
-import { pictureTexture } from './TTextures';
+
 
 export const basicObjectList:Object3D[] = [];
 
@@ -30,19 +29,6 @@ const stage:Mesh = new Mesh(
 stage.castShadow = true;
 stage.receiveShadow = true;
 stage.position.y = -5;
-
-
-// 图片
-const preture:Mesh = new Mesh(
-  new PlaneGeometry(192,108),
-  new MeshStandardMaterial({
-    map:pictureTexture
-  })
-)
-preture.position.y = 120;
-preture.position.z = -70;
-preture.scale.set(0.3,0.3,0.3);
-
 
 // 墙面
 export const well:Mesh = new Mesh(
@@ -69,7 +55,7 @@ well.addEventListener('mouseleave',() => {
 })
 
 
-basicObjectList.push(stage,well,preture);
+basicObjectList.push(stage,well);
 
 
 

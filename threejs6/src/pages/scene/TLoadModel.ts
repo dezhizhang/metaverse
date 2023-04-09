@@ -27,9 +27,7 @@ export const framePromise = new Promise<Object3D>((resolve,reject) => {
     const frame:Mesh = group.children[0] as Mesh;
     (frame.material as Material).dispose();
     frame.material = frameMaterial;
-    
-    frame.position.y = 120;
-    frame.position.z = -70;
+  
     frame.rotation.y = Math.PI / 180 * -90;
     frame.scale.set(2,2,2)
 
