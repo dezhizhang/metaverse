@@ -5,7 +5,7 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-05-04 05:38:45
  * :last editor: 张德志
- * :date last edited: 2023-05-04 06:05:32
+ * :date last edited: 2023-05-04 06:20:55
  */
 import './style.css'
 
@@ -39,6 +39,8 @@ const light = new BABYLON.DirectionalLight(
   new BABYLON.Vector3(0,-1,0),
   scene
 )
+
+const ground = BABYLON.MeshBuilder.CreateGround('ground',{width:6,height:6},scene)
 
 engine.runRenderLoop(() =>{
   scene.render();
