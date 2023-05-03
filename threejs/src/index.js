@@ -5,41 +5,135 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-02-17 21:42:17
  * :last editor: 张德志
- * :date last edited: 2023-04-22 21:55:59
+ * :date last edited: 2023-05-04 07:50:31
  */
 import * as THREE from "three";
 import Stats from "stats.js";
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+import * as dat from "dat.gui";
 
-const stats = new Stats();
+let camera, scene, renderer, stats, material;
+let mouseX = 0,
+  mouseY = 0;
 
-const scene = new THREE.Scene();
+let windowHalfX = window.innerWidth / 2;
+let windowHalfY = window.innerHeight / 2;
 
-const geometry = new THREE.BoxGeometry(1,1,1);
-const material = new THREE.MeshBasicMaterial({color:0xff0000});
-const mesh = new THREE.Mesh(geometry,material);
-scene.add(mesh);
+init();
+animate();
 
-const camera = new THREE.PerspectiveCamera(75,window.innerWidth / window.innerHeight,0.1,1000);
-camera.position.set(10,10,10);
-camera.lookAt(scene.position);
+function init() {
+  camera = new THREE.PerspectiveCamera(
+    55,
+    window.innerWidth / window.innerHeight,
+    2,
+    2000
+  );
+  camera.position.z = 1000;
 
-scene.add(camera);
+  scene = new THREE.Scene();
+  scene.fog = new THREE.FogExp2(0x000000, 0.001);
 
+  const geometry = new THREE.BufferGeometry();
+  const vertices = [];
 
-const renderer = new THREE.WebGL1Renderer();
-renderer.setSize(window.innerWidth,window.innerHeight);
+  const sprite = new THREE.TextureLoader().load(
+    "https://tugua.oss-cn-hangzhou.aliyuncs.com/model/pictures/disc.png"
+  );
+  sprite.colorSpace = THREE.SRGBColorSpace;
 
-document.body.appendChild(renderer.domElement);
+  for (let i = 0; i < 10000; i++) {
+    const x = 2000 * Math.random() - 1000;
+    const y = 2000 * Math.random() - 1000;
+    const z = 2000 * Math.random() - 1000;
 
-function render() {
-  renderer.render(scene,camera);
-  requestAnimationFrame(render);
-  
+    vertices.push(x, y, z);
+  }
 
+  geometry.setAttribute(
+    "position",
+    new THREE.Float32BufferAttribute(vertices, 3)
+  );
+
+  material = new THREE.PointsMaterial({
+    size: 35,
+    sizeAttenuation: true,
+    map: sprite,
+    alphaTest: 0.5,
+    transparent: true,
+  });
+  material.color.setHSL(1.0, 0.3, 0.7, THREE.SRGBColorSpace);
+
+  const particles = new THREE.Points(geometry, material);
+  scene.add(particles);
+
+  //
+
+  renderer = new THREE.WebGLRenderer();
+  renderer.setPixelRatio(window.devicePixelRatio);
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  document.body.appendChild(renderer.domElement);
+
+  //
+
+  stats = new Stats();
+  document.body.appendChild(stats.dom);
+
+  //
+
+  const gui = new dat.GUI();
+
+  gui.add(material, "sizeAttenuation").onChange(function () {
+    material.needsUpdate = true;
+  });
+
+  gui.open();
+
+  //
+
+  document.body.style.touchAction = "none";
+  document.body.addEventListener("pointermove", onPointerMove);
+
+  //
+
+  window.addEventListener("resize", onWindowResize);
 }
 
-render();
+function onWindowResize() {
+  windowHalfX = window.innerWidth / 2;
+  windowHalfY = window.innerHeight / 2;
 
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
 
+  renderer.setSize(window.innerWidth, window.innerHeight);
+}
 
+function onPointerMove(event) {
+  if (event.isPrimary === false) return;
+
+  mouseX = event.clientX - windowHalfX;
+  mouseY = event.clientY - windowHalfY;
+}
+
+//
+
+function animate() {
+  requestAnimationFrame(animate);
+
+  render();
+  stats.update();
+}
+
+function render() {
+  const time = Date.now() * 0.00005;
+
+  camera.position.x += (mouseX - camera.position.x) * 0.05;
+  camera.position.y += (-mouseY - camera.position.y) * 0.05;
+
+  camera.lookAt(scene.position);
+
+  const h = ((360 * (1.0 + time)) % 360) / 360;
+  material.color.setHSL(h, 0.5, 0.5);
+
+  renderer.render(scene, camera);
+}
