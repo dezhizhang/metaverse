@@ -5,7 +5,7 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-02-17 21:42:17
  * :last editor: 张德志
- * :date last edited: 2023-05-05 07:30:35
+ * :date last edited: 2023-05-05 07:28:11
  */
 import * as THREE from 'three';
 
@@ -66,12 +66,9 @@ function init() {
 
   // Skybox
 
-
   const sky = new Sky();
   sky.scale.setScalar(10000);
   scene.add(sky);
-
-
 
   const skyUniforms = sky.material.uniforms;
 
