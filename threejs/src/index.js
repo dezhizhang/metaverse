@@ -5,143 +5,121 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-03-13 05:58:33
  * :last editor: 张德志
- * :date last edited: 2023-05-06 07:39:14
+ * :date last edited: 2023-05-06 07:53:09
  */
 
+import * as THREE from 'three';
+import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
+import { FilmPass } from 'three/examples/jsm/postprocessing/FilmPass.js';
+import { BloomPass } from 'three/examples/jsm/postprocessing/BloomPass.js';
 
-import * as THREE from "three";
-import Stats from "stats.js";
-import * as BufferGeometryUtils from 'three/examples/jsm/utils/BufferGeometryUtils.js'
+let camera, renderer, composer, clock;
 
-
-let renderer, scene, camera, stats;
-
-let particles;
-
-const PARTICLE_SIZE = 20;
-
-let raycaster, intersects;
-let pointer, INTERSECTED;
+let uniforms, mesh;
 
 init();
 animate();
 
 function init() {
+
   const container = document.getElementById('container');
 
-  scene = new THREE.Scene();
+  camera = new THREE.PerspectiveCamera(35, window.innerWidth / window.innerHeight, 1, 3000);
+  camera.position.z = 4;
 
-  camera = new THREE.PerspectiveCamera(45,window.innerWidth / window.innerHeight,1,10000);
-  camera.position.z = 250;
-  
-  let boxGeometry = new THREE.BoxGeometry(200,200,200,16,16,16);
-  boxGeometry.deleteAttribute('normal');
-  boxGeometry.deleteAttribute('uv');
+  const scene = new THREE.Scene();
 
+  clock = new THREE.Clock();
 
-  boxGeometry = BufferGeometryUtils.mergeVertices(boxGeometry);
+  const textureLoader = new THREE.TextureLoader();
 
-  const positionAttribute = boxGeometry.getAttribute('position');
+  uniforms = {
 
-  const colors = [];
-  const sizes = [];
-  const color = new THREE.Color();
+    'fogDensity': { value: 0.45 },
+    'fogColor': { value: new THREE.Vector3(0, 0, 0) },
+    'time': { value: 1.0 },
+    'uvScale': { value: new THREE.Vector2(3.0, 1.0) },
+    'texture1': { value: textureLoader.load('https://threejs.org/examples/textures/lava/cloud.png') },
+    'texture2': { value: textureLoader.load('https://threejs.org/examples/textures/lava/lavatile.jpg') }
 
-  for(let i=0,l = positionAttribute.count;i < l;i++) {
-    color.setHSL(0.01 + 0.1 * (i / l), 1.0, 0.5);
-    color.toArray(colors,i * 3);
-    sizes[i] = PARTICLE_SIZE * 0.5;
-    
-  }
+  };
 
-  const geometry = new THREE.BufferGeometry();
-  geometry.setAttribute('position',positionAttribute);
-  geometry.setAttribute(
-    'customColor',
-    new THREE.Float32BufferAttribute(colors, 3)
-  )
-  geometry.setAttribute('size',new THREE.Float32BufferAttribute(sizes,1));
+  uniforms['texture1'].value.wrapS = uniforms['texture1'].value.wrapT = THREE.RepeatWrapping;
+  uniforms['texture2'].value.wrapS = uniforms['texture2'].value.wrapT = THREE.RepeatWrapping;
 
+  const size = 0.65;
 
   const material = new THREE.ShaderMaterial({
-    uniforms: {
-      color: { value: new THREE.Color(0xffffff) },
-      pointTexture: {
-        value: new THREE.TextureLoader().load("https://tugua.oss-cn-hangzhou.aliyuncs.com/model/pictures/disc.png"),
-      },
-      alphaTest: { value: 0.9 },
-    },
-    vertexShader: document.getElementById("vertexshader").textContent,
-    fragmentShader: document.getElementById("fragmentshader").textContent,
+
+    uniforms: uniforms,
+    vertexShader: document.getElementById('vertexShader').textContent,
+    fragmentShader: document.getElementById('fragmentShader').textContent
+
   });
 
+  mesh = new THREE.Mesh(new THREE.TorusGeometry(size, 0.3, 30, 30), material);
+  mesh.rotation.x = 0.3;
+  scene.add(mesh);
+
   //
-  particles = new THREE.Points(geometry,material);
-  scene.add(particles);
 
-  renderer = new THREE.WebGLRenderer();
+  renderer = new THREE.WebGLRenderer({ antialias: true });
   renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(window.innerWidth,window.innerHeight);
   container.appendChild(renderer.domElement);
-
-  raycaster = new THREE.Raycaster();
-  pointer = new THREE.Vector2();
-
-  stats = new Stats();
-  container.appendChild(stats.dom);
-
-  window.addEventListener('resize',onWindowResize);
-  document.addEventListener('pointermove',onPointerMove)
-  
-
-  
-}
+  renderer.autoClear = false;
 
 
-function onPointerMove(event) {
-  pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
-  pointer.y = -(event.clientY / window.innerHeight) * 2 + 1;
+  //
+
+  const renderModel = new RenderPass(scene, camera);
+  const effectBloom = new BloomPass(1.25);
+  const effectFilm = new FilmPass(0.35, 0.95, 2048, false);
+
+  composer = new EffectComposer(renderer);
+
+  composer.addPass(renderModel);
+  composer.addPass(effectBloom);
+  composer.addPass(effectFilm);
+
+  //
+
+  onWindowResize();
+
+  window.addEventListener('resize', onWindowResize);
+
 }
 
 function onWindowResize() {
+
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
 
   renderer.setSize(window.innerWidth, window.innerHeight);
+  composer.setSize(window.innerWidth, window.innerHeight);
+
 }
 
+//
+
 function animate() {
+
   requestAnimationFrame(animate);
 
   render();
-  stats.update();
+
 }
 
 function render() {
-  particles.rotation.x += 0.0005;
-  particles.rotation.y += 0.001;
 
-  const geometry = particles.geometry;
-  const attributes = geometry.attributes;
+  const delta = 5 * clock.getDelta();
 
-  raycaster.setFromCamera(pointer, camera);
+  uniforms['time'].value += 0.2 * delta;
 
-  intersects = raycaster.intersectObject(particles);
+  mesh.rotation.y += 0.0125 * delta;
+  mesh.rotation.x += 0.05 * delta;
 
-  if (intersects.length > 0) {
-    if (INTERSECTED != intersects[0].index) {
-      attributes.size.array[INTERSECTED] = PARTICLE_SIZE;
+  renderer.clear();
+  composer.render(0.01);
 
-      INTERSECTED = intersects[0].index;
-
-      attributes.size.array[INTERSECTED] = PARTICLE_SIZE * 1.25;
-      attributes.size.needsUpdate = true;
-    }
-  } else if (INTERSECTED !== null) {
-    attributes.size.array[INTERSECTED] = PARTICLE_SIZE;
-    attributes.size.needsUpdate = true;
-    INTERSECTED = null;
-  }
-
-  renderer.render(scene, camera);
 }
