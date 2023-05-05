@@ -1,181 +1,169 @@
 /*
- * :file description:
+ * :file description: 
  * :name: /threejs/src/index.js
  * :author: 张德志
  * :copyright: (c) 2023, Tungee
- * :date created: 2023-02-17 21:42:17
+ * :date created: 2023-03-13 05:58:33
  * :last editor: 张德志
- * :date last edited: 2023-05-05 07:30:35
+ * :date last edited: 2023-05-06 07:08:55
  */
-import * as THREE from 'three';
 
+
+import * as THREE from "three";
 import Stats from "stats.js";
-import * as dat from "dat.gui";
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-import { Water } from 'three/examples/jsm/objects/Water.js';
-import { Sky } from 'three/examples/jsm/objects/Sky.js';
+import * as BufferGeometryUtils from 'three/examples/jsm/utils/BufferGeometryUtils.js'
 
-THREE.ColorManagement.enabled = false; // TODO: Confirm correct color management.
 
-let stats;
-let camera, scene, renderer;
-let controls, water, sun, mesh;
+let renderer, scene, camera, stats;
+
+let particles;
+
+const PARTICLE_SIZE = 20;
+
+let raycaster, intersects;
+let pointer, INTERSECTED;
 
 init();
 animate();
 
 function init() {
-
-  renderer = new THREE.WebGLRenderer();
-  renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(window.innerWidth,window.innerHeight);
-  renderer.outputColorSpace = THREE.LinearSRGBColorSpace;
-  renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  document.body.appendChild(renderer.domElement);
-
-  scene = new THREE.Scene();
-  
-  camera = new THREE.PerspectiveCamera(55,window.innerWidth / window.innerHeight,1,20000);
-  camera.position.set(30,30,100);
-
-  sun= new THREE.Vector3();
-
-  const waterGeometry = new THREE.PlaneGeometry(10000,10000);
-
-
-    water = new Water(
-      waterGeometry,
-      {
-        textureWidth:512,
-        textureHeight:512,
-        waterNormals: new THREE.TextureLoader().load('https://tugua.oss-cn-hangzhou.aliyuncs.com/waternormals.jpeg', function (texture) {
-
-        texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
-
-      }),
-      sunDirection: new THREE.Vector3(),
-      sunColor: 0xffffff,
-      waterColor: 0x001e0f,
-      distortionScale: 3.7,
-      fog: scene.fog !== undefined
-      }
-    )
-
-    water.rotation.x = -Math.PI / 2;
-    scene.add(water);
-
-  // Skybox
-
-
-  const sky = new Sky();
-  sky.scale.setScalar(10000);
-  scene.add(sky);
-
-
-
-  const skyUniforms = sky.material.uniforms;
-
-  skyUniforms['turbidity'].value = 10;
-  skyUniforms['rayleigh'].value = 2;
-  skyUniforms['mieCoefficient'].value = 0.005;
-  skyUniforms['mieDirectionalG'].value = 0.8;
-
-  const parameters = {
-    elevation: 2,
-    azimuth: 180
-  };
-
-  const pmremGenerator = new THREE.PMREMGenerator(renderer);
-  let renderTarget;
-
-  function updateSun() {
-
-    const phi = THREE.MathUtils.degToRad(90 - parameters.elevation);
-    const theta = THREE.MathUtils.degToRad(parameters.azimuth);
-
-    sun.setFromSphericalCoords(1, phi, theta);
-
-    sky.material.uniforms['sunPosition'].value.copy(sun);
-    water.material.uniforms['sunDirection'].value.copy(sun).normalize();
-
-    if (renderTarget !== undefined) renderTarget.dispose();
-
-    renderTarget = pmremGenerator.fromScene(sky);
-
-    scene.environment = renderTarget.texture;
-
-  }
-
-  updateSun();
-
-  //
-
-  const geometry = new THREE.BoxGeometry(30, 30, 30);
-  const material = new THREE.MeshStandardMaterial({ roughness: 0 });
-
-  mesh = new THREE.Mesh(geometry, material);
-  scene.add(mesh);
-
-  //
-
-  controls = new OrbitControls(camera, renderer.domElement);
-  controls.maxPolarAngle = Math.PI * 0.495;
-  controls.target.set(0, 10, 0);
-  controls.minDistance = 40.0;
-  controls.maxDistance = 200.0;
-  controls.update();
-
-  //
-
-  stats = new Stats();
-  document.body.appendChild(stats.dom);
-
-  // // GUI
-
-  // const gui = new dat.GUI();
-
-  // const folderSky = gui.addFolder('Sky');
-  // folderSky.add(parameters, 'elevation', 0, 90, 0.1).onChange(updateSun);
-  // folderSky.add(parameters, 'azimuth', - 180, 180, 0.1).onChange(updateSun);
-  // folderSky.open();
-
-  // const waterUniforms = water.material.uniforms;
-
-  // const folderWater = gui.addFolder('Water');
-  // folderWater.add(waterUniforms.distortionScale, 'value', 0, 8, 0.1).name('distortionScale');
-  // folderWater.add(waterUniforms.size, 'value', 0.1, 10, 0.1).name('size');
-  // folderWater.open();
-
-  //
-
-  window.addEventListener('resize', onWindowResize);
-
+  const container = document.getElementById('container')
 }
 
+// function init() {
+//   const container = document.getElementById("container");
 
+//   scene = new THREE.Scene();
+
+//   camera = new THREE.PerspectiveCamera(
+//     45,
+//     window.innerWidth / window.innerHeight,
+//     1,
+//     10000
+//   );
+//   camera.position.z = 250;
+
+//   //
+
+//   let boxGeometry = new THREE.BoxGeometry(200, 200, 200, 16, 16, 16);
+
+//   // if normal and uv attributes are not removed, mergeVertices() can't consolidate indentical vertices with different normal/uv data
+
+//   boxGeometry.deleteAttribute("normal");
+//   boxGeometry.deleteAttribute("uv");
+
+//   boxGeometry = BufferGeometryUtils.mergeVertices(boxGeometry);
+
+//   //
+
+//   const positionAttribute = boxGeometry.getAttribute("position");
+
+//   const colors = [];
+//   const sizes = [];
+
+//   const color = new THREE.Color();
+
+//   for (let i = 0, l = positionAttribute.count; i < l; i++) {
+//     color.setHSL(0.01 + 0.1 * (i / l), 1.0, 0.5);
+//     color.toArray(colors, i * 3);
+
+//     sizes[i] = PARTICLE_SIZE * 0.5;
+//   }
+
+//   const geometry = new THREE.BufferGeometry();
+//   geometry.setAttribute("position", positionAttribute);
+//   geometry.setAttribute(
+//     "customColor",
+//     new THREE.Float32BufferAttribute(colors, 3)
+//   );
+//   geometry.setAttribute("size", new THREE.Float32BufferAttribute(sizes, 1));
+
+//   //
+
+//   const material = new THREE.ShaderMaterial({
+//     uniforms: {
+//       color: { value: new THREE.Color(0xffffff) },
+//       pointTexture: {
+//         value: new THREE.TextureLoader().load("https://tugua.oss-cn-hangzhou.aliyuncs.com/model/pictures/disc.png"),
+//       },
+//       alphaTest: { value: 0.9 },
+//     },
+//     vertexShader: document.getElementById("vertexshader").textContent,
+//     fragmentShader: document.getElementById("fragmentshader").textContent,
+//   });
+
+//   //
+
+//   particles = new THREE.Points(geometry, material);
+//   scene.add(particles);
+
+//   //
+
+//   renderer = new THREE.WebGLRenderer();
+//   renderer.setPixelRatio(window.devicePixelRatio);
+//   renderer.setSize(window.innerWidth, window.innerHeight);
+//   container.appendChild(renderer.domElement);
+
+//   //
+
+//   raycaster = new THREE.Raycaster();
+//   pointer = new THREE.Vector2();
+
+//   //
+
+//   stats = new Stats();
+//   container.appendChild(stats.dom);
+
+//   //
+
+//   window.addEventListener("resize", onWindowResize);
+//   document.addEventListener("pointermove", onPointerMove);
+// }
+
+function onPointerMove(event) {
+  pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
+  pointer.y = -(event.clientY / window.innerHeight) * 2 + 1;
+}
 
 function onWindowResize() {
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
-  renderer.setSize(window.innerWidth,window.innerHeight);
+
+  renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
 function animate() {
-
   requestAnimationFrame(animate);
+
   render();
   stats.update();
-
 }
 
 function render() {
-  const time = performance.now() * 0.001;
+  particles.rotation.x += 0.0005;
+  particles.rotation.y += 0.001;
 
-  mesh.position.y = Math.sin(time) * 20 + 5;
-  mesh.rotation.x = time * 0.5;
-  mesh.rotation.z = time * 0.51;
+  const geometry = particles.geometry;
+  const attributes = geometry.attributes;
 
-  water.material.uniforms['time'].value += 1.0 / 60.0;
-  renderer.render(scene,camera);
+  raycaster.setFromCamera(pointer, camera);
+
+  intersects = raycaster.intersectObject(particles);
+
+  if (intersects.length > 0) {
+    if (INTERSECTED != intersects[0].index) {
+      attributes.size.array[INTERSECTED] = PARTICLE_SIZE;
+
+      INTERSECTED = intersects[0].index;
+
+      attributes.size.array[INTERSECTED] = PARTICLE_SIZE * 1.25;
+      attributes.size.needsUpdate = true;
+    }
+  } else if (INTERSECTED !== null) {
+    attributes.size.array[INTERSECTED] = PARTICLE_SIZE;
+    attributes.size.needsUpdate = true;
+    INTERSECTED = null;
+  }
+
+  renderer.render(scene, camera);
 }
-
