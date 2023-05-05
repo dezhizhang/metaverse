@@ -5,7 +5,7 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-03-13 05:58:33
  * :last editor: 张德志
- * :date last edited: 2023-05-06 07:08:55
+ * :date last edited: 2023-05-06 07:39:14
  */
 
 
@@ -27,98 +27,76 @@ init();
 animate();
 
 function init() {
-  const container = document.getElementById('container')
+  const container = document.getElementById('container');
+
+  scene = new THREE.Scene();
+
+  camera = new THREE.PerspectiveCamera(45,window.innerWidth / window.innerHeight,1,10000);
+  camera.position.z = 250;
+  
+  let boxGeometry = new THREE.BoxGeometry(200,200,200,16,16,16);
+  boxGeometry.deleteAttribute('normal');
+  boxGeometry.deleteAttribute('uv');
+
+
+  boxGeometry = BufferGeometryUtils.mergeVertices(boxGeometry);
+
+  const positionAttribute = boxGeometry.getAttribute('position');
+
+  const colors = [];
+  const sizes = [];
+  const color = new THREE.Color();
+
+  for(let i=0,l = positionAttribute.count;i < l;i++) {
+    color.setHSL(0.01 + 0.1 * (i / l), 1.0, 0.5);
+    color.toArray(colors,i * 3);
+    sizes[i] = PARTICLE_SIZE * 0.5;
+    
+  }
+
+  const geometry = new THREE.BufferGeometry();
+  geometry.setAttribute('position',positionAttribute);
+  geometry.setAttribute(
+    'customColor',
+    new THREE.Float32BufferAttribute(colors, 3)
+  )
+  geometry.setAttribute('size',new THREE.Float32BufferAttribute(sizes,1));
+
+
+  const material = new THREE.ShaderMaterial({
+    uniforms: {
+      color: { value: new THREE.Color(0xffffff) },
+      pointTexture: {
+        value: new THREE.TextureLoader().load("https://tugua.oss-cn-hangzhou.aliyuncs.com/model/pictures/disc.png"),
+      },
+      alphaTest: { value: 0.9 },
+    },
+    vertexShader: document.getElementById("vertexshader").textContent,
+    fragmentShader: document.getElementById("fragmentshader").textContent,
+  });
+
+  //
+  particles = new THREE.Points(geometry,material);
+  scene.add(particles);
+
+  renderer = new THREE.WebGLRenderer();
+  renderer.setPixelRatio(window.devicePixelRatio);
+  renderer.setSize(window.innerWidth,window.innerHeight);
+  container.appendChild(renderer.domElement);
+
+  raycaster = new THREE.Raycaster();
+  pointer = new THREE.Vector2();
+
+  stats = new Stats();
+  container.appendChild(stats.dom);
+
+  window.addEventListener('resize',onWindowResize);
+  document.addEventListener('pointermove',onPointerMove)
+  
+
+  
 }
 
-// function init() {
-//   const container = document.getElementById("container");
-
-//   scene = new THREE.Scene();
-
-//   camera = new THREE.PerspectiveCamera(
-//     45,
-//     window.innerWidth / window.innerHeight,
-//     1,
-//     10000
-//   );
-//   camera.position.z = 250;
-
-//   //
-
-//   let boxGeometry = new THREE.BoxGeometry(200, 200, 200, 16, 16, 16);
-
-//   // if normal and uv attributes are not removed, mergeVertices() can't consolidate indentical vertices with different normal/uv data
-
-//   boxGeometry.deleteAttribute("normal");
-//   boxGeometry.deleteAttribute("uv");
-
-//   boxGeometry = BufferGeometryUtils.mergeVertices(boxGeometry);
-
-//   //
-
-//   const positionAttribute = boxGeometry.getAttribute("position");
-
-//   const colors = [];
-//   const sizes = [];
-
-//   const color = new THREE.Color();
-
-//   for (let i = 0, l = positionAttribute.count; i < l; i++) {
-//     color.setHSL(0.01 + 0.1 * (i / l), 1.0, 0.5);
-//     color.toArray(colors, i * 3);
-
-//     sizes[i] = PARTICLE_SIZE * 0.5;
-//   }
-
-//   const geometry = new THREE.BufferGeometry();
-//   geometry.setAttribute("position", positionAttribute);
-//   geometry.setAttribute(
-//     "customColor",
-//     new THREE.Float32BufferAttribute(colors, 3)
-//   );
-//   geometry.setAttribute("size", new THREE.Float32BufferAttribute(sizes, 1));
-
-//   //
-
-//   const material = new THREE.ShaderMaterial({
-//     uniforms: {
-//       color: { value: new THREE.Color(0xffffff) },
-//       pointTexture: {
-//         value: new THREE.TextureLoader().load("https://tugua.oss-cn-hangzhou.aliyuncs.com/model/pictures/disc.png"),
-//       },
-//       alphaTest: { value: 0.9 },
-//     },
-//     vertexShader: document.getElementById("vertexshader").textContent,
-//     fragmentShader: document.getElementById("fragmentshader").textContent,
-//   });
-
-//   //
-
-//   particles = new THREE.Points(geometry, material);
-//   scene.add(particles);
-
-//   //
-
-//   renderer = new THREE.WebGLRenderer();
-//   renderer.setPixelRatio(window.devicePixelRatio);
-//   renderer.setSize(window.innerWidth, window.innerHeight);
-//   container.appendChild(renderer.domElement);
-
-//   //
-
-//   raycaster = new THREE.Raycaster();
-//   pointer = new THREE.Vector2();
-
-//   //
-
-//   stats = new Stats();
-//   container.appendChild(stats.dom);
-
-//   //
-
-//   window.addEventListener("resize", onWindowResize);
-//   document.addEventListener("pointermove", onPointerMove);
-// }
 
 function onPointerMove(event) {
   pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
