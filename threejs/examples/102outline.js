@@ -1,3 +1,12 @@
+/*
+ * :file description: 
+ * :name: /threejs/examples/102Outline.js
+ * :author: 张德志
+ * :copyright: (c) 2023, Tungee
+ * :date created: 2023-05-07 16:10:37
+ * :last editor: 张德志
+ * :date last edited: 2023-05-07 16:11:10
+ */
 import * as THREE from 'three';
 
 import Stats from 'stats.js';
