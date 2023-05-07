@@ -1,3 +1,12 @@
+/*
+ * :file description: 
+ * :name: /threejs/examples/110BufferGeometry2.js
+ * :author: 张德志
+ * :copyright: (c) 2023, Tungee
+ * :date created: 2023-05-08 05:43:09
+ * :last editor: 张德志
+ * :date last edited: 2023-05-08 05:43:29
+ */
 import * as THREE from "three";
 import Stats from "stats.js";
 
