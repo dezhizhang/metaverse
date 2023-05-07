@@ -5,7 +5,7 @@
  * :copyright: (c) 2022, Tungee
  * :date created: 2022-07-12 07:39:26
  * :last editor: 张德志
- * :date last edited: 2023-05-06 07:48:34
+ * :date last edited: 2023-05-07 14:46:03
 -->
 <!DOCTYPE html>
 <html lang="en">
@@ -86,6 +86,16 @@
     </style>
   </head>
   <body>
-    <div id="container"></div>
+	<div id="overlay">
+		<h2>WARNING</h2>
+		<p style="text-align: center; max-width:450px; margin-bottom:40px;">
+			This example may potentially trigger seizures for people with <strong>photosensitive epilepsy</strong>.
+		</p>
+		<button id="startButton">Okay</button>
+	</div>
+
+	<div id="info">
+		<label for="dotScreen">Glitch me wild:</label><input id="wildGlitch" type="checkbox"/><br />
+	</div>
   </body>
 </html>
