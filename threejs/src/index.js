@@ -1,230 +1,125 @@
+import * as THREE from "three";
 
-
-import * as THREE from 'three';
-
-import Stats from 'stats.js';
-
-let SCREEN_WIDTH = window.innerWidth;
-let SCREEN_HEIGHT = window.innerHeight;
-let aspect = SCREEN_WIDTH / SCREEN_HEIGHT;
-
-let container, stats;
-let camera, scene, renderer, mesh;
-let cameraRig, activeCamera, activeHelper;
-let cameraPerspective, cameraOrtho;
-let cameraPerspectiveHelper, cameraOrthoHelper;
-const frustumSize = 600;
+let camera, scene, renderer;
+let mesh;
+const AMOUNT = 6;
 
 init();
 animate();
 
 function init() {
-  scene = new THREE.Scene();
+  const ASPECT_RATIO = window.innerWidth / window.innerHeight;
+  const WIDTH = (window.innerWidth / AMOUNT) * window.devicePixelRatio;
+  const HEIGHT = (window.innerHeight / AMOUNT) * window.devicePixelRatio;
 
-  camera = new THREE.PerspectiveCamera(50,0.5 * aspect,1,10000);
-  camera.position.z = 2500;
-
-  cameraPerspective = new THREE.PerspectiveCamera(50,0.5 * aspect,150,1000);
-
-  cameraPerspectiveHelper = new THREE.CameraHelper(cameraPerspective);
-  scene.add(cameraPerspectiveHelper);
-
-  cameraOrtho = new THREE.OrthographicCamera(0.5 * frustumSize * aspect / -2,0.5 * frustumSize * aspect / 2,frustumSize / 2,frustumSize / -2,150,1000);
-  cameraOrthoHelper = new THREE.CameraHelper(cameraOrtho);
-  scene.add(cameraOrthoHelper);
-
-  activeCamera = cameraPerspective;
-  activeHelper = cameraPerspectiveHelper;
-
-  cameraOrtho.rotation.y = Math.PI;
-  cameraPerspective.rotation.y = Math.PI;
-
-  cameraRig = new THREE.Group();
-  cameraRig.add(cameraPerspective);
-  cameraRig.add(cameraOrtho);
-  scene.add(cameraRig);
-
-
-
-
-
-
-
-
+  const cameras = [];
+  for(let y = 0;y < AMOUNT;y++) {
+    for(let x = 0; x < AMOUNT;x++) {
+      const subcamera = new THREE.PerspectiveCamera(40,ASPECT_RATIO,0.1,10);
+      
+    }
+  }
 }
 
 // function init() {
+//   const ASPECT_RATIO = window.innerWidth / window.innerHeight;
 
+//   const WIDTH = (window.innerWidth / AMOUNT) * window.devicePixelRatio;
+//   const HEIGHT = (window.innerHeight / AMOUNT) * window.devicePixelRatio;
 
+//   const cameras = [];
 
-
-//   //
-
-//   mesh = new THREE.Mesh(
-//     new THREE.SphereGeometry( 100, 16, 8 ),
-//     new THREE.MeshBasicMaterial( { color: 0xffffff, wireframe: true } )
-//   );
-//   scene.add( mesh );
-
-//   const mesh2 = new THREE.Mesh(
-//     new THREE.SphereGeometry( 50, 16, 8 ),
-//     new THREE.MeshBasicMaterial( { color: 0x00ff00, wireframe: true } )
-//   );
-//   mesh2.position.y = 150;
-//   mesh.add( mesh2 );
-
-//   const mesh3 = new THREE.Mesh(
-//     new THREE.SphereGeometry( 5, 16, 8 ),
-//     new THREE.MeshBasicMaterial( { color: 0x0000ff, wireframe: true } )
-//   );
-//   mesh3.position.z = 150;
-//   cameraRig.add( mesh3 );
-
-//   //
-
-//   const geometry = new THREE.BufferGeometry();
-//   const vertices = [];
-
-//   for ( let i = 0; i < 10000; i ++ ) {
-
-//     vertices.push( THREE.MathUtils.randFloatSpread( 2000 ) ); // x
-//     vertices.push( THREE.MathUtils.randFloatSpread( 2000 ) ); // y
-//     vertices.push( THREE.MathUtils.randFloatSpread( 2000 ) ); // z
-
+//   for (let y = 0; y < AMOUNT; y++) {
+//     for (let x = 0; x < AMOUNT; x++) {
+//       const subcamera = new THREE.PerspectiveCamera(40, ASPECT_RATIO, 0.1, 10);
+//       subcamera.viewport = new THREE.Vector4(
+//         Math.floor(x * WIDTH),
+//         Math.floor(y * HEIGHT),
+//         Math.ceil(WIDTH),
+//         Math.ceil(HEIGHT)
+//       );
+//       subcamera.position.x = x / AMOUNT - 0.5;
+//       subcamera.position.y = 0.5 - y / AMOUNT;
+//       subcamera.position.z = 1.5;
+//       subcamera.position.multiplyScalar(2);
+//       subcamera.lookAt(0, 0, 0);
+//       subcamera.updateMatrixWorld();
+//       cameras.push(subcamera);
+//     }
 //   }
 
-//   geometry.setAttribute( 'position', new THREE.Float32BufferAttribute( vertices, 3 ) );
+//   camera = new THREE.ArrayCamera(cameras);
+//   camera.position.z = 3;
 
-//   const particles = new THREE.Points( geometry, new THREE.PointsMaterial( { color: 0x888888 } ) );
-//   scene.add( particles );
+//   scene = new THREE.Scene();
+
+//   scene.add(new THREE.AmbientLight(0x222244));
+
+//   const light = new THREE.DirectionalLight();
+//   light.position.set(0.5, 0.5, 1);
+//   light.castShadow = true;
+//   light.shadow.camera.zoom = 4; // tighter shadow map
+//   scene.add(light);
+
+//   const geometryBackground = new THREE.PlaneGeometry(100, 100);
+//   const materialBackground = new THREE.MeshPhongMaterial({ color: 0x000066 });
+
+//   const background = new THREE.Mesh(geometryBackground, materialBackground);
+//   background.receiveShadow = true;
+//   background.position.set(0, 0, -1);
+//   scene.add(background);
+
+//   const geometryCylinder = new THREE.CylinderGeometry(0.5, 0.5, 1, 32);
+//   const materialCylinder = new THREE.MeshPhongMaterial({ color: 0xff0000 });
+
+//   mesh = new THREE.Mesh(geometryCylinder, materialCylinder);
+//   mesh.castShadow = true;
+//   mesh.receiveShadow = true;
+//   scene.add(mesh);
+
+//   renderer = new THREE.WebGLRenderer();
+//   renderer.setPixelRatio(window.devicePixelRatio);
+//   renderer.setSize(window.innerWidth, window.innerHeight);
+//   renderer.shadowMap.enabled = true;
+//   document.body.appendChild(renderer.domElement);
 
 //   //
 
-//   renderer = new THREE.WebGLRenderer( { antialias: true } );
-//   renderer.setPixelRatio( window.devicePixelRatio );
-//   renderer.setSize( SCREEN_WIDTH, SCREEN_HEIGHT );
-//   container.appendChild( renderer.domElement );
-
-//   renderer.autoClear = false;
-
-//   //
-
-//   stats = new Stats();
-//   container.appendChild( stats.dom );
-
-//   //
-
-//   window.addEventListener( 'resize', onWindowResize );
-//   document.addEventListener( 'keydown', onKeyDown );
-
+//   window.addEventListener("resize", onWindowResize);
 // }
 
-//
-
-function onKeyDown( event ) {
-
-  switch ( event.keyCode ) {
-
-    case 79: /*O*/
-
-      activeCamera = cameraOrtho;
-      activeHelper = cameraOrthoHelper;
-
-      break;
-
-    case 80: /*P*/
-
-      activeCamera = cameraPerspective;
-      activeHelper = cameraPerspectiveHelper;
-
-      break;
-
-  }
-
-}
-
-//
-
 function onWindowResize() {
+  const ASPECT_RATIO = window.innerWidth / window.innerHeight;
+  const WIDTH = (window.innerWidth / AMOUNT) * window.devicePixelRatio;
+  const HEIGHT = (window.innerHeight / AMOUNT) * window.devicePixelRatio;
 
-  SCREEN_WIDTH = window.innerWidth;
-  SCREEN_HEIGHT = window.innerHeight;
-  aspect = SCREEN_WIDTH / SCREEN_HEIGHT;
-
-  renderer.setSize( SCREEN_WIDTH, SCREEN_HEIGHT );
-
-  camera.aspect = 0.5 * aspect;
+  camera.aspect = ASPECT_RATIO;
   camera.updateProjectionMatrix();
 
-  cameraPerspective.aspect = 0.5 * aspect;
-  cameraPerspective.updateProjectionMatrix();
+  for (let y = 0; y < AMOUNT; y++) {
+    for (let x = 0; x < AMOUNT; x++) {
+      const subcamera = camera.cameras[AMOUNT * y + x];
 
-  cameraOrtho.left = - 0.5 * frustumSize * aspect / 2;
-  cameraOrtho.right = 0.5 * frustumSize * aspect / 2;
-  cameraOrtho.top = frustumSize / 2;
-  cameraOrtho.bottom = - frustumSize / 2;
-  cameraOrtho.updateProjectionMatrix();
+      subcamera.viewport.set(
+        Math.floor(x * WIDTH),
+        Math.floor(y * HEIGHT),
+        Math.ceil(WIDTH),
+        Math.ceil(HEIGHT)
+      );
 
-}
-
-//
-
-function animate() {
-
-  requestAnimationFrame( animate );
-
-  render();
-  stats.update();
-
-}
-
-
-function render() {
-
-  const r = Date.now() * 0.0005;
-
-  mesh.position.x = 700 * Math.cos( r );
-  mesh.position.z = 700 * Math.sin( r );
-  mesh.position.y = 700 * Math.sin( r );
-
-  mesh.children[ 0 ].position.x = 70 * Math.cos( 2 * r );
-  mesh.children[ 0 ].position.z = 70 * Math.sin( r );
-
-  if ( activeCamera === cameraPerspective ) {
-
-    cameraPerspective.fov = 35 + 30 * Math.sin( 0.5 * r );
-    cameraPerspective.far = mesh.position.length();
-    cameraPerspective.updateProjectionMatrix();
-
-    cameraPerspectiveHelper.update();
-    cameraPerspectiveHelper.visible = true;
-
-    cameraOrthoHelper.visible = false;
-
-  } else {
-
-    cameraOrtho.far = mesh.position.length();
-    cameraOrtho.updateProjectionMatrix();
-
-    cameraOrthoHelper.update();
-    cameraOrthoHelper.visible = true;
-
-    cameraPerspectiveHelper.visible = false;
-
+      subcamera.aspect = ASPECT_RATIO;
+      subcamera.updateProjectionMatrix();
+    }
   }
 
-  cameraRig.lookAt( mesh.position );
+  renderer.setSize(window.innerWidth, window.innerHeight);
+}
 
-  renderer.clear();
+function animate() {
+  mesh.rotation.x += 0.005;
+  mesh.rotation.z += 0.01;
 
-  activeHelper.visible = false;
+  renderer.render(scene, camera);
 
-  renderer.setViewport( 0, 0, SCREEN_WIDTH / 2, SCREEN_HEIGHT );
-  renderer.render( scene, activeCamera );
-
-  activeHelper.visible = true;
-
-  renderer.setViewport( SCREEN_WIDTH / 2, 0, SCREEN_WIDTH / 2, SCREEN_HEIGHT );
-  renderer.render( scene, camera );
-
+  requestAnimationFrame(animate);
 }
