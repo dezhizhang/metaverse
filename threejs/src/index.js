@@ -1,168 +1,230 @@
-/*
- * :file description:
- * :name: /threejs/src/index.js
- * :author: 张德志
- * :copyright: (c) 2023, Tungee
- * :date created: 2023-03-13 05:58:33
- * :last editor: 张德志
- * :date last edited: 2023-05-10 05:56:08
- */
-import * as THREE from "three";
-import { TrackballControls } from "three/examples/jsm/controls/TrackballControls";
-import {
-  CSS3DRenderer,
-  CSS3DSprite,
-} from "three/examples/jsm/renderers/CSS3DRenderer";
-import * as TWEEN from "@tweenjs/tween.js";
 
-let camera, scene, renderer;
-let controls;
 
-const particlesTotal = 512;
-const positions = [];
-const objects = [];
-let current = 0;
+import * as THREE from 'three';
+
+import Stats from 'stats.js';
+
+let SCREEN_WIDTH = window.innerWidth;
+let SCREEN_HEIGHT = window.innerHeight;
+let aspect = SCREEN_WIDTH / SCREEN_HEIGHT;
+
+let container, stats;
+let camera, scene, renderer, mesh;
+let cameraRig, activeCamera, activeHelper;
+let cameraPerspective, cameraOrtho;
+let cameraPerspectiveHelper, cameraOrthoHelper;
+const frustumSize = 600;
 
 init();
 animate();
 
 function init() {
-  camera = new THREE.PerspectiveCamera(
-    75,
-    window.innerWidth / window.innerHeight,
-    1,
-    5000
-  );
-  camera.position.set(600, 400, 1500);
-  camera.lookAt(0, 0, 0);
-
   scene = new THREE.Scene();
-  const image = document.createElement("img");
-  image.addEventListener("load", function () {
-    for (let i = 0; i < particlesTotal; i++) {
-      const object = new CSS3DSprite(image.cloneNode());
-      object.position.x = Math.random() * 4000 - 2000;
-      object.position.y = Math.random() * 4000 - 2000;
-      object.position.z = Math.random() * 4000 - 2000;
-      scene.add(object);
-      objects.push(object);
-    }
-    transition();
-  });
-  image.src = "https://threejs.org/examples/textures/sprite.png";
 
-  // plan
-  const amountX = 16;
-  const amountZ = 32;
-  const separationPlane = 150;
-  const offsetX = ((amountX - 1) * separationPlane) / 2;
-  const offsetZ = ((amountZ - 1) * separationPlane) / 2;
+  camera = new THREE.PerspectiveCamera(50,0.5 * aspect,1,10000);
+  camera.position.z = 2500;
 
-  for (let i = 0; i < particlesTotal; i++) {
-    const x = (i % amountX) * separationPlane;
-    const z = Math.floor(i / amountX) * separationPlane;
-    const y = (Math.sin(x * 0.5) + Math.sin(z * 0.5)) * 200;
-    positions.push(x - offsetX, y, z - offsetZ);
-  }
+  cameraPerspective = new THREE.PerspectiveCamera(50,0.5 * aspect,150,1000);
 
-  // Cube
+  cameraPerspectiveHelper = new THREE.CameraHelper(cameraPerspective);
+  scene.add(cameraPerspectiveHelper);
 
-  const amount = 8;
-  const separationCube = 150;
-  const offset = ((amount - 1) * separationCube) / 2;
+  cameraOrtho = new THREE.OrthographicCamera(0.5 * frustumSize * aspect / -2,0.5 * frustumSize * aspect / 2,frustumSize / 2,frustumSize / -2,150,1000);
+  cameraOrthoHelper = new THREE.CameraHelper(cameraOrtho);
+  scene.add(cameraOrthoHelper);
 
-  for (let i = 0; i < particlesTotal; i++) {
-    const x = (i % amount) * separationCube;
-    const y = Math.floor((i / amount) % amount) * separationCube;
-    const z = Math.floor(i / (amount * amount)) * separationCube;
+  activeCamera = cameraPerspective;
+  activeHelper = cameraPerspectiveHelper;
 
-    positions.push(x - offset, y - offset, z - offset);
-  }
+  cameraOrtho.rotation.y = Math.PI;
+  cameraPerspective.rotation.y = Math.PI;
 
-  // Random
+  cameraRig = new THREE.Group();
+  cameraRig.add(cameraPerspective);
+  cameraRig.add(cameraOrtho);
+  scene.add(cameraRig);
 
-  for (let i = 0; i < particlesTotal; i++) {
-    positions.push(
-      Math.random() * 4000 - 2000,
-      Math.random() * 4000 - 2000,
-      Math.random() * 4000 - 2000
-    );
-  }
 
-  // Sphere
 
-  const radius = 750;
 
-  for (let i = 0; i < particlesTotal; i++) {
-    const phi = Math.acos(-1 + (2 * i) / particlesTotal);
-    const theta = Math.sqrt(particlesTotal * Math.PI) * phi;
 
-    positions.push(
-      radius * Math.cos(theta) * Math.sin(phi),
-      radius * Math.sin(theta) * Math.sin(phi),
-      radius * Math.cos(phi)
-    );
-  }
 
-  //
 
-  renderer = new CSS3DRenderer();
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  document.body.appendChild(renderer.domElement);
 
-  //
-
-  controls = new TrackballControls(camera, renderer.domElement);
-
-  //
-
-  window.addEventListener("resize", onWindowResize);
 }
+
+// function init() {
+
+
+
+
+//   //
+
+//   mesh = new THREE.Mesh(
+//     new THREE.SphereGeometry( 100, 16, 8 ),
+//     new THREE.MeshBasicMaterial( { color: 0xffffff, wireframe: true } )
+//   );
+//   scene.add( mesh );
+
+//   const mesh2 = new THREE.Mesh(
+//     new THREE.SphereGeometry( 50, 16, 8 ),
+//     new THREE.MeshBasicMaterial( { color: 0x00ff00, wireframe: true } )
+//   );
+//   mesh2.position.y = 150;
+//   mesh.add( mesh2 );
+
+//   const mesh3 = new THREE.Mesh(
+//     new THREE.SphereGeometry( 5, 16, 8 ),
+//     new THREE.MeshBasicMaterial( { color: 0x0000ff, wireframe: true } )
+//   );
+//   mesh3.position.z = 150;
+//   cameraRig.add( mesh3 );
+
+//   //
+
+//   const geometry = new THREE.BufferGeometry();
+//   const vertices = [];
+
+//   for ( let i = 0; i < 10000; i ++ ) {
+
+//     vertices.push( THREE.MathUtils.randFloatSpread( 2000 ) ); // x
+//     vertices.push( THREE.MathUtils.randFloatSpread( 2000 ) ); // y
+//     vertices.push( THREE.MathUtils.randFloatSpread( 2000 ) ); // z
+
+//   }
+
+//   geometry.setAttribute( 'position', new THREE.Float32BufferAttribute( vertices, 3 ) );
+
+//   const particles = new THREE.Points( geometry, new THREE.PointsMaterial( { color: 0x888888 } ) );
+//   scene.add( particles );
+
+//   //
+
+//   renderer = new THREE.WebGLRenderer( { antialias: true } );
+//   renderer.setPixelRatio( window.devicePixelRatio );
+//   renderer.setSize( SCREEN_WIDTH, SCREEN_HEIGHT );
+//   container.appendChild( renderer.domElement );
+
+//   renderer.autoClear = false;
+
+//   //
+
+//   stats = new Stats();
+//   container.appendChild( stats.dom );
+
+//   //
+
+//   window.addEventListener( 'resize', onWindowResize );
+//   document.addEventListener( 'keydown', onKeyDown );
+
+// }
+
+//
+
+function onKeyDown( event ) {
+
+  switch ( event.keyCode ) {
+
+    case 79: /*O*/
+
+      activeCamera = cameraOrtho;
+      activeHelper = cameraOrthoHelper;
+
+      break;
+
+    case 80: /*P*/
+
+      activeCamera = cameraPerspective;
+      activeHelper = cameraPerspectiveHelper;
+
+      break;
+
+  }
+
+}
+
+//
 
 function onWindowResize() {
-  camera.aspect = window.innerWidth / window.innerHeight;
+
+  SCREEN_WIDTH = window.innerWidth;
+  SCREEN_HEIGHT = window.innerHeight;
+  aspect = SCREEN_WIDTH / SCREEN_HEIGHT;
+
+  renderer.setSize( SCREEN_WIDTH, SCREEN_HEIGHT );
+
+  camera.aspect = 0.5 * aspect;
   camera.updateProjectionMatrix();
 
-  renderer.setSize(window.innerWidth, window.innerHeight);
+  cameraPerspective.aspect = 0.5 * aspect;
+  cameraPerspective.updateProjectionMatrix();
+
+  cameraOrtho.left = - 0.5 * frustumSize * aspect / 2;
+  cameraOrtho.right = 0.5 * frustumSize * aspect / 2;
+  cameraOrtho.top = frustumSize / 2;
+  cameraOrtho.bottom = - frustumSize / 2;
+  cameraOrtho.updateProjectionMatrix();
+
 }
 
-function transition() {
-  const offset = current * particlesTotal * 3;
-  const duration = 2000;
-
-  for (let i = 0, j = offset; i < particlesTotal; i++, j += 3) {
-    const object = objects[i];
-
-    new TWEEN.Tween(object.position)
-      .to(
-        {
-          x: positions[j],
-          y: positions[j + 1],
-          z: positions[j + 2],
-        },
-        Math.random() * duration + duration
-      )
-      .easing(TWEEN.Easing.Exponential.InOut)
-      .start();
-  }
-
-  new TWEEN.Tween(this)
-    .to({}, duration * 3)
-    .onComplete(transition)
-    .start();
-
-  current = (current + 1) % 4;
-}
+//
 
 function animate() {
-  requestAnimationFrame(animate);
-  TWEEN.update();
-  controls.update();
-  const time = performance.now();
-  for (let i = 0, l = objects.length; i < l; i++) {
-    const object = objects[i];
-    const scale = Math.sin((Math.floor(object.position.x) + time) * 0.002) * 0.3 + 1;
-    object.scale.set(scale, scale, scale);
+
+  requestAnimationFrame( animate );
+
+  render();
+  stats.update();
+
+}
+
+
+function render() {
+
+  const r = Date.now() * 0.0005;
+
+  mesh.position.x = 700 * Math.cos( r );
+  mesh.position.z = 700 * Math.sin( r );
+  mesh.position.y = 700 * Math.sin( r );
+
+  mesh.children[ 0 ].position.x = 70 * Math.cos( 2 * r );
+  mesh.children[ 0 ].position.z = 70 * Math.sin( r );
+
+  if ( activeCamera === cameraPerspective ) {
+
+    cameraPerspective.fov = 35 + 30 * Math.sin( 0.5 * r );
+    cameraPerspective.far = mesh.position.length();
+    cameraPerspective.updateProjectionMatrix();
+
+    cameraPerspectiveHelper.update();
+    cameraPerspectiveHelper.visible = true;
+
+    cameraOrthoHelper.visible = false;
+
+  } else {
+
+    cameraOrtho.far = mesh.position.length();
+    cameraOrtho.updateProjectionMatrix();
+
+    cameraOrthoHelper.update();
+    cameraOrthoHelper.visible = true;
+
+    cameraPerspectiveHelper.visible = false;
+
   }
-  renderer.render(scene, camera);
+
+  cameraRig.lookAt( mesh.position );
+
+  renderer.clear();
+
+  activeHelper.visible = false;
+
+  renderer.setViewport( 0, 0, SCREEN_WIDTH / 2, SCREEN_HEIGHT );
+  renderer.render( scene, activeCamera );
+
+  activeHelper.visible = true;
+
+  renderer.setViewport( SCREEN_WIDTH / 2, 0, SCREEN_WIDTH / 2, SCREEN_HEIGHT );
+  renderer.render( scene, camera );
+
 }
