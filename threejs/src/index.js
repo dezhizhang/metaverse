@@ -1,121 +1,172 @@
-import * as THREE from "three";
-import Stats from "stats.js";
+/*
+ * :file description: 
+ * :name: /threejs/src/index.js
+ * :author: 张德志
+ * :copyright: (c) 2023, Tungee
+ * :date created: 2023-03-13 05:58:33
+ * :last editor: 张德志
+ * :date last edited: 2023-05-09 23:19:52
+ */
+import * as THREE from 'three';
 
-let stats, clock;
+import { TrackballControls } from 'three/examples/jsm/controls/TrackballControls.js';
+import {CSS3DRenderer, CSS3DObject} from 'three/examples/jsm/renderers/CSS3DRenderer.js'
+import * as dat from "dat.gui";
 
 let camera, scene, renderer;
 
-let line;
+let scene2, renderer2;
 
-const segments = 10000;
-const r = 800;
-let t = 0;
+let controls;
 
 init();
 animate();
 
 function init() {
-  camera = new THREE.PerspectiveCamera(27,window.innerWidth/window.innerHeight,1,4000);
-  camera.position.z = 2750;
-  
+
+  camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 1000);
+  camera.position.set(200, 200, 200);
+
   scene = new THREE.Scene();
+  scene.background = new THREE.Color(0xf0f0f0);
 
-  clock = new THREE.Clock();
+  scene2 = new THREE.Scene();
 
-  const geometry = new THREE.BufferGeometry();
-  const material = new THREE.LineBasicMaterial({vertexColors:true});
+  const material = new THREE.MeshBasicMaterial({ color: 0x000000, wireframe: true, wireframeLinewidth: 1, side: THREE.DoubleSide });
 
-  const positions = [];
-  const colors = [];
+  //
 
-  for(let i=0;i < segments;i++) {
-    const x = Math.random() * r - r / 2;
-    const y = Math.random() * r - r / 2;
-    const z = Math.random() * r - r / 2;
+  for (let i = 0; i < 10; i++) {
 
-    positions.push(x,y,z);
+    const element = document.createElement('div');
+    element.style.width = '100px';
+    element.style.height = '100px';
+    element.style.opacity = (i < 5) ? 0.5 : 1;
+    element.style.background = new THREE.Color(Math.random() * 0xffffff).getStyle();
 
-    colors.push( ( x / r ) + 0.5 );
-    colors.push( ( y / r ) + 0.5 );
-    colors.push( ( z / r ) + 0.5 );
+    const object = new CSS3DObject(element);
+    object.position.x = Math.random() * 200 - 100;
+    object.position.y = Math.random() * 200 - 100;
+    object.position.z = Math.random() * 200 - 100;
+    object.rotation.x = Math.random();
+    object.rotation.y = Math.random();
+    object.rotation.z = Math.random();
+    object.scale.x = Math.random() + 0.5;
+    object.scale.y = Math.random() + 0.5;
+    scene2.add(object);
+
+    const geometry = new THREE.PlaneGeometry(100, 100);
+    const mesh = new THREE.Mesh(geometry, material);
+    mesh.position.copy(object.position);
+    mesh.rotation.copy(object.rotation);
+    mesh.scale.copy(object.scale);
+    scene.add(mesh);
 
   }
 
-
-
-  geometry.setAttribute( 'position', new THREE.Float32BufferAttribute( positions, 3 ) );
-  geometry.setAttribute( 'color', new THREE.Float32BufferAttribute( colors, 3 ) );
-  generateMorphTargets( geometry );
-
-  geometry.computeBoundingSphere();
-
-  line = new THREE.Line( geometry, material );
-  scene.add( line );
-
   //
 
-  renderer = new THREE.WebGLRenderer();
-  renderer.setPixelRatio( window.devicePixelRatio );
-  renderer.setSize( window.innerWidth, window.innerHeight );
+  renderer = new THREE.WebGLRenderer({ antialias: true });
+  renderer.setPixelRatio(window.devicePixelRatio);
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  document.body.appendChild(renderer.domElement);
 
-  document.body.appendChild( renderer.domElement );
+  renderer2 = new CSS3DRenderer();
+  renderer2.setSize(window.innerWidth, window.innerHeight);
+  renderer2.domElement.style.position = 'absolute';
+  renderer2.domElement.style.top = 0;
+  document.body.appendChild(renderer2.domElement);
 
-  //
+  controls = new TrackballControls(camera, renderer2.domElement);
 
-  stats = new Stats();
-  document.body.appendChild( stats.dom );
-
-  //
-
-  window.addEventListener( 'resize', onWindowResize );
-
-
+  window.addEventListener('resize', onWindowResize);
+  // createPanel();
 
 }
 
-
 function onWindowResize() {
+
   camera.aspect = window.innerWidth / window.innerHeight;
+
   camera.updateProjectionMatrix();
 
   renderer.setSize(window.innerWidth, window.innerHeight);
-}
 
-//
+  renderer2.setSize(window.innerWidth, window.innerHeight);
+
+}
 
 function animate() {
+
   requestAnimationFrame(animate);
 
-  render();
-  stats.update();
-}
-
-function render() {
-  const delta = clock.getDelta();
-  const time = clock.getElapsedTime();
-
-  line.rotation.x = time * 0.25;
-  line.rotation.y = time * 0.5;
-
-  t += delta * 0.5;
-  line.morphTargetInfluences[0] = Math.abs(Math.sin(t));
+  controls.update();
 
   renderer.render(scene, camera);
+  renderer2.render(scene2, camera);
+
 }
 
-function generateMorphTargets(geometry) {
-  const data = [];
+// function createPanel() {
 
-  for (let i = 0; i < segments; i++) {
-    const x = Math.random() * r - r / 2;
-    const y = Math.random() * r - r / 2;
-    const z = Math.random() * r - r / 2;
+//   const panel = new dat.GUI();
+//   const folder1 = panel.addFolder('camera setViewOffset').close();
 
-    data.push(x, y, z);
+//   const settings = {
+//     'setViewOffset'() {
+
+//       folder1.children[1].enable().setValue(window.innerWidth);
+//       folder1.children[2].enable().setValue(window.innerHeight);
+//       folder1.children[3].enable().setValue(0);
+//       folder1.children[4].enable().setValue(0);
+//       folder1.children[5].enable().setValue(window.innerWidth);
+//       folder1.children[6].enable().setValue(window.innerHeight);
+
+//     },
+//     'fullWidth': 0,
+//     'fullHeight': 0,
+//     'offsetX': 0,
+//     'offsetY': 0,
+//     'width': 0,
+//     'height': 0,
+//     'clearViewOffset'() {
+
+//       folder1.children[1].setValue(0).disable();
+//       folder1.children[2].setValue(0).disable();
+//       folder1.children[3].setValue(0).disable();
+//       folder1.children[4].setValue(0).disable();
+//       folder1.children[5].setValue(0).disable();
+//       folder1.children[6].setValue(0).disable();
+//       camera.clearViewOffset();
+
+//     }
+//   };
+
+//   folder1.add(settings, 'setViewOffset');
+//   folder1.add(settings, 'fullWidth', window.screen.width / 4, window.screen.width * 2, 1).onChange((val) => updateCameraViewOffset({ fullWidth: val })).disable();
+//   folder1.add(settings, 'fullHeight', window.screen.height / 4, window.screen.height * 2, 1).onChange((val) => updateCameraViewOffset({ fullHeight: val })).disable();
+//   folder1.add(settings, 'offsetX', 0, 256, 1).onChange((val) => updateCameraViewOffset({ x: val })).disable();
+//   folder1.add(settings, 'offsetY', 0, 256, 1).onChange((val) => updateCameraViewOffset({ y: val })).disable();
+//   folder1.add(settings, 'width', window.screen.width / 4, window.screen.width * 2, 1).onChange((val) => updateCameraViewOffset({ width: val })).disable();
+//   folder1.add(settings, 'height', window.screen.height / 4, window.screen.height * 2, 1).onChange((val) => updateCameraViewOffset({ height: val })).disable();
+//   folder1.add(settings, 'clearViewOffset');
+
+// }
+
+function updateCameraViewOffset({ fullWidth, fullHeight, x, y, width, height }) {
+
+  if (!camera.view) {
+
+    camera.setViewOffset(fullWidth || window.innerWidth, fullHeight || window.innerHeight, x || 0, y || 0, width || window.innerWidth, height || window.innerHeight);
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+
+  } else {
+
+    camera.setViewOffset(fullWidth || camera.view.fullWidth, fullHeight || camera.view.fullHeight, x || camera.view.offsetX, y || camera.view.offsetY, width || camera.view.width, height || camera.view.height);
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+
   }
 
-  const morphTarget = new THREE.Float32BufferAttribute(data, 3);
-  morphTarget.name = "target1";
-
-  geometry.morphAttributes.position = [morphTarget];
 }
