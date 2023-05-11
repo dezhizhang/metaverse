@@ -1,179 +1,201 @@
 /*
- * :file description:
+ * :file description: 
  * :name: /threejs/src/index.js
  * :author: 张德志
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-03-13 05:58:33
  * :last editor: 张德志
- * :date last edited: 2023-05-11 07:50:18
+ * :date last edited: 2023-05-11 09:34:29
  */
-import * as THREE from "three";
-import Stats from "stats.js";
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
-import {
-  SUBTRACTION,
-  Brush,
-  Evaluator,
-} from "three-bvh-csg";
+import * as THREE from 'three';
 
-let stats;
-let camera, scene, renderer;
-let baseBrush, brush;
-let core;
-let result, evaluator, wireframe;
+import Stats from 'stats.js';
 
-const params = {
-  operation: SUBTRACTION,
-  useGroups: true,
-  wireframe: false,
-};
+let container, stats;
+let camera, scene, raycaster, renderer, parentTransform, sphereInter;
+
+const pointer = new THREE.Vector2();
+const radius = 100;
+let theta = 0;
 
 init();
 animate();
 
 function init() {
-  camera = new THREE.PerspectiveCamera(
-    50,
-    window.innerWidth / window.innerHeight,
-    1,
-    1000
-  );
-  camera.position.set(-1, 1, 1).normalize().multiplyScalar(10);
+  camera = new THREE.PerspectiveCamera(70,window.innerWidth / window.innerHeight,1,10000);
 
   scene = new THREE.Scene();
-  scene.background = new THREE.Color(0xfce4ec);
+  scene.background = new THREE.Color(0xf0f0f0);
 
-  //lights
-  const ambient = new THREE.HemisphereLight(0xffffff, 0xbfd4d2, 0.9);
-  scene.add(animate);
+  const geometry = new THREE.SphereGeometry(5);
+  const material = new THREE.MeshBasicMaterial({color:0xff0000});
+  const sphereInter = new THREE.Mesh(geometry,material);
+  sphereInter.visible = false;
+  scene.add(sphereInter);
 
-  const directionalLight = new THREE.DirectionalLight(0xffffff, 0.1);
-  directionalLight.position.set(1, 4, 3).multiplyScalar(3);
-  directionalLight.castShadow = true;
-  directionalLight.shadow.mapSize.setScalar(2048);
-  directionalLight.shadow.bias = -1e-4;
-  directionalLight.shadow.normalBias = 1e-4;
-  scene.add(directionalLight);
+  const lineGeometry = new THREE.BufferGeometry();
+  const points = [];
+  const point = new THREE.Vector3();
+  const direction = new THREE.Vector3();
 
-  renderer = new THREE.WebGLRenderer({ antialias: true });
-  renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.shadowMap.enabled = true;
-  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-  document.body.appendChild(renderer.domElement);
+  for(let i=0;i < 50;i++) {
+    direction.x += Math.random() - 0.5;
+    direction.y += Math.random() - 0.5;
+    direction.z += Math.random() - 0.5;
+    direction.normalize().multiplyScalar(10);
+    
+    point.add(direction);
+    points.push(point.x,point.y,point.z);
+  }
 
-  stats = new Stats();
-  document.body.appendChild(stats.dom);
+  lineGeometry.setAttribute('position',new THREE.Float32BufferAttribute(points,3));
+  
+  parentTransform = new THREE.Object3D();
+  parentTransform.position.x = Math.random() * 40 - 20;
+  parentTransform.position.y = Math.random() * 40 - 20;
+  parentTransform.position.z = Math.random() * 40 - 20;
 
-  const plane = new THREE.Mesh(
-    new THREE.PlaneGeometry(),
-    new THREE.ShadowMaterial({
-      color: 0xd81b60,
-      transparent: true,
-      opacity: 0.075,
-      side: THREE.DoubleSide,
-    })
-  );
-  plane.position.y = -3;
-  plane.rotation.x = -Math.PI / 2;
-  plane.scale.setScalar(10);
-  plane.receiveShadow = true;
-  scene.add(plane);
+  parentTransform.rotation.x = Math.random() * 2 * Math.PI;
+  parentTransform.rotation.y = Math.random() * 2 * Math.PI;
+  parentTransform.rotation.z = Math.random() * 2 * Math.PI;
 
-  evaluator = new Evaluator();
-  baseBrush = new Brush(
-    new THREE.IcosahedronGeometry(2, 3),
-    new THREE.MeshStandardMaterial({
-      flatShading: true,
-      polygonOffset: true,
-      polygonOffsetUnits: 1,
-      polygonOffsetFactor: 1,
-    })
-  );
+  parentTransform.scale.x = Math.random() + 0.5;
+  parentTransform.scale.y = Math.random() + 0.5;
+  parentTransform.scale.z = Math.random() + 0.5;
 
-  brush = new Brush(
-    new THREE.CylinderGeometry(1, 1, 5, 45),
-    new THREE.MeshStandardMaterial({
-      color: 0x80cbc4,
 
-      polygonOffset: true,
-      polygonOffsetUnits: 1,
-      polygonOffsetFactor: 1,
-    })
-  );
+  for(let i=0;i < 50;i++) {
+    let object;
+    const lineMaterial = new THREE.LineBasicMaterial({color:Math.random() * 0xffffff});
+    if(Math.random() > 0.5) {
+      object = new THREE.Line(lineGeometry,lineMaterial);
+    } else {
+      object = new THREE.LineSegments(lineGeometry,lineMaterial);
+    }
+    object.position.x = Math.random() * 400 - 200;
+    object.position.y = Math.random() * 400 - 200;
+    object.position.z = Math.random() * 400 - 200;
 
-  core = new Brush(
-    new THREE.IcosahedronGeometry(0.15, 1),
-    new THREE.MeshStandardMaterial({
-      flatShading: true,
-      color: 0xff9800,
-      emissive: 0xff9800,
-      emissiveIntensity: 0.35,
+    object.rotation.x = Math.random() 
+  }
+  
 
-      polygonOffset: true,
-      polygonOffsetUnits: 1,
-      polygonOffsetFactor: 1,
-    })
-  );
-  core.castShadow = true;
-  scene.add(core);
 
-  // create wireframe
-  wireframe = new THREE.Mesh(
-    undefined,
-    new THREE.MeshBasicMaterial({ color: 0x009688, wireframe: true })
-  );
-  scene.add(wireframe);
+  console.log('points',points)
 
-  // controls
-  const controls = new OrbitControls(camera, renderer.domElement);
-  controls.minDistance = 5;
-  controls.maxDistance = 75;
-
-  window.addEventListener("resize", onWindowResize);
-  onWindowResize();
 }
 
-function updateCSG() {
-  evaluator.useGroups = params.useGroups;
-  result = evaluator.evaluate(baseBrush, brush, params.operation, result);
+// function init() {
 
-  result.castShadow = true;
-  result.receiveShadow = true;
-  scene.add(result);
-}
+
+//   for (let i = 0; i < 50; i++) {
+
+//     let object;
+
+//     const lineMaterial = new THREE.LineBasicMaterial({ color: Math.random() * 0xffffff });
+
+//     if (Math.random() > 0.5) {
+
+//       object = new THREE.Line(lineGeometry, lineMaterial);
+
+//     } else {
+
+//       object = new THREE.LineSegments(lineGeometry, lineMaterial);
+
+//     }
+
+//     object.position.x = Math.random() * 400 - 200;
+//     object.position.y = Math.random() * 400 - 200;
+//     object.position.z = Math.random() * 400 - 200;
+
+//     object.rotation.x = Math.random() * 2 * Math.PI;
+//     object.rotation.y = Math.random() * 2 * Math.PI;
+//     object.rotation.z = Math.random() * 2 * Math.PI;
+
+//     object.scale.x = Math.random() + 0.5;
+//     object.scale.y = Math.random() + 0.5;
+//     object.scale.z = Math.random() + 0.5;
+
+//     parentTransform.add(object);
+
+//   }
+
+//   scene.add(parentTransform);
+
+//   raycaster = new THREE.Raycaster();
+//   raycaster.params.Line.threshold = 3;
+
+//   renderer = new THREE.WebGLRenderer({ antialias: true });
+//   renderer.setPixelRatio(window.devicePixelRatio);
+//   renderer.setSize(window.innerWidth, window.innerHeight);
+//   container.appendChild(renderer.domElement);
+
+//   stats = new Stats();
+//   container.appendChild(stats.dom);
+
+//   document.addEventListener('pointermove', onPointerMove);
+
+//   //
+
+//   window.addEventListener('resize', onWindowResize);
+
+// }
 
 function onWindowResize() {
+
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
 
   renderer.setSize(window.innerWidth, window.innerHeight);
+
 }
 
+function onPointerMove(event) {
+
+  pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
+  pointer.y = - (event.clientY / window.innerHeight) * 2 + 1;
+
+}
+
+//
+
 function animate() {
+
   requestAnimationFrame(animate);
 
-  // update the transforms
-  const t = window.performance.now() + 9000;
-  baseBrush.rotation.x = t * 0.0001;
-  baseBrush.rotation.y = t * 0.00025;
-  baseBrush.rotation.z = t * 0.0005;
-  baseBrush.updateMatrixWorld();
+  render();
+  stats.update();
 
-  brush.rotation.x = t * -0.0002;
-  brush.rotation.y = t * -0.0005;
-  brush.rotation.z = t * -0.001;
+}
 
-  const s = 0.5 + 0.5 * (1 + Math.sin(t * 0.001));
-  brush.scale.set(s, 1, s);
-  brush.updateMatrixWorld();
+function render() {
 
-  // update the csg
-  updateCSG();
+  theta += 0.1;
 
-  wireframe.geometry = result.geometry;
-  wireframe.visible = params.wireframe;
+  camera.position.x = radius * Math.sin(THREE.MathUtils.degToRad(theta));
+  camera.position.y = radius * Math.sin(THREE.MathUtils.degToRad(theta));
+  camera.position.z = radius * Math.cos(THREE.MathUtils.degToRad(theta));
+  camera.lookAt(scene.position);
+
+  camera.updateMatrixWorld();
+
+  // find intersections
+
+  raycaster.setFromCamera(pointer, camera);
+
+  const intersects = raycaster.intersectObjects(parentTransform.children, true);
+
+  if (intersects.length > 0) {
+
+    sphereInter.visible = true;
+    sphereInter.position.copy(intersects[0].point);
+
+  } else {
+
+    sphereInter.visible = false;
+
+  }
 
   renderer.render(scene, camera);
-  stats.update();
+
 }
