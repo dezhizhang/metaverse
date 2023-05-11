@@ -1,201 +1,124 @@
 /*
- * :file description: 
+ * :file description:
  * :name: /threejs/src/index.js
  * :author: 张德志
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-03-13 05:58:33
  * :last editor: 张德志
- * :date last edited: 2023-05-11 09:34:29
+ * :date last edited: 2023-05-11 12:51:36
  */
-import * as THREE from 'three';
+import * as THREE from "three";
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
+import { ConvexGeometry } from "three/examples/jsm/geometries/ConvexGeometry.js";
+import * as BufferGeometryUtils from "three/examples/jsm/utils/BufferGeometryUtils.js";
 
-import Stats from 'stats.js';
-
-let container, stats;
-let camera, scene, raycaster, renderer, parentTransform, sphereInter;
-
-const pointer = new THREE.Vector2();
-const radius = 100;
-let theta = 0;
+let group, camera, scene, renderer;
 
 init();
 animate();
 
 function init() {
-  camera = new THREE.PerspectiveCamera(70,window.innerWidth / window.innerHeight,1,10000);
-
   scene = new THREE.Scene();
-  scene.background = new THREE.Color(0xf0f0f0);
 
-  const geometry = new THREE.SphereGeometry(5);
-  const material = new THREE.MeshBasicMaterial({color:0xff0000});
-  const sphereInter = new THREE.Mesh(geometry,material);
-  sphereInter.visible = false;
-  scene.add(sphereInter);
+  renderer = new THREE.WebGLRenderer({ antialias: true });
+  renderer.setPixelRatio(window.devicePixelRatio);
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  document.body.appendChild(renderer.domElement);
 
-  const lineGeometry = new THREE.BufferGeometry();
-  const points = [];
-  const point = new THREE.Vector3();
-  const direction = new THREE.Vector3();
+  //camera
+  camera = new THREE.PerspectiveCamera(
+    40,
+    window.innerWidth / window.innerHeight,
+    1,
+    1000
+  );
+  camera.position.set(15, 20, 30);
+  scene.add(camera);
 
-  for(let i=0;i < 50;i++) {
-    direction.x += Math.random() - 0.5;
-    direction.y += Math.random() - 0.5;
-    direction.z += Math.random() - 0.5;
-    direction.normalize().multiplyScalar(10);
-    
-    point.add(direction);
-    points.push(point.x,point.y,point.z);
+  const controls = new OrbitControls(camera, renderer.domElement);
+  controls.minDistance = 20;
+  controls.maxDistance = 50;
+  controls.maxPolarAngle = Math.PI / 2;
+
+  //ambient
+  scene.add(new THREE.AmbientLight(0x222222));
+
+  //point
+  const light = new THREE.PointLight(0xffffff, 1);
+  camera.add(light);
+
+  scene.add(new THREE.AxesHelper(20));
+
+  // textures
+  const loader = new THREE.TextureLoader();
+  const texture = loader.load(
+    "https://tugua.oss-cn-hangzhou.aliyuncs.com/model/pictures/disc.png"
+  );
+  texture.colorSpace = THREE.SRGBColorSpace;
+
+  group = new THREE.Group();
+  scene.add(group);
+
+  //points
+  let dodecahedronGeometry = new THREE.DodecahedronGeometry(10);
+  dodecahedronGeometry.deleteAttribute("normal");
+  dodecahedronGeometry.deleteAttribute("uv");
+
+  dodecahedronGeometry =
+    BufferGeometryUtils.mergeVertices(dodecahedronGeometry);
+
+  const vertices = [];
+  const positionAttribute = dodecahedronGeometry.getAttribute("position");
+
+  for (let i = 0; i < positionAttribute.count; i++) {
+    const vertex = new THREE.Vector3();
+    vertex.fromBufferAttribute(positionAttribute, i);
+    vertices.push(vertex);
   }
 
-  lineGeometry.setAttribute('position',new THREE.Float32BufferAttribute(points,3));
-  
-  parentTransform = new THREE.Object3D();
-  parentTransform.position.x = Math.random() * 40 - 20;
-  parentTransform.position.y = Math.random() * 40 - 20;
-  parentTransform.position.z = Math.random() * 40 - 20;
+  const pointsMaterial = new THREE.PointsMaterial({
+    color: 0x0080ff,
+    map: texture,
+    size: 1,
+    alphaTest: 0.5,
+  });
 
-  parentTransform.rotation.x = Math.random() * 2 * Math.PI;
-  parentTransform.rotation.y = Math.random() * 2 * Math.PI;
-  parentTransform.rotation.z = Math.random() * 2 * Math.PI;
+  const pointsGeometry = new THREE.BufferGeometry().setFromPoints(vertices);
 
-  parentTransform.scale.x = Math.random() + 0.5;
-  parentTransform.scale.y = Math.random() + 0.5;
-  parentTransform.scale.z = Math.random() + 0.5;
+  const points = new THREE.Points(pointsGeometry, pointsMaterial);
+  group.add(points);
 
+  // convex hull
 
-  for(let i=0;i < 50;i++) {
-    let object;
-    const lineMaterial = new THREE.LineBasicMaterial({color:Math.random() * 0xffffff});
-    if(Math.random() > 0.5) {
-      object = new THREE.Line(lineGeometry,lineMaterial);
-    } else {
-      object = new THREE.LineSegments(lineGeometry,lineMaterial);
-    }
-    object.position.x = Math.random() * 400 - 200;
-    object.position.y = Math.random() * 400 - 200;
-    object.position.z = Math.random() * 400 - 200;
+  const meshMaterial = new THREE.MeshLambertMaterial({
+    color: 0xffffff,
+    opacity: 0.5,
+    side: THREE.DoubleSide,
+    transparent: true,
+  });
 
-    object.rotation.x = Math.random() 
-  }
-  
+  const meshGeometry = new ConvexGeometry(vertices);
 
-
-  console.log('points',points)
-
+  const mesh = new THREE.Mesh(meshGeometry, meshMaterial);
+  group.add(mesh);
+  window.addEventListener( 'resize', onWindowResize );
 }
 
-// function init() {
-
-
-//   for (let i = 0; i < 50; i++) {
-
-//     let object;
-
-//     const lineMaterial = new THREE.LineBasicMaterial({ color: Math.random() * 0xffffff });
-
-//     if (Math.random() > 0.5) {
-
-//       object = new THREE.Line(lineGeometry, lineMaterial);
-
-//     } else {
-
-//       object = new THREE.LineSegments(lineGeometry, lineMaterial);
-
-//     }
-
-//     object.position.x = Math.random() * 400 - 200;
-//     object.position.y = Math.random() * 400 - 200;
-//     object.position.z = Math.random() * 400 - 200;
-
-//     object.rotation.x = Math.random() * 2 * Math.PI;
-//     object.rotation.y = Math.random() * 2 * Math.PI;
-//     object.rotation.z = Math.random() * 2 * Math.PI;
-
-//     object.scale.x = Math.random() + 0.5;
-//     object.scale.y = Math.random() + 0.5;
-//     object.scale.z = Math.random() + 0.5;
-
-//     parentTransform.add(object);
-
-//   }
-
-//   scene.add(parentTransform);
-
-//   raycaster = new THREE.Raycaster();
-//   raycaster.params.Line.threshold = 3;
-
-//   renderer = new THREE.WebGLRenderer({ antialias: true });
-//   renderer.setPixelRatio(window.devicePixelRatio);
-//   renderer.setSize(window.innerWidth, window.innerHeight);
-//   container.appendChild(renderer.domElement);
-
-//   stats = new Stats();
-//   container.appendChild(stats.dom);
-
-//   document.addEventListener('pointermove', onPointerMove);
-
-//   //
-
-//   window.addEventListener('resize', onWindowResize);
-
-// }
-
 function onWindowResize() {
-
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
 
   renderer.setSize(window.innerWidth, window.innerHeight);
-
 }
-
-function onPointerMove(event) {
-
-  pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
-  pointer.y = - (event.clientY / window.innerHeight) * 2 + 1;
-
-}
-
-//
 
 function animate() {
-
   requestAnimationFrame(animate);
 
-  render();
-  stats.update();
+  group.rotation.y += 0.005;
 
+  render();
 }
 
 function render() {
-
-  theta += 0.1;
-
-  camera.position.x = radius * Math.sin(THREE.MathUtils.degToRad(theta));
-  camera.position.y = radius * Math.sin(THREE.MathUtils.degToRad(theta));
-  camera.position.z = radius * Math.cos(THREE.MathUtils.degToRad(theta));
-  camera.lookAt(scene.position);
-
-  camera.updateMatrixWorld();
-
-  // find intersections
-
-  raycaster.setFromCamera(pointer, camera);
-
-  const intersects = raycaster.intersectObjects(parentTransform.children, true);
-
-  if (intersects.length > 0) {
-
-    sphereInter.visible = true;
-    sphereInter.position.copy(intersects[0].point);
-
-  } else {
-
-    sphereInter.visible = false;
-
-  }
-
   renderer.render(scene, camera);
-
 }
