@@ -1,183 +1,128 @@
 import * as THREE from 'three';
 
-import Stats from 'stats.js';
+			import { AnaglyphEffect } from 'three/addons/effects/AnaglyphEffect.js';
 
-THREE.ColorManagement.enabled = false; // TODO: Confirm correct color management.
+			let container, camera, scene, renderer, effect;
 
+			const spheres = [];
 
-let cameraRTT, camera, sceneRTT, sceneScreen, scene, renderer, zmesh1, zmesh2,stats;
+			let mouseX = 0;
+			let mouseY = 0;
 
-let mouseX = 0, mouseY = 0;
+			let windowHalfX = window.innerWidth / 2;
+			let windowHalfY = window.innerHeight / 2;
 
-const windowHalfX = window.innerWidth / 2;
-const windowHalfY = window.innerHeight / 2;
+			document.addEventListener( 'mousemove', onDocumentMouseMove );
 
-let rtTexture, material, quad;
+			init();
+			animate();
 
-let delta = 0.01;
+			function init() {
 
-init();
-animate();
+				container = document.createElement( 'div' );
+				document.body.appendChild( container );
 
-function init() {
-	camera = new THREE.PerspectiveCamera(30,window.innerWidth / window.innerHeight,1,10000);
-	camera.position.z = 100;
+				camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 0.01, 100 );
+				camera.position.z = 3;
+				camera.focalLength = 3;
 
-	cameraRTT = new THREE.OrthographicCamera(window.innerWidth / - 2, window.innerWidth / 2, window.innerHeight / 2, window.innerHeight / - 2, - 10000, 10000);
-	cameraRTT.position.z = 100;
+				const path = 'textures/cube/pisa/';
+				const format = '.png';
+				const urls = [
+					path + 'px' + format, path + 'nx' + format,
+					path + 'py' + format, path + 'ny' + format,
+					path + 'pz' + format, path + 'nz' + format
+				];
 
-	// 添加场景
-	scene = new THREE.Scene();
-	sceneRTT = new THREE.Scene();
-	sceneScreen = new THREE.Scene();
+				const textureCube = new THREE.CubeTextureLoader().load( urls );
 
-	// 添加灯光
-	let light = new THREE.DirectionalLight(0xffffff);
-	light.position.set(0,0,1).normalize();
-	sceneRTT.add(light);
+				scene = new THREE.Scene();
+				scene.background = textureCube;
 
-	light = new THREE.DirectionalLight(0xffaaaa,1.5);
-	light.position.set(0,0,-1).normalize();
-	sceneRTT.add(light);
+				const geometry = new THREE.SphereGeometry( 0.1, 32, 16 );
+				const material = new THREE.MeshBasicMaterial( { color: 0xffffff, envMap: textureCube } );
 
-	rtTexture = new THREE.WebGLRenderTarget(window.innerWidth,window.innerHeight);
-	material = new THREE.ShaderMaterial({
-		uniforms:{ time:{ value:0.0}},
-		vertexShader:document.getElementById('vertexShader').textContent,
-		fragmentShader:document.getElementById('fragment_shader_pass_1').textContent
-	});
+				for ( let i = 0; i < 500; i ++ ) {
 
-	const materialScreen = new THREE.ShaderMaterial({
-		uniforms:{tDiffuse:{value:rtTexture.texture}},
-		vertexShader:document.getElementById('vertexShader').textContent,
-		fragmentShader:document.getElementById('fragment_shader_screen').textContent,
-		depthWrite:false
-	});
+					const mesh = new THREE.Mesh( geometry, material );
 
-	const plane = new THREE.PlaneGeometry(window.innerWidth,window.innerHeight);
-	quad = new THREE.Mesh(plane,material);
-	quad.position.z = -100;
-	sceneRTT.add(quad);
+					mesh.position.x = Math.random() * 10 - 5;
+					mesh.position.y = Math.random() * 10 - 5;
+					mesh.position.z = Math.random() * 10 - 5;
 
-	const torusGeometry = new THREE.TorusGeometry(100,25,15,30);
-	const mat1 = new THREE.MeshPhongMaterial({color: 0x555555, specular: 0xffaa00, shininess: 5});
-	const mat2 = new THREE.MeshPhongMaterial({color: 0x550000, specular: 0xff2200, shininess: 5});
+					mesh.scale.x = mesh.scale.y = mesh.scale.z = Math.random() * 3 + 1;
 
-	zmesh1 = new THREE.Mesh(torusGeometry,mat1);
-	zmesh1.position.set(0,0,100);
-	zmesh1.scale.set(1.5,1.5,1.5);
-	sceneRTT.add(zmesh1);
+					scene.add( mesh );
 
-	zmesh2 = new THREE.Mesh(torusGeometry,mat2);
-	zmesh2.position.set(0,150,100);
-	zmesh2.scale.set(0.75, 0.75, 0.75);
-	sceneRTT.add(zmesh2);
+					spheres.push( mesh );
 
-	quad = new THREE.Mesh(plane,materialScreen);
-	quad.position.z = -100;
-	sceneScreen.add(quad);
+				}
 
+				//
 
+				renderer = new THREE.WebGLRenderer();
+				renderer.setPixelRatio( window.devicePixelRatio );
+				container.appendChild( renderer.domElement );
 
+				const width = window.innerWidth || 2;
+				const height = window.innerHeight || 2;
 
+				effect = new AnaglyphEffect( renderer );
+				effect.setSize( width, height );
 
-	const n = 5,
-		geometry = new THREE.SphereGeometry(10, 64, 32),
-		material2 = new THREE.MeshBasicMaterial({ color: 0xffffff, map: rtTexture.texture });
+				//
 
-	for (let j = 0; j < n; j++) {
+				window.addEventListener( 'resize', onWindowResize );
 
-		for (let i = 0; i < n; i++) {
+			}
 
-			const mesh = new THREE.Mesh(geometry, material2);
+			function onWindowResize() {
 
-			mesh.position.x = (i - (n - 1) / 2) * 20;
-			mesh.position.y = (j - (n - 1) / 2) * 20;
-			mesh.position.z = 0;
+				windowHalfX = window.innerWidth / 2;
+				windowHalfY = window.innerHeight / 2;
 
-			mesh.rotation.y = - Math.PI / 2;
+				camera.aspect = window.innerWidth / window.innerHeight;
+				camera.updateProjectionMatrix();
 
-			scene.add(mesh);
+				effect.setSize( window.innerWidth, window.innerHeight );
 
-		}
+			}
 
-	}
+			function onDocumentMouseMove( event ) {
 
-	renderer = new THREE.WebGLRenderer();
-	renderer.outputColorSpace = THREE.LinearSRGBColorSpace;
-	renderer.setPixelRatio(window.devicePixelRatio);
-	renderer.setSize(window.innerWidth, window.innerHeight);
-	renderer.autoClear = false;
+				mouseX = ( event.clientX - windowHalfX ) / 100;
+				mouseY = ( event.clientY - windowHalfY ) / 100;
 
-	document.body.appendChild(renderer.domElement);
+			}
 
-	stats = new Stats();
-	document.body.appendChild(stats.dom);
+			//
 
-	document.addEventListener('mousemove', onDocumentMouseMove);
+			function animate() {
 
+				requestAnimationFrame( animate );
 
-}
+				render();
 
+			}
 
-function onDocumentMouseMove(event) {
+			function render() {
 
-	mouseX = (event.clientX - windowHalfX);
-	mouseY = (event.clientY - windowHalfY);
+				const timer = 0.0001 * Date.now();
 
-}
+				camera.position.x += ( mouseX - camera.position.x ) * .05;
+				camera.position.y += ( - mouseY - camera.position.y ) * .05;
 
-//
+				camera.lookAt( scene.position );
 
-function animate() {
+				for ( let i = 0, il = spheres.length; i < il; i ++ ) {
 
-	requestAnimationFrame(animate);
+					const sphere = spheres[ i ];
 
-	render();
-	stats.update();
+					sphere.position.x = 5 * Math.cos( timer + i );
+					sphere.position.y = 5 * Math.sin( timer + i * 1.1 );
 
-}
+				}
 
-function render() {
+				effect.render( scene, camera );
 
-	const time = Date.now() * 0.0015;
-
-	camera.position.x += (mouseX - camera.position.x) * .05;
-	camera.position.y += (- mouseY - camera.position.y) * .05;
-
-	camera.lookAt(scene.position);
-
-	if (zmesh1 && zmesh2) {
-
-		zmesh1.rotation.y = - time;
-		zmesh2.rotation.y = - time + Math.PI / 2;
-
-	}
-
-	if (material.uniforms['time'].value > 1 || material.uniforms['time'].value < 0) {
-
-		delta *= - 1;
-
-	}
-
-	material.uniforms['time'].value += delta;
-
-
-	// Render first scene into texture
-
-	renderer.setRenderTarget(rtTexture);
-	renderer.clear();
-	renderer.render(sceneRTT, cameraRTT);
-
-	// Render full screen quad with generated texture
-
-	renderer.setRenderTarget(null);
-	renderer.clear();
-	renderer.render(sceneScreen, cameraRTT);
-
-	// Render second scene to screen
-	// (using first scene as regular texture)
-
-	renderer.render(scene, camera);
-
-}
+			}
