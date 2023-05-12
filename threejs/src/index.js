@@ -1,247 +1,183 @@
 import * as THREE from 'three';
 
-			import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
-			import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
-			import { ShaderPass } from 'three/addons/postprocessing/ShaderPass.js';
-			import { BloomPass } from 'three/addons/postprocessing/BloomPass.js';
-			import { CopyShader } from 'three/addons/shaders/CopyShader.js';
+import Stats from 'stats.js';
 
-			let container;
+THREE.ColorManagement.enabled = false; // TODO: Confirm correct color management.
 
-			let camera, scene, renderer;
 
-			let video, texture, material, mesh;
+let cameraRTT, camera, sceneRTT, sceneScreen, scene, renderer, zmesh1, zmesh2,stats;
 
-			let composer;
+let mouseX = 0, mouseY = 0;
 
-			let mouseX = 0;
-			let mouseY = 0;
+const windowHalfX = window.innerWidth / 2;
+const windowHalfY = window.innerHeight / 2;
 
-			let windowHalfX = window.innerWidth / 2;
-			let windowHalfY = window.innerHeight / 2;
+let rtTexture, material, quad;
 
-			let cube_count;
+let delta = 0.01;
 
-			const meshes = [],
-				materials = [],
+init();
+animate();
 
-				xgrid = 20,
-				ygrid = 10;
+function init() {
+	camera = new THREE.PerspectiveCamera(30,window.innerWidth / window.innerHeight,1,10000);
+	camera.position.z = 100;
 
-			const startButton = document.getElementById( 'startButton' );
-			startButton.addEventListener( 'click', function () {
+	cameraRTT = new THREE.OrthographicCamera(window.innerWidth / - 2, window.innerWidth / 2, window.innerHeight / 2, window.innerHeight / - 2, - 10000, 10000);
+	cameraRTT.position.z = 100;
 
-				init();
-				animate();
+	// 添加场景
+	scene = new THREE.Scene();
+	sceneRTT = new THREE.Scene();
+	sceneScreen = new THREE.Scene();
 
-			} );
+	// 添加灯光
+	let light = new THREE.DirectionalLight(0xffffff);
+	light.position.set(0,0,1).normalize();
+	sceneRTT.add(light);
 
-			function init() {
+	light = new THREE.DirectionalLight(0xffaaaa,1.5);
+	light.position.set(0,0,-1).normalize();
+	sceneRTT.add(light);
 
-				const overlay = document.getElementById( 'overlay' );
-				overlay.remove();
+	rtTexture = new THREE.WebGLRenderTarget(window.innerWidth,window.innerHeight);
+	material = new THREE.ShaderMaterial({
+		uniforms:{ time:{ value:0.0}},
+		vertexShader:document.getElementById('vertexShader').textContent,
+		fragmentShader:document.getElementById('fragment_shader_pass_1').textContent
+	});
 
-				container = document.createElement( 'div' );
-				document.body.appendChild( container );
+	const materialScreen = new THREE.ShaderMaterial({
+		uniforms:{tDiffuse:{value:rtTexture.texture}},
+		vertexShader:document.getElementById('vertexShader').textContent,
+		fragmentShader:document.getElementById('fragment_shader_screen').textContent,
+		depthWrite:false
+	});
 
-				camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 10000 );
-				camera.position.z = 500;
+	const plane = new THREE.PlaneGeometry(window.innerWidth,window.innerHeight);
+	quad = new THREE.Mesh(plane,material);
+	quad.position.z = -100;
+	sceneRTT.add(quad);
 
-				scene = new THREE.Scene();
+	const torusGeometry = new THREE.TorusGeometry(100,25,15,30);
+	const mat1 = new THREE.MeshPhongMaterial({color: 0x555555, specular: 0xffaa00, shininess: 5});
+	const mat2 = new THREE.MeshPhongMaterial({color: 0x550000, specular: 0xff2200, shininess: 5});
 
-				const light = new THREE.DirectionalLight( 0xffffff );
-				light.position.set( 0.5, 1, 1 ).normalize();
-				scene.add( light );
+	zmesh1 = new THREE.Mesh(torusGeometry,mat1);
+	zmesh1.position.set(0,0,100);
+	zmesh1.scale.set(1.5,1.5,1.5);
+	sceneRTT.add(zmesh1);
 
-				renderer = new THREE.WebGLRenderer();
-				renderer.setPixelRatio( window.devicePixelRatio );
-				renderer.setSize( window.innerWidth, window.innerHeight );
-				container.appendChild( renderer.domElement );
+	zmesh2 = new THREE.Mesh(torusGeometry,mat2);
+	zmesh2.position.set(0,150,100);
+	zmesh2.scale.set(0.75, 0.75, 0.75);
+	sceneRTT.add(zmesh2);
 
-				video = document.getElementById( 'video' );
-				video.play();
-				video.addEventListener( 'play', function () {
+	quad = new THREE.Mesh(plane,materialScreen);
+	quad.position.z = -100;
+	sceneScreen.add(quad);
 
-					this.currentTime = 3;
 
-				} );
 
-				texture = new THREE.VideoTexture( video );
 
-				//
 
-				let i, j, ox, oy, geometry;
+	const n = 5,
+		geometry = new THREE.SphereGeometry(10, 64, 32),
+		material2 = new THREE.MeshBasicMaterial({ color: 0xffffff, map: rtTexture.texture });
 
-				const ux = 1 / xgrid;
-				const uy = 1 / ygrid;
+	for (let j = 0; j < n; j++) {
 
-				const xsize = 480 / xgrid;
-				const ysize = 204 / ygrid;
+		for (let i = 0; i < n; i++) {
 
-				const parameters = { color: 0xffffff, map: texture };
+			const mesh = new THREE.Mesh(geometry, material2);
 
-				cube_count = 0;
+			mesh.position.x = (i - (n - 1) / 2) * 20;
+			mesh.position.y = (j - (n - 1) / 2) * 20;
+			mesh.position.z = 0;
 
-				for ( i = 0; i < xgrid; i ++ ) {
+			mesh.rotation.y = - Math.PI / 2;
 
-					for ( j = 0; j < ygrid; j ++ ) {
+			scene.add(mesh);
 
-						ox = i;
-						oy = j;
+		}
 
-						geometry = new THREE.BoxGeometry( xsize, ysize, xsize );
+	}
 
-						change_uvs( geometry, ux, uy, ox, oy );
+	renderer = new THREE.WebGLRenderer();
+	renderer.outputColorSpace = THREE.LinearSRGBColorSpace;
+	renderer.setPixelRatio(window.devicePixelRatio);
+	renderer.setSize(window.innerWidth, window.innerHeight);
+	renderer.autoClear = false;
 
-						materials[ cube_count ] = new THREE.MeshLambertMaterial( parameters );
+	document.body.appendChild(renderer.domElement);
 
-						material = materials[ cube_count ];
+	stats = new Stats();
+	document.body.appendChild(stats.dom);
 
-						material.hue = i / xgrid;
-						material.saturation = 1 - j / ygrid;
+	document.addEventListener('mousemove', onDocumentMouseMove);
 
-						material.color.setHSL( material.hue, material.saturation, 0.5 );
 
-						mesh = new THREE.Mesh( geometry, material );
+}
 
-						mesh.position.x = ( i - xgrid / 2 ) * xsize;
-						mesh.position.y = ( j - ygrid / 2 ) * ysize;
-						mesh.position.z = 0;
 
-						mesh.scale.x = mesh.scale.y = mesh.scale.z = 1;
+function onDocumentMouseMove(event) {
 
-						scene.add( mesh );
+	mouseX = (event.clientX - windowHalfX);
+	mouseY = (event.clientY - windowHalfY);
 
-						mesh.dx = 0.001 * ( 0.5 - Math.random() );
-						mesh.dy = 0.001 * ( 0.5 - Math.random() );
+}
 
-						meshes[ cube_count ] = mesh;
+//
 
-						cube_count += 1;
+function animate() {
 
-					}
+	requestAnimationFrame(animate);
 
-				}
+	render();
+	stats.update();
 
-				renderer.autoClear = false;
+}
 
-				document.addEventListener( 'mousemove', onDocumentMouseMove );
+function render() {
 
-				// postprocessing
+	const time = Date.now() * 0.0015;
 
-				const renderModel = new RenderPass( scene, camera );
-				const effectBloom = new BloomPass( 1.3 );
-				const effectCopy = new ShaderPass( CopyShader );
+	camera.position.x += (mouseX - camera.position.x) * .05;
+	camera.position.y += (- mouseY - camera.position.y) * .05;
 
-				composer = new EffectComposer( renderer );
+	camera.lookAt(scene.position);
 
-				composer.addPass( renderModel );
-				composer.addPass( effectBloom );
-				composer.addPass( effectCopy );
+	if (zmesh1 && zmesh2) {
 
-				//
+		zmesh1.rotation.y = - time;
+		zmesh2.rotation.y = - time + Math.PI / 2;
 
-				window.addEventListener( 'resize', onWindowResize );
+	}
 
-			}
+	if (material.uniforms['time'].value > 1 || material.uniforms['time'].value < 0) {
 
-			function onWindowResize() {
+		delta *= - 1;
 
-				windowHalfX = window.innerWidth / 2;
-				windowHalfY = window.innerHeight / 2;
+	}
 
-				camera.aspect = window.innerWidth / window.innerHeight;
-				camera.updateProjectionMatrix();
+	material.uniforms['time'].value += delta;
 
-				renderer.setSize( window.innerWidth, window.innerHeight );
-				composer.setSize( window.innerWidth, window.innerHeight );
 
-			}
+	// Render first scene into texture
 
-			function change_uvs( geometry, unitx, unity, offsetx, offsety ) {
+	renderer.setRenderTarget(rtTexture);
+	renderer.clear();
+	renderer.render(sceneRTT, cameraRTT);
 
-				const uvs = geometry.attributes.uv.array;
+	// Render full screen quad with generated texture
 
-				for ( let i = 0; i < uvs.length; i += 2 ) {
+	renderer.setRenderTarget(null);
+	renderer.clear();
+	renderer.render(sceneScreen, cameraRTT);
 
-					uvs[ i ] = ( uvs[ i ] + offsetx ) * unitx;
-					uvs[ i + 1 ] = ( uvs[ i + 1 ] + offsety ) * unity;
+	// Render second scene to screen
+	// (using first scene as regular texture)
 
-				}
+	renderer.render(scene, camera);
 
-			}
-
-
-			function onDocumentMouseMove( event ) {
-
-				mouseX = ( event.clientX - windowHalfX );
-				mouseY = ( event.clientY - windowHalfY ) * 0.3;
-
-			}
-
-			//
-
-			function animate() {
-
-				requestAnimationFrame( animate );
-
-				render();
-
-			}
-
-			let h, counter = 1;
-
-			function render() {
-
-				const time = Date.now() * 0.00005;
-
-				camera.position.x += ( mouseX - camera.position.x ) * 0.05;
-				camera.position.y += ( - mouseY - camera.position.y ) * 0.05;
-
-				camera.lookAt( scene.position );
-
-				for ( let i = 0; i < cube_count; i ++ ) {
-
-					material = materials[ i ];
-
-					h = ( 360 * ( material.hue + time ) % 360 ) / 360;
-					material.color.setHSL( h, material.saturation, 0.5 );
-
-				}
-
-				if ( counter % 1000 > 200 ) {
-
-					for ( let i = 0; i < cube_count; i ++ ) {
-
-						mesh = meshes[ i ];
-
-						mesh.rotation.x += 10 * mesh.dx;
-						mesh.rotation.y += 10 * mesh.dy;
-
-						mesh.position.x -= 150 * mesh.dx;
-						mesh.position.y += 150 * mesh.dy;
-						mesh.position.z += 300 * mesh.dx;
-
-					}
-
-				}
-
-				if ( counter % 1000 === 0 ) {
-
-					for ( let i = 0; i < cube_count; i ++ ) {
-
-						mesh = meshes[ i ];
-
-						mesh.dx *= - 1;
-						mesh.dy *= - 1;
-
-					}
-
-				}
-
-				counter ++;
-
-				renderer.clear();
-				composer.render();
-
-			}
+}
