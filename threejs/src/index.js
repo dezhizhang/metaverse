@@ -1,109 +1,242 @@
-import * as THREE from "three";
+import * as THREE from 'three';
+import Stats from 'stats.js';
+import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls'
 
-import Stats from "stats.js";
+			THREE.ColorManagement.enabled = false; // TODO: Consider enabling color management.
 
-let stats;
+			let group;
+			let stats;
+			const particlesData = [];
+			let camera, scene, renderer;
+			let positions, colors;
+			let particles;
+			let pointCloud;
+			let particlePositions;
+			let linesMesh;
 
-let camera, scene, renderer;
+			const maxParticleCount = 1000;
+			let particleCount = 500;
+			const r = 800;
+			const rHalf = r / 2;
 
-let points;
+			const effectController = {
+				showDots: true,
+				showLines: true,
+				minDistance: 150,
+				limitConnections: false,
+				maxConnections: 20,
+				particleCount: 500
+			};
 
-init();
-animate();
+			init();
+			animate();
 
-function init() {
-	camera = new THREE.PerspectiveCamera(27,window.innerWidth / window.innerHeight,5,3500);
-	camera.position.z = 2750;
-
-	scene = new THREE.Scene();
-	scene.background = new THREE.Color(0x050505);
-	scene.fog = new THREE.Fog(0x050505,2000,3500);
-
-	//
-	const particles = 500000;
-	const geometry = new THREE.BufferGeometry();
-	const arrayBuffer = new ArrayBuffer(particles * 16);
-	const interleavedFloat32Buffer = new Float32Array(arrayBuffer);
-	const interleavedUint8Buffer = new Uint8Array(arrayBuffer);
-
-	const color = new THREE.Color();
-	const n = 1000;
-	const n2 = n / 2;
-
-	for(let i=0;i < interleavedFloat32Buffer.length;i+=4) {
-		const x = Math.random() * n - n2;
-		const y = Math.random() * n - n2;
-		const z = Math.random() * n - n2;
-
-		interleavedFloat32Buffer[i + 0] = x;
-		interleavedFloat32Buffer[i + 1] = y;
-		interleavedFloat32Buffer[i + 2] = z;
-
-		const vx = x / n + 0.5;
-		const vy = y / n + 0.5;
-		const vz = z / n + 0.5;
-
-		color.setRGB(vx,vy,vz,THREE.SRGBColorSpace);
-		const j = (i + 3) * 4;
 		
-		interleavedUint8Buffer[j + 0] = color.r * 255;
-		interleavedUint8Buffer[j + 1] = color.g * 255;
-		interleavedUint8Buffer[j + 2] = color.b * 255;
-		interleavedUint8Buffer[j + 3] = 0;
 
-	}
+			function init() {
 
-	const interleavedBuffer32 = new THREE.InterleavedBuffer(
-		interleavedFloat32Buffer,
-		4
-	);
+			
 
-	const interleavedBuffer8 = new THREE.InterleavedBuffer(
-		interleavedUint8Buffer,
-		16
-	);
+			
 
-	geometry.setAttribute('position',new THREE.InterleavedBufferAttribute(interleavedBuffer32,3,0,false));
-	geometry.setAttribute('color',new THREE.InterleavedBufferAttribute(interleavedBuffer8,3,12,true));
+				camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 4000 );
+				camera.position.z = 1750;
+
+				
+
+				scene = new THREE.Scene();
 
 
-	const material = new THREE.PointsMaterial({size:15,vertexColors:true});
-	points = new THREE.Points(geometry,material);
-	scene.add(points);
+				group = new THREE.Group();
+				scene.add( group );
+
+				const helper = new THREE.BoxHelper( new THREE.Mesh( new THREE.BoxGeometry( r, r, r ) ) );
+				helper.material.color.setHex( 0x101010 );
+				helper.material.blending = THREE.AdditiveBlending;
+				helper.material.transparent = true;
+				group.add( helper );
+
+				const segments = maxParticleCount * maxParticleCount;
+
+				positions = new Float32Array( segments * 3 );
+				colors = new Float32Array( segments * 3 );
+
+				const pMaterial = new THREE.PointsMaterial( {
+					color: 0xFFFFFF,
+					size: 3,
+					blending: THREE.AdditiveBlending,
+					transparent: true,
+					sizeAttenuation: false
+				} );
+
+				particles = new THREE.BufferGeometry();
+				particlePositions = new Float32Array( maxParticleCount * 3 );
+
+				for ( let i = 0; i < maxParticleCount; i ++ ) {
+
+					const x = Math.random() * r - r / 2;
+					const y = Math.random() * r - r / 2;
+					const z = Math.random() * r - r / 2;
+
+					particlePositions[ i * 3 ] = x;
+					particlePositions[ i * 3 + 1 ] = y;
+					particlePositions[ i * 3 + 2 ] = z;
+
+					// add it to the geometry
+					particlesData.push( {
+						velocity: new THREE.Vector3( - 1 + Math.random() * 2, - 1 + Math.random() * 2, - 1 + Math.random() * 2 ),
+						numConnections: 0
+					} );
+
+				}
+
+				particles.setDrawRange( 0, particleCount );
+				particles.setAttribute( 'position', new THREE.BufferAttribute( particlePositions, 3 ).setUsage( THREE.DynamicDrawUsage ) );
+
+				// create the particle system
+				pointCloud = new THREE.Points( particles, pMaterial );
+				group.add( pointCloud );
+
+				const geometry = new THREE.BufferGeometry();
+
+				geometry.setAttribute( 'position', new THREE.BufferAttribute( positions, 3 ).setUsage( THREE.DynamicDrawUsage ) );
+				geometry.setAttribute( 'color', new THREE.BufferAttribute( colors, 3 ).setUsage( THREE.DynamicDrawUsage ) );
+
+				geometry.computeBoundingSphere();
+
+				geometry.setDrawRange( 0, 0 );
+
+				const material = new THREE.LineBasicMaterial( {
+					vertexColors: true,
+					blending: THREE.AdditiveBlending,
+					transparent: true
+				} );
+
+				linesMesh = new THREE.LineSegments( geometry, material );
+				group.add( linesMesh );
+
+				//
+
+				renderer = new THREE.WebGLRenderer( { antialias: true } );
+				renderer.setPixelRatio( window.devicePixelRatio );
+				renderer.setSize( window.innerWidth, window.innerHeight );
+
+				const controls = new OrbitControls( camera, renderer.domElement );
+				controls.minDistance = 1000;
+				controls.maxDistance = 3000;
+
+				document.body.appendChild( renderer.domElement );
+
+				//
+
+				stats = new Stats();
+				document.body.appendChild( stats.dom );
+
+				window.addEventListener( 'resize', onWindowResize );
+
+			}
+
+			function onWindowResize() {
+
+				camera.aspect = window.innerWidth / window.innerHeight;
+				camera.updateProjectionMatrix();
+
+				renderer.setSize( window.innerWidth, window.innerHeight );
+
+			}
+
+			function animate() {
+
+				let vertexpos = 0;
+				let colorpos = 0;
+				let numConnected = 0;
+
+				for ( let i = 0; i < particleCount; i ++ )
+					particlesData[ i ].numConnections = 0;
+
+				for ( let i = 0; i < particleCount; i ++ ) {
+
+					// get the particle
+					const particleData = particlesData[ i ];
+
+					particlePositions[ i * 3 ] += particleData.velocity.x;
+					particlePositions[ i * 3 + 1 ] += particleData.velocity.y;
+					particlePositions[ i * 3 + 2 ] += particleData.velocity.z;
+
+					if ( particlePositions[ i * 3 + 1 ] < - rHalf || particlePositions[ i * 3 + 1 ] > rHalf )
+						particleData.velocity.y = - particleData.velocity.y;
+
+					if ( particlePositions[ i * 3 ] < - rHalf || particlePositions[ i * 3 ] > rHalf )
+						particleData.velocity.x = - particleData.velocity.x;
+
+					if ( particlePositions[ i * 3 + 2 ] < - rHalf || particlePositions[ i * 3 + 2 ] > rHalf )
+						particleData.velocity.z = - particleData.velocity.z;
+
+					if ( effectController.limitConnections && particleData.numConnections >= effectController.maxConnections )
+						continue;
+
+					// Check collision
+					for ( let j = i + 1; j < particleCount; j ++ ) {
+
+						const particleDataB = particlesData[ j ];
+						if ( effectController.limitConnections && particleDataB.numConnections >= effectController.maxConnections )
+							continue;
+
+						const dx = particlePositions[ i * 3 ] - particlePositions[ j * 3 ];
+						const dy = particlePositions[ i * 3 + 1 ] - particlePositions[ j * 3 + 1 ];
+						const dz = particlePositions[ i * 3 + 2 ] - particlePositions[ j * 3 + 2 ];
+						const dist = Math.sqrt( dx * dx + dy * dy + dz * dz );
+
+						if ( dist < effectController.minDistance ) {
+
+							particleData.numConnections ++;
+							particleDataB.numConnections ++;
+
+							const alpha = 1.0 - dist / effectController.minDistance;
+
+							positions[ vertexpos ++ ] = particlePositions[ i * 3 ];
+							positions[ vertexpos ++ ] = particlePositions[ i * 3 + 1 ];
+							positions[ vertexpos ++ ] = particlePositions[ i * 3 + 2 ];
+
+							positions[ vertexpos ++ ] = particlePositions[ j * 3 ];
+							positions[ vertexpos ++ ] = particlePositions[ j * 3 + 1 ];
+							positions[ vertexpos ++ ] = particlePositions[ j * 3 + 2 ];
+
+							colors[ colorpos ++ ] = alpha;
+							colors[ colorpos ++ ] = alpha;
+							colors[ colorpos ++ ] = alpha;
+
+							colors[ colorpos ++ ] = alpha;
+							colors[ colorpos ++ ] = alpha;
+							colors[ colorpos ++ ] = alpha;
+
+							numConnected ++;
+
+						}
+
+					}
+
+				}
 
 
-	renderer = new THREE.WebGLRenderer();
-	renderer.setPixelRatio(window.devicePixelRatio);
-	renderer.setSize(window.innerWidth,window.innerHeight);
-	document.body.appendChild(renderer.domElement);
+				linesMesh.geometry.setDrawRange( 0, numConnected * 2 );
+				linesMesh.geometry.attributes.position.needsUpdate = true;
+				linesMesh.geometry.attributes.color.needsUpdate = true;
 
-	stats = new Stats();
-	document.body.appendChild(stats.dom);
+				pointCloud.geometry.attributes.position.needsUpdate = true;
 
-	window.addEventListener('resize',onWindowResize);
+				requestAnimationFrame( animate );
 
-}
+				stats.update();
+				render();
 
-function onWindowResize() {
-	camera.aspect = window.innerWidth / window.innerHeight;
-	camera.updateProjectionMatrix();
+			}
 
-	renderer.setSize(window.innerWidth,window.innerHeight);
-}
+			function render() {
 
+				const time = Date.now() * 0.001;
 
-function animate() {
-  requestAnimationFrame(animate);
+				group.rotation.y = time * 0.1;
+				renderer.render( scene, camera );
 
-  render();
-  stats.update();
-}
-
-function render() {
-  const time = Date.now() * 0.001;
-
-  points.rotation.x = time * 0.25;
-  points.rotation.y = time * 0.5;
-
-  renderer.render(scene, camera);
-}
+			}
