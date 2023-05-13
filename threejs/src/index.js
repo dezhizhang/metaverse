@@ -5,219 +5,195 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-03-13 05:58:33
  * :last editor: 张德志
- * :date last edited: 2023-05-13 22:31:17
+ * :date last edited: 2023-05-13 23:09:31
  */
 import * as THREE from 'three';
+THREE.ColorManagement.enabled = false;
+let group;
+let camera, scene, renderer;
+let cameraOrtho, sceneOrtho;
+
+let spriteTL, spriteTR, spriteBL, spriteBR, spriteC;
+
+let mapC;
+init();
+animate();
 
-			THREE.ColorManagement.enabled = false; // TODO: Confirm correct color management.
+function init() {
+	const width = window.innerWidth;
+	const height = window.innerHeight;
 
-			let camera, scene, renderer;
-			let cameraOrtho, sceneOrtho;
+	camera = new THREE.PerspectiveCamera(60, width / height, 1, 2100);
+	camera.position.z = 1500;
+
+	cameraOrtho = new THREE.OrthographicCamera(- width / 2, width / 2, height / 2, - height / 2, 1, 10);
+	cameraOrtho.position.z = 10;
 
-			let spriteTL, spriteTR, spriteBL, spriteBR, spriteC;
+	scene = new THREE.Scene();
+	scene.fog = new THREE.Fog(0x000000, 1500, 2100);
 
-			let mapC;
+	sceneOrtho = new THREE.Scene();
 
-			let group;
+	const amount = 200;
+	const radius = 500;
+	const textureLoader = new THREE.TextureLoader();
+	textureLoader.load('https://threejs.org/examples/textures/sprite0.png', createHUDSprites);
+	const mapB = textureLoader.load('https://threejs.org/examples/textures/sprite1.png');
+	mapC = textureLoader.load('https://threejs.org/examples/textures/sprite2.png');
 
-			init();
-			animate();
+	group = new THREE.Group();
+	const materialC = new THREE.SpriteMaterial({ map: mapC, color: 0xffffff, fog: true });
+	const materialB = new THREE.SpriteMaterial({ map: mapB, color: 0xffffff, fog: true });
 
-			function init() {
+	for (let a = 0; a < amount; a++) {
+		const x = Math.random() - 0.5;
+		const y = Math.random() - 0.5;
+		const z = Math.random() - 0.5;
 
-				const width = window.innerWidth;
-				const height = window.innerHeight;
+		let material;
+		if (z < 0) {
+			material = materialB.clone();
+		} else {
+			material = materialC.clone();
+			material.color.setHSL(0.5 * Math.random(), 0.75, 0.5);
+			material.map.offset.set(-0.5, -0.5);
+			material.map.repeat.set(2, 2);
+		}
+		const sprite = new THREE.Sprite(material);
+		sprite.position.set(x, y, z);
+		sprite.position.normalize();
+		sprite.position.multiplyScalar(radius);
+		group.add(sprite);
+	}
 
-				camera = new THREE.PerspectiveCamera( 60, width / height, 1, 2100 );
-				camera.position.z = 1500;
+	scene.add(group);
+	renderer = new THREE.WebGLRenderer();
+	renderer.setPixelRatio(window.devicePixelRatio);
+	renderer.setSize(window.innerWidth, window.innerHeight);
+	renderer.outputColorSpace = THREE.LinearSRGBColorSpace;
+	renderer.autoClear = false;
 
-				cameraOrtho = new THREE.OrthographicCamera( - width / 2, width / 2, height / 2, - height / 2, 1, 10 );
-				cameraOrtho.position.z = 10;
+	document.body.appendChild(renderer.domElement);
+	window.addEventListener('resize', onWindowResize);
 
-				scene = new THREE.Scene();
-				scene.fog = new THREE.Fog( 0x000000, 1500, 2100 );
+}
 
-				sceneOrtho = new THREE.Scene();
 
-				// create sprites
 
-				const amount = 200;
-				const radius = 500;
+function createHUDSprites(texture) {
 
-				const textureLoader = new THREE.TextureLoader();
+	const material = new THREE.SpriteMaterial({ map: texture });
 
-				textureLoader.load( 'https://threejs.org/examples/textures/sprite0.png', createHUDSprites );
-				const mapB = textureLoader.load( 'https://threejs.org/examples/textures/sprite1.png' );
-				mapC = textureLoader.load( 'https://threejs.org/examples/textures/sprite2.png' );
+	const width = material.map.image.width;
+	const height = material.map.image.height;
 
-				group = new THREE.Group();
+	spriteTL = new THREE.Sprite(material);
+	spriteTL.center.set(0.0, 1.0);
+	spriteTL.scale.set(width, height, 1);
+	sceneOrtho.add(spriteTL);
 
-				const materialC = new THREE.SpriteMaterial( { map: mapC, color: 0xffffff, fog: true } );
-				const materialB = new THREE.SpriteMaterial( { map: mapB, color: 0xffffff, fog: true } );
+	spriteTR = new THREE.Sprite(material);
+	spriteTR.center.set(1.0, 1.0);
+	spriteTR.scale.set(width, height, 1);
+	sceneOrtho.add(spriteTR);
 
-				for ( let a = 0; a < amount; a ++ ) {
+	spriteBL = new THREE.Sprite(material);
+	spriteBL.center.set(0.0, 0.0);
+	spriteBL.scale.set(width, height, 1);
+	sceneOrtho.add(spriteBL);
 
-					const x = Math.random() - 0.5;
-					const y = Math.random() - 0.5;
-					const z = Math.random() - 0.5;
+	spriteBR = new THREE.Sprite(material);
+	spriteBR.center.set(1.0, 0.0);
+	spriteBR.scale.set(width, height, 1);
+	sceneOrtho.add(spriteBR);
 
-					let material;
+	spriteC = new THREE.Sprite(material);
+	spriteC.center.set(0.5, 0.5);
+	spriteC.scale.set(width, height, 1);
+	sceneOrtho.add(spriteC);
 
-					if ( z < 0 ) {
+	updateHUDSprites();
 
-						material = materialB.clone();
+}
 
-					} else {
+function updateHUDSprites() {
 
-						material = materialC.clone();
-						material.color.setHSL( 0.5 * Math.random(), 0.75, 0.5 );
-						material.map.offset.set( - 0.5, - 0.5 );
-						material.map.repeat.set( 2, 2 );
+	const width = window.innerWidth / 2;
+	const height = window.innerHeight / 2;
 
-					}
+	spriteTL.position.set(- width, height, 1); // top left
+	spriteTR.position.set(width, height, 1); // top right
+	spriteBL.position.set(- width, - height, 1); // bottom left
+	spriteBR.position.set(width, - height, 1); // bottom right
+	spriteC.position.set(0, 0, 1); // center
 
-					const sprite = new THREE.Sprite( material );
+}
 
-					sprite.position.set( x, y, z );
-					sprite.position.normalize();
-					sprite.position.multiplyScalar( radius );
+function onWindowResize() {
 
-					group.add( sprite );
+	const width = window.innerWidth;
+	const height = window.innerHeight;
 
-				}
+	camera.aspect = width / height;
+	camera.updateProjectionMatrix();
 
-				scene.add( group );
+	cameraOrtho.left = - width / 2;
+	cameraOrtho.right = width / 2;
+	cameraOrtho.top = height / 2;
+	cameraOrtho.bottom = - height / 2;
+	cameraOrtho.updateProjectionMatrix();
 
-				// renderer
+	updateHUDSprites();
 
-				renderer = new THREE.WebGLRenderer();
-				renderer.setPixelRatio( window.devicePixelRatio );
-				renderer.setSize( window.innerWidth, window.innerHeight );
-				renderer.outputColorSpace = THREE.LinearSRGBColorSpace;
-				renderer.autoClear = false; // To allow render overlay on top of sprited sphere
+	renderer.setSize(window.innerWidth, window.innerHeight);
 
-				document.body.appendChild( renderer.domElement );
+}
 
-				//
+function animate() {
 
-				window.addEventListener( 'resize', onWindowResize );
+	requestAnimationFrame(animate);
+	render();
 
-			}
+}
 
-			function createHUDSprites( texture ) {
+function render() {
 
-				const material = new THREE.SpriteMaterial( { map: texture } );
+	const time = Date.now() / 1000;
 
-				const width = material.map.image.width;
-				const height = material.map.image.height;
+	for (let i = 0, l = group.children.length; i < l; i++) {
 
-				spriteTL = new THREE.Sprite( material );
-				spriteTL.center.set( 0.0, 1.0 );
-				spriteTL.scale.set( width, height, 1 );
-				sceneOrtho.add( spriteTL );
+		const sprite = group.children[i];
+		const material = sprite.material;
+		const scale = Math.sin(time + sprite.position.x * 0.01) * 0.3 + 1.0;
 
-				spriteTR = new THREE.Sprite( material );
-				spriteTR.center.set( 1.0, 1.0 );
-				spriteTR.scale.set( width, height, 1 );
-				sceneOrtho.add( spriteTR );
+		let imageWidth = 1;
+		let imageHeight = 1;
 
-				spriteBL = new THREE.Sprite( material );
-				spriteBL.center.set( 0.0, 0.0 );
-				spriteBL.scale.set( width, height, 1 );
-				sceneOrtho.add( spriteBL );
+		if (material.map && material.map.image && material.map.image.width) {
 
-				spriteBR = new THREE.Sprite( material );
-				spriteBR.center.set( 1.0, 0.0 );
-				spriteBR.scale.set( width, height, 1 );
-				sceneOrtho.add( spriteBR );
+			imageWidth = material.map.image.width;
+			imageHeight = material.map.image.height;
 
-				spriteC = new THREE.Sprite( material );
-				spriteC.center.set( 0.5, 0.5 );
-				spriteC.scale.set( width, height, 1 );
-				sceneOrtho.add( spriteC );
+		}
 
-				updateHUDSprites();
+		sprite.material.rotation += 0.1 * (i / l);
+		sprite.scale.set(scale * imageWidth, scale * imageHeight, 1.0);
 
-			}
+		if (material.map !== mapC) {
 
-			function updateHUDSprites() {
+			material.opacity = Math.sin(time + sprite.position.x * 0.01) * 0.4 + 0.6;
 
-				const width = window.innerWidth / 2;
-				const height = window.innerHeight / 2;
+		}
 
-				spriteTL.position.set( - width, height, 1 ); // top left
-				spriteTR.position.set( width, height, 1 ); // top right
-				spriteBL.position.set( - width, - height, 1 ); // bottom left
-				spriteBR.position.set( width, - height, 1 ); // bottom right
-				spriteC.position.set( 0, 0, 1 ); // center
+	}
 
-			}
+	group.rotation.x = time * 0.5;
+	group.rotation.y = time * 0.75;
+	group.rotation.z = time * 1.0;
 
-			function onWindowResize() {
+	renderer.clear();
+	renderer.render(scene, camera);
+	renderer.clearDepth();
+	renderer.render(sceneOrtho, cameraOrtho);
 
-				const width = window.innerWidth;
-				const height = window.innerHeight;
-
-				camera.aspect = width / height;
-				camera.updateProjectionMatrix();
-
-				cameraOrtho.left = - width / 2;
-				cameraOrtho.right = width / 2;
-				cameraOrtho.top = height / 2;
-				cameraOrtho.bottom = - height / 2;
-				cameraOrtho.updateProjectionMatrix();
-
-				updateHUDSprites();
-
-				renderer.setSize( window.innerWidth, window.innerHeight );
-
-			}
-
-			function animate() {
-
-				requestAnimationFrame( animate );
-				render();
-
-			}
-
-			function render() {
-
-				const time = Date.now() / 1000;
-
-				for ( let i = 0, l = group.children.length; i < l; i ++ ) {
-
-					const sprite = group.children[ i ];
-					const material = sprite.material;
-					const scale = Math.sin( time + sprite.position.x * 0.01 ) * 0.3 + 1.0;
-
-					let imageWidth = 1;
-					let imageHeight = 1;
-
-					if ( material.map && material.map.image && material.map.image.width ) {
-
-						imageWidth = material.map.image.width;
-						imageHeight = material.map.image.height;
-
-					}
-
-					sprite.material.rotation += 0.1 * ( i / l );
-					sprite.scale.set( scale * imageWidth, scale * imageHeight, 1.0 );
-
-					if ( material.map !== mapC ) {
-
-						material.opacity = Math.sin( time + sprite.position.x * 0.01 ) * 0.4 + 0.6;
-
-					}
-
-				}
-
-				group.rotation.x = time * 0.5;
-				group.rotation.y = time * 0.75;
-				group.rotation.z = time * 1.0;
-
-				renderer.clear();
-				renderer.render( scene, camera );
-				renderer.clearDepth();
-				renderer.render( sceneOrtho, cameraOrtho );
-
-			}
+}
