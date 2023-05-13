@@ -1,145 +1,173 @@
+/*
+ * :file description: 
+ * :name: /threejs/src/index.js
+ * :author: 张德志
+ * :copyright: (c) 2023, Tungee
+ * :date created: 2023-03-13 05:58:33
+ * :last editor: 张德志
+ * :date last edited: 2023-05-13 22:31:17
+ */
 import * as THREE from 'three';
-import Stats from 'stats.js';
-import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls'
 
-			THREE.ColorManagement.enabled = false; // TODO: Consider enabling color management.
+			THREE.ColorManagement.enabled = false; // TODO: Confirm correct color management.
+
+			let camera, scene, renderer;
+			let cameraOrtho, sceneOrtho;
+
+			let spriteTL, spriteTR, spriteBL, spriteBR, spriteC;
+
+			let mapC;
 
 			let group;
-			let stats;
-			const particlesData = [];
-			let camera, scene, renderer;
-			let positions, colors;
-			let particles;
-			let pointCloud;
-			let particlePositions;
-			let linesMesh;
-
-			const maxParticleCount = 1000;
-			let particleCount = 500;
-			const r = 800;
-			const rHalf = r / 2;
-
-			const effectController = {
-				showDots: true,
-				showLines: true,
-				minDistance: 150,
-				limitConnections: false,
-				maxConnections: 20,
-				particleCount: 500
-			};
 
 			init();
 			animate();
 
-		
-
 			function init() {
 
-			
+				const width = window.innerWidth;
+				const height = window.innerHeight;
 
-			
+				camera = new THREE.PerspectiveCamera( 60, width / height, 1, 2100 );
+				camera.position.z = 1500;
 
-				camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 4000 );
-				camera.position.z = 1750;
-
-				
+				cameraOrtho = new THREE.OrthographicCamera( - width / 2, width / 2, height / 2, - height / 2, 1, 10 );
+				cameraOrtho.position.z = 10;
 
 				scene = new THREE.Scene();
+				scene.fog = new THREE.Fog( 0x000000, 1500, 2100 );
 
+				sceneOrtho = new THREE.Scene();
+
+				// create sprites
+
+				const amount = 200;
+				const radius = 500;
+
+				const textureLoader = new THREE.TextureLoader();
+
+				textureLoader.load( 'https://threejs.org/examples/textures/sprite0.png', createHUDSprites );
+				const mapB = textureLoader.load( 'https://threejs.org/examples/textures/sprite1.png' );
+				mapC = textureLoader.load( 'https://threejs.org/examples/textures/sprite2.png' );
 
 				group = new THREE.Group();
-				scene.add( group );
 
-				const helper = new THREE.BoxHelper( new THREE.Mesh( new THREE.BoxGeometry( r, r, r ) ) );
-				helper.material.color.setHex( 0x101010 );
-				helper.material.blending = THREE.AdditiveBlending;
-				helper.material.transparent = true;
-				group.add( helper );
+				const materialC = new THREE.SpriteMaterial( { map: mapC, color: 0xffffff, fog: true } );
+				const materialB = new THREE.SpriteMaterial( { map: mapB, color: 0xffffff, fog: true } );
 
-				const segments = maxParticleCount * maxParticleCount;
+				for ( let a = 0; a < amount; a ++ ) {
 
-				positions = new Float32Array( segments * 3 );
-				colors = new Float32Array( segments * 3 );
+					const x = Math.random() - 0.5;
+					const y = Math.random() - 0.5;
+					const z = Math.random() - 0.5;
 
-				const pMaterial = new THREE.PointsMaterial( {
-					color: 0xFFFFFF,
-					size: 3,
-					blending: THREE.AdditiveBlending,
-					transparent: true,
-					sizeAttenuation: false
-				} );
+					let material;
 
-				particles = new THREE.BufferGeometry();
-				particlePositions = new Float32Array( maxParticleCount * 3 );
+					if ( z < 0 ) {
 
-				for ( let i = 0; i < maxParticleCount; i ++ ) {
+						material = materialB.clone();
 
-					const x = Math.random() * r - r / 2;
-					const y = Math.random() * r - r / 2;
-					const z = Math.random() * r - r / 2;
+					} else {
 
-					particlePositions[ i * 3 ] = x;
-					particlePositions[ i * 3 + 1 ] = y;
-					particlePositions[ i * 3 + 2 ] = z;
+						material = materialC.clone();
+						material.color.setHSL( 0.5 * Math.random(), 0.75, 0.5 );
+						material.map.offset.set( - 0.5, - 0.5 );
+						material.map.repeat.set( 2, 2 );
 
-					// add it to the geometry
-					particlesData.push( {
-						velocity: new THREE.Vector3( - 1 + Math.random() * 2, - 1 + Math.random() * 2, - 1 + Math.random() * 2 ),
-						numConnections: 0
-					} );
+					}
+
+					const sprite = new THREE.Sprite( material );
+
+					sprite.position.set( x, y, z );
+					sprite.position.normalize();
+					sprite.position.multiplyScalar( radius );
+
+					group.add( sprite );
 
 				}
 
-				particles.setDrawRange( 0, particleCount );
-				particles.setAttribute( 'position', new THREE.BufferAttribute( particlePositions, 3 ).setUsage( THREE.DynamicDrawUsage ) );
+				scene.add( group );
 
-				// create the particle system
-				pointCloud = new THREE.Points( particles, pMaterial );
-				group.add( pointCloud );
+				// renderer
 
-				const geometry = new THREE.BufferGeometry();
-
-				geometry.setAttribute( 'position', new THREE.BufferAttribute( positions, 3 ).setUsage( THREE.DynamicDrawUsage ) );
-				geometry.setAttribute( 'color', new THREE.BufferAttribute( colors, 3 ).setUsage( THREE.DynamicDrawUsage ) );
-
-				geometry.computeBoundingSphere();
-
-				geometry.setDrawRange( 0, 0 );
-
-				const material = new THREE.LineBasicMaterial( {
-					vertexColors: true,
-					blending: THREE.AdditiveBlending,
-					transparent: true
-				} );
-
-				linesMesh = new THREE.LineSegments( geometry, material );
-				group.add( linesMesh );
-
-				//
-
-				renderer = new THREE.WebGLRenderer( { antialias: true } );
+				renderer = new THREE.WebGLRenderer();
 				renderer.setPixelRatio( window.devicePixelRatio );
 				renderer.setSize( window.innerWidth, window.innerHeight );
-
-				const controls = new OrbitControls( camera, renderer.domElement );
-				controls.minDistance = 1000;
-				controls.maxDistance = 3000;
+				renderer.outputColorSpace = THREE.LinearSRGBColorSpace;
+				renderer.autoClear = false; // To allow render overlay on top of sprited sphere
 
 				document.body.appendChild( renderer.domElement );
 
 				//
 
-				stats = new Stats();
-				document.body.appendChild( stats.dom );
-
 				window.addEventListener( 'resize', onWindowResize );
+
+			}
+
+			function createHUDSprites( texture ) {
+
+				const material = new THREE.SpriteMaterial( { map: texture } );
+
+				const width = material.map.image.width;
+				const height = material.map.image.height;
+
+				spriteTL = new THREE.Sprite( material );
+				spriteTL.center.set( 0.0, 1.0 );
+				spriteTL.scale.set( width, height, 1 );
+				sceneOrtho.add( spriteTL );
+
+				spriteTR = new THREE.Sprite( material );
+				spriteTR.center.set( 1.0, 1.0 );
+				spriteTR.scale.set( width, height, 1 );
+				sceneOrtho.add( spriteTR );
+
+				spriteBL = new THREE.Sprite( material );
+				spriteBL.center.set( 0.0, 0.0 );
+				spriteBL.scale.set( width, height, 1 );
+				sceneOrtho.add( spriteBL );
+
+				spriteBR = new THREE.Sprite( material );
+				spriteBR.center.set( 1.0, 0.0 );
+				spriteBR.scale.set( width, height, 1 );
+				sceneOrtho.add( spriteBR );
+
+				spriteC = new THREE.Sprite( material );
+				spriteC.center.set( 0.5, 0.5 );
+				spriteC.scale.set( width, height, 1 );
+				sceneOrtho.add( spriteC );
+
+				updateHUDSprites();
+
+			}
+
+			function updateHUDSprites() {
+
+				const width = window.innerWidth / 2;
+				const height = window.innerHeight / 2;
+
+				spriteTL.position.set( - width, height, 1 ); // top left
+				spriteTR.position.set( width, height, 1 ); // top right
+				spriteBL.position.set( - width, - height, 1 ); // bottom left
+				spriteBR.position.set( width, - height, 1 ); // bottom right
+				spriteC.position.set( 0, 0, 1 ); // center
 
 			}
 
 			function onWindowResize() {
 
-				camera.aspect = window.innerWidth / window.innerHeight;
+				const width = window.innerWidth;
+				const height = window.innerHeight;
+
+				camera.aspect = width / height;
 				camera.updateProjectionMatrix();
+
+				cameraOrtho.left = - width / 2;
+				cameraOrtho.right = width / 2;
+				cameraOrtho.top = height / 2;
+				cameraOrtho.bottom = - height / 2;
+				cameraOrtho.updateProjectionMatrix();
+
+				updateHUDSprites();
 
 				renderer.setSize( window.innerWidth, window.innerHeight );
 
@@ -147,96 +175,49 @@ import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls'
 
 			function animate() {
 
-				let vertexpos = 0;
-				let colorpos = 0;
-				let numConnected = 0;
-
-				for ( let i = 0; i < particleCount; i ++ )
-					particlesData[ i ].numConnections = 0;
-
-				for ( let i = 0; i < particleCount; i ++ ) {
-
-					// get the particle
-					const particleData = particlesData[ i ];
-
-					particlePositions[ i * 3 ] += particleData.velocity.x;
-					particlePositions[ i * 3 + 1 ] += particleData.velocity.y;
-					particlePositions[ i * 3 + 2 ] += particleData.velocity.z;
-
-					if ( particlePositions[ i * 3 + 1 ] < - rHalf || particlePositions[ i * 3 + 1 ] > rHalf )
-						particleData.velocity.y = - particleData.velocity.y;
-
-					if ( particlePositions[ i * 3 ] < - rHalf || particlePositions[ i * 3 ] > rHalf )
-						particleData.velocity.x = - particleData.velocity.x;
-
-					if ( particlePositions[ i * 3 + 2 ] < - rHalf || particlePositions[ i * 3 + 2 ] > rHalf )
-						particleData.velocity.z = - particleData.velocity.z;
-
-					if ( effectController.limitConnections && particleData.numConnections >= effectController.maxConnections )
-						continue;
-
-					// Check collision
-					for ( let j = i + 1; j < particleCount; j ++ ) {
-
-						const particleDataB = particlesData[ j ];
-						if ( effectController.limitConnections && particleDataB.numConnections >= effectController.maxConnections )
-							continue;
-
-						const dx = particlePositions[ i * 3 ] - particlePositions[ j * 3 ];
-						const dy = particlePositions[ i * 3 + 1 ] - particlePositions[ j * 3 + 1 ];
-						const dz = particlePositions[ i * 3 + 2 ] - particlePositions[ j * 3 + 2 ];
-						const dist = Math.sqrt( dx * dx + dy * dy + dz * dz );
-
-						if ( dist < effectController.minDistance ) {
-
-							particleData.numConnections ++;
-							particleDataB.numConnections ++;
-
-							const alpha = 1.0 - dist / effectController.minDistance;
-
-							positions[ vertexpos ++ ] = particlePositions[ i * 3 ];
-							positions[ vertexpos ++ ] = particlePositions[ i * 3 + 1 ];
-							positions[ vertexpos ++ ] = particlePositions[ i * 3 + 2 ];
-
-							positions[ vertexpos ++ ] = particlePositions[ j * 3 ];
-							positions[ vertexpos ++ ] = particlePositions[ j * 3 + 1 ];
-							positions[ vertexpos ++ ] = particlePositions[ j * 3 + 2 ];
-
-							colors[ colorpos ++ ] = alpha;
-							colors[ colorpos ++ ] = alpha;
-							colors[ colorpos ++ ] = alpha;
-
-							colors[ colorpos ++ ] = alpha;
-							colors[ colorpos ++ ] = alpha;
-							colors[ colorpos ++ ] = alpha;
-
-							numConnected ++;
-
-						}
-
-					}
-
-				}
-
-
-				linesMesh.geometry.setDrawRange( 0, numConnected * 2 );
-				linesMesh.geometry.attributes.position.needsUpdate = true;
-				linesMesh.geometry.attributes.color.needsUpdate = true;
-
-				pointCloud.geometry.attributes.position.needsUpdate = true;
-
 				requestAnimationFrame( animate );
-
-				stats.update();
 				render();
 
 			}
 
 			function render() {
 
-				const time = Date.now() * 0.001;
+				const time = Date.now() / 1000;
 
-				group.rotation.y = time * 0.1;
+				for ( let i = 0, l = group.children.length; i < l; i ++ ) {
+
+					const sprite = group.children[ i ];
+					const material = sprite.material;
+					const scale = Math.sin( time + sprite.position.x * 0.01 ) * 0.3 + 1.0;
+
+					let imageWidth = 1;
+					let imageHeight = 1;
+
+					if ( material.map && material.map.image && material.map.image.width ) {
+
+						imageWidth = material.map.image.width;
+						imageHeight = material.map.image.height;
+
+					}
+
+					sprite.material.rotation += 0.1 * ( i / l );
+					sprite.scale.set( scale * imageWidth, scale * imageHeight, 1.0 );
+
+					if ( material.map !== mapC ) {
+
+						material.opacity = Math.sin( time + sprite.position.x * 0.01 ) * 0.4 + 0.6;
+
+					}
+
+				}
+
+				group.rotation.x = time * 0.5;
+				group.rotation.y = time * 0.75;
+				group.rotation.z = time * 1.0;
+
+				renderer.clear();
 				renderer.render( scene, camera );
+				renderer.clearDepth();
+				renderer.render( sceneOrtho, cameraOrtho );
 
 			}
