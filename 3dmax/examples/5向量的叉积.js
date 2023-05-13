@@ -1,14 +1,12 @@
 /*
- * :file description:
- * :name: /3dmax/src/index.js
+ * :file description: 
+ * :name: /3dmax/examples/5向量的叉积.js
  * :author: 张德志
  * :copyright: (c) 2023, Tungee
- * :date created: 2023-04-12 07:13:44
+ * :date created: 2023-05-13 22:12:05
  * :last editor: 张德志
- * :date last edited: 2023-05-13 22:18:57
+ * :date last edited: 2023-05-13 22:19:49
  */
-
-
 const objA = {
     x1: 1,
     y1: 3,
@@ -30,9 +28,5 @@ function cross(objA, objB) {
     ]
 }
 
-const res = cross(objA,objB);
-console.log({res});
-
-
-
-
+const res = cross(objA, objB);
+console.log({ res });
