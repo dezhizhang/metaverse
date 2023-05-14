@@ -1,5 +1,14 @@
 /*
  * :file description: 
+ * :name: /threejs/examples/122LineDashedMaterial.js
+ * :author: 张德志
+ * :copyright: (c) 2023, Tungee
+ * :date created: 2023-05-15 07:04:21
+ * :last editor: 张德志
+ * :date last edited: 2023-05-15 07:04:23
+ */
+/*
+ * :file description: 
  * :name: /threejs/src/index.js
  * :author: 张德志
  * :copyright: (c) 2023, Tungee
