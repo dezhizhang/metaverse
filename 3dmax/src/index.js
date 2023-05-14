@@ -5,7 +5,7 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-04-12 07:13:44
  * :last editor: 张德志
- * :date last edited: 2023-05-14 20:06:01
+ * :date last edited: 2023-05-14 20:56:05
  */
 
 
@@ -34,4 +34,7 @@ const B = {
     b31,b32,b33
 }
 
-const AB = [A.a11 * B.b11 + A.a12 * B.b21 + A.]
+const AB = [
+    a11 * b11 + a12 * b21 + a13 * b31, a11 * b12 + A.a11
+    // A.a11 * B.b11 + A.a12 * B.b21 + A.a13 * B.b31,A.a11 * B.b12 + a12 * b22 +
+]
