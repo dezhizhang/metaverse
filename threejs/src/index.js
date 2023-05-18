@@ -5,7 +5,7 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-03-13 05:58:33
  * :last editor: 张德志
- * :date last edited: 2023-05-19 05:44:10
+ * :date last edited: 2023-05-19 05:46:55
  */
 import * as THREE from 'three';
 
@@ -26,6 +26,12 @@ import * as THREE from 'three';
 // let v2 = v1.clone().applyMatrix4(mate);
 
 // console.log(v2);
+
+// const mesh = new THREE.Mesh();
+
+// mesh.rotateZ(Math.PI);
+
+// console.log(mesh.rotation)
 
 
 
