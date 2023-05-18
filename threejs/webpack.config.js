@@ -5,7 +5,7 @@
  * :copyright: (c) 2022, Tungee
  * :date created: 2022-07-12 07:38:33
  * :last editor: 张德志
- * :date last edited: 2022-11-15 06:25:53
+ * :date last edited: 2023-05-18 12:31:08
  */
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
@@ -18,7 +18,7 @@ module.exports = {
         filename:"build.js"
     },
     devServer:{
-        port:8000,
+        port:8002,
         open:true
     },
     module:{

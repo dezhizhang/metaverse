@@ -1,29 +1,50 @@
+/*
+ * :file description: 
+ * :name: /threejs/src/index.js
+ * :author: 张德志
+ * :copyright: (c) 2023, Tungee
+ * :date created: 2023-03-13 05:58:33
+ * :last editor: 张德志
+ * :date last edited: 2023-05-18 23:08:22
+ */
 import * as THREE from 'three';
 
-// const a = new THREE.Vector3( 0, 1, 0 );
+import * as dat from 'stats.js';
 
-// //no arguments; will be initialised to (0, 0, 0)
-// const b = new THREE.Vector3( );
+const geometry = new THREE.BoxGeometry(10,10,10);
 
-// const d = a.distanceTo( b );
-
-// console.log(d)
-
-// const a = new THREE.Vector3(1,1,1);
-
-// const b = new THREE.Vector3();
-
-// const d = a.distanceTo(b);
-
-// console.log(d)
-
-// const geometry = new THREE.SphereGeometry(50,25,25);
-// console.log(geometry)
+let area = 0.0;
 
 
-const p1 = new THREE.Vector3(10,8,12);
-const p2 = new THREE.Vector3(30,30,-10);
+console.log(geometry);
 
-const l = p1.clone().sub(p2).length();
+for(let i=0;i < geometry.groups.length;i++) {
+    let a = geometry.groups[i].a;
+    let b = geometry.groups[i].b;
+    let c = geometry.groups[i].c;
 
-console.log('两点间的距离',l);
+    let p1 = geometry.vertices[a];
+    let p2 = geometry.vertices[b];
+    let p3 = geometry.vertices[c];
+
+    area += AreaOfTriangle(p1,p2,p3);
+}
+
+
+function AreaOfTriangle(p1,p2,p3) {
+    let v1 = new THREE.Vector3();
+    let v2 = new THREE.Vector3();
+
+    v1 = p1.clone().sub(p2);
+    v2 = p1.clone().sub(p3);
+
+    let v3 = new THREE.Vector3();
+
+    v3.crossVectors(v1,v2);
+    return v3.length() / 2;
+    // let v3 = new THREE.Vector3();
+    
+}
+
+
+console.log(area);
