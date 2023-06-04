@@ -1,4 +1,13 @@
 /*
+ * :file description: 
+ * :name: /threejs/examples/125物体效果.js
+ * :author: 张德志
+ * :copyright: (c) 2023, Tungee
+ * :date created: 2023-06-04 19:31:31
+ * :last editor: 张德志
+ * :date last edited: 2023-06-04 19:31:54
+ */
+/*
  * :file description:
  * :name: /threejs/src/index.js
  * :author: 张德志
