@@ -1,11 +1,11 @@
 /*
- * :file description:
- * :name: /threejs/src/index.js
+ * :file description: 
+ * :name: /threejs/examples/124point.js
  * :author: 张德志
  * :copyright: (c) 2023, Tungee
- * :date created: 2023-03-13 05:58:33
+ * :date created: 2023-06-04 16:09:41
  * :last editor: 张德志
- * :date last edited: 2023-06-04 16:32:33
+ * :date last edited: 2023-06-04 16:09:42
  */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
@@ -24,21 +24,9 @@ scene.add(camera);
 const textureLoader = new THREE.TextureLoader();
 const texture = textureLoader.load(soilSpecular);
 
-const particlesGeometry = new THREE.BufferGeometry();
-const count = 5000;
-
-const pointions = new Float32Array(count * 3);
-const colors = new Float32Array(count * 3);
 
 
-for(let i=0;i < count * 3;i++) {
-    pointions[i] = Math.random() * 10 - 5;
-}
-
-particlesGeometry.setAttribute('position',new THREE.BufferAttribute(pointions,3));
-particlesGeometry.setAttribute('color',new THREE.BufferAttribute(colors,3))
-
-// const sphereGeometey = new THREE.SphereGeometry(3,20,20);
+const sphereGeometey = new THREE.SphereGeometry(3,20,20);
 const pointMaterial = new THREE.PointsMaterial();
 pointMaterial.size = 0.06;
 pointMaterial.color.set(0xfff000);
@@ -46,9 +34,8 @@ pointMaterial.map = texture;
 pointMaterial.alphaMap = texture;
 pointMaterial.transparent = true;
 pointMaterial.depthWrite = true;
-// pointMaterial.vertexColors = true;
 
-const points = new THREE.Points(particlesGeometry,pointMaterial);
+const points = new THREE.Points(sphereGeometey,pointMaterial);
 
 scene.add(points);
 
