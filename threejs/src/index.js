@@ -5,11 +5,13 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-03-13 05:58:33
  * :last editor: 张德志
- * :date last edited: 2023-06-04 16:32:33
+ * :date last edited: 2023-06-04 19:03:11
  */
 import * as THREE from 'three';
+
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-import soilSpecular from '../assets/textures/soil_specular.jpg';
+import * as CANNON from 'cannon-es';
+
 
 // 创建场影
 const scene = new THREE.Scene();
@@ -21,36 +23,43 @@ const camera = new THREE.PerspectiveCamera(
 camera.position.set(0,0,10);
 scene.add(camera);
 
-const textureLoader = new THREE.TextureLoader();
-const texture = textureLoader.load(soilSpecular);
+const sphereGeometey = new THREE.SphereGeometry(1,20,20);
+const meshStandardMaterial = new THREE.MeshStandardMaterial();
+const sphere = new THREE.Mesh(sphereGeometey,meshStandardMaterial);
+sphere.castShadow = true;
+scene.add(sphere);
 
-const particlesGeometry = new THREE.BufferGeometry();
-const count = 5000;
+const floor = new THREE.Mesh(
+    new THREE.PlaneGeometry(20,20),
+    new THREE.MeshStandardMaterial()
+)
+floor.receiveShadow = true;
+floor.position.set(0,-5,0);
+floor.rotation.x = -Math.PI / 2;
 
-const pointions = new Float32Array(count * 3);
-const colors = new Float32Array(count * 3);
+scene.add(floor);
 
+// 创建物理世界
+// const world = new CANNON.World({gravity:9.8});
+const world = new CANNON.World();
+world.gravity.set(0,-9.8,0);
 
-for(let i=0;i < count * 3;i++) {
-    pointions[i] = Math.random() * 10 - 5;
-}
+// 创建小球
+const sphereShape = new CANNON.Sphere();
 
-particlesGeometry.setAttribute('position',new THREE.BufferAttribute(pointions,3));
-particlesGeometry.setAttribute('color',new THREE.BufferAttribute(colors,3))
+const sphereWorldMaterial = new CANNON.Material();
 
-// const sphereGeometey = new THREE.SphereGeometry(3,20,20);
-const pointMaterial = new THREE.PointsMaterial();
-pointMaterial.size = 0.06;
-pointMaterial.color.set(0xfff000);
-pointMaterial.map = texture;
-pointMaterial.alphaMap = texture;
-pointMaterial.transparent = true;
-pointMaterial.depthWrite = true;
-// pointMaterial.vertexColors = true;
+// 创建物理世界的物体
+const sphereBody = new CANNON.Body({
+    shape:sphereShape,
+    position: new CANNON.Vec3(0,0,0),
+    mass:1,
+    material:sphereWorldMaterial
+});
 
-const points = new THREE.Points(particlesGeometry,pointMaterial);
+// 添加至物理世界
+world.addBody(sphereBody);
 
-scene.add(points);
 
 const light = new THREE.AmbientLight(0xffffff,0.5);
 scene.add(light);
@@ -72,13 +81,18 @@ document.body.appendChild(renderer.domElement);
 const controls = new OrbitControls(camera,renderer.domElement);
 controls.enableDamping = true;
 
+const clock = new THREE.Clock();
+
 
 const axesHelper = new THREE.AxesHelper(5);
 scene.add(axesHelper);
 
 
 function render() {
+    let deltaTime = clock.getDelta();
     controls.update();
+    world.step(1/120,deltaTime)
+    sphere.position.copy(sphereBody.position);
     renderer.render(scene,camera);
     requestAnimationFrame(render);
 }

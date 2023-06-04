@@ -13,7 +13,7 @@
   "license": "ISC",
   "dependencies": {
     "@tweenjs/tween.js": "^20.0.3",
-    "cannon-es": "^0.20.0",
+    "cannon-es": "0.18.0",
     "dat.gui": "0.7.9",
     "file-loader": "^6.2.0",
     "gsap": "^3.11.3",
