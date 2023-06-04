@@ -5,15 +5,20 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-03-13 05:58:33
  * :last editor: 张德志
- * :date last edited: 2023-06-04 21:00:05
+ * :date last edited: 2023-06-05 05:41:12
  */
 import * as THREE from 'three';
+import * as dat from 'dat.gui';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import * as CANNON from 'cannon-es';
-import vertex from './shader/vertex.glsl';
-import fragment from './shader/fragment.glsl';
+import vertexShader from './shader/vertex.glsl';
+import fragmentShader from './shader/fragment.glsl';
 
 
+
+
+// 创建gui
+const gui = new dat.GUI();
 // 创建场影
 const scene = new THREE.Scene();
 
@@ -24,29 +29,38 @@ const camera = new THREE.PerspectiveCamera(
 camera.position.set(0,0,10);
 scene.add(camera);
 
-const cubeGeometey = new THREE.BoxGeometry(1,1,1);
-const cubeMaterial = new THREE.MeshStandardMaterial();
-const cube = new THREE.Mesh(cubeGeometey,cubeMaterial);
-cube.castShadow = true;
-scene.add(cube);
+const params = {
+    uWaresFrequency:{
+        value:20.0
+    },
+    uScale:{
+        value:0.1
+    },
+    
+}
 
-const material = new THREE.MeshBasicMaterial({color:'#00ff00'});
 
 const shaderMaterial = new THREE.ShaderMaterial({
-    vertexShader:vertex,
-    fragmentShader:fragment
-})
+    vertexShader:vertexShader,
+    fragmentShader:fragmentShader,
+    side:THREE.DoubleSide,
+    uniforms:{
+       ...params
+    }
+});
+
+// gui.add(params,'uWaresFrequency').min(1).max(100).step(0.1).onChange((value) => {
+//     shaderMaterial.uniforms.uWaresFrequency.value = value;
+// })
+
+const planGeometey = new THREE.PlaneGeometry(1,1,512,512);
+const planMaterial = new THREE.MeshBasicMaterial({color:0xff0000});
+
+const plan = new THREE.Mesh(planGeometey,shaderMaterial);
+plan.castShadow = true;
+scene.add(plan);
 
 
-const floor = new THREE.Mesh(
-    new THREE.PlaneGeometry(1,1,64,64),
-    shaderMaterial
-)
-// floor.receiveShadow = true;
-// floor.position.set(0,-5,0);
-// floor.rotation.x = -Math.PI / 2;
-
-scene.add(floor);
 
 
 // const light = new THREE.AmbientLight(0xffffff,1);
