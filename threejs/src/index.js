@@ -5,20 +5,13 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-03-13 05:58:33
  * :last editor: 张德志
- * :date last edited: 2023-06-05 05:41:12
+ * :date last edited: 2023-06-04 19:30:19
  */
 import * as THREE from 'three';
-import * as dat from 'dat.gui';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import * as CANNON from 'cannon-es';
-import vertexShader from './shader/vertex.glsl';
-import fragmentShader from './shader/fragment.glsl';
 
 
-
-
-// 创建gui
-const gui = new dat.GUI();
 // 创建场影
 const scene = new THREE.Scene();
 
@@ -29,44 +22,59 @@ const camera = new THREE.PerspectiveCamera(
 camera.position.set(0,0,10);
 scene.add(camera);
 
-const params = {
-    uWaresFrequency:{
-        value:20.0
-    },
-    uScale:{
-        value:0.1
-    },
-    
-}
+const sphereGeometey = new THREE.SphereGeometry(1,20,20);
+const meshStandardMaterial = new THREE.MeshStandardMaterial();
+const sphere = new THREE.Mesh(sphereGeometey,meshStandardMaterial);
+sphere.castShadow = true;
+scene.add(sphere);
 
+const floor = new THREE.Mesh(
+    new THREE.PlaneGeometry(20,20),
+    new THREE.MeshStandardMaterial()
+)
+floor.receiveShadow = true;
+floor.position.set(0,-5,0);
+floor.rotation.x = -Math.PI / 2;
 
-const shaderMaterial = new THREE.ShaderMaterial({
-    vertexShader:vertexShader,
-    fragmentShader:fragmentShader,
-    side:THREE.DoubleSide,
-    uniforms:{
-       ...params
-    }
+scene.add(floor);
+
+// 创建物理世界
+const world = new CANNON.World();
+world.gravity.set(0,-9.8,0);
+
+// 创建小球
+const sphereShape = new CANNON.Sphere();
+const sphereWorldMaterial = new CANNON.Material();
+
+// 创建物理世界的物体
+const sphereBody = new CANNON.Body({
+    shape:sphereShape,
+    position: new CANNON.Vec3(0,0,0),
+    mass:1,
+    material:sphereWorldMaterial
 });
 
-// gui.add(params,'uWaresFrequency').min(1).max(100).step(0.1).onChange((value) => {
-//     shaderMaterial.uniforms.uWaresFrequency.value = value;
-// })
+// 添加至物理世界
+world.addBody(sphereBody);
 
-const planGeometey = new THREE.PlaneGeometry(1,1,512,512);
-const planMaterial = new THREE.MeshBasicMaterial({color:0xff0000});
+// 创建地面
+const floorSpape = new CANNON.Plane();
+const floorBody = new CANNON.Body({
+    mass:0,
+    shape:floorSpape,
+    position:new CANNON.Vec3(0,-5,0),
+    material:sphereWorldMaterial,
+    
+});
 
-const plan = new THREE.Mesh(planGeometey,shaderMaterial);
-plan.castShadow = true;
-scene.add(plan);
+floorBody.quaternion.setFromAxisAngle(new CANNON.Vec3(1,0,0), -Math.PI / 2);
+world.addBody(floorBody);
 
 
+const light = new THREE.AmbientLight(0xffffff,0.5);
+scene.add(light);
 
-
-// const light = new THREE.AmbientLight(0xffffff,1);
-// scene.add(light);
-
-const  pointLight = new THREE.SpotLight(0xffffff,1);
+const  pointLight = new THREE.SpotLight(0xff0000,1);
 pointLight.position.set(2,2,2);
 pointLight.castShadow = true;
 pointLight.shadow.radius = 5;
@@ -93,6 +101,8 @@ scene.add(axesHelper);
 function render() {
     let deltaTime = clock.getDelta();
     controls.update();
+    world.step(1/120,deltaTime)
+    sphere.position.copy(sphereBody.position);
     renderer.render(scene,camera);
     requestAnimationFrame(render);
 }

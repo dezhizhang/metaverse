@@ -3,44 +3,78 @@
  * :name: /threejs/src/line.js
  * :author: 张德志
  * :copyright: (c) 2023, Tungee
- * :date created: 2023-02-17 22:14:31
+ * :date created: 2023-03-13 05:58:33
  * :last editor: 张德志
- * :date last edited: 2023-02-17 22:14:32
+ * :date last edited: 2023-06-07 22:14:15
  */
-function line(pointsArrs) {
-    var group = new THREE.Group();//一个国家多个轮廓线条line的父对象
-    pointsArrs.forEach(polygon => {
-      var pointArr = [];//边界线顶点坐标
-      polygon[0].forEach(elem => {
-        pointArr.push(elem[0], elem[1], 0);
-      });
-      group.add(一个封闭轮廓线条(pointArr));
-    });
-    return group;
-  }
-  
-  
-  // pointArr：行政区一个多边形轮廓边界坐标(2个元素为一组，分别表示一个顶点x、y值)
-  function 一个封闭轮廓线条(pointArr) {
-    /**
-     * 通过BufferGeometry构建一个几何体，传入顶点数据
-     * 通过Line模型渲染几何体，连点成线
-     * LineLoop和Line功能一样，区别在于首尾顶点相连，轮廓闭合
-     */
-    var geometry = new THREE.BufferGeometry(); //创建一个Buffer类型几何体对象
-    //类型数组创建顶点数据
-    var vertices = new Float32Array(pointArr);
-    // 创建属性缓冲区对象
-    var attribue = new THREE.BufferAttribute(vertices, 3); //3个为一组，表示一个顶点的xyz坐标
-    // 设置几何体attributes属性的位置属性
-    geometry.attributes.position = attribue;
-    // 线条渲染几何体顶点数据
-    var material = new THREE.LineBasicMaterial({
-      color: 0x00cccc //线条颜色
-    });//材质对象
-    // var line = new THREE.Line(geometry, material);//线条模型对象
-    var line = new THREE.LineLoop(geometry, material);//首尾顶点连线，轮廓闭合
-    return line;
-  }
-  
-  export { line };
+import * as THREE from 'three';
+// 创建场影
+const scene = new THREE.Scene();
+
+// 创建相机
+const camera = new THREE.PerspectiveCamera(45,window.innerWidth / window.innerHeight,0.1,1000);
+
+// 创建渲染器
+const renderer = new THREE.WebGL1Renderer();
+renderer.setClearColor(new THREE.Color(0xEEEEE,1.0));
+renderer.setSize(window.innerWidth,window.innerHeight);
+renderer.shadowMap = {
+    enabled:true
+};
+
+// 创建平面
+const planeGeometry = new THREE.PlaneGeometry(60,20);
+const planeMaterial = new THREE.MeshBasicMaterial({color:0xffffff});
+const plane = new THREE.Mesh(planeGeometry,planeMaterial);
+plane.receiveShadow = true;
+
+plane.rotation.x = -0.5 *Math.PI;
+plane.position.x = 15;
+plane.position.y = 0;
+plane.position.z = 0;
+
+scene.add(plane);
+
+
+// 创建几何体
+const cubeGeometry = new THREE.BoxGeometry(4,4,4);
+const cubeMaterial = new THREE.MeshBasicMaterial({color:0xff0000,wireframe:true});
+const cube = new THREE.Mesh(cubeGeometry,cubeMaterial);
+cube.castShadow = true;
+
+cube.position.x = -4;
+cube.position.y = 3;
+cube.position.z = 0;
+scene.add(cube);
+
+// 创建圆形几何体
+const sphereGeometry = new THREE.SphereGeometry(4,20,20);
+const sphereMaterial = new THREE.MeshLambertMaterial({color:0x7777ff});
+const sphere = new THREE.Mesh(sphereGeometry,sphereMaterial);
+
+sphere.position.x = 20;
+sphere.position.y = 4;
+sphere.position.z = 2;
+sphere.castShadow = true;
+scene.add(sphere);
+
+
+//创建灯光
+const spotLight = new THREE.SpotLight(0xffffff);
+spotLight.position.set(-40,60,-10);
+spotLight.castShadow = true;
+scene.add(spotLight);
+
+
+// 设置相机位置
+camera.position.x = -30;
+camera.position.y = 40;
+camera.position.z = 30;
+camera.lookAt(scene.position);
+
+
+document.body.append(renderer.domElement);
+renderer.render(scene,camera);
+
+
+

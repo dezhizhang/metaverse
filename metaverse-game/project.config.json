@@ -10,7 +10,8 @@
       "ignore": [],
       "disablePlugins": [],
       "outputPath": ""
-    }
+    },
+    "condition": false
   },
   "compileType": "game",
   "libVersion": "2.25.3",
