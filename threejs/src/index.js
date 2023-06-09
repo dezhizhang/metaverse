@@ -5,12 +5,14 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-03-13 05:58:33
  * :last editor: 张德志
- * :date last edited: 2023-06-09 21:46:31
+ * :date last edited: 2023-06-09 22:37:27
  */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import fragmentShader from './shader/fragment.glsl';
 import vertexShader from './shader/vertex.glsl';
+
+import soil_normal from './soil_normal.jpg';
 
 // 创建场景
 const scene = new THREE.Scene();
@@ -26,8 +28,18 @@ const geometry = new THREE.BufferGeometry();
 const positions = new Float32Array([0,0,0]);
 geometry.setAttribute('position',new THREE.BufferAttribute(positions,3));
 
+// 导入纹理
+const textureLoader = new THREE.TextureLoader();
+const texture = textureLoader.load(soil_normal);
+
+
 // 点材质
 const material = new THREE.ShaderMaterial({
+    uniforms:{
+        uTexture:{
+            value:texture
+        }
+    },
     fragmentShader:fragmentShader,
     vertexShader:vertexShader,
     transparent:true
