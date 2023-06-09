@@ -5,10 +5,12 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-03-13 05:58:33
  * :last editor: 张德志
- * :date last edited: 2023-06-09 20:49:28
+ * :date last edited: 2023-06-09 21:06:48
  */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import fragmentShader from './shader/fragment.glsl';
+import vertexShader from './shader/vertex.glsl';
 
 
 // 创建场影
@@ -26,11 +28,16 @@ const positions = new Float32Array([0,0,0]);
 geometry.setAttribute('position', new THREE.BufferAttribute(positions,3));
 
 // 点材质
-const material = new THREE.PointsMaterial({
-    color:0xff0000,
-    size:10,
-    sizeAttenuation:true
-});
+// const material = new THREE.PointsMaterial({
+//     color:0xff0000,
+//     size:10,
+//     sizeAttenuation:true
+// });
+
+const material = new THREE.ShaderMaterial({
+    fragmentShader:fragmentShader,
+    vertexShader:vertexShader
+})
 
 const points = new THREE.Points(geometry,material);
 scene.add(points);
