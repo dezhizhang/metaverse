@@ -1,9 +1,6 @@
 import * as THREE from 'three';
 import * as dat from 'dat.gui';
-
 import Stats from 'stats.js';
-// import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js';
-
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
 import { SSAOPass } from 'three/examples/jsm/postprocessing/SSAOPass.js';
 import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js';
@@ -91,14 +88,16 @@ function init() {
     gui.add(ssaoPass, 'minDistance').min(0.001).max(0.02);
     gui.add(ssaoPass, 'maxDistance').min(0.01).max(0.3);
 
-    // 差色器写渲染通道
+    // 着色器写通道
+
+
     const shaderPass = new ShaderPass({
         uniforms:{
             tDiffuse:{
                 value:null,
             },
             uColor:{
-                value:new THREE.Color(1.0,0.0,0.0)
+                value: new THREE.Color(1.0,0.0,0.0)
             }
         },
         vertexShader:`
@@ -114,15 +113,12 @@ function init() {
             uniform vec3 uColor;
             void main() {
                 vec4 color = texture2D(tDiffuse,vUv);
-                // gl_FragColor =vec4(vUv,0.0,1.0);
                 color.xyz += uColor;
                 gl_FragColor = color;
             }
         `
-
     });
     composer.addPass(shaderPass);
-
 
     window.addEventListener('resize', onWindowResize);
 
