@@ -5,7 +5,7 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-05-04 05:38:45
  * :last editor: 张德志
- * :date last edited: 2023-05-04 06:37:13
+ * :date last edited: 2023-06-10 21:58:50
  */
 import './style.css'
 
@@ -51,26 +51,6 @@ const ground = BABYLON.MeshBuilder.CreateGround(
 ground.position.set(0,-1,0);
 
 // 创建平面
-// const plan = BABYLON.MeshBuilder.CreatePlane(
-//   'plan',
-//   {size:6},
-//   scene
-// )
-
-// 创建几何体
-// const box = BABYLON.MeshBuilder.CreateBox(
-//   'box',
-//   {size:2},
-//   scene
-// );
-
-// 创建圆锥体
-// const cone = BABYLON.MeshBuilder.CreateCylinder(
-//   'cone',
-//   {height:2,diameterTop:2,diameterBottom:2},
-//   scene
-// )
-
 const torus = BABYLON.MeshBuilder.CreateTorus(
   'tours',
   { diameter:3,thickness:1,tessellation:32},
