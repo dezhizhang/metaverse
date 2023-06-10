@@ -1,3 +1,12 @@
+/*
+ * :file description: 
+ * :name: /threejs/examples/129自定义合期合成.js
+ * :author: 张德志
+ * :copyright: (c) 2023, Tungee
+ * :date created: 2023-06-10 11:33:48
+ * :last editor: 张德志
+ * :date last edited: 2023-06-10 11:38:33
+ */
 import * as THREE from 'three';
 import * as dat from 'dat.gui';
 
