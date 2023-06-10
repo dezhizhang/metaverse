@@ -1,3 +1,13 @@
+/*
+ * :file description: 后期合成
+ * :name: /threejs/examples/128.ssaoPass.js
+ * :author: 张德志
+ * :copyright: (c) 2023, Tungee
+ * :date created: 2023-06-10 10:57:57
+ * :last editor: 张德志
+ * :date last edited: 2023-06-10 10:57:58
+ */
+
 import * as THREE from 'three';
 import * as dat from 'dat.gui';
 
