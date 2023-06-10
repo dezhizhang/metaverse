@@ -1,159 +1,179 @@
-import * as THREE from 'three';
-import * as dat from 'dat.gui';
-import Stats from 'stats.js';
-import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
-import { SSAOPass } from 'three/examples/jsm/postprocessing/SSAOPass.js';
-import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js';
-import { GammaCorrectionShader } from 'three/examples/jsm/shaders/GammaCorrectionShader.js';
+import * as THREE from "three";
 
-let container, stats;
+import Stats from "stats.js";
+
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
+
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
+import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader.js";
+import { RGBELoader } from "three/examples/jsm/loaders/RGBELoader.js";
+
 let camera, scene, renderer;
-let composer;
-let group;
+let stats;
 
-init();
-animate();
+let grid;
+let controls;
+
+const wheels = [];
 
 function init() {
-    container = document.createElement('div');
-    document.body.appendChild(container);
+  renderer = new THREE.WebGLRenderer({ antialias: true });
+  renderer.setPixelRatio(window.devicePixelRatio);
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setAnimationLoop(render);
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 0.85;
+  document.body.appendChild(renderer.domElement);
 
-    renderer = new THREE.WebGLRenderer();
-    renderer.setSize(window.innerWidth,window.innerHeight);
-    document.body.appendChild(renderer.domElement);
+  window.addEventListener("resize", onWindowResize);
 
-    camera = new THREE.PerspectiveCamera(65,window.innerWidth / window.innerHeight,0.1,1000);
-    camera.position.z = 500;
+  stats = new Stats();
+  document.body.appendChild(stats.dom);
 
-    scene = new THREE.Scene();
-    scene.background = new THREE.Color(0xaaaaaa);
+  //
 
-    scene.add(new THREE.DirectionalLight());
-    scene.add(new THREE.HemisphereLight());
+  camera = new THREE.PerspectiveCamera(
+    40,
+    window.innerWidth / window.innerHeight,
+    0.1,
+    100
+  );
+  camera.position.set(4.25, 1.4, -4.5);
 
-    group = new THREE.Group();
-    scene.add(group);
+  controls = new OrbitControls(camera, renderer.domElement);
+  controls.maxDistance = 9;
+  controls.maxPolarAngle = THREE.MathUtils.degToRad(90);
+  controls.target.set(0, 0.5, 0);
+  controls.update();
 
-    const geometry = new THREE.BoxGeometry(10,10,10);
-    
-    for(let i=0;i < 100;i++) {
-        const material = new THREE.MeshLambertMaterial({
-            color:Math.random() * 0xffffff
-        });
+  scene = new THREE.Scene();
+  scene.background = new THREE.Color(0x333333);
+  scene.environment = new RGBELoader().load(
+    "https://threejs.org/examples/textures/equirectangular/venice_sunset_1k.hdr"
+  );
+  scene.environment.mapping = THREE.EquirectangularReflectionMapping;
+  scene.fog = new THREE.Fog(0x333333, 10, 15);
 
-        const mesh = new THREE.Mesh(geometry,material);
-        mesh.position.x = Math.random() * 400 - 200;
-        mesh.position.y = Math.random() * 400 - 200;
-        mesh.position.z = Math.random() * 400 - 200;
+  grid = new THREE.GridHelper(20, 40, 0xffffff, 0xffffff);
+  grid.material.opacity = 0.2;
+  grid.material.depthWrite = false;
+  grid.material.transparent = true;
+  scene.add(grid);
 
-        mesh.rotation.x = Math.random();
-        mesh.rotation.y = Math.random();
-        mesh.rotation.z = Math.random();
+  // materials
 
-        mesh.scale.setScalar(Math.random() * 10 + 2);
-        group.add(mesh);
+  const bodyMaterial = new THREE.MeshPhysicalMaterial({
+    color: 0xff0000,
+    metalness: 1.0,
+    roughness: 0.5,
+    clearcoat: 1.0,
+    clearcoatRoughness: 0.03,
+  });
 
+  const detailsMaterial = new THREE.MeshStandardMaterial({
+    color: 0xffffff,
+    metalness: 1.0,
+    roughness: 0.5,
+  });
+
+  const glassMaterial = new THREE.MeshPhysicalMaterial({
+    color: 0xffffff,
+    metalness: 0.25,
+    roughness: 0,
+    transmission: 1.0,
+  });
+
+  const bodyColorInput = document.getElementById("body-color");
+  bodyColorInput.addEventListener("input", function () {
+    bodyMaterial.color.set(this.value);
+  });
+
+  const detailsColorInput = document.getElementById("details-color");
+  detailsColorInput.addEventListener("input", function () {
+    detailsMaterial.color.set(this.value);
+  });
+
+  const glassColorInput = document.getElementById("glass-color");
+  glassColorInput.addEventListener("input", function () {
+    glassMaterial.color.set(this.value);
+  });
+
+  // Car
+
+  const shadow = new THREE.TextureLoader().load(
+    "https://threejs.org/examples/models/gltf/ferrari_ao.png"
+  );
+
+  const dracoLoader = new DRACOLoader();
+  dracoLoader.setDecoderPath(
+    "https://threejs.org/examples/jsm/libs/draco/gltf/"
+  );
+
+  const loader = new GLTFLoader();
+  loader.setDRACOLoader(dracoLoader);
+
+  loader.load(
+    "https://threejs.org/examples/models/gltf/ferrari.glb",
+    function (gltf) {
+      const carModel = gltf.scene.children[0];
+
+      carModel.getObjectByName("body").material = bodyMaterial;
+
+      carModel.getObjectByName("rim_fl").material = detailsMaterial;
+      carModel.getObjectByName("rim_fr").material = detailsMaterial;
+      carModel.getObjectByName("rim_rr").material = detailsMaterial;
+      carModel.getObjectByName("rim_rl").material = detailsMaterial;
+      carModel.getObjectByName("trim").material = detailsMaterial;
+
+      carModel.getObjectByName("glass").material = glassMaterial;
+
+      wheels.push(
+        carModel.getObjectByName("wheel_fl"),
+        carModel.getObjectByName("wheel_fr"),
+        carModel.getObjectByName("wheel_rl"),
+        carModel.getObjectByName("wheel_rr")
+      );
+
+      // shadow
+      const mesh = new THREE.Mesh(
+        new THREE.PlaneGeometry(0.655 * 4, 1.3 * 4),
+        new THREE.MeshBasicMaterial({
+          map: shadow,
+          blending: THREE.MultiplyBlending,
+          toneMapped: false,
+          transparent: true,
+        })
+      );
+      mesh.rotation.x = -Math.PI / 2;
+      mesh.renderOrder = 2;
+      carModel.add(mesh);
+
+      scene.add(carModel);
     }
-
-    stats = new Stats();
-    container.appendChild(stats.dom);
-
-    const width = window.innerWidth;
-    const height = window.innerHeight;
-
-    composer = new EffectComposer(renderer);
-    const ssaoPass = new SSAOPass(scene,camera,width,height);
-    ssaoPass.kernelRadius = 16;
-    composer.addPass(ssaoPass);
-
-    const outputPass = new ShaderPass(GammaCorrectionShader);
-    composer.addPass(outputPass);
-
-    // Init gui
-    const gui = new dat.GUI();
-
-    gui.add(ssaoPass, 'output', {
-        'Default': SSAOPass.OUTPUT.Default,
-        'SSAO Only': SSAOPass.OUTPUT.SSAO,
-        'SSAO Only + Blur': SSAOPass.OUTPUT.Blur,
-        'Beauty': SSAOPass.OUTPUT.Beauty,
-        'Depth': SSAOPass.OUTPUT.Depth,
-        'Normal': SSAOPass.OUTPUT.Normal
-    }).onChange(function (value) {
-
-        ssaoPass.output = parseInt(value);
-
-    });
-    gui.add(ssaoPass, 'kernelRadius').min(0).max(32);
-    gui.add(ssaoPass, 'minDistance').min(0.001).max(0.02);
-    gui.add(ssaoPass, 'maxDistance').min(0.01).max(0.3);
-
-    // 着色器写通道
-
-
-    const shaderPass = new ShaderPass({
-        uniforms:{
-            tDiffuse:{
-                value:null,
-            },
-            uColor:{
-                value: new THREE.Color(1.0,0.0,0.0)
-            }
-        },
-        vertexShader:`
-            varying vec2 vUv;
-            void main() {
-                vUv = uv;
-                gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0);
-            }
-        `,
-        fragmentShader:`
-            varying vec2 vUv;
-            uniform sampler2D tDiffuse;
-            uniform vec3 uColor;
-            void main() {
-                vec4 color = texture2D(tDiffuse,vUv);
-                color.xyz += uColor;
-                gl_FragColor = color;
-            }
-        `
-    });
-    composer.addPass(shaderPass);
-
-    window.addEventListener('resize', onWindowResize);
-
+  );
 }
-
 
 function onWindowResize() {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
 
-    const width = window.innerWidth;
-    const height = window.innerHeight;
-
-    camera.aspect = width / height;
-    camera.updateProjectionMatrix();
-
-    renderer.setSize(width, height);
-    composer.setSize(width, height);
-
-}
-
-function animate() {
-
-    requestAnimationFrame(animate);
-
-    stats.begin();
-    render();
-    stats.end();
-
+  renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
 function render() {
+  controls.update();
 
-    const timer = performance.now();
-    group.rotation.x = timer * 0.0002;
-    group.rotation.y = timer * 0.0001;
+  const time = -performance.now() / 1000;
 
-    composer.render();
+  for (let i = 0; i < wheels.length; i++) {
+    wheels[i].rotation.x = time * Math.PI * 2;
+  }
 
+  grid.position.z = -time % 1;
+
+  renderer.render(scene, camera);
+
+  stats.update();
 }
+
+init();

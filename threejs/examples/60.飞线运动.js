@@ -1,12 +1,20 @@
+/*
+ * :file description: 
+ * :name: /metaverse/threejs/examples/60.飞线运动.js
+ * :author: 张德志
+ * :copyright: (c) 2023, Tungee
+ * :date created: 2023-03-13 05:58:33
+ * :last editor: 张德志
+ * :date last edited: 2023-06-10 15:45:01
+ */
  // 现在浏览器支持ES6语法，自然包括import方式引入js文件
  import * as THREE from 'three';
  // 引入Three.js扩展库
  import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
  // 引入线宽设置相关库
- import { LineSegmentsGeometry } from 'three/examples/jsm/lines/LineSegmentsGeometry.js';
  import { LineGeometry } from 'three/examples/jsm/lines/LineGeometry.js';
  import { LineMaterial } from 'three/examples/jsm/lines/LineMaterial.js';
- import { LineSegments2 } from 'three/examples/jsm/lines/LineSegments2.js';
+
  import { Line2 } from 'three/examples/jsm/lines/Line2.js';
 
 const scene = new THREE.Scene();

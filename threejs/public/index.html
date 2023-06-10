@@ -5,7 +5,7 @@
  * :copyright: (c) 2022, Tungee
  * :date created: 2022-07-12 07:39:26
  * :last editor: 张德志
- * :date last edited: 2023-06-10 10:40:54
+ * :date last edited: 2023-06-10 21:09:35
 -->
 <!DOCTYPE html>
 <html lang="en">
@@ -16,16 +16,33 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<title>threejs</title>	
 	<style>
-		body{
-			margin: 0px;
-			padding: 0px;
-		}
+		body {
+				color: #bbbbbb;
+				background: #333333;
+			}
+			a {
+				color: #08f;
+			}
+
+			.colorPicker {
+				display: inline-block;
+				margin: 0 10px
+			}
+			#info{
+				text-align: center;
+			}
 		
 	</style>
 </head>
 
 <body>
+	<div id="info">
 	
+		<span class="colorPicker"><input id="body-color" type="color" value="#ff0000"></input><br/>Body</span>
+		<span class="colorPicker"><input id="details-color" type="color" value="#ffffff"></input><br/>Details</span>
+		<span class="colorPicker"><input id="glass-color" type="color" value="#ffffff"></input><br/>Glass</span>
+	</div>
+
 </body>
 
 </html>

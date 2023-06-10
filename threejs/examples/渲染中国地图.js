@@ -1,8 +1,39 @@
+/*
+ * :file description: 
+ * :name: /threejs/examples/渲染中国地图.js
+ * :author: 张德志
+ * :copyright: (c) 2023, Tungee
+ * :date created: 2023-03-13 05:58:33
+ * :last editor: 张德志
+ * :date last edited: 2023-06-10 16:25:05
+ */
 import * as THREE from 'three';
 // 引入Three.js扩展库
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { line } from './line.js';
-import { ExtrudeMesh } from './ExtrudeMesh.js';
+
+
+
+
+function shapeMesh(pointsArrs) {
+  var shapeArr = [];//轮廓形状Shape集合
+  pointsArrs.forEach(pointsArr => {
+      var vector2Arr = [];
+      // 转化为Vector2构成的顶点数组
+      pointsArr[0].forEach(elem => {
+          vector2Arr.push(new THREE.Vector2(elem[0], elem[1]))
+      });
+      var shape = new THREE.Shape(vector2Arr);
+      shapeArr.push(shape);
+  });
+  var material = new THREE.MeshBasicMaterial({
+      color: 0x004444,
+      side: THREE.DoubleSide, //两面可见
+  }); //材质对象
+  var geometry = new THREE.ShapeBufferGeometry(shapeArr);
+  var mesh = new THREE.Mesh(geometry, material); //网格模型对象
+  return mesh;
+}
 
 const scene = new THREE.Scene();
 const loader = new THREE.FileLoader();
@@ -29,7 +60,7 @@ loader.load('https://tugua.oss-cn-hangzhou.aliyuncs.com/model/china.json',functi
     // height：根据行政区尺寸范围设置，比如高度设置为地图尺寸范围的2%、5%等，过小感觉不到高度，过大太高了
     var height = 1;//拉伸高度
 
-    var mesh = ExtrudeMesh(area.geometry.coordinates, height)
+    var mesh = shapeMesh(area.geometry.coordinates, height)
     // mesh.material.transparent = true;
     // mesh.material.opacity = 0.6;// 半透明效果/
     meshGroup.add(mesh);//省份轮廓拉伸Mesh插入组对象mapGroup
