@@ -1,5 +1,14 @@
 /*
  * :file description: 
+ * :name: /webgl/examples/81基本图元.js
+ * :author: 张德志
+ * :copyright: (c) 2023, Tungee
+ * :date created: 2023-06-11 20:23:05
+ * :last editor: 张德志
+ * :date last edited: 2023-06-11 20:23:06
+ */
+/*
+ * :file description: 
  * :name: /webgl/src/index.js
  * :author: 张德志
  * :copyright: (c) 2022, Tungee
