@@ -1,11 +1,11 @@
 /*
  * :file description: 
- * :name: /webgl/src/index.js
+ * :name: /webgl/examples/76顶点缓冲区.js
  * :author: 张德志
  * :copyright: (c) 2022, Tungee
  * :date created: 2022-07-10 11:12:55
  * :last editor: 张德志
- * :date last edited: 2023-06-11 11:38:40
+ * :date last edited: 2023-06-11 11:20:20
  */
 
 const canvas = document.createElement('canvas');
@@ -31,6 +31,7 @@ const frag = gl.createShader(gl.FRAGMENT_SHADER);
 gl.shaderSource(vertex,VERTEX_SHADER);
 gl.shaderSource(frag,FRAG_SHADER);
 
+// 编译
 gl.compileShader(vertex);
 gl.compileShader(frag);
 
@@ -54,6 +55,7 @@ const buffer = gl.createBuffer();
 gl.bindBuffer(gl.ARRAY_BUFFER,buffer);
 
 gl.bufferData(gl.ARRAY_BUFFER,dataVertices,gl.STATIC_DRAW);
+
 const a_position = gl.getAttribLocation(program,'a_pos');
 gl.vertexAttribPointer(a_position,2,gl.FLOAT,false,0,0);
 gl.enableVertexAttribArray(a_position);
@@ -61,4 +63,5 @@ gl.enableVertexAttribArray(a_position);
 gl.drawArrays(gl.TRIANGLES,0,3);
 
 document.body.appendChild(canvas);
+
 
