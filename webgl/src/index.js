@@ -1,11 +1,11 @@
 /*
  * :file description: 
- * :name: /webgl/examples/78带有颜色的矩形.js
+ * :name: /webgl/src/index.js
  * :author: 张德志
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-06-11 15:45:48
  * :last editor: 张德志
- * :date last edited: 2023-06-11 15:45:55
+ * :date last edited: 2023-06-11 16:45:41
  */
 /*
  * :file description: 
@@ -25,24 +25,21 @@ const gl = canvas.getContext('webgl');
 const VERTEX_SHADER = `
     precision mediump float;
     attribute vec3 v3Position;
-    attribute vec4 inColor;
-    varying   vec4 outColor;
     void main() {
-        outColor = inColor;
         gl_Position = vec4(v3Position,1.0);
     }
 `;
 
 const FRAG_SHADER = `
     precision mediump float;
-    varying vec4 outColor;
+    uniform vec4 color;
     void main() {
-        gl_FragColor = outColor;
+        gl_FragColor = color;
     }
 `;
 
 let v3PositionIndex = 0.0;
-let inColor = 1;
+let uniformColor = 1;
 const vertex = gl.createShader(gl.VERTEX_SHADER);
 const frag = gl.createShader(gl.FRAGMENT_SHADER);
 
@@ -58,7 +55,9 @@ gl.attachShader(program,vertex);
 gl.attachShader(program,frag);
 
 gl.bindAttribLocation(program,v3PositionIndex,'v3Position');
-gl.bindAttribLocation(program,inColor,'inColor');
+
+
+// gl.bindAttribLocation(program,uniformColor,'color');
 
 
 // 链接几何体
@@ -87,6 +86,9 @@ gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,indexBuffer);
 gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,indexVertices,gl.STATIC_DRAW);
 
 
+const color = gl.getUniformLocation(program,'color');
+gl.uniform4f(color,1.0,0.0,1.0,1.0);
+
 
 gl.clearColor(0.0,0.0,0.0,1.0);
 gl.clear(gl.COLOR_BUFFER_BIT);
@@ -95,11 +97,11 @@ gl.bindBuffer(gl.ARRAY_BUFFER,buffer);
 gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,indexBuffer);
 
 gl.enableVertexAttribArray(v3PositionIndex);
-gl.enableVertexAttribArray(inColor);
+
 
 
 gl.vertexAttribPointer(v3PositionIndex,3,gl.FLOAT,false,4 * 7,0);
-gl.vertexAttribPointer(inColor,4,gl.FLOAT,false, 4 * 7,12);
+
 
 gl.drawElements(gl.TRIANGLES,6,gl.UNSIGNED_SHORT,0);
 
