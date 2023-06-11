@@ -1,5 +1,14 @@
 /*
  * :file description: 
+ * :name: /webgl/examples/78带有颜色的矩形.js
+ * :author: 张德志
+ * :copyright: (c) 2023, Tungee
+ * :date created: 2023-06-11 15:45:48
+ * :last editor: 张德志
+ * :date last edited: 2023-06-11 15:45:55
+ */
+/*
+ * :file description: 
  * :name: /webgl/src/index.js
  * :author: 张德志
  * :copyright: (c) 2022, Tungee
