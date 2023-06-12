@@ -5,7 +5,7 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2022-07-10 11:12:55
  * :last editor: 张德志
- * :date last edited: 2023-06-13 04:48:38
+ * :date last edited: 2023-06-13 05:22:49
  */
 
 const canvas = document.createElement('canvas');
@@ -17,15 +17,18 @@ const VERTEX_SHADER = `
     attribute vec2 a_position;
     void main() {
         gl_Position = vec4(a_position,0.0,1.0);
-        gl_PointSize = 2.0;
+        gl_PointSize = 20.0;
     }
 `;
 
 const FRAG_SHADER = `
+    precision mediump float;
+    uniform vec3 u_color;
     void main() {
-        gl_FragColor = vec4(1.0,0.0,0.0,1.0);
+        gl_FragColor = vec4(u_color,1.0);
     }
 `;
+
 
 const vertex = gl.createShader(gl.VERTEX_SHADER);
 const frag = gl.createShader(gl.FRAGMENT_SHADER);
@@ -43,29 +46,15 @@ gl.attachShader(program,frag);
 gl.linkProgram(program);
 gl.useProgram(program);
 
-
-
 gl.clearColor(0.0,0.0,0.0,1.0);
 gl.clear(gl.COLOR_BUFFER_BIT);
 
-let x = 0;
-let y = 0;
-let n = 1000;
-let r = 0.5;
-for(let i=0;i < n;i++) {
-    x = Math.sin(i) * r;
-    y = Math.cos(i) * r;
+const a_position = gl.getAttribLocation(program,'a_position');
+gl.vertexAttrib2f(a_position,0,0.5);
 
-    const aPosition = gl.getAttribLocation(program,'a_position');
-    gl.vertexAttrib2f(aPosition,x,y);
-    console.log(aPosition)
+const u_color = gl.getUniformLocation(program,'u_color');
+gl.uniform3f(u_color,1.0,0.0,0.0);
 
-
-    gl.drawArrays(gl.POINTS,0,1);
-}
-
-
+gl.drawArrays(gl.POINTS,0,1);
 
 document.body.appendChild(canvas);
-
-
