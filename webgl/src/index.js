@@ -5,7 +5,7 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2022-07-10 11:12:55
  * :last editor: 张德志
- * :date last edited: 2023-06-12 07:18:56
+ * :date last edited: 2023-06-12 23:36:38
  */
 
 const canvas = document.createElement('canvas');
@@ -13,58 +13,46 @@ canvas.width = 400;
 canvas.height = 400;
 const gl = canvas.getContext('webgl');
 
-const vertexSource = `
+const VERTEX_SHADER = `
+    attribute vec2 a_position;
     void main() {
-        gl_Position = vec4(0.0,0.0,0.0,1.0);
+        gl_Position = vec4(a_position,0.0,1.0);
         gl_PointSize = 10.0;
     }
 `;
 
-const fragmentSource = `
+const FRAG_SHADER = `
     void main() {
         gl_FragColor = vec4(1.0,0.0,0.0,1.0);
     }
 `;
 
-// 创建shader
-function createShader(gl,type,source) {
-    let shader = gl.createShader(type);
-    gl.shaderSource(shader,source);
-    gl.compileShader(shader);
+const vertex = gl.createShader(gl.VERTEX_SHADER);
+const frag = gl.createShader(gl.FRAGMENT_SHADER);
 
-    // 获取编译信息
-    let completed = gl.getShaderParameter(shader,gl.COMPILE_STATUS);
+gl.shaderSource(vertex,VERTEX_SHADER);
+gl.shaderSource(frag,FRAG_SHADER);
 
-    if(!completed) {
-        console.log(gl.getShaderInfoLog(shader));
-        return
-    }
+gl.compileShader(vertex);
+gl.compileShader(frag);
 
-    return shader;
+const program = gl.createProgram();
+gl.attachShader(program,vertex);
+gl.attachShader(program,frag);
 
-}
-
-const vertexShader = createShader(gl,gl.VERTEX_SHADER,vertexSource);
-const fragmentShader = createShader(gl,gl.FRAGMENT_SHADER,fragmentSource);
-
-
-function createProgram(gl,vertexShader,fragmentShader) {
-    const program = gl.createProgram();
-    gl.attachShader(program,vertexShader);
-    gl.attachShader(program,fragmentShader);
-
-    gl.linkProgram(program);
-    gl.useProgram(program);
-    return program;
-}
-
-const program = createProgram(gl,vertexShader,fragmentShader);
+gl.linkProgram(program);
+gl.useProgram(program);
 
 
 
 
 gl.clearColor(0.0,0.0,0.0,1.0);
 gl.clear(gl.COLOR_BUFFER_BIT);
+
+const aPosition = gl.getAttribLocation(program,'a_position');
+gl.vertexAttrib2f(aPosition,-0.8,0.0);
+console.log(aPosition)
+
 
 gl.drawArrays(gl.POINTS,0,1);
 
