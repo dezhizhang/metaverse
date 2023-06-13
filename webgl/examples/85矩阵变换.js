@@ -19,16 +19,6 @@ document.body.appendChild(canvas);
 
 const gl = canvas.getContext('webgl');
 
-// const VERTEX_SHADER =
-//     `
-//     attribute vec4 a_pos;\n\
-//     uniform float u_sinB,u_cosB;\n\
-//     void main() {\n\
-//     gl_Position.x = a_pos.x * u_cosB - a_pos.y * u_sinB;\n
-//     gl_Position.y = a_pos.y * u_cosB + a_pos.y * u_cosB;\n
-//     gl_Position.z = a_pos.z;\n
-//     gl_Position.w = a_pos.w;\n
-// }`;
 
 const VERTEX_SHADER = `
     attribute vec2 a_position;
@@ -41,14 +31,12 @@ const VERTEX_SHADER = `
 `;
 
 
-
 const FRAG_SHADER = `
     precision mediump float;
     void main() {
         gl_FragColor = vec4(1.0,0.0,0.0,1.0);
     }
 `;
-
 
 
 const vertex = gl.createShader(gl.VERTEX_SHADER);
@@ -108,8 +96,4 @@ gl.clear(gl.COLOR_BUFFER_BIT);
 
 
 gl.drawArrays(gl.TRIANGLES,0,3);
-
-
-
-
 
