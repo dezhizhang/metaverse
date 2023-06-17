@@ -1,11 +1,11 @@
 /*
  * :file description: 
- * :name: /webgl/src/index.js
+ * :name: /webgl/examples/86多矩阵组合.js
  * :author: 张德志
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-03-13 05:58:33
  * :last editor: 张德志
- * :date last edited: 2023-06-17 20:55:49
+ * :date last edited: 2023-06-17 20:57:15
  */
 // import { mat4,glMatrix } from 'gl-matrix';
 
