@@ -13,6 +13,28 @@ import { glMatrix, mat4 } from "gl-matrix";
 import VERTEX_SHADER from "./shader/vertex.js";
 import FRAG_SHADER from "./shader/frag.js";
 
+
+// const FRAG_SHADER = /* glsl */ `
+//     precision mediump float;
+//     void main() {
+//         gl_FragColor = vec4(1.0,0.0,0.0,1.0);
+//     }
+// `;
+
+// const VERTEX_SHADER =  /* glsl */`
+//     precision mediump float;
+//     attribute vec3 a_position;
+//     uniform mat4 u_rotateMatrix;
+//     void main() {
+//         gl_Position = u_rotateMatrix * vec4(a_position,1.0);
+//         gl_PointSize = 10.0;
+//     }
+// `;
+
+// export default VERTEX_SHADER;
+
+
+
 const canvas = document.createElement("canvas");
 canvas.width = 500;
 canvas.height = 500;
