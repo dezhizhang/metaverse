@@ -1,11 +1,11 @@
 /*
  * :file description:
- * :name: /webgl/src/index.js
+ * :name: /webgl/examples/88纹理贴图.js
  * :author: 张德志
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-03-13 05:58:33
  * :last editor: 张德志
- * :date last edited: 2023-06-18 15:38:16
+ * :date last edited: 2023-06-18 16:29:04
  */
 import cat from "./cat.png";
 
@@ -119,5 +119,7 @@ function draw() {
 }
 
 draw();
+
+
 
 
