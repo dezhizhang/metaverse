@@ -5,8 +5,14 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-03-13 05:58:33
  * :last editor: 张德志
- * :date last edited: 2023-06-18 16:02:31
+ * :date last edited: 2023-06-18 19:46:29
  */
+
+import VERTEX_SHADER from './shader/vertex.js';
+import FRAG_SHADER from './shader/frag.js';
+
+console.log('FRAG_SHADER',VERTEX_SHADER);
+console.log('FRAG_SHADER',FRAG_SHADER);
 
 
 const canvas = document.createElement('canvas');
@@ -15,26 +21,6 @@ canvas.width = 500;
 canvas.height = 500;
 
 const gl = canvas.getContext('webgl');
-
-const VERTEX_SHADER = `
-    precision mediump float;
-    attribute vec3 a_position;
-    attribute vec2 a_uv;
-    varying vec2 v_uv;
-    void main() {
-        v_uv = a_uv;
-        gl_Position = vec4(a_position,1.0);
-        gl_PointSize = 10.0;
-    }
-`;
-
-const FRAG_SHADER = `
-    precision mediump float;
-    varying vec2 v_uv;
-    void main() {
-        gl_FragColor = vec4(v_uv,0.0,1.0);
-    }
-`;
 
 
 const vertex = gl.createShader(gl.VERTEX_SHADER);
