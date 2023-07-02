@@ -5,18 +5,9 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-07-02 20:10:04
  * :last editor: 张德志
- * :date last edited: 2023-07-02 20:41:25
+ * :date last edited: 2023-07-02 21:50:49
  */
 
-/*
- * :file description:
- * :name: /babylon/src/BasicScene.ts
- * :author: 张德志
- * :copyright: (c) 2023, Tungee
- * :date created: 2023-07-02 17:49:35
- * :last editor: 张德志
- * :date last edited: 2023-07-02 20:07:25
- */
 
 import {
     ArcRotateCamera,
@@ -32,7 +23,7 @@ export default class Village {
     scene: Scene;
     constructor(private readonly canvas: HTMLCanvasElement) {
         this.engine = new Engine(this.canvas);
-        this.scene = this.CreateScene();
+        this.scene = this.createScene();
 
         this.engine.runRenderLoop(() => {
             this.scene.render();
@@ -40,7 +31,7 @@ export default class Village {
     }
 
     // 创建场景
-    CreateScene(): Scene {
+    createScene():Scene {
         const scene = new Scene(this.engine);
 
         /**** Set camera and light *****/
@@ -57,21 +48,33 @@ export default class Village {
         const roofMat = new BABYLON.StandardMaterial("roofMat");
         roofMat.diffuseTexture = new BABYLON.Texture("https://assets.babylonjs.com/environments/roof.jpg");
         const boxMat = new BABYLON.StandardMaterial("boxMat");
-        boxMat.diffuseTexture = new BABYLON.Texture("https://www.babylonjs-playground.com/textures/floor.png")
+        boxMat.diffuseTexture = new BABYLON.Texture("https://assets.babylonjs.com/environments/semihouse.png")
+    
+    
+        //options parameter to set different images on each side
+        const faceUV:any[] = [];
+        faceUV[0] = new BABYLON.Vector4(0.6, 0.0, 1.0, 1.0); //rear face
+        faceUV[1] = new BABYLON.Vector4(0.0, 0.0, 0.4, 1.0); //front face
+        faceUV[2] = new BABYLON.Vector4(0.4, 0, 0.6, 1.0); //right side
+        faceUV[3] = new BABYLON.Vector4(0.4, 0, 0.6, 1.0); //left side
+        // top 4 and bottom 5 not seen so not set
+        
     
         /**** World Objects *****/
-        const box = BABYLON.MeshBuilder.CreateBox("box", {});
+        const box = BABYLON.MeshBuilder.CreateBox("box", {width: 2, faceUV: faceUV, wrap: true});
         box.material = boxMat;
         box.position.y = 0.5;
         const roof = BABYLON.MeshBuilder.CreateCylinder("roof", {diameter: 1.3, height: 1.2, tessellation: 3});
         roof.material = roofMat;
         roof.scaling.x = 0.75;
+        roof.scaling.y = 2;
         roof.rotation.z = Math.PI / 2;
         roof.position.y = 1.22;
         const ground = BABYLON.MeshBuilder.CreateGround("ground", {width:10, height:10});
         ground.material = groundMat;
     
-
         return scene;
+
     }
+   
 }
