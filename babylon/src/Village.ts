@@ -1,16 +1,15 @@
 /*
- * :file description: 
+ * :file description:
  * :name: /babylon/src/Village.ts
  * :author: 张德志
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-07-02 20:10:04
  * :last editor: 张德志
- * :date last edited: 2023-07-02 20:21:14
+ * :date last edited: 2023-07-02 20:41:25
  */
 
-
 /*
- * :file description: 
+ * :file description:
  * :name: /babylon/src/BasicScene.ts
  * :author: 张德志
  * :copyright: (c) 2023, Tungee
@@ -19,8 +18,14 @@
  * :date last edited: 2023-07-02 20:07:25
  */
 
-import { ArcRotateCamera, Engine, HemisphericLight, MeshBuilder, Scene, Vector3, Sound } from "babylonjs";
-
+import {
+    ArcRotateCamera,
+    Engine,
+    HemisphericLight,
+    MeshBuilder,
+    Scene,
+    Vector3,
+} from "babylonjs";
 
 export default class Village {
     engine: Engine;
@@ -31,33 +36,42 @@ export default class Village {
 
         this.engine.runRenderLoop(() => {
             this.scene.render();
-        })
+        });
     }
 
     // 创建场景
     CreateScene(): Scene {
         const scene = new Scene(this.engine);
 
-        const camera = new ArcRotateCamera('camera', - Math.PI / 2, Math.PI / 2.5, 10, new Vector3(0, 0, 0));
+        /**** Set camera and light *****/
+        const camera = new BABYLON.ArcRotateCamera("camera", -Math.PI / 2, Math.PI / 2.5, 10, new BABYLON.Vector3(0, 0, 0));
         camera.attachControl(this.canvas, true);
-
-        // 创建灯光
-        const light = new HemisphericLight('light', new Vector3(1, 1, 0), this.scene);
-
-        const box = MeshBuilder.CreateBox('box');
-        box.position.y = 0.5;
-
-        // 添加声音
-        const bounce = new Sound('bounce','https://playground.babylonjs.com/sounds/bounce.wav',this.scene);
-        setInterval(() => bounce.play(),3000);
+        const light = new HemisphericLight("light", new Vector3(1, 1, 0),this.scene);
     
-
-        // 创建平面
-        const ground = MeshBuilder.CreateGround('ground', { width: 10, height: 10 });
-
+        /**** Materials *****/
+        //color
+        const groundMat = new BABYLON.StandardMaterial("groundMat");
+        groundMat.diffuseColor = new BABYLON.Color3(0, 1, 0)
+    
+        //texture
+        const roofMat = new BABYLON.StandardMaterial("roofMat");
+        roofMat.diffuseTexture = new BABYLON.Texture("https://assets.babylonjs.com/environments/roof.jpg");
+        const boxMat = new BABYLON.StandardMaterial("boxMat");
+        boxMat.diffuseTexture = new BABYLON.Texture("https://www.babylonjs-playground.com/textures/floor.png")
+    
+        /**** World Objects *****/
+        const box = BABYLON.MeshBuilder.CreateBox("box", {});
+        box.material = boxMat;
+        box.position.y = 0.5;
+        const roof = BABYLON.MeshBuilder.CreateCylinder("roof", {diameter: 1.3, height: 1.2, tessellation: 3});
+        roof.material = roofMat;
+        roof.scaling.x = 0.75;
+        roof.rotation.z = Math.PI / 2;
+        roof.position.y = 1.22;
+        const ground = BABYLON.MeshBuilder.CreateGround("ground", {width:10, height:10});
+        ground.material = groundMat;
+    
 
         return scene;
     }
-
-
 }
