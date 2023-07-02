@@ -5,7 +5,7 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-05-04 05:38:45
  * :last editor: 张德志
- * :date last edited: 2023-07-02 17:28:30
+ * :date last edited: 2023-07-02 17:35:08
  */
 import './style.css'
 
@@ -75,6 +75,19 @@ const light = new BABYLON.DirectionalLight(
 //   },
 //   scene
 // );
+
+const pointLight = new BABYLON.PointLight(
+  'pointLight',
+  new BABYLON.Vector3(-2,0,0),
+  scene
+);
+
+pointLight.diffuse = new BABYLON.Color3(1,0,0);
+pointLight.specular = new BABYLON.Color3(1,1,0);
+pointLight.intensity = 0.5;
+
+
+
 
 const torus = BABYLON.MeshBuilder.CreateTorus(
   'torus',
