@@ -1,14 +1,21 @@
 /*
  * :file description: 
+ * :name: /babylon/examples/01examples.js
+ * :author: 张德志
+ * :copyright: (c) 2023, Tungee
+ * :date created: 2023-07-02 16:43:06
+ * :last editor: 张德志
+ * :date last edited: 2023-07-02 16:53:23
+ */
+/*
+ * :file description: 
  * :name: /babylon/src/main.js
  * :author: 张德志
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-05-04 05:38:45
  * :last editor: 张德志
- * :date last edited: 2023-07-02 16:52:34
+ * :date last edited: 2023-06-10 21:58:50
  */
-import './style.css'
-
 import * as BABYLON from 'babylonjs';
 
 const canvas = document.createElement('canvas');
