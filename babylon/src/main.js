@@ -5,7 +5,7 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-05-04 05:38:45
  * :last editor: 张德志
- * :date last edited: 2023-07-02 17:06:48
+ * :date last edited: 2023-07-02 17:28:30
  */
 import './style.css'
 
@@ -85,6 +85,11 @@ const torus = BABYLON.MeshBuilder.CreateTorus(
   },
   scene
 );
+
+torus.position.set(-4,-1,0);
+torus.scaling.set(0.5,0.5,0.5);
+
+
 
 
 
