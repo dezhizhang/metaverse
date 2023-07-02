@@ -5,7 +5,7 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-07-02 20:10:04
  * :last editor: 张德志
- * :date last edited: 2023-07-02 20:15:29
+ * :date last edited: 2023-07-02 20:21:14
  */
 
 
@@ -19,7 +19,7 @@
  * :date last edited: 2023-07-02 20:07:25
  */
 
-import { ArcRotateCamera, Engine, HemisphericLight, MeshBuilder, Scene, Vector3 } from "babylonjs";
+import { ArcRotateCamera, Engine, HemisphericLight, MeshBuilder, Scene, Vector3, Sound } from "babylonjs";
 
 
 export default class Village {
@@ -47,10 +47,15 @@ export default class Village {
         const box = MeshBuilder.CreateBox('box');
         box.position.y = 0.5;
 
+        // 添加声音
+        const bounce = new Sound('bounce','https://playground.babylonjs.com/sounds/bounce.wav',this.scene);
+        setInterval(() => bounce.play(),3000);
+    
+
         // 创建平面
         const ground = MeshBuilder.CreateGround('ground', { width: 10, height: 10 });
-        
-        
+
+
         return scene;
     }
 
