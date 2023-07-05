@@ -5,7 +5,7 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-07-02 20:10:04
  * :last editor: 张德志
- * :date last edited: 2023-07-05 22:36:10
+ * :date last edited: 2023-07-05 22:49:30
  */
 import {
     ArcRotateCamera,
@@ -29,24 +29,21 @@ export default class Village {
 
     // 创建场景
     createScene():Scene {
-
         const scene = new Scene(this.engine);
 
-        const camera = new ArcRotateCamera('camera', -Math.PI / 2,Math.PI / 2.5,10,new Vector3(0,0,0));
+        const camera = new ArcRotateCamera('camera', - Math.PI / 2, Math.PI / 2.5,10,new Vector3(0,0,0));
         camera.attachControl(this.canvas,true);
         const light = new HemisphericLight('light',new Vector3(1,1,0),this.scene);
 
-        //  创建地面
-        const  ground = this.buildGround();
+        // 创建地面
+        const ground = this.buildGround();
         const box = this.buildBox();
         const roof = this.buildRoof();
-
-        const house = BABYLON.Mesh.MergeMeshes([box, roof], true, false, undefined, false, true);
-
+        const house = BABYLON.Mesh.MergeMeshes([box,roof],true,false,undefined,false,true);
         return scene;
-    
-
     }
+
+    // 创建场景
     buildGround = () => {
         const groundMat = new BABYLON.StandardMaterial('groundMat');
         groundMat.diffuseColor = new BABYLON.Color3(0,1,0);
