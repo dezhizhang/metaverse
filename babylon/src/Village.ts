@@ -5,15 +5,12 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-07-02 20:10:04
  * :last editor: 张德志
- * :date last edited: 2023-07-02 22:46:45
+ * :date last edited: 2023-07-05 22:36:10
  */
-
-
 import {
     ArcRotateCamera,
     Engine,
     HemisphericLight,
-    MeshBuilder,
     Scene,
     Vector3,
 } from "babylonjs";
@@ -58,11 +55,10 @@ export default class Village {
         ground.material = groundMat;
 
     }
-   
-    buildBox = () => {
 
+    buildBox = () => {
         const boxMat = new BABYLON.StandardMaterial('boxMat');
-        boxMat.diffuseTexture = new BABYLON.Texture('https://assets.babylonjs.com/environments/cubehouse.png');
+        boxMat.diffuseTexture = new  BABYLON.Texture('https://assets.babylonjs.com/environments/cubehouse.png');
 
         const faceUV:any[] = [];
         faceUV[0] = new BABYLON.Vector4(0.5, 0.0, 0.75, 1.0); //rear face
@@ -75,12 +71,10 @@ export default class Village {
         box.position.y = 0.5;
 
         return box;
-        
     }
+
     
     buildRoof = () => {
-   
-
         const roofMat = new BABYLON.StandardMaterial('roofMat');
         roofMat.diffuseTexture = new BABYLON.Texture('https://assets.babylonjs.com/environments/roof.jpg');
 
