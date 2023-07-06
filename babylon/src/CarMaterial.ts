@@ -5,19 +5,10 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-07-07 07:24:49
  * :last editor: 张德志
- * :date last edited: 2023-07-07 07:28:56
+ * :date last edited: 2023-07-07 07:33:52
  */
 
 
-/*
- * :file description: 
- * :name: /babylon/src/BasicScene.ts
- * :author: 张德志
- * :copyright: (c) 2023, Tungee
- * :date created: 2023-07-02 17:49:35
- * :last editor: 张德志
- * :date last edited: 2023-07-02 20:07:25
- */
 import * as earcut from 'earcut';
 import { ArcRotateCamera, Engine, HemisphericLight, MeshBuilder, Scene,SceneLoader,Vector3 } from "babylonjs";
 
@@ -39,7 +30,7 @@ export default class CarMaterial {
     createScene():Scene {
         const scene = new Scene(this.engine);
 
-        const camera = new BABYLON.ArcRotateCamera("camera", -Math.PI / 2, Math.PI / 2.5, 100, new BABYLON.Vector3(0, 0, 0));
+        const camera = new BABYLON.ArcRotateCamera("camera", -Math.PI / 2, Math.PI / 2.5, 15, new BABYLON.Vector3(0, 0, 0));
         camera.attachControl(this.canvas, true);
         const light = new HemisphericLight("light", new Vector3(0, 1, 0),this.scene);
         
