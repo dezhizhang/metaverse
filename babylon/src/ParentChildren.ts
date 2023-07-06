@@ -5,7 +5,7 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-07-07 05:39:58
  * :last editor: 张德志
- * :date last edited: 2023-07-07 06:34:46
+ * :date last edited: 2023-07-07 06:44:58
  */
 /*
  * :file description:
@@ -22,9 +22,9 @@ import {
     HemisphericLight,
     Scene,
     Vector3,
-    Mesh,
+    ArcRotateCamera,
     MeshBuilder,
-    SceneLoader,
+    TransformNode,
     StandardMaterial,
     Color3,
     DaydreamController,
@@ -47,17 +47,17 @@ export default class ParentChildren {
     createScene(): Scene {
         const scene = new Scene(this.engine);
 
-        const camera = new BABYLON.ArcRotateCamera("camera", -Math.PI / 2, Math.PI / 2.5, 15, new BABYLON.Vector3(0, 0, 0));
+        const camera = new ArcRotateCamera("camera", -Math.PI / 2, Math.PI / 2.5, 15, new Vector3(0, 0, 0));
         camera.attachControl(this.canvas, true);
         const light = new HemisphericLight("light", new Vector3(1, 1, 0), this.scene);
 
         const faceColors:any[] = [];
-        faceColors[0] = BABYLON.Color3.Blue();
-        faceColors[1] = BABYLON.Color3.Teal()
-        faceColors[2] = BABYLON.Color3.Red();
-        faceColors[3] = BABYLON.Color3.Purple();
-        faceColors[4] = BABYLON.Color3.Green();
-        faceColors[5] = BABYLON.Color3.Yellow();
+        faceColors[0] = Color3.Blue();
+        faceColors[1] = Color3.Teal()
+        faceColors[2] = Color3.Red();
+        faceColors[3] = Color3.Purple();
+        faceColors[4] = Color3.Green();
+        faceColors[5] = Color3.Yellow();
      
         const boxParent = MeshBuilder.CreateBox("Box", {faceColors:faceColors});
         const boxChild = MeshBuilder.CreateBox("Box", {size: 0.5, faceColors:faceColors});
@@ -79,9 +79,10 @@ export default class ParentChildren {
         boxParent.rotation.y = 0;
         boxParent.rotation.z = -Math.PI / 4;
 
+        const boxChildAxes =this.localAxes(1);
+        boxChildAxes.parent = boxChild; 
         this.showAxis(6);
-        
-        // const boxChildAxes = this.localAxes(1, scene);
+        return scene;
      
         return scene;
     }
@@ -120,8 +121,32 @@ export default class ParentChildren {
         
     }
 
-   
-
-
-
+    localAxes  (size){
+        const local_axisX =  MeshBuilder.CreateLines("local_axisX",{points:[
+           Vector3.Zero(), new Vector3(size, 0, 0), new Vector3(size * 0.95, 0.05 * size, 0),
+            new Vector3(size, 0, 0), new Vector3(size * 0.95, -0.05 * size, 0)
+        ]});
+        local_axisX.color = new Color3(1, 0, 0);
+    
+        const local_axisY = MeshBuilder.CreateLines("local_axisY",{points: [
+            Vector3.Zero(), new Vector3(0, size, 0), new Vector3(-0.05 * size, size * 0.95, 0),
+            new Vector3(0, size, 0), new Vector3(0.05 * size, size * 0.95, 0)
+        ]});
+        local_axisY.color = new Color3(0, 1, 0);
+    
+        const local_axisZ = MeshBuilder.CreateLines("local_axisZ",{points:[
+            Vector3.Zero(), new Vector3(0, 0, size), new Vector3(0, -0.05 * size, size * 0.95),
+            new Vector3(0, 0, size), new Vector3(0, 0.05 * size, size * 0.95)
+        ]});
+        local_axisZ.color = new Color3(0, 0, 1);
+    
+        const local_origin = new TransformNode("local_origin");
+    
+        local_axisX.parent = local_origin;
+        local_axisY.parent = local_origin;
+        local_axisZ.parent = local_origin;
+    
+        return local_origin;
+    }
+    
 }
