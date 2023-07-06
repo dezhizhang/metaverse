@@ -5,7 +5,7 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-07-07 06:47:07
  * :last editor: 张德志
- * :date last edited: 2023-07-07 07:10:34
+ * :date last edited: 2023-07-07 07:22:45
  */
 
 
@@ -29,7 +29,7 @@ export default class VillageAnimation {
     scene:Scene;
     constructor(private readonly canvas:HTMLCanvasElement) {
         this.engine = new Engine(this.canvas);
-        this.scene = this.CreateScene();
+        this.scene = this.createScene();
 
         this.engine.runRenderLoop(() => {
             this.scene.render();
@@ -37,34 +37,31 @@ export default class VillageAnimation {
     }
 
     // 创建场景
-    CreateScene():Scene {
+    createScene():Scene {
         const scene = new Scene(this.engine);
 
-    const camera = new ArcRotateCamera("camera", -Math.PI / 2, Math.PI / 2.5, 3, new Vector3(0, 0, 0));
-    camera.attachControl(this.canvas, true);
-    const light = new HemisphericLight("light", new Vector3(0, 1, 0),this.scene);
-    
-    //base
-    const outline = [
-        new Vector3(-0.3, 0, -0.1),
-        new Vector3(0.2, 0, -0.1),
-    ]
+        const camera = new ArcRotateCamera('camera',-Math.PI / 2, Math.PI / 2.5, 3, new Vector3(0, 0, 0));
+        camera.attachControl(this.canvas,true);
+        
+        const light = new HemisphericLight('light',new Vector3(0,1,0),this.scene);
 
-    //curved front
-    for (let i = 0; i < 20; i++) {
-        outline.push(new Vector3(0.2 * Math.cos(i * Math.PI / 40), 0, 0.2 * Math.sin(i * Math.PI / 40) - 0.1));
+        // 
+        const outline = [
+            new Vector3(-0.3, 0, -0.1),
+            new Vector3(0.2, 0, -0.1),
+        ];
+
+        for(let i=0;i < 20;i++) {
+            outline.push(new Vector3(0.2 * Math.cos(i * Math.PI / 40), 0, 0.2 * Math.sin(i * Math.PI / 40) - 0.1));
+        }
+
+        outline.push(new Vector3(0,0,0.1));
+        outline.push(new Vector3(-0.3,0,0.1));
+        const car = MeshBuilder.ExtrudePolygon("car", {shape: outline, depth: 0.2});
+        
+        return scene;
     }
 
-    //top
-    outline.push(new Vector3(0, 0, 0.1));
-    outline.push(new Vector3(-0.3, 0, 0.1));
-
-    //back formed automatically
-
-    const car = MeshBuilder.ExtrudePolygon("car", {shape: outline, depth: 0.2});
-
-    return scene;
-    }
 
    
 }
