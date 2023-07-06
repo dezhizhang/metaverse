@@ -1,13 +1,4 @@
 /*
- * :file description: 
- * :name: /babylon/src/ParentChildren.ts
- * :author: 张德志
- * :copyright: (c) 2023, Tungee
- * :date created: 2023-07-07 05:39:58
- * :last editor: 张德志
- * :date last edited: 2023-07-07 06:44:58
- */
-/*
  * :file description:
  * :name: /babylon/src/Village.ts
  * :author: 张德志
@@ -27,7 +18,6 @@ import {
     TransformNode,
     StandardMaterial,
     Color3,
-    DaydreamController,
 } from "babylonjs";
 import 'babylonjs-loaders';
 

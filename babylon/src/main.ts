@@ -5,16 +5,16 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-05-04 05:38:45
  * :last editor: 张德志
- * :date last edited: 2023-07-07 05:40:32
+ * :date last edited: 2023-07-07 07:03:14
  */
-import ParentChildren from './ParentChildren';
+import VillageAnimation from './VillageAnimation';
 import './style.css'
 
 const canvas = document.createElement('canvas');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-new ParentChildren(canvas);
+new VillageAnimation(canvas);
 
 
 document.body.appendChild(canvas);
