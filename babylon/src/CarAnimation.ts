@@ -5,7 +5,7 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-07-08 22:13:15
  * :last editor: 张德志
- * :date last edited: 2023-07-08 22:33:03
+ * :date last edited: 2023-07-08 22:54:18
  */
 
 
@@ -38,23 +38,21 @@ export default class CarAnimation {
     createScene():Scene {
         const scene = new Scene(this.engine);
 
-        const camera = new BABYLON.ArcRotateCamera("camera", -Math.PI / 2, Math.PI / 2.5, 15, new BABYLON.Vector3(0, 0, 0));
-        camera.attachControl(this.canvas, true);
-        const light = new HemisphericLight("light", new Vector3(1, 1, 0),this.scene);
+        const camera = new BABYLON.ArcRotateCamera('camera',- Math.PI / 2,Math.PI / 2.5,15, new BABYLON.Vector3(0,0,0));
+        camera.attachControl(this.canvas,true);
+        const light = new HemisphericLight("light",new Vector3(1,1,1),this.scene);
         
-        //Create Village ground
         const groundMat = new BABYLON.StandardMaterial("groundMat");
-        groundMat.diffuseTexture = new BABYLON.Texture("https://assets.babylonjs.com/environments/villagegreen.png");
+        groundMat.diffuseTexture = new BABYLON.Texture('https://assets.babylonjs.com/environments/villagegreen.png');
         groundMat.diffuseTexture.hasAlpha = true;
-    
-        const ground = BABYLON.MeshBuilder.CreateGround("ground", {width:24, height:24});
+
+        const ground = BABYLON.MeshBuilder.CreateGround("ground",{width:24,height:24});
         ground.material = groundMat;
-    
-        //large ground
+
         const largeGroundMat = new BABYLON.StandardMaterial("largeGroundMat");
-        largeGroundMat.diffuseTexture = new BABYLON.Texture("https://assets.babylonjs.com/environments/valleygrass.png");
-        
-        const largeGround = BABYLON.MeshBuilder.CreateGroundFromHeightMap("largeGround", "https://assets.babylonjs.com/environments/villageheightmap.png", {width:150, height:150, subdivisions: 20, minHeight:0, maxHeight: 10});
+        largeGroundMat.diffuseTexture = new BABYLON.Texture('https://assets.babylonjs.com/environments/valleygrass.png');
+
+        const largeGround = BABYLON.MeshBuilder.CreateGroundFromHeightMap("largeGround","https://assets.babylonjs.com/environments/villageheightmap.png",{width:150, height:150, subdivisions: 20, minHeight:0, maxHeight: 10});
         largeGround.material = largeGroundMat;
         largeGround.position.y = -0.01;
         
