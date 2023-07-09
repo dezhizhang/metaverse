@@ -7,7 +7,7 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-07-02 17:49:35
  * :last editor: 张德志
- * :date last edited: 2023-07-09 17:42:12
+ * :date last edited: 2023-07-09 17:47:26
  */
 
 import { ArcRotateCamera, Engine, HemisphericLight, MeshBuilder, Scene,SceneLoader,Vector3 } from "babylonjs";
@@ -29,21 +29,19 @@ export default class BasicScene {
     createScene():Scene {
         const scene = new Scene(this.engine);
 
-        const camera = new ArcRotateCamera('camera', - Math.PI / 2, Math.PI / 2.5,3, new Vector3(0,0,0));
+        const camera = new ArcRotateCamera('camera', - Math.PI / 2, Math.PI /2.5,3, new Vector3(0,0,0));
         camera.attachControl(this.canvas,true);
 
-        // 创建一个球
         const sphere = MeshBuilder.CreateSphere('sphere',{diameter:2},this.scene);
 
         // 创建灯光
-        const light = new  HemisphericLight('light',new Vector3(0,1,0),this.scene);
+        const light = new HemisphericLight('light',new Vector3(0,1,0),this.scene);
 
         window.addEventListener('resize',() => {
             this.engine.resize();
         })
-        
         return scene;
+        
     }
-
- 
+    
 }
