@@ -7,7 +7,7 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-07-02 17:49:35
  * :last editor: 张德志
- * :date last edited: 2023-07-09 19:52:31
+ * :date last edited: 2023-07-09 19:53:40
  */
 
 import { ArcRotateCamera, Engine, HemisphericLight, MeshBuilder, PointLight, Scene,SceneLoader,Vector3 } from "babylonjs";
@@ -67,8 +67,6 @@ export default class BasicScene {
         pointLight.specular = new BABYLON.Color3(1,1,0);
         pointLight.intensity = 0.5;
 
-        // 设置聚光灯
-        const spotLight = new BABYLON.spo
 
 
 

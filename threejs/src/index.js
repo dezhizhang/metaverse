@@ -1,127 +1,77 @@
-/*
- * :file description:
- * :name: /threejs/src/index.js
- * :author: 张德志
- * :copyright: (c) 2023, Tungee
- * :date created: 2023-03-13 05:58:33
- * :last editor: 张德志
- * :date last edited: 2023-06-10 22:26:29
- */
-import * as THREE from "three";
+import * as THREE from 'three';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
-import { FontLoader } from "three/examples/jsm/loaders/FontLoader.js";
+const scene = new THREE.Scene();
 
-let camera, scene, renderer;
+// 平行光1
+const directionalLight = new THREE.DirectionalLight(0xffffff,0.8);
+directionalLight.position.set(400, 200, 300);
+scene.add(directionalLight);
 
-init();
+// 平行光2
+const directionalLight2 = new THREE.DirectionalLight(0xffffff,0.8);
+directionalLight2.position.set(-400, -200, -300);
+scene.add(directionalLight2);
 
-function init() {
-  camera = new THREE.PerspectiveCamera(
-    45,
-    window.innerWidth / window.innerHeight,
-    1,
-    10000
-  );
-  camera.position.set(0, -400, 600);
+// 环境光
+const ambient = new THREE.AmbientLight(0xffffff,0.3);
+scene.add(ambient);
 
-  scene = new THREE.Scene();
-  scene.background = new THREE.Color(0xf0f0f0);
+// 三维坐标轴
+const axesHelper = new THREE.AxesHelper(300);
+scene.add(axesHelper);
 
-  const loader = new FontLoader();
-  loader.load("https://threejs.org/examples/fonts/helvetiker_regular.typeface.json", function (font) {
-    const color = 0x006699;
+function createConeMesh(size) {
+ const height = size * 4;
+ const geometry = new THREE.ConeGeometry(size,height,4);
+ geometry.rotateX(-Math.PI / 2);
+ geometry.translate(0,0,height / 2);
+ const material = new THREE.MeshLambertMaterial({
+   color:0x22ffcc
+ });
+ const mesh = new THREE.Mesh(geometry,material);
 
-    const matDark = new THREE.LineBasicMaterial({
-      color: color,
-      side: THREE.DoubleSide,
-    });
+ function animation() {
+   mesh.rotateZ(0.05);
+   requestAnimationFrame(animation);
+ }
+ animation();
+ return mesh;
+}
 
-    const matLite = new THREE.MeshBasicMaterial({
-      color: color,
-      transparent: true,
-      opacity: 0.4,
-      side: THREE.DoubleSide,
-    });
+const model = new THREE.Group();
+const coneMesh = createConeMesh(10);
+model.add(coneMesh);
+scene.add(model);
 
-    const message = "   Three.js\nSimple text.";
+const width = window.innerWidth;
+const height = window.innerHeight;
 
-    const shapes = font.generateShapes(message, 100);
+const camera = new THREE.PerspectiveCamera(30, width / height,1,3000);
+camera.position.set(292,233,285);
+camera.lookAt(scene.position);
 
-    const geometry = new THREE.ShapeGeometry(shapes);
+const renderer = new THREE.WebGLRenderer({
+ antialias:true
+});
+renderer.setPixelRatio(window.devicePixelRatio);
+renderer.setSize(width,height);
 
-    geometry.computeBoundingBox();
+document.body.appendChild(renderer.domElement);
 
-    const xMid =
-      -0.5 * (geometry.boundingBox.max.x - geometry.boundingBox.min.x);
+const controls = new OrbitControls(camera,renderer.domElement);
 
-    geometry.translate(xMid, 0, 0);
+window.onresize = function() {
+ renderer.setSize(window.innerWidth,window.innerHeight);
+ camera.aspect = window.innerWidth / window.innerHeight;
+ camera.updateProjectionMatrix();
 
-    // make shape ( N.B. edge view not visible )
-
-    const text = new THREE.Mesh(geometry, matLite);
-    text.position.z = -150;
-    scene.add(text);
-
-    // make line shape ( N.B. edge view remains visible )
-
-    const holeShapes = [];
-
-    for (let i = 0; i < shapes.length; i++) {
-      const shape = shapes[i];
-
-      if (shape.holes && shape.holes.length > 0) {
-        for (let j = 0; j < shape.holes.length; j++) {
-          const hole = shape.holes[j];
-          holeShapes.push(hole);
-        }
-      }
-    }
-
-    shapes.push.apply(shapes, holeShapes);
-
-    const lineText = new THREE.Object3D();
-
-    for (let i = 0; i < shapes.length; i++) {
-      const shape = shapes[i];
-
-      const points = shape.getPoints();
-      const geometry = new THREE.BufferGeometry().setFromPoints(points);
-
-      geometry.translate(xMid, 0, 0);
-
-      const lineMesh = new THREE.Line(geometry, matDark);
-      lineText.add(lineMesh);
-    }
-
-    scene.add(lineText);
-
-    render();
-  }); //end load function
-
-  renderer = new THREE.WebGLRenderer({ antialias: true });
-  renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  document.body.appendChild(renderer.domElement);
-
-  const controls = new OrbitControls(camera, renderer.domElement);
-  controls.target.set(0, 0, 0);
-  controls.update();
-
-  controls.addEventListener("change", render);
-
-  window.addEventListener("resize", onWindowResize);
-} // end init
-
-function onWindowResize() {
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-
-  renderer.setSize(window.innerWidth, window.innerHeight);
-
-  render();
 }
 
 function render() {
-  renderer.render(scene, camera);
+ renderer.render(scene,camera);
+ requestAnimationFrame(render);
 }
+
+render();
+

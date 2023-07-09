@@ -1,9 +1,11 @@
 const VERTEX_SHADER =  /* glsl */`
     precision mediump float;
     attribute vec3 a_position;
-    uniform mat4 u_rotateMatrix;
+    attribute vec3 a_color;
+    varying vec3 v_color;
     void main() {
-        gl_Position = u_rotateMatrix * vec4(a_position,1.0);
+        v_color = a_color;
+        gl_Position = vec4(a_position,1.0);
         gl_PointSize = 10.0;
     }
 `;

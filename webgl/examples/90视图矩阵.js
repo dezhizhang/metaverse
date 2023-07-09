@@ -118,7 +118,4 @@ function draw() {
 
 draw();
 
-
-
-
 document.body.appendChild(canvas);
