@@ -5,16 +5,16 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-05-04 05:38:45
  * :last editor: 张德志
- * :date last edited: 2023-07-09 15:15:26
+ * :date last edited: 2023-07-09 15:43:53
  */
-import ParticleSpray from './ParticleSpray';
+import SwitchOnEvent from './SwitchOnEvent';
 import './style.css'
 
 const canvas = document.createElement('canvas');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-new ParticleSpray(canvas);
+new SwitchOnEvent(canvas);
 
 
 document.body.appendChild(canvas);
