@@ -5,7 +5,7 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-07-09 15:51:59
  * :last editor: 张德志
- * :date last edited: 2023-07-09 17:19:12
+ * :date last edited: 2023-07-09 19:34:42
  */
 
 
@@ -60,7 +60,7 @@ export default class StreetLights {
     var sphere = MeshBuilder.CreateSphere("sphere1");
 
     // Move the sphere upward 1/2 its height
-    sphere.position.y = 1;
+    sphere.position.y = -1;
 
     // Our built-in 'ground' shape. Params: name, width, depth, subdivs, scene
     var ground = MeshBuilder.CreateGround("ground1");
