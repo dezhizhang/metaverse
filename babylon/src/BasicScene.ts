@@ -7,10 +7,10 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-07-02 17:49:35
  * :last editor: 张德志
- * :date last edited: 2023-07-08 20:20:35
+ * :date last edited: 2023-07-09 17:42:12
  */
 
-import { ArcRotateCamera, Engine, HemisphericLight, Scene,SceneLoader,Vector3 } from "babylonjs";
+import { ArcRotateCamera, Engine, HemisphericLight, MeshBuilder, Scene,SceneLoader,Vector3 } from "babylonjs";
 
 
 export default class BasicScene {
@@ -18,7 +18,7 @@ export default class BasicScene {
     scene:Scene;
     constructor(private readonly canvas:HTMLCanvasElement) {
         this.engine = new Engine(this.canvas);
-        this.scene = this.CreateScene();
+        this.scene = this.createScene();
 
         this.engine.runRenderLoop(() => {
             this.scene.render();
@@ -26,27 +26,24 @@ export default class BasicScene {
     }
 
     // 创建场景
-    CreateScene():Scene {
+    createScene():Scene {
         const scene = new Scene(this.engine);
 
         const camera = new ArcRotateCamera('camera', - Math.PI / 2, Math.PI / 2.5,3, new Vector3(0,0,0));
         camera.attachControl(this.canvas,true);
 
+        // 创建一个球
+        const sphere = MeshBuilder.CreateSphere('sphere',{diameter:2},this.scene);
+
         // 创建灯光
         const light = new  HemisphericLight('light',new Vector3(0,1,0),this.scene);
 
-        // const box = MeshBuilder.CreateBox('box');
-
-        // 导入模型
-        this.importMeshes();
-
+        window.addEventListener('resize',() => {
+            this.engine.resize();
+        })
         
         return scene;
     }
 
-    // 加载模型
-    async importMeshes() {
-        const result = await SceneLoader.ImportMeshAsync("", "https://assets.babylonjs.com/meshes/", "both_houses_scene.babylon");
-        console.log(result);
-    }
+ 
 }

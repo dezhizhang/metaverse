@@ -5,16 +5,16 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-05-04 05:38:45
  * :last editor: 张德志
- * :date last edited: 2023-07-09 15:54:36
+ * :date last edited: 2023-07-09 17:38:23
  */
-import StreetLights from './StreetLights';
+import BasicScene from './BasicScene';
 import './style.css'
 
 const canvas = document.createElement('canvas');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-new StreetLights(canvas);
+new BasicScene(canvas);
 
 
 document.body.appendChild(canvas);
