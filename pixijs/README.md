@@ -1,12 +1,8 @@
-/*
- * :file description: 
- * :name: /pixijs/src/main.ts
- * :author: 张德志
- * :copyright: (c) 2023, Tungee
- * :date created: 2023-07-09 20:13:22
- * :last editor: 张德志
- * :date last edited: 2023-07-11 06:18:05
- */
+### pixi.js文档
+
+
+### 精灵添加文理
+```js
 import * as PIXI from 'pixi.js';
 import './style.css'
 
@@ -33,15 +29,9 @@ app.ticker.add((delta) => {
     sprite.rotation += 0.01 * delta;
 })
 
-sprite.interactive = true;
-
-sprite.on('click',() => {
-    console.log('click');
-})
-
 
 app.stage.addChild(sprite);
 
-
-
 document.body.appendChild(app.view as any);
+
+```
