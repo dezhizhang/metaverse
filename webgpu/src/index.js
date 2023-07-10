@@ -5,7 +5,7 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-06-27 05:54:49
  * :last editor: 张德志
- * :date last edited: 2023-06-27 07:21:06
+ * :date last edited: 2023-07-11 06:37:54
  */
 
 
@@ -43,30 +43,7 @@ async function run() {
     });
 
     device.queue.writeBuffer(vertexBuffer,0,vertexArray);
-
-
-    const pipeline = device.createRenderPipeline({
-        layout:'auto',
-        vertex:{
-            buffers:[
-                {
-                    arrayStride: 3 * 4,
-                    attributes:[
-                        {
-                            shaderLocation:0,
-                            format:'float32x3',
-                            offset:0,
-                        }
-                    ]
-                }
-            ],
-        }
-    });
     
-    
-
-    
-
     console.log(device);
 
 }
