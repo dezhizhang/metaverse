@@ -5,7 +5,7 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-07-09 20:13:22
  * :last editor: 张德志
- * :date last edited: 2023-07-11 06:18:05
+ * :date last edited: 2023-07-11 06:31:00
  */
 import * as PIXI from 'pixi.js';
 import './style.css'
@@ -20,27 +20,24 @@ const app = new PIXI.Application({
 });
 
 
-const texture = PIXI.Texture.from('./vite.svg');
+const text = new PIXI.Text('hello world',{
+    fontFamily:'Arial',
+    fontSize:36,
+    fill:'white',
+    align:'center'
+});
 
-const sprite = new PIXI.Sprite(texture);
-
-sprite.x = app.screen.width / 2;
-sprite.y = app.screen.height / 2;
-
-sprite.alpha = 0.5;
-
-app.ticker.add((delta) => {
-    sprite.rotation += 0.01 * delta;
-})
-
-sprite.interactive = true;
-
-sprite.on('click',() => {
-    console.log('click');
-})
+text.position.x = app.screen.width / 2;
+text.position.y = app.screen.height / 2;
 
 
-app.stage.addChild(sprite);
+text.anchor.set(0.5);
+
+
+app.stage.addChild(text);
+
+
+
 
 
 
