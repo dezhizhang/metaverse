@@ -66,11 +66,16 @@ async function initPipeline(device: GPUDevice) {
   return {pipeline}
 }
 
+function draw(device:GPUDevice,pipeline:GPURenderPipeline) {
+  
+}
+
 
 
 async function run() {
   const {device} = await initGPU();
-  const {pipeline} = await initPipeline(device as GPUDevice)
+  const {pipeline} = await initPipeline(device as GPUDevice);
+  draw(device as GPUDevice,pipeline)
 }
 
 initGPU()
