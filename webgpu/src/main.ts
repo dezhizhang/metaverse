@@ -1,3 +1,13 @@
+/*
+ * :file description: 
+ * :name: /webgpu/src/main.ts
+ * :author: 张德志
+ * :copyright: (c) 2023, Tungee
+ * :date created: 2023-07-13 05:31:18
+ * :last editor: 张德志
+ * :date last edited: 2023-07-14 05:20:27
+ */
+import './style.css';
 
 
 
@@ -9,7 +19,6 @@ async function initGPU() {
 
   console.log(adapter,device)
   const canvas = document.querySelector('canvas');
-
   const context = canvas?.getContext('webgpu');
 
   context?.configure({
@@ -66,16 +75,35 @@ async function initPipeline(device: GPUDevice) {
   return {pipeline}
 }
 
-function draw(device:GPUDevice,pipeline:GPURenderPipeline) {
+function draw(device:GPUDevice,pipeline:GPURenderPipeline,context:GPUCanvasContext) {
+  const encoder = device.createCommandEncoder();
+
+  const renderPaas = encoder.beginRenderPass({
+    colorAttachments:[{
+      view:context.getCurrentTexture().createView(),
+      loadOp:'clear',
+      clearValue:{r:0,g:0,b:0,a:1},
+      storeOp:'store',
+    }]
+  });
+
+  renderPaas.setPipeline(pipeline);
+
+  renderPaas.draw(3);
+
+  renderPaas.end();
+
+  const buffer = encoder.finish();
+  device.queue.submit([buffer]);
   
 }
 
 
 
 async function run() {
-  const {device} = await initGPU();
+  const {device,context} = await initGPU();
   const {pipeline} = await initPipeline(device as GPUDevice);
-  draw(device as GPUDevice,pipeline)
+  draw(device as GPUDevice,pipeline,context as GPUCanvasContext)
 }
 
-initGPU()
+run();
