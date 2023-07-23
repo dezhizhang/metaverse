@@ -5,13 +5,9 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-07-13 05:31:18
  * :last editor: 张德志
- * :date last edited: 2023-07-23 15:57:16
+ * :date last edited: 2023-07-14 05:22:30
  */
 import './style.css';
-
-import vertx from './shader/triangle.vert.wgsl?raw'
-import frag from './shader/fragment.frag.wgsl?raw'
-
 
 
 
@@ -34,25 +30,27 @@ async function initGPU() {
 
 async function initPipeline(device: GPUDevice) {
   const vertexShader = device.createShaderModule({
-    code:vertx
+    code:`
+    @vertex
+    fn main(@builtin(vertex_index) VertexIndex : u32) -> @builtin(position) vec4<f32> {
+        var pos = array<vec2<f32>, 3>(
+          vec2<f32>(0.0, 0.5),
+          vec2<f32>(-0.5, -0.5),
+          vec2<f32>(0.5, -0.5)
+        );
+        return vec4<f32>(pos[VertexIndex], 0.0, 1.0);
+    }
+    `
   });
   const fregSharder = device.createShaderModule({
-    code:frag
+    code:`
+    @fragment
+    fn main() -> @location(0) vec4<f32> {
+        return vec4<f32>(1.0, 0.0, 0.0, 1.0);
+    }
+    `
   });
 
-  const vertex = new Float32Array([
-    0,0.5,0,
-    -0.5,0.5,0,
-    0.5,-0.5,0,
-  ]);
-
-  const vertexBuffer = device.createBuffer({
-    size:vertex.byteLength,
-    usage:GPUBufferUsage.VERTEX | GPUBufferUsage.COPY_DST
-  });
-
-  device.queue.writeBuffer(vertexBuffer,0,vertex);
-  
   const pipeline = await device.createRenderPipelineAsync({
     vertex: {
       module: vertexShader,
@@ -83,18 +81,18 @@ function draw(device:GPUDevice,pipeline:GPURenderPipeline,context:GPUCanvasConte
       view:context.getCurrentTexture().createView(),
       loadOp:'clear',
       clearValue:{r:0,g:0,b:0,a:1},
-      storeOp:'store'
+      storeOp:'store',
     }]
   });
 
   renderPaas.setPipeline(pipeline);
+
   renderPaas.draw(3);
 
   renderPaas.end();
 
   const buffer = encoder.finish();
   device.queue.submit([buffer]);
-  
   
 }
 
