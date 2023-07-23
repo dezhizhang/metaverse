@@ -5,7 +5,7 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-07-13 05:31:18
  * :last editor: 张德志
- * :date last edited: 2023-07-23 15:57:16
+ * :date last edited: 2023-07-23 15:59:40
  */
 import './style.css';
 
@@ -52,11 +52,21 @@ async function initPipeline(device: GPUDevice) {
   });
 
   device.queue.writeBuffer(vertexBuffer,0,vertex);
-  
+
   const pipeline = await device.createRenderPipelineAsync({
     vertex: {
       module: vertexShader,
-      entryPoint: 'main'
+      entryPoint: 'main',
+      buffers:[{
+        arrayStride: 3 * 4,
+        attributes:[
+          {
+            shaderLocation:0,
+            offset:0,
+            format:"float32x3"
+          }
+        ]
+      }]
     },
     fragment: {
       module: fregSharder,
