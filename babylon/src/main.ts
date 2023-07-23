@@ -5,16 +5,16 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-05-04 05:38:45
  * :last editor: 张德志
- * :date last edited: 2023-07-23 17:42:34
+ * :date last edited: 2023-07-23 19:26:43
  */
-import LightTexure from './LightTexure';
+import ProjectionTexture from './ProjectionTexture';
 import './style.css'
 
 const canvas = document.createElement('canvas');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-new LightTexure(canvas);
+new ProjectionTexture(canvas);
 
 
 document.body.appendChild(canvas);
