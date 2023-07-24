@@ -3,23 +3,12 @@
  * :name: /babylon/src/ShadowDistance.ts
  * :author: 张德志
  * :copyright: (c) 2023, Tungee
- * :date created: 2023-07-25 05:24:10
- * :last editor: 张德志
- * :date last edited: 2023-07-25 05:48:07
- */
-
-
-/*
- * :file description: 
- * :name: /babylon/src/BasicScene.ts
- * :author: 张德志
- * :copyright: (c) 2023, Tungee
  * :date created: 2023-07-02 17:49:35
  * :last editor: 张德志
- * :date last edited: 2023-07-25 04:54:40
+ * :date last edited: 2023-07-25 05:52:24
  */
 
-import { ArcRotateCamera, Color3, Engine, HemisphericLight, MeshBuilder, PointLight, Scene,SceneLoader,ShadowGenerator,SpotLight,StandardMaterial,Vector3 } from "babylonjs";
+import { ArcRotateCamera, Color3, Engine, MeshBuilder, Scene,ShadowGenerator,SpotLight,StandardMaterial,Vector3 } from "babylonjs";
 
 
 export default class ShadowDistance {
