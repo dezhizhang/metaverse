@@ -5,16 +5,16 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-05-04 05:38:45
  * :last editor: 张德志
- * :date last edited: 2023-07-26 04:27:51
+ * :date last edited: 2023-07-26 05:03:01
  */
-import FromPointLight from './FromPointLight';
+import FromDirectionLight from './FromDirectionLight';
 import './style.css'
 
 const canvas = document.createElement('canvas');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-new FromPointLight(canvas);
+new FromDirectionLight(canvas);
 
 
 document.body.appendChild(canvas);
