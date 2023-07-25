@@ -5,16 +5,16 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-05-04 05:38:45
  * :last editor: 张德志
- * :date last edited: 2023-07-25 05:55:43
+ * :date last edited: 2023-07-26 04:27:51
  */
-import ShadowTransparent from './ShadowTransparent';
+import FromPointLight from './FromPointLight';
 import './style.css'
 
 const canvas = document.createElement('canvas');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-new ShadowTransparent(canvas);
+new FromPointLight(canvas);
 
 
 document.body.appendChild(canvas);
