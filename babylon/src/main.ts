@@ -5,16 +5,16 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-05-04 05:38:45
  * :last editor: 张德志
- * :date last edited: 2023-07-26 05:03:01
+ * :date last edited: 2023-07-26 07:04:21
  */
-import FromDirectionLight from './FromDirectionLight';
+import AnalyzingDirection from './AnalyzingDirection';
 import './style.css'
 
 const canvas = document.createElement('canvas');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-new FromDirectionLight(canvas);
+new AnalyzingDirection(canvas);
 
 
 document.body.appendChild(canvas);

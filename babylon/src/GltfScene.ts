@@ -1,16 +1,5 @@
 /*
  * :file description: 
- * :name: /babylon/src/GltfScene.ts
- * :author: 张德志
- * :copyright: (c) 2023, Tungee
- * :date created: 2023-07-09 19:53:43
- * :last editor: 张德志
- * :date last edited: 2023-07-09 19:56:45
- */
-
-
-/*
- * :file description: 
  * :name: /babylon/src/BasicScene.ts
  * :author: 张德志
  * :copyright: (c) 2023, Tungee
@@ -19,7 +8,7 @@
  * :date last edited: 2023-07-09 19:53:40
  */
 
-import { ArcRotateCamera, Engine, HemisphericLight, MeshBuilder, PointLight, Scene,SceneLoader,Vector3 } from "babylonjs";
+import { ArcRotateCamera, Engine, Scene,SceneLoader,Vector3 } from "babylonjs";
 import 'babylonjs-loaders';
 
 export default class GltfScene {
