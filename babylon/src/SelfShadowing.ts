@@ -5,7 +5,7 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-07-26 08:01:25
  * :last editor: 张德志
- * :date last edited: 2023-07-26 08:17:03
+ * :date last edited: 2023-07-26 08:18:48
  */
 import { ArcRotateCamera, Color3, Engine, HemisphericLight, MeshBuilder, PointLight, Scene,SceneLoader,ShadowGenerator,SpotLight,StandardMaterial,Vector3 } from "babylonjs";
 
@@ -67,10 +67,16 @@ export default class SelfShadowing {
         const sg = new ShadowGenerator(1023,light);
         sg.addShadowCaster(b1);
         sg.addShadowCaster(b2);
-        
-        
-        
+        sg.addShadowCaster(s);
+        sg.addShadowCaster(tk);
 
+        b1.receiveShadows = true;
+        b2.receiveShadows = true;
+        s.receiveShadows = true;
+        tk.receiveShadows = true;
+        ground.receiveShadows = true;
+
+        
 
         window.addEventListener('resize',() => {
             this.engine.resize();
