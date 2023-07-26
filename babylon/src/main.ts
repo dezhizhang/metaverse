@@ -5,16 +5,16 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-05-04 05:38:45
  * :last editor: 张德志
- * :date last edited: 2023-07-27 06:14:59
+ * :date last edited: 2023-07-27 06:55:22
  */
-import ClipBoardUsed from './ClipBoardUsed';
+import ClipTextused from './ClipTextused';
 import './style.css'
 
 const canvas = document.createElement('canvas');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-new ClipBoardUsed(canvas);
+new ClipTextused(canvas);
 
 
 document.body.appendChild(canvas);

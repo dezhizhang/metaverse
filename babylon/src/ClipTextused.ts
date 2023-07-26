@@ -1,18 +1,17 @@
 /*
  * :file description: 
- * :name: /babylon/src/ClipBoardUsed.ts
+ * :name: /babylon/src/ClipTextused.ts
  * :author: 张德志
  * :copyright: (c) 2023, Tungee
- * :date created: 2023-07-27 06:14:14
+ * :date created: 2023-07-27 06:48:23
  * :last editor: 张德志
- * :date last edited: 2023-07-27 06:50:33
+ * :date last edited: 2023-07-27 06:57:30
  */
 
-
-import { ClipboardEventTypes, Engine, FreeCamera, HemisphericLight, MeshBuilder, Scene,SceneLoader,SceneSerializer,Vector3 } from "babylonjs";
+import { ClipboardEventTypes, Color3, Engine, FreeCamera, HemisphericLight, MeshBuilder, Scene,SceneLoader,SceneSerializer,Vector3 } from "babylonjs";
 import * as GUI from 'babylonjs-gui';
 
-export default class ClipBoardUsed {
+export default class ClipTextused {
     engine:Engine;
     scene:Scene;
     constructor(private readonly canvas:HTMLCanvasElement) {
@@ -57,24 +56,27 @@ export default class ClipBoardUsed {
 
         adTexture.onClipboardObservable.add((evt) => {
             if(evt.type === ClipboardEventTypes.COPY) {
-                let pick = scene.pick(scene.pointerX,scene.pointerY);
-                if(pick.hit) {
-                    const seriaizeData = SceneSerializer.SerializeMesh(pick.pickedMesh);
-                    const blob = new Blob([JSON.stringify(seriaizeData)],{type:'application/json;charset=utf-8'});
-                    const url = URL.createObjectURL(blob);
-                    evt.event.clipboardData?.setData('text/url-list',url);
-                    textblock.text = '现在可以按 ctrl/cmd + v\n创建一个新的' + pick.pickedMesh?.name
+                const textData = evt.event.clipboardData?.getData('text/plain');
+                if(textData) {
+                    const text = new GUI.TextBlock();
+                    text.text = textData;
+                    text.color = 'pink';
+                    text.fontSize = Math.random() * 25 + 5;
+                    text.rotation = Math.random() * 10;
+                    text.top = Math.random() * 10 + Math.random() * -100;
+                    text.left = Math.random() * 10 + Math.random() * -100;
+                    adTexture.addControl(text);
+                    
+                }else {
+                    const msg = new GUI.TextBlock();
+                    msg.text = '请复制一些纯文本';
+                    msg.color = 'red';
+                    adTexture.addControl(msg);
+                    
                 }
+              
+
             }
-            if(evt.type === ClipboardEventTypes.PASTE) {
-                if(evt.event.clipboardData!?.types.indexOf('text/url-list') > -1) {
-                    const blobURL = evt.event.clipboardData?.getData('text/url-list');
-                    SceneLoader.ImportMesh('','',blobURL,scene,(meshes) => {
-                        const position = new Vector3(Math.random() * 10 + Math.random() * -10,Math.random() * 10 + Math.random() * -10,Math.random() * 10);
-                        meshes[0].position = position;
-                    })
-                }
-            };
         })
 
         window.addEventListener('resize',() => {
