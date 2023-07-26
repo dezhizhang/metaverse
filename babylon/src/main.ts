@@ -5,16 +5,16 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-05-04 05:38:45
  * :last editor: 张德志
- * :date last edited: 2023-07-26 23:06:10
+ * :date last edited: 2023-07-27 06:04:20
  */
-import FullsceenMode from './FullsceenMode';
+import TextureMode from './TextureMode';
 import './style.css'
 
 const canvas = document.createElement('canvas');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-new FullsceenMode(canvas);
+new TextureMode(canvas);
 
 
 document.body.appendChild(canvas);
