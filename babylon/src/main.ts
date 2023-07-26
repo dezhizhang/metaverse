@@ -5,16 +5,16 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-05-04 05:38:45
  * :last editor: 张德志
- * :date last edited: 2023-07-26 22:32:06
+ * :date last edited: 2023-07-26 23:06:10
  */
-import CascadesShadowMap from './CascadesShadowMap';
+import FullsceenMode from './FullsceenMode';
 import './style.css'
 
 const canvas = document.createElement('canvas');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-new CascadesShadowMap(canvas);
+new FullsceenMode(canvas);
 
 
 document.body.appendChild(canvas);
