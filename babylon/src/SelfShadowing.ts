@@ -5,9 +5,9 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-07-26 08:01:25
  * :last editor: 张德志
- * :date last edited: 2023-07-26 08:18:48
+ * :date last edited: 2023-07-26 22:29:43
  */
-import { ArcRotateCamera, Color3, Engine, HemisphericLight, MeshBuilder, PointLight, Scene,SceneLoader,ShadowGenerator,SpotLight,StandardMaterial,Vector3 } from "babylonjs";
+import { ArcRotateCamera, Color3, Engine,MeshBuilder, Scene,ShadowGenerator,SpotLight,StandardMaterial,Vector3 } from "babylonjs";
 
 
 export default class SelfShadowing {
