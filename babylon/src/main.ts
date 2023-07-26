@@ -5,16 +5,16 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-05-04 05:38:45
  * :last editor: 张德志
- * :date last edited: 2023-07-26 07:04:21
+ * :date last edited: 2023-07-26 08:02:06
  */
-import AnalyzingDirection from './AnalyzingDirection';
+import SelfShadowing from './SelfShadowing';
 import './style.css'
 
 const canvas = document.createElement('canvas');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-new AnalyzingDirection(canvas);
+new SelfShadowing(canvas);
 
 
 document.body.appendChild(canvas);
