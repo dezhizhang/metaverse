@@ -5,10 +5,10 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-07-27 06:48:23
  * :last editor: 张德志
- * :date last edited: 2023-07-27 06:57:30
+ * :date last edited: 2023-07-27 07:46:48
  */
 
-import { ClipboardEventTypes, Color3, Engine, FreeCamera, HemisphericLight, MeshBuilder, Scene,SceneLoader,SceneSerializer,Vector3 } from "babylonjs";
+import { ClipboardEventTypes, Engine, FreeCamera, HemisphericLight, MeshBuilder, Scene,Vector3 } from "babylonjs";
 import * as GUI from 'babylonjs-gui';
 
 export default class ClipTextused {

@@ -5,16 +5,16 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-05-04 05:38:45
  * :last editor: 张德志
- * :date last edited: 2023-07-27 06:55:22
+ * :date last edited: 2023-07-27 08:25:14
  */
-import ClipTextused from './ClipTextused';
+import AlignmentsExample from './AlignmentsExample';
 import './style.css'
 
 const canvas = document.createElement('canvas');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-new ClipTextused(canvas);
+new AlignmentsExample(canvas);
 
 
 document.body.appendChild(canvas);
