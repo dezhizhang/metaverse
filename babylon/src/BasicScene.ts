@@ -5,10 +5,10 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-07-02 17:49:35
  * :last editor: 张德志
- * :date last edited: 2023-07-29 18:29:52
+ * :date last edited: 2023-07-29 19:55:12
  */
 
-import { ArcRotateCamera, Engine,  MeshBuilder, Scene,Vector3, HemisphericLight, ActionManager, InterpolateValueAction, Color3, SetValueAction, PredicateCondition } from "babylonjs";
+import { ArcRotateCamera, Engine,  MeshBuilder, Scene,Vector3, HemisphericLight, ActionManager, InterpolateValueAction, Color3, SetValueAction, PredicateCondition, ExecuteCodeAction } from "babylonjs";
 
 
 export default class BasicScene {
@@ -27,7 +27,7 @@ export default class BasicScene {
     createScene():Scene {
         const scene = new Scene(this.engine);
 
-        const camera = new ArcRotateCamera('camera', - Math.PI / 2, Math.PI /2.5,6, new Vector3(0,0,0));
+        const camera = new ArcRotateCamera('camera', - Math.PI / 2, Math.PI /2.5,20, new Vector3(0,0,0));
         camera.attachControl(this.canvas,true);
 
         const light = new HemisphericLight('light',new Vector3(0,1,0),scene);
@@ -46,7 +46,30 @@ export default class BasicScene {
             )
         )
 
-    
+        const sphere = MeshBuilder.CreateSphere('sphere');
+        sphere.position.x = 3;
+
+        box.actionManager.registerAction(
+            new SetValueAction({
+                trigger:ActionManager.OnIntersectionEnterTrigger,
+                parameter:{
+                    mesh:sphere,
+                    usePreciseInterscetion:true
+                }
+            },
+            box,
+            'scaling',
+            new Vector3(1,2,1)
+            )
+        );
+
+
+        let delta = 0;
+        scene.registerBeforeRender(() => {
+            box.position.x = Math.sin(delta) * 3,
+            delta += 0.01
+        });
+
 
         window.addEventListener('resize',() => {
             this.engine.resize();
