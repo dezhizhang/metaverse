@@ -5,7 +5,7 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-07-27 08:20:22
  * :last editor: 张德志
- * :date last edited: 2023-07-29 13:49:56
+ * :date last edited: 2023-07-29 13:53:05
  */
 import {  Engine, FreeCamera, HemisphericLight, MeshBuilder, Scene,SceneLoader,Vector3 } from "babylonjs";
 import * as GUI from 'babylonjs-gui';
@@ -42,6 +42,8 @@ export default class PositionExample {
         const ground = MeshBuilder.CreateGround('ground',{width:6,height:6,subdivisions:2});
 
         const adTexture = GUI.AdvancedDynamicTexture.CreateFullscreenUI('UI');
+        adTexture.idealWidth = 300;
+        
 
         const rect = new GUI.Rectangle();
         rect.width = 0.2;
