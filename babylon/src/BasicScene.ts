@@ -1,5 +1,3 @@
-
-
 /*
  * :file description: 
  * :name: /babylon/src/BasicScene.ts
@@ -7,7 +5,7 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-07-02 17:49:35
  * :last editor: 张德志
- * :date last edited: 2023-07-29 15:48:54
+ * :date last edited: 2023-07-29 17:41:40
  */
 
 import { ArcRotateCamera, Engine,  MeshBuilder, Animation, Scene,SceneLoader,Vector3 } from "babylonjs";
@@ -55,9 +53,13 @@ export default class BasicScene {
         })
 
         xSlide.setKeys(keyFrames);
-        box.animations.push(xSlide);
+        // box.animations.push(xSlide);
 
-        scene.beginAnimation(box,0,2 * frameRate,true);
+        // scene.beginAnimation(box,0,2 * frameRate,true);
+        const animation = scene.beginDirectAnimation(box,[xSlide],0,2 * frameRate,true);
+        setTimeout(() => {
+            animation.stop();
+        }, 3000);
 
         window.addEventListener('resize',() => {
             this.engine.resize();
