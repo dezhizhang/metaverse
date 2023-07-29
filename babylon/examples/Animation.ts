@@ -1,19 +1,17 @@
-
-
 /*
  * :file description: 
- * :name: /babylon/src/BasicScene.ts
+ * :name: /babylon/examples/Animation.ts
  * :author: 张德志
  * :copyright: (c) 2023, Tungee
- * :date created: 2023-07-02 17:49:35
+ * :date created: 2023-07-29 15:49:09
  * :last editor: 张德志
- * :date last edited: 2023-07-29 15:48:54
+ * :date last edited: 2023-07-29 15:49:10
  */
 
-import { ArcRotateCamera, Engine,  MeshBuilder, Animation, Scene,SceneLoader,Vector3 } from "babylonjs";
+import { ArcRotateCamera, Engine,  MeshBuilder, Animation, Scene,Vector3 } from "babylonjs";
 
 
-export default class BasicScene {
+export default class AnimationBase {
     engine:Engine;
     scene:Scene;
     constructor(private readonly canvas:HTMLCanvasElement) {
