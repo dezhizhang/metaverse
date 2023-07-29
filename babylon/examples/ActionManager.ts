@@ -5,10 +5,10 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-07-02 17:49:35
  * :last editor: 张德志
- * :date last edited: 2023-07-29 18:29:52
+ * :date last edited: 2023-07-29 17:59:50
  */
 
-import { ArcRotateCamera, Engine,  MeshBuilder, Scene,Vector3, HemisphericLight, ActionManager, InterpolateValueAction, Color3, SetValueAction, PredicateCondition } from "babylonjs";
+import { ArcRotateCamera, Engine,  MeshBuilder, Scene,Vector3, HemisphericLight, ActionManager, InterpolateValueAction, Color3 } from "babylonjs";
 
 
 export default class BasicScene {
@@ -45,8 +45,6 @@ export default class BasicScene {
                 1000
             )
         )
-
-    
 
         window.addEventListener('resize',() => {
             this.engine.resize();
