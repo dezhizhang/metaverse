@@ -1,15 +1,5 @@
-/*
- * :file description: 
- * :name: /babylon/src/BasicScene.ts
- * :author: 张德志
- * :copyright: (c) 2023, Tungee
- * :date created: 2023-07-02 17:49:35
- * :last editor: 张德志
- * :date last edited: 2023-07-29 20:13:22
- */
 
 import { ArcRotateCamera, Engine, Scene,Vector3, HemisphericLight, ActionManager,  ExecuteCodeAction, SpriteManager, Sprite } from "babylonjs";
-
 
 export default class BasicScene {
     engine:Engine;
@@ -67,14 +57,7 @@ export default class BasicScene {
                 alert('player1 click')
             }
         ))
-
         
-
-
-
-       
-
-
         window.addEventListener('resize',() => {
             this.engine.resize();
         })
