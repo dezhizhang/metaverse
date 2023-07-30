@@ -5,16 +5,16 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-05-04 05:38:45
  * :last editor: 张德志
- * :date last edited: 2023-07-30 10:28:21
+ * :date last edited: 2023-07-30 10:33:11
  */
-import UniversalCameraScene from './UniversalCameraScene';
+import ArcRotateUsed from './ArcRotateUsed';
 import './style.css'
 
 const canvas = document.createElement('canvas');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-new UniversalCameraScene(canvas);
+new ArcRotateUsed(canvas);
 
 
 document.body.appendChild(canvas);
