@@ -3,20 +3,11 @@
  * :name: /babylon/src/ArcRotateUsed.ts
  * :author: 张德志
  * :copyright: (c) 2023, Tungee
- * :date created: 2023-07-30 10:32:32
- * :last editor: 张德志
- * :date last edited: 2023-07-30 10:50:13
- */
-/*
- * :file description: 
- * :name: /babylon/src/BaseScene.ts
- * :author: 张德志
- * :copyright: (c) 2023, Tungee
  * :date created: 2023-07-30 10:28:37
  * :last editor: 张德志
- * :date last edited: 2023-07-30 10:28:38
+ * :date last edited: 2023-07-30 11:10:17
  */
-import { ArcRotateCamera, Engine, Scene,Vector3, HemisphericLight, ActionManager,  ExecuteCodeAction, SpriteManager, Sprite, UniversalCamera, MeshBuilder, StandardMaterial, Color3, Mesh } from "babylonjs";
+import { ArcRotateCamera, Engine, Scene,Vector3, HemisphericLight,  MeshBuilder, StandardMaterial, Color3, Mesh } from "babylonjs";
 
 
 export default class UniversalCameraScene {
@@ -37,6 +28,8 @@ export default class UniversalCameraScene {
 
         const camera = new ArcRotateCamera('camera', -Math.PI / 2,Math.PI / 2.5,24,new Vector3(0,0,0));
         camera.attachControl(this.canvas,true);
+        camera.zoomToMouseLocation = true;
+        camera.wheelDeltaPercentage = 0.005;
 
         const light = new HemisphericLight('light',new Vector3(0,1,0),scene);
 

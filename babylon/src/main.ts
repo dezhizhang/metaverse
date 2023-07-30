@@ -5,16 +5,16 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-05-04 05:38:45
  * :last editor: 张德志
- * :date last edited: 2023-07-30 10:33:11
+ * :date last edited: 2023-07-30 11:16:45
  */
-import ArcRotateUsed from './ArcRotateUsed';
+import FollowUsed from './FollowUsed';
 import './style.css'
 
 const canvas = document.createElement('canvas');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-new ArcRotateUsed(canvas);
+new FollowUsed(canvas);
 
 
 document.body.appendChild(canvas);
