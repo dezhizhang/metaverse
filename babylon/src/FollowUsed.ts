@@ -1,11 +1,11 @@
 /*
  * :file description: 
- * :name: /babylon/src/BaseScene.ts
+ * :name: /babylon/src/FollowUsed.ts
  * :author: 张德志
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-07-30 10:28:37
  * :last editor: 张德志
- * :date last edited: 2023-07-30 10:28:38
+ * :date last edited: 2023-07-30 11:29:29
  */
 import { Engine, Scene,Vector3, HemisphericLight, MeshBuilder, FollowCamera, StandardMaterial, Color3 } from "babylonjs";
 
@@ -49,6 +49,14 @@ export default class FollowUsed {
         boxY.position = new Vector3(0,5,0);
 
         camera.lockedTarget = box;
+
+        setTimeout(()=> {
+            scene.registerBeforeRender(()=> {
+                if(box.position.z > -6) {
+                    box.position.z -= 0.01;
+                }
+            })
+        },5000)
         
         
     
