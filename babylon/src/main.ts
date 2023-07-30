@@ -5,16 +5,16 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-05-04 05:38:45
  * :last editor: 张德志
- * :date last edited: 2023-07-30 14:35:19
+ * :date last edited: 2023-07-30 15:18:32
  */
-import CameraCollision from './CameraCollision';
+import MeshCollision from './MeshCollision';
 import './style.css'
 
 const canvas = document.createElement('canvas');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-new CameraCollision(canvas);
+new MeshCollision(canvas);
 
 
 document.body.appendChild(canvas);
