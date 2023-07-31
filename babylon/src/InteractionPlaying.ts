@@ -3,21 +3,12 @@
  * :name: /babylon/src/InteractionPlaying.ts
  * :author: 张德志
  * :copyright: (c) 2023, Tungee
- * :date created: 2023-08-01 05:16:44
- * :last editor: 张德志
- * :date last edited: 2023-08-01 05:27:05
- */
-/*
- * :file description: 
- * :name: /babylon/src/BaseScene.ts
- * :author: 张德志
- * :copyright: (c) 2023, Tungee
  * :date created: 2023-07-30 10:28:37
  * :last editor: 张德志
- * :date last edited: 2023-07-30 10:28:38
+ * :date last edited: 2023-08-01 05:30:10
  */
-import { ArcRotateCamera, Engine, Scene, Sound, Vector2, Vector3, } from "babylonjs";
 
+import { ArcRotateCamera, Engine, Scene, Sound, Vector3, } from "babylonjs";
 
 export default class InteractionPlaying {
     engine:Engine;
