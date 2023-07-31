@@ -5,7 +5,7 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-08-01 06:12:56
  * :last editor: 张德志
- * :date last edited: 2023-08-01 06:19:49
+ * :date last edited: 2023-08-01 06:24:48
  */
 
 import { ArcRotateCamera, Engine, Scene, Sound, Vector3 } from "babylonjs";
@@ -41,6 +41,8 @@ export default class FromArrayBuffer {
             xhr.open('GET',url,true);
             xhr.responseType = 'arraybuffer';
             xhr.onreadystatechange = function() {
+                
+                
                 if(xhr.readyState ===4 ) {
                     if(xhr.status === 200) {
                         gunshot = new Sound('FromArrayBuffer',xhr.response,scene,soundReady)
@@ -48,7 +50,7 @@ export default class FromArrayBuffer {
                 }
             }
         }
-        
+
         window.addEventListener('resize',() => {
             this.engine.resize();
         })
