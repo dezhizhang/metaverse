@@ -1,22 +1,4 @@
-/*
- * :file description: 
- * :name: /babylon/src/PlayingServeral.ts
- * :author: 张德志
- * :copyright: (c) 2023, Tungee
- * :date created: 2023-08-01 05:46:39
- * :last editor: 张德志
- * :date last edited: 2023-08-01 05:52:47
- */
-/*
- * :file description: 
- * :name: /babylon/src/BaseScene.ts
- * :author: 张德志
- * :copyright: (c) 2023, Tungee
- * :date created: 2023-07-30 10:28:37
- * :last editor: 张德志
- * :date last edited: 2023-07-30 10:28:38
- */
-import { ArcRotateCamera, Engine, Scene,Vector3, Sound, ActionManager,  ExecuteCodeAction, SpriteManager, Sprite, UniversalCamera, MeshBuilder } from "babylonjs";
+import { ArcRotateCamera, Engine, Scene,Vector3, Sound } from "babylonjs";
 
 
 export default class PlayingServeral {
