@@ -5,16 +5,16 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-05-04 05:38:45
  * :last editor: 张德志
- * :date last edited: 2023-08-01 05:14:10
+ * :date last edited: 2023-08-01 05:18:57
  */
-import AmbientSound from './AmbientSound';
+import InteractionPlaying from './InteractionPlaying';
 import './style.css'
 
 const canvas = document.createElement('canvas');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-new AmbientSound(canvas);
+new InteractionPlaying(canvas);
 
 
 document.body.appendChild(canvas);
