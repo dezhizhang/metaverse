@@ -5,16 +5,16 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-05-04 05:38:45
  * :last editor: 张德志
- * :date last edited: 2023-08-02 04:23:56
+ * :date last edited: 2023-08-02 05:09:15
  */
-import ControlRadioButton from './ControlRadioButton';
+import ControlLine from './ControlLine';
 import './style.css'
 
 const canvas = document.createElement('canvas');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-new ControlRadioButton(canvas);
+new ControlLine(canvas);
 
 
 document.body.appendChild(canvas);
