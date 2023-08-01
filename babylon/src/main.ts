@@ -5,16 +5,16 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-05-04 05:38:45
  * :last editor: 张德志
- * :date last edited: 2023-08-02 05:26:22
+ * :date last edited: 2023-08-02 05:56:47
  */
-import ControlMultiline from './ControlMultiline';
+import ControlImageNinePatch from './ControlImageNinePatch';
 import './style.css'
 
 const canvas = document.createElement('canvas');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-new ControlMultiline(canvas);
+new ControlImageNinePatch(canvas);
 
 
 document.body.appendChild(canvas);
