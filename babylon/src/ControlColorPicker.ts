@@ -5,7 +5,7 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-08-03 06:54:09
  * :last editor: 张德志
- * :date last edited: 2023-08-03 07:25:26
+ * :date last edited: 2023-08-03 07:34:19
  */
 
 
@@ -70,9 +70,7 @@ export default class ControlColorPicker {
         })
 
         panel.addControl(picker);
-
         
-      
         window.addEventListener('resize',() => {
             this.engine.resize();
         })
