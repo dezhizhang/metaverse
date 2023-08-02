@@ -5,11 +5,10 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-08-02 05:56:00
  * :last editor: 张德志
- * :date last edited: 2023-08-02 06:11:26
+ * :date last edited: 2023-08-02 06:12:40
  */
 
-
-import {  Engine, FreeCamera, HemisphericLight, MeshBuilder, Scene,SceneLoader,Vector3 } from "babylonjs";
+import {  Engine, FreeCamera, HemisphericLight, MeshBuilder, Scene,Vector3 } from "babylonjs";
 import * as GUI from 'babylonjs-gui';
 
 

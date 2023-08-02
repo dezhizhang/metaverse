@@ -5,16 +5,16 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-05-04 05:38:45
  * :last editor: 张德志
- * :date last edited: 2023-08-02 05:56:47
+ * :date last edited: 2023-08-02 07:58:22
  */
-import ControlImageNinePatch from './ControlImageNinePatch';
+import ControlImageSprite from './ControlImageSprite';
 import './style.css'
 
 const canvas = document.createElement('canvas');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-new ControlImageNinePatch(canvas);
+new ControlImageSprite(canvas);
 
 
 document.body.appendChild(canvas);

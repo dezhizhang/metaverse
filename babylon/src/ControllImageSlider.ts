@@ -5,9 +5,9 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-08-02 04:50:03
  * :last editor: 张德志
- * :date last edited: 2023-08-02 05:07:01
+ * :date last edited: 2023-08-02 08:01:54
  */
-import {  ArcRotateCamera, Engine, FreeCamera, HemisphericLight, Mesh, MeshBuilder, PointLight, Scene,SceneLoader,Vector3 } from "babylonjs";
+import {  ArcRotateCamera, Engine,  Scene,SceneLoader,Vector3 } from "babylonjs";
 import * as GUI from 'babylonjs-gui';
 
 
