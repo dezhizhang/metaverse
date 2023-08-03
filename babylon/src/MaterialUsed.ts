@@ -5,7 +5,7 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-08-04 05:44:38
  * :last editor: 张德志
- * :date last edited: 2023-08-04 05:57:48
+ * :date last edited: 2023-08-04 06:16:42
  */
 import {  ArcRotateCamera, Color3, Engine, HemisphericLight, Mesh, MeshBuilder, PointLight, Scene,SpotLight,StandardMaterial,Vector3 } from "babylonjs";
 import * as GUI from 'babylonjs-gui';
@@ -63,8 +63,43 @@ export default class MaterialUsed {
         const whiteLight = new SpotLight('whiteLight',new Vector3(0,1,1),new Vector3(0,-1,0),Math.PI / 2,1.5,scene);
         whiteLight.diffuse = new Color3(1,1,1);
         whiteLight.specular = new Color3(0,0,0);
+
+        //mesh
+
+        const redSphere = MeshBuilder.CreateSphere('redSphere',{diameter:0.25});
+        redSphere.material = redMat;
+        redSphere.position = redLight.position;
+
+
+        const greenSphere = MeshBuilder.CreateSphere('greenSphere',{diameter:0.25});
+        greenSphere.material = greenMat;
+        greenSphere.position = greenLight.position;
+
+
+        const blueSphere = MeshBuilder.CreateSphere('blueSphere',{diameter:0.25});
+        blueSphere.material = blueMat;
+        blueSphere.position = blueLight.position;
       
       
+        const whiteSphere = MeshBuilder.CreateSphere('whiteSphere',{diameter:0.25});
+        whiteSphere.material = whiteMat;
+        whiteSphere.position = whiteLight.position;
+
+        const mats = [
+            new Color3(1,1,0),
+            new Color3(1,0,1),
+            new Color3(0,1,1),
+            new Color3(1,1,1)
+        ];
+
+        const groundMat = new StandardMaterial('groundMat');
+        groundMat.diffuseColor = mats[0];
+        
+
+        //ground
+        const ground = MeshBuilder.CreateGround('ground',{width:4,height:6})
+
+        
       
     
       
