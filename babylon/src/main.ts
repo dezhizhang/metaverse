@@ -5,16 +5,16 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-05-04 05:38:45
  * :last editor: 张德志
- * :date last edited: 2023-08-03 07:40:15
+ * :date last edited: 2023-08-04 05:21:23
  */
-import ContainerAdaptiveClip from './ContainerAdaptiveClip';
+import ContainerGrid from './ContainerGrid';
 import './style.css'
 
 const canvas = document.createElement('canvas');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-new ContainerAdaptiveClip(canvas);
+new ContainerGrid(canvas);
 
 
 document.body.appendChild(canvas);
