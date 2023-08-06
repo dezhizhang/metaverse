@@ -5,16 +5,16 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-05-04 05:38:45
  * :last editor: 张德志
- * :date last edited: 2023-08-06 21:57:32
+ * :date last edited: 2023-08-07 06:38:13
  */
-import StereoHolographicButton from './StereoHolographicButton';
+import UseAmbientColor from './UseAmbientColor';
 import './style.css'
 
 const canvas = document.createElement('canvas');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-new StereoHolographicButton(canvas);
+new UseAmbientColor(canvas);
 
 
 document.body.appendChild(canvas);
