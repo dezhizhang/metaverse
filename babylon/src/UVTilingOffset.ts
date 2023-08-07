@@ -1,17 +1,17 @@
 /*
  * :file description: 
- * :name: /babylon/src/TransparentBackground.ts
+ * :name: /babylon/src/UVTilingOffset.ts
  * :author: 张德志
  * :copyright: (c) 2023, Tungee
- * :date created: 2023-08-08 05:00:40
+ * :date created: 2023-08-08 05:26:20
  * :last editor: 张德志
- * :date last edited: 2023-08-08 05:14:22
+ * :date last edited: 2023-08-08 05:46:43
  */
 import {  ArcRotateCamera, Engine, HemisphericLight, MeshBuilder, Scene,StandardMaterial,Texture,Vector3 } from "babylonjs";
 import * as GUI from 'babylonjs-gui';
 
 
-export default class TransparentBackground {
+export default class UVTilingOffset {
     engine:Engine;
     scene:Scene;
     constructor(private readonly canvas:HTMLCanvasElement) {
@@ -35,13 +35,13 @@ export default class TransparentBackground {
         const light = new HemisphericLight('light',new Vector3(0,1,0),scene);
         light.intensity = 0.7;
 
-        const mat = new StandardMaterial('mat');
-        mat.diffuseTexture = new Texture('https://doc.babylonjs.com/img/how_to/Materials/dog.png');
-        mat.diffuseTexture.hasAlpha = true;
-        mat.backFaceCulling = false;
+        const plan = MeshBuilder.CreatePlane('plan');
+        const material = new StandardMaterial('material');
+        material.diffuseTexture = new Texture('box.png');
+
+        plan.material = material;
+        plan.position.x = -1.5;
         
-        const box = MeshBuilder.CreateBox('box');
-        box.material = mat;
 
 
         window.addEventListener('resize',() => {

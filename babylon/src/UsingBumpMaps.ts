@@ -1,17 +1,8 @@
-/*
- * :file description: 
- * :name: /babylon/src/TransparentBackground.ts
- * :author: 张德志
- * :copyright: (c) 2023, Tungee
- * :date created: 2023-08-08 05:00:40
- * :last editor: 张德志
- * :date last edited: 2023-08-08 05:14:22
- */
 import {  ArcRotateCamera, Engine, HemisphericLight, MeshBuilder, Scene,StandardMaterial,Texture,Vector3 } from "babylonjs";
 import * as GUI from 'babylonjs-gui';
 
 
-export default class TransparentBackground {
+export default class UsingBumpMaps {
     engine:Engine;
     scene:Scene;
     constructor(private readonly canvas:HTMLCanvasElement) {
