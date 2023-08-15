@@ -5,7 +5,7 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-08-16 05:47:47
  * :last editor: 张德志
- * :date last edited: 2023-08-16 06:05:00
+ * :date last edited: 2023-08-16 06:08:48
  */
 import {  ArcRotateCamera, Engine, HemisphericLight, MeshBuilder, Scene,StandardMaterial,Texture,Vector3,Vector4 } from "babylonjs";
 import * as GUI from 'babylonjs-gui';
@@ -26,8 +26,6 @@ export default class FaceNumbers {
     // 创建场景
     createScene():Scene {
         const scene = new Scene(this.engine);
-
-
         const camera = new ArcRotateCamera('camera', -Math.PI / 2,Math.PI / 2.5,5,new Vector3(0,0,0));
         camera.setTarget(Vector3.Zero());
         camera.attachControl(this.canvas,true);
@@ -64,8 +62,6 @@ export default class FaceNumbers {
             this.engine.resize();
         })
         return scene;
-    
-     
     }
     
 }
