@@ -5,16 +5,16 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-05-04 05:38:45
  * :last editor: 张德志
- * :date last edited: 2023-08-28 06:37:24
+ * :date last edited: 2023-08-28 07:17:50
  */
-import DrawingText from './DrawingText';
+import DrawingImage from './DrawingImage';
 import './style.css'
 
 const canvas = document.createElement('canvas');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-new DrawingText(canvas);
+new DrawingImage(canvas);
 
 
 document.body.appendChild(canvas);
