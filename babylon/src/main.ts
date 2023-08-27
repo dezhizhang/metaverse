@@ -5,16 +5,16 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-05-04 05:38:45
  * :last editor: 张德志
- * :date last edited: 2023-08-28 06:19:55
+ * :date last edited: 2023-08-28 06:37:24
  */
-import SphereMaterial from './SphereMaterial';
+import DrawingText from './DrawingText';
 import './style.css'
 
 const canvas = document.createElement('canvas');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-new SphereMaterial(canvas);
+new DrawingText(canvas);
 
 
 document.body.appendChild(canvas);
