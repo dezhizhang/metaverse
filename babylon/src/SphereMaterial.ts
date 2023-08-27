@@ -1,5 +1,5 @@
 
-import {  ArcRotateCamera, Color3, Engine, HemisphericLight, MeshBuilder, MultiMaterial, Scene,StandardMaterial,SubMesh,Texture,Vector3 } from "babylonjs";
+import {  ArcRotateCamera, Color3, Engine, HemisphericLight, Mesh, MeshBuilder, MultiMaterial, Scene,StandardMaterial,SubMesh,Texture,Vector3 } from "babylonjs";
 import * as GUI from 'babylonjs-gui';
 
 
@@ -19,41 +19,35 @@ export default class SphereMaterial {
     createScene():Scene {
         const scene = new Scene(this.engine);
 
-        const camera = new ArcRotateCamera('camera', -Math.PI / 2,Math.PI / 2.5,6,new Vector3(0,0,0));
+        const camera = new ArcRotateCamera('camera', -Math.PI / 2,Math.PI / 2.5,8,new Vector3(0,0,0));
         camera.attachControl(this.canvas,true);
+
+
 
         const light = new HemisphericLight('light',new Vector3(0,1,0),scene);
 
-        // const box = MeshBuilder.CreateBox('box');
-
-        const material = new StandardMaterial('material');
-        material.diffuseColor = new Color3(1,0,0);
-        material.diffuseTexture = new Texture('https://playground.babylonjs.com/textures/normalMap.jpg');
+        const ground = MeshBuilder.CreateGround('ground',{width:6,height:6});
 
         const material1 = new StandardMaterial('material1');
-        material1.diffuseColor = new Color3(0,0,1);
+        material1.diffuseColor = new Color3(1,0,0);
 
         const material2 = new StandardMaterial('material2');
-        material2.diffuseColor = new Color3(0.4,0,0.4);
+        material2.diffuseColor = new Color3(0,1,0);
 
-        const multMat = new MultiMaterial('multMat');
-        multMat.subMaterials.push(material);
-        multMat.subMaterials.push(material1);
-        multMat.subMaterials.push(material2);
+        const sphere = MeshBuilder.CreateSphere('sphere',{diameter:2,segments:16});
+        sphere.position.y = 1;
 
-        const sphere = MeshBuilder.CreateSphere('sphere',{diameter:3,segments:16});
-        sphere.material  = multMat;
+        const  cube = MeshBuilder.CreateBox('cube',{size:1,height:3});
+
+        cube.position = new Vector3(1,1.5,0);
+
+        
+        // sphere.material = material1;
+        // cube.material = material2;
 
 
-        const verticesCount = sphere.getTotalIndices();
-
-        new SubMesh(0,0,verticesCount,0,900,sphere);
-        new SubMesh(1,0,verticesCount,900,900,sphere);
-        new SubMesh(2,0,verticesCount,1800,2088,sphere);
-
-        scene.registerBeforeRender(() => {
-            sphere.rotation.y += 0.01;
-        });
+        // const mesh = Mesh.MergeMeshes([sphere,cube],true,true,undefined,false,true);
+    
 
         window.addEventListener('resize',() => {
             this.engine.resize();
@@ -61,8 +55,6 @@ export default class SphereMaterial {
 
         return scene;
 
-    
-     
     }
     
 }
