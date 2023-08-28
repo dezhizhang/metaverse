@@ -5,16 +5,16 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-05-04 05:38:45
  * :last editor: 张德志
- * :date last edited: 2023-08-28 23:05:59
+ * :date last edited: 2023-08-29 05:56:26
  */
-import FitTextToPlane from './FitTextToPlane';
+import PlayVideoTexture from './PlayVideoTexture';
 import './style.css'
 
 const canvas = document.createElement('canvas');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-new FitTextToPlane(canvas);
+new PlayVideoTexture(canvas);
 
 
 document.body.appendChild(canvas);
