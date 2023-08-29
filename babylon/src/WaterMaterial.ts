@@ -5,13 +5,14 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-08-29 20:22:56
  * :last editor: 张德志
- * :date last edited: 2023-08-29 20:56:06
+ * :date last edited: 2023-08-29 23:24:32
  */
+import * as BABYLON from 'babylonjs';
 
-import {  ArcRotateCamera, Color3, CreateGround, CubeTexture, Engine,HemisphericLight,MeshBuilder,Scene,StandardMaterial,Texture,Vector3 } from "babylonjs";
+import {  ArcRotateCamera, Color3, CubeTexture, Engine,HemisphericLight,MeshBuilder,Scene,StandardMaterial,Texture,Vector3 } from "babylonjs";
 
 
-export default class WaterMaterial {
+export default class WaterMaterial1 {
     engine:Engine;
     scene:Scene;
     constructor(private readonly canvas:HTMLCanvasElement) {
@@ -54,10 +55,17 @@ export default class WaterMaterial {
         const ground = MeshBuilder.CreateGround('ground',{width:512,height:512},scene);
         ground.position.y = -1;
         ground.material = groundMaterial;
-        
-        
-        
 
+        const waterMesh = MeshBuilder.CreateGround('waterMesh',{width:512,height:512},scene);
+
+        const waterMaterial = new StandardMaterial("water", scene);
+        waterMaterial.bumpTexture = new Texture('https://playground.babylonjs.com/textures/waterbump.png');
+
+        // console.log(BABYLON.WaterMaterial);
+
+
+        
+        
     
 
         const box = MeshBuilder.CreateBox('box');
