@@ -1,33 +1,32 @@
 import * as THREE from 'three';
 
-import { DragControls } from 'three/examples/jsm/controls/DragControls.js';
+import Stats from 'stats.js';
 
-let container;
+import { SelectionBox } from 'three/examples/jsm/interactive/SelectionBox.js';
+import { SelectionHelper } from 'three/examples/jsm/interactive/SelectionHelper.js';
+
+let container, stats;
 let camera, scene, renderer;
-let controls, group;
-let enableSelection = false;
-
-const objects = [];
-
-const mouse = new THREE.Vector2(), raycaster = new THREE.Raycaster();
 
 init();
+animate();
 
 function init() {
+
   container = document.createElement('div');
   document.body.appendChild(container);
 
-  camera = new THREE.PerspectiveCamera(70,window.innerWidth / window.innerHeight,0.1,500);
-  camera.position.z = 25;
+  camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 500);
+  camera.position.z = 50;
 
   scene = new THREE.Scene();
   scene.background = new THREE.Color(0xf0f0f0);
 
   scene.add(new THREE.AmbientLight(0xaaaaaa));
 
-  const light = new THREE.SpotLight(0xffffff,1000);
-  light.position.set(0,25,50);
-  light.angle = Math.PI / 9;
+  const light = new THREE.SpotLight(0xffffff, 10000);
+  light.position.set(0, 25, 50);
+  light.angle = Math.PI / 5;
 
   light.castShadow = true;
   light.shadow.camera.near = 10;
@@ -37,16 +36,15 @@ function init() {
 
   scene.add(light);
 
-  group = new THREE.Group();
-  scene.add(group);
-
   const geometry = new THREE.BoxGeometry();
-  
-  for(let i=0;i < 200;i++) {
-    const object = new THREE.Mesh(geometry,new THREE.MeshLambertMaterial({color:Math.random() * 0xffffff}));
-    object.position.x = Math.random() * 30 - 15;
-    object.position.y = Math.random() * 15 - 7.5;
-    object.position.z = Math.random() * 20 - 10;
+
+  for (let i = 0; i < 200; i++) {
+
+    const object = new THREE.Mesh(geometry, new THREE.MeshLambertMaterial({ color: Math.random() * 0xffffff }));
+
+    object.position.x = Math.random() * 80 - 40;
+    object.position.y = Math.random() * 45 - 25;
+    object.position.z = Math.random() * 45 - 25;
 
     object.rotation.x = Math.random() * 2 * Math.PI;
     object.rotation.y = Math.random() * 2 * Math.PI;
@@ -60,35 +58,23 @@ function init() {
     object.receiveShadow = true;
 
     scene.add(object);
-    objects.push(object);
 
   }
 
-  renderer = new THREE.WebGLRenderer({antialias:true});
+  renderer = new THREE.WebGLRenderer({ antialias: true });
   renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(window.innerWidth,window.innerHeight);
+  renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFShadowMap;
 
   container.appendChild(renderer.domElement);
 
-  controls = new DragControls([...objects],camera,renderer.domElement);
-  controls.addEventListener('drag',render);
+  stats = new Stats();
+  container.appendChild(stats.dom);
 
-  window.addEventListener('resize',onWindowResize);
-
-
-
-  document.addEventListener('click', onClick);
-  window.addEventListener('keydown', onKeyDown);
-  window.addEventListener('keyup', onKeyUp);
-
-  render();
-
+  window.addEventListener('resize', onWindowResize);
 
 }
-
-
 
 function onWindowResize() {
 
@@ -97,69 +83,16 @@ function onWindowResize() {
 
   renderer.setSize(window.innerWidth, window.innerHeight);
 
-  render();
-
 }
 
-function onKeyDown(event) {
+//
 
-  enableSelection = (event.keyCode === 16) ? true : false;
+function animate() {
 
-}
-
-function onKeyUp() {
-
-  enableSelection = false;
-
-}
-
-function onClick(event) {
-
-  event.preventDefault();
-
-  if (enableSelection === true) {
-
-    const draggableObjects = controls.getObjects();
-    draggableObjects.length = 0;
-
-    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-    mouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
-
-    raycaster.setFromCamera(mouse, camera);
-
-    const intersections = raycaster.intersectObjects(objects, true);
-
-    if (intersections.length > 0) {
-
-      const object = intersections[0].object;
-
-      if (group.children.includes(object) === true) {
-
-        object.material.emissive.set(0x000000);
-        scene.attach(object);
-
-      } else {
-
-        object.material.emissive.set(0xaaaaaa);
-        group.attach(object);
-
-      }
-
-      controls.transformGroup = true;
-      draggableObjects.push(group);
-
-    }
-
-    if (group.children.length === 0) {
-
-      controls.transformGroup = false;
-      draggableObjects.push(...objects);
-
-    }
-
-  }
+  requestAnimationFrame(animate);
 
   render();
+  stats.update();
 
 }
 
@@ -168,3 +101,65 @@ function render() {
   renderer.render(scene, camera);
 
 }
+
+const selectionBox = new SelectionBox(camera, scene);
+const helper = new SelectionHelper(renderer, 'selectBox');
+
+document.addEventListener('pointerdown', function (event) {
+
+  for (const item of selectionBox.collection) {
+
+    item.material.emissive.set(0x000000);
+
+  }
+
+  selectionBox.startPoint.set(
+    (event.clientX / window.innerWidth) * 2 - 1,
+    - (event.clientY / window.innerHeight) * 2 + 1,
+    0.5);
+
+});
+
+document.addEventListener('pointermove', function (event) {
+
+  if (helper.isDown) {
+
+    for (let i = 0; i < selectionBox.collection.length; i++) {
+
+      selectionBox.collection[i].material.emissive.set(0x000000);
+
+    }
+
+    selectionBox.endPoint.set(
+      (event.clientX / window.innerWidth) * 2 - 1,
+      - (event.clientY / window.innerHeight) * 2 + 1,
+      0.5);
+
+    const allSelected = selectionBox.select();
+
+    for (let i = 0; i < allSelected.length; i++) {
+
+      allSelected[i].material.emissive.set(0xffffff);
+
+    }
+
+  }
+
+});
+
+document.addEventListener('pointerup', function (event) {
+
+  selectionBox.endPoint.set(
+    (event.clientX / window.innerWidth) * 2 - 1,
+    - (event.clientY / window.innerHeight) * 2 + 1,
+    0.5);
+
+  const allSelected = selectionBox.select();
+
+  for (let i = 0; i < allSelected.length; i++) {
+
+    allSelected[i].material.emissive.set(0xffffff);
+
+  }
+
+});
