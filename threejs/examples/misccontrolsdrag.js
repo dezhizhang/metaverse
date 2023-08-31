@@ -1,3 +1,13 @@
+/*
+ * :file description: 
+ * :name: /threejs/examples/misccontrolsdrag.js
+ * :author: 张德志
+ * :copyright: (c) 2023, Tungee
+ * :date created: 2023-08-31 20:56:39
+ * :last editor: 张德志
+ * :date last edited: 2023-08-31 20:57:10
+ */
+
 import * as THREE from 'three';
 
 import { DragControls } from 'three/examples/jsm/controls/DragControls.js';
