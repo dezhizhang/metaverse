@@ -1,77 +1,112 @@
 import * as THREE from 'three';
-import { uniform, skinning, PointsNodeMaterial } from 'three/nodes';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-import WebGPU from 'three/examples/jsm/capabilities/WebGPU.js';
-import WebGPURenderer from 'three/examples/jsm/renderers/webgpu/WebGPURenderer.js';
+			import { texture, uniform, vec2, MeshBasicNodeMaterial } from 'three/nodes';
 
-let camera, scene, renderer;
+			import WebGPU from 'three/addons/capabilities/WebGPU.js';
+			import WebGPURenderer from 'three/addons/renderers/webgpu/WebGPURenderer.js';
 
-let mixer, clock;
+			let camera, scene, renderer;
+			const mouse = new THREE.Vector2();
 
-init();
+			let cameraFX, sceneFX, renderTarget;
 
-function init() {
-  if(WebGPU.isAvailable() === false) {
-    document.body.appendChild(WebGPU.getErrorMessage());
-    throw new Error('No WebGPU support')
-  }
-  camera = new THREE.PerspectiveCamera(50,window.innerWidth / window.innerHeight,1,1000);
-  camera.position.set(0, 300, - 85);
+			let box;
 
-  scene = new THREE.Scene();
-  camera.lookAt(0,0,-85);
+			const dpr = window.devicePixelRatio;
 
-  clock = new THREE.Clock();
-  const url = 'https://threejs.org/examples/models/gltf/Michelle.glb';
+			init();
 
-  const loader = new GLTFLoader();
-  loader.load(url,function(gltf) {
-    const object = gltf.scene;
-    mixer = new THREE.AnimationMixer(object);
-
-    const action = mixer.clipAction(gltf.animations[0]);
-    action.play();
-
-    object.traverse(function(child) {
-      if(child.isMesh) {
-        child.visible = false;
-        const materialPoints = new PointsNodeMaterial();
-        materialPoints.colorNode = uniform(new THREE.Color());
-        materialPoints.positionNode = skinning(child);
-
-        const pointCloud = new THREE.Points(child.geometry,materialPoints);
-        scene.add(pointCloud);
+      function init() {
+        
       }
-    });
-    scene.add(object);
 
-  });
+			// function init() {
 
-  renderer = new WebGPURenderer({antialias:true});
-  renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(window.innerWidth,window.innerHeight);
-  renderer.setAnimationLoop(animate);
+			// 	if ( WebGPU.isAvailable() === false ) {
 
-  document.body.appendChild(renderer.domElement);
+			// 		document.body.appendChild( WebGPU.getErrorMessage() );
 
-  window.addEventListener('resize',onWindowResize);
-}
+			// 		throw new Error( 'No WebGPU support' );
 
-function onWindowResize() {
+			// 	}
 
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
+			// 	camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 0.1, 10 );
+			// 	camera.position.z = 4;
 
-  renderer.setSize(window.innerWidth, window.innerHeight);
+			// 	scene = new THREE.Scene();
+			// 	scene.background = new THREE.Color( 0x222222 );
 
-}
+			// 	// textured mesh
 
-function animate() {
+			// 	const loader = new THREE.TextureLoader();
+			// 	const uvTexture = loader.load( 'https://threejs.org/examples/textures/uv_grid_opengl.jpg' );
 
-  const delta = clock.getDelta();
+			// 	const geometryBox = new THREE.BoxGeometry();
+			// 	const materialBox = new MeshBasicNodeMaterial();
+			// 	materialBox.colorNode = texture( uvTexture );
 
-  if (mixer) mixer.update(delta);
+			// 	//
 
-  renderer.render(scene, camera);
+			// 	box = new THREE.Mesh( geometryBox, materialBox );
+			// 	scene.add( box );
 
-}
+			// 	//
+
+			// 	renderer = new WebGPURenderer( { antialias: true } );
+			// 	renderer.setPixelRatio( dpr );
+			// 	renderer.setSize( window.innerWidth, window.innerHeight );
+			// 	renderer.setAnimationLoop( animate );
+			// 	document.body.appendChild( renderer.domElement );
+
+			// 	renderTarget = new THREE.RenderTarget( window.innerWidth * dpr, window.innerHeight * dpr );
+
+			// 	window.addEventListener( 'mousemove', onWindowMouseMove );
+			// 	window.addEventListener( 'resize', onWindowResize );
+
+			// 	// FX
+
+			// 	cameraFX = new THREE.OrthographicCamera( - 1, 1, 1, - 1, 0, 1 );
+			// 	sceneFX = new THREE.Scene();
+
+			// 	const geometryFX = new THREE.PlaneGeometry( 2, 2 );
+
+			// 	// modulate the final color based on the mouse position
+
+			// 	const screenFXNode = uniform( mouse ).add( vec2( 0.5, 0.5 ) );
+
+			// 	const materialFX = new MeshBasicNodeMaterial();
+			// 	materialFX.colorNode = texture( renderTarget.texture ).mul( screenFXNode );
+
+			// 	const quad = new THREE.Mesh( geometryFX, materialFX );
+			// 	sceneFX.add( quad );
+
+			// }
+
+			function onWindowMouseMove( e ) {
+
+				mouse.x = e.offsetX / screen.width;
+				mouse.y = e.offsetY / screen.height;
+
+			}
+
+			function onWindowResize() {
+
+				camera.aspect = window.innerWidth / window.innerHeight;
+				camera.updateProjectionMatrix();
+
+				renderer.setSize( window.innerWidth, window.innerHeight );
+				renderTarget.setSize( window.innerWidth * dpr, window.innerHeight * dpr );
+
+			}
+
+			function animate() {
+
+				box.rotation.x += 0.01;
+				box.rotation.y += 0.02;
+
+				renderer.setRenderTarget( renderTarget );
+				renderer.render( scene, camera );
+
+				renderer.setRenderTarget( null );
+				renderer.render( sceneFX, cameraFX );
+
+			}
