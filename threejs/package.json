@@ -13,6 +13,7 @@
   "license": "ISC",
   "dependencies": {
     "@tweenjs/tween.js": "^20.0.3",
+    "ammo.js": "0.0.10",
     "cannon-es": "0.18.0",
     "dat.gui": "0.7.9",
     "file-loader": "^6.2.0",
@@ -22,7 +23,7 @@
     "parcel-bundler": "^1.12.5",
     "stats": "^1.0.0",
     "stats.js": "^0.17.0",
-    "three": "^0.139.0",
+    "three": "^0.156.0",
     "three-bvh-csg": "0.0.5",
     "three-mesh-bvh": "^0.5.23",
     "tween": "^0.9.0",
