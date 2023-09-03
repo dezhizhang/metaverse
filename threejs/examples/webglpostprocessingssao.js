@@ -6,7 +6,7 @@ import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
 import { SSAOPass } from 'three/examples/jsm/postprocessing/SSAOPass.js';
 import { OutputPass } from 'three/examples/jsm/postprocessing/OutputPass.js';
 
-let stats;
+let container, stats;
 let camera, scene, renderer;
 let composer;
 let group;
@@ -15,17 +15,21 @@ init();
 animate();
 
 function init() {
+
+	container = document.createElement('div');
+	document.body.appendChild(container);
+
 	renderer = new THREE.WebGLRenderer();
-	renderer.setSize(window.innerWidth,window.innerHeight);
+	renderer.setSize(window.innerWidth, window.innerHeight);
 	document.body.appendChild(renderer.domElement);
 
-	camera = new THREE.PerspectiveCamera(65,window.innerWidth / window.innerHeight,0.1,1000);
+	camera = new THREE.PerspectiveCamera(65, window.innerWidth / window.innerHeight, 100, 700);
 	camera.position.z = 500;
 
 	scene = new THREE.Scene();
 	scene.background = new THREE.Color(0xaaaaaa);
 
-	scene.add(new THREE.DirectionalLight(0xffffff,4));
+	scene.add(new THREE.DirectionalLight(0xffffff, 4));
 	scene.add(new THREE.AmbientLight(0xffffff));
 
 	group = new THREE.Group();
@@ -33,15 +37,16 @@ function init() {
 
 	const geometry = new THREE.BoxGeometry(10, 10, 10);
 
-	for(let i=0;i < 100;i++) {
+	for (let i = 0; i < 100; i++) {
+
 		const material = new THREE.MeshLambertMaterial({
-			color:Math.random() * 0xffffff
+			color: Math.random() * 0xffffff
 		});
-		const mesh = new THREE.Mesh(geometry,material);
+
+		const mesh = new THREE.Mesh(geometry, material);
 		mesh.position.x = Math.random() * 400 - 200;
 		mesh.position.y = Math.random() * 400 - 200;
 		mesh.position.z = Math.random() * 400 - 200;
-
 		mesh.rotation.x = Math.random();
 		mesh.rotation.y = Math.random();
 		mesh.rotation.z = Math.random();
@@ -52,26 +57,44 @@ function init() {
 	}
 
 	stats = new Stats();
-	document.body.appendChild(stats.dom);
+	container.appendChild(stats.dom);
 
 	const width = window.innerWidth;
 	const height = window.innerHeight;
 
 	composer = new EffectComposer(renderer);
 
-	const renderPass = new RenderPass(scene,camera);
+	const renderPass = new RenderPass(scene, camera);
 	composer.addPass(renderPass);
 
-	const ssaoPass = new SSAOPass(scene,camera,width,height);
+	const ssaoPass = new SSAOPass(scene, camera, width, height);
 	composer.addPass(ssaoPass);
 
 	const outputPass = new OutputPass();
 	composer.addPass(outputPass);
 
-	window.addEventListener('resize',onWindowResize)
+	// Init gui
+	const gui = new dat.GUI();
+
+	gui.add(ssaoPass, 'output', {
+		'Default': SSAOPass.OUTPUT.Default,
+		'SSAO Only': SSAOPass.OUTPUT.SSAO,
+		'SSAO Only + Blur': SSAOPass.OUTPUT.Blur,
+		'Depth': SSAOPass.OUTPUT.Depth,
+		'Normal': SSAOPass.OUTPUT.Normal
+	}).onChange(function (value) {
+
+		ssaoPass.output = value;
+
+	});
+	gui.add(ssaoPass, 'kernelRadius').min(0).max(32);
+	gui.add(ssaoPass, 'minDistance').min(0.001).max(0.02);
+	gui.add(ssaoPass, 'maxDistance').min(0.01).max(0.3);
+	gui.add(ssaoPass, 'enabled');
+
+	window.addEventListener('resize', onWindowResize);
 
 }
-
 
 function onWindowResize() {
 
