@@ -5,7 +5,7 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-03-13 05:58:33
  * :last editor: 张德志
- * :date last edited: 2023-09-04 05:53:04
+ * :date last edited: 2023-09-04 07:03:42
  */
 import * as THREE from 'three';
 import * as dat from 'dat.gui';
@@ -21,13 +21,19 @@ camera.lookAt(0, 0, 0);
 
 scene.add(camera);
 
+const geometry = new THREE.BufferGeometry();
+const vertices = new Float32Array([
+	-1.0,-1.0,1.0,
+	1.0,-1.0,0.0,
+	1.0,1.0,0.0
+]);
+geometry.setAttribute('position',new THREE.BufferAttribute(vertices,3));
+const material = new THREE.MeshBasicMaterial({
+	color:0x00ff00
+});
 
-const geometry = new THREE.BoxGeometry(1, 1, 1);
-const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
-const cube = new THREE.Mesh(geometry, material);
-// cube.scale.set(2,2,2);
-cube.rotation.x = Math.PI / 4;
-scene.add(cube);
+const plane = new THREE.Mesh(geometry,material);
+scene.add(plane);
 
 
 
@@ -52,23 +58,6 @@ function onWindowResize() {
 	
 }
 
-// let eventObj = {
-// 	Fullscreen:function () {
-// 		document.body.requestFullscreen();
-// 	},
-// 	ExitFullscreen:function() {
-// 		document.exitFullscreen()
-// 	}
-// }
-
-const gui = new dat.GUI();
-const folder = gui.addFolder('立方体位置');
-folder.add(cube.position,'x',-5,5).name('立方体x轴位置');
-folder.add(cube.position,'y',-5,5).name('立方体y轴位置');
-folder.add(cube.position,'z',-5,5).name('立方体z轴位置');
-// gui.add(eventObj,'Fullscreen').name('全屏');
-// gui.add(eventObj,'ExitFullscreen').name('退出全屏')
-// console.log(gui);
 
 
 
