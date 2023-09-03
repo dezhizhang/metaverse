@@ -5,7 +5,7 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-03-13 05:58:33
  * :last editor: 张德志
- * :date last edited: 2023-09-04 07:03:42
+ * :date last edited: 2023-09-04 07:24:02
  */
 import * as THREE from 'three';
 import * as dat from 'dat.gui';
@@ -25,14 +25,28 @@ const geometry = new THREE.BufferGeometry();
 const vertices = new Float32Array([
 	-1.0,-1.0,1.0,
 	1.0,-1.0,0.0,
-	1.0,1.0,0.0
+	1.0,1.0,0.0,
+	-1.0,1.0,0.0
 ]);
 geometry.setAttribute('position',new THREE.BufferAttribute(vertices,3));
+const indices = new Uint16Array([0,1,2,2,3,0]);
+geometry.setIndex(new THREE.BufferAttribute(indices,1));
+
+geometry.addGroup(0,3,0);
+geometry.addGroup(3,3,1);
+
+
 const material = new THREE.MeshBasicMaterial({
 	color:0x00ff00
 });
 
-const plane = new THREE.Mesh(geometry,material);
+const material1 = new THREE.MeshBasicMaterial({
+	color:0xff0000,
+});
+
+
+
+const plane = new THREE.Mesh(geometry,[material,material1]);
 scene.add(plane);
 
 
