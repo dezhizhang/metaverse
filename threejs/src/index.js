@@ -1,107 +1,54 @@
+/*
+ * :file description: 
+ * :name: /threejs/src/index.js
+ * :author: 张德志
+ * :copyright: (c) 2023, Tungee
+ * :date created: 2023-03-13 05:58:33
+ * :last editor: 张德志
+ * :date last edited: 2023-09-04 04:51:55
+ */
 import * as THREE from 'three';
-import * as dat from 'dat.gui';
-import Stats from 'stats.js';
-import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
-import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
-import { SSAOPass } from 'three/examples/jsm/postprocessing/SSAOPass.js';
-import { OutputPass } from 'three/examples/jsm/postprocessing/OutputPass.js';
-
-let stats;
-let camera, scene, renderer;
-let composer;
-let group;
-
-init();
-animate();
-
-function init() {
-	renderer = new THREE.WebGLRenderer();
-	renderer.setSize(window.innerWidth,window.innerHeight);
-	document.body.appendChild(renderer.domElement);
-
-	camera = new THREE.PerspectiveCamera(65,window.innerWidth / window.innerHeight,0.1,1000);
-	camera.position.z = 500;
-
-	scene = new THREE.Scene();
-	scene.background = new THREE.Color(0xaaaaaa);
-
-	scene.add(new THREE.DirectionalLight(0xffffff,4));
-	scene.add(new THREE.AmbientLight(0xffffff));
-
-	group = new THREE.Group();
-	scene.add(group);
-
-	const geometry = new THREE.BoxGeometry(10, 10, 10);
-
-	for(let i=0;i < 100;i++) {
-		const material = new THREE.MeshLambertMaterial({
-			color:Math.random() * 0xffffff
-		});
-		const mesh = new THREE.Mesh(geometry,material);
-		mesh.position.x = Math.random() * 400 - 200;
-		mesh.position.y = Math.random() * 400 - 200;
-		mesh.position.z = Math.random() * 400 - 200;
-
-		mesh.rotation.x = Math.random();
-		mesh.rotation.y = Math.random();
-		mesh.rotation.z = Math.random();
-
-		mesh.scale.setScalar(Math.random() * 10 + 2);
-		group.add(mesh);
-
-	}
-
-	stats = new Stats();
-	document.body.appendChild(stats.dom);
-
-	const width = window.innerWidth;
-	const height = window.innerHeight;
-
-	composer = new EffectComposer(renderer);
-
-	const renderPass = new RenderPass(scene,camera);
-	composer.addPass(renderPass);
-
-	const ssaoPass = new SSAOPass(scene,camera,width,height);
-	composer.addPass(ssaoPass);
-
-	const outputPass = new OutputPass();
-	composer.addPass(outputPass);
-
-	window.addEventListener('resize',onWindowResize)
-
-}
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
 
-function onWindowResize() {
+const scene = new THREE.Scene();
 
-	const width = window.innerWidth;
-	const height = window.innerHeight;
+const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+camera.position.z = 5;
+camera.lookAt(0, 0, 0);
 
-	camera.aspect = width / height;
-	camera.updateProjectionMatrix();
+scene.add(camera);
 
-	renderer.setSize(width, height);
-	composer.setSize(width, height);
 
-}
+const geometry = new THREE.BoxGeometry(1, 1, 1);
+const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+const cube = new THREE.Mesh(geometry, material);
+scene.add(cube);
+
+
+
+const renderer = new THREE.WebGLRenderer();
+renderer.setPixelRatio(window.devicePixelRatio);
+renderer.setSize(window.innerWidth, window.innerHeight);
+document.body.appendChild(renderer.domElement);
+
+const axesHelper = new THREE.AxesHelper(5);
+scene.add(axesHelper);
+
+const controls = new OrbitControls(scene, renderer.domElement);
+scene.add(controls);
+
+
+
+
 
 function animate() {
+	controls.update();
 
 	requestAnimationFrame(animate);
-
-	stats.begin();
-	render();
-	stats.end();
-
+	cube.rotation.x += 0.01;
+	cube.rotation.y += 0.01;
+	renderer.render(scene, camera)
 }
 
-function render() {
-
-	const timer = performance.now();
-	group.rotation.x = timer * 0.0002;
-	group.rotation.y = timer * 0.0001;
-
-	composer.render();
-
-}
+animate();
