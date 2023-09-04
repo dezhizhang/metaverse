@@ -5,38 +5,41 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-03-13 05:58:33
  * :last editor: 张德志
- * :date last edited: 2023-09-04 23:22:21
+ * :date last edited: 2023-09-05 05:34:12
  */
 import * as THREE from 'three';
-import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls.js';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader.js'
 
 const scene = new THREE.Scene();
 
+scene.fog = new THREE.Fog()
 
-const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight,0.1,1000);
-camera.position.z = 10;
+
+const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+camera.position.set(0,32,32);
+camera.lookAt(scene.position);
 
 const renderer = new THREE.WebGLRenderer();
 renderer.setPixelRatio(window.devicePixelRatio);
-renderer.setSize(window.innerWidth,window.innerHeight);
+renderer.setSize(window.innerWidth, window.innerHeight);
 
 document.body.appendChild(renderer.domElement);
 
-const textureLoader = new THREE.TextureLoader();
-const texture = textureLoader.load('https://t7.baidu.com/it/u=2168645659,3174029352&fm=193&f=GIF');
 
+const controls = new OrbitControls(camera, renderer.domElement);
 
-const planeGeometry = new THREE.PlaneGeometry(1,1);
-const planeMaterial = new THREE.MeshBasicMaterial({
-	color:0xffffff,
-	map:texture,
-	side:THREE.DoubleSide
+// 创建长方体
+const boxGeometry = new THREE.BoxGeometry(1,1,100);
+const boxMaterial = new THREE.MeshBasicMaterial({
+	color:0x00ff00
 });
+const box = new THREE.Mesh(boxGeometry,boxMaterial);
+scene.add(box);
 
-let plane = new THREE.Mesh(planeGeometry,planeMaterial);
-scene.add(plane);
+scene.fog = new THREE.Fog(0x999999,0.1,50);
+scene.background = new THREE.Color(0x999999)
 
-const controls = new OrbitControls(camera,renderer.domElement);
 
 
 
@@ -46,7 +49,7 @@ const controls = new OrbitControls(camera,renderer.domElement);
 
 function render() {
 	requestAnimationFrame(render);
-	renderer.render(scene,camera)
+	renderer.render(scene, camera)
 }
 
 render();
