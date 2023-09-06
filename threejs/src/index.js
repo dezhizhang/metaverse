@@ -1,84 +1,81 @@
 import * as THREE from 'three';
-import * as dat from 'dat.gui';
+import { AsciiEffect } from 'three/addons/effects/AsciiEffect.js';
+import { TrackballControls } from 'three/addons/controls/TrackballControls.js';
 
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+let camera, controls, scene, renderer, effect;
 
-let camera, scene, renderer;
-const params = {
-	clipIntersection:true,
-	planeConstant:0,
-	showHelpers:false
-}
+let sphere, plane;
 
-const clippingPlanes = [
-	new THREE.Plane(new THREE.Vector3(1,0,0),0),
-	new THREE.Plane(new THREE.Vector3(0,-1,0),0),
-	new THREE.Plane(new THREE.Vector3(0,0,-1),0)
-];
+const start = Date.now();
 
 init();
+animate();
 
 function init() {
-	renderer = new THREE.WebGLRenderer({antialias:true});
-	renderer.setPixelRatio(window.devicePixelRatio);
-	renderer.setSize(window.innerWidth,window.innerHeight);
-	renderer.localClippingEnabled = true;
-	document.body.appendChild(renderer.domElement);
+	camera = new THREE.PerspectiveCamera(70,window.innerWidth / window.innerHeight,1,1000);
+	camera.position.y = 150;
+	camera.position.z = 500;
 
 	scene = new THREE.Scene();
+	scene.background = new THREE.Color(0,0,0);
 
-	camera = new THREE.PerspectiveCamera(40,window.innerWidth / window.innerHeight,1,2000);
-	camera.position.set(- 1.5, 2.5, 3.0);
+	const pointLight1 = new THREE.PointLight(0xffffff, 3, 0, 0);
+	pointLight1.position.set(500,500,500);
+	scene.add(pointLight1);
 
-	const controls = new OrbitControls(camera,renderer.domElement);
-	controls.addEventListener('change',render);
-	controls.minDistance = 1;
-	controls.maxDistance = 10;
-	controls.enablePan = false;
+	const pointLight2 = new THREE.PointLight(0xffffff,1,0,0);
+	pointLight2.position.set(-500,-500,-500);
+	scene.add(pointLight2);
 
-	// 添加灯光
-	const light = new THREE.HemisphereLight(0xffffff,0x080808,4.5);
-	light.position.set(- 1.25, 1, 1.25);
-	scene.add(light);
+	sphere = new THREE.Mesh(new THREE.SphereGeometry(200,20,10),new THREE.MeshPhongMaterial({flatShading:true}));
+	scene.add(sphere);
 
-	const group = new THREE.Group();
+	plane = new THREE.Mesh(new THREE.PlaneGeometry(400,400),new THREE.MeshBasicMaterial({color:0xe0e0e0}));
+	plane.position.y = - 200;
+	plane.rotation.x = -Math.PI / 2;
+	scene.add(plane);
 
-	for(let i=1;i <=30;i += 2) {
-		const geometry = new THREE.SphereGeometry(i / 30,48,24);
-		const material = new THREE.MeshLambertMaterial({
-			color:new THREE.Color().setHSL(Math.random(),0.5,0.5,THREE.SRGBColorSpace),
-			side:THREE.DoubleSide,
-			clippingPlanes:clippingPlanes,
-			clipIntersection:params.clipIntersection
-		});
-		group.add(new THREE.Mesh(geometry,material));
-	}
-	scene.add(group);
+	renderer = new THREE.WebGLRenderer();
+	renderer.setSize(window.innerWidth,window.innerHeight);
+	
+	effect = new AsciiEffect(renderer, ' .:-+*=%@#', { invert: true });
+	effect.setSize(window.innerWidth,window.innerHeight);
+	effect.domElement.style.color = 'white';
+	effect.domElement.style.backgroundColor = 'black';
 
-	const helpers = new THREE.Group();
-	helpers.add(new THREE.PlaneHelper(clippingPlanes[0],2,0xff0000));
-	helpers.add(new THREE.PlaneHelper(clippingPlanes[1],2,0x00ff00));
-	helpers.add(new THREE.PlaneHelper(clippingPlanes[2],2,0x0000ff));
-	helpers.visible = false;
-	scene.add(helpers);
+	document.body.appendChild(effect.domElement);
+
+	controls = new TrackballControls(camera,effect.domElement);
 
 	window.addEventListener('resize',onWindowResize)
+
+
 }
 
 function onWindowResize() {
 	camera.aspect = window.innerWidth / window.innerHeight;
 	camera.updateProjectionMatrix();
+
 	renderer.setSize(window.innerWidth,window.innerHeight);
-	render();
+	effect.setSize(window.innerWidth,window.innerHeight);
+
 }
 
 
+function animate() {
+
+	requestAnimationFrame(animate);
+
+	render();
+
+}
 
 function render() {
-	renderer.render(scene,camera);
-	requestAnimationFrame(render)
+	let timer = Date.now() - start;
+	sphere.position.y = Math.abs(Math.sin(timer * 0.002)) * 150;
+	sphere.rotation.x = timer * 0.0003;
+	sphere.rotation.z = timer * 0.0002;
+	
+	controls.update();
+	effect.render(scene,camera);
 }
-
-render();
-
-
