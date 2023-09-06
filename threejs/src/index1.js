@@ -1,16 +1,17 @@
 /*
  * :file description: 
- * :name: /threejs/src/index.js
+ * :name: /threejs/src/index1.js
  * :author: 张德志
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-03-13 05:58:33
  * :last editor: 张德志
- * :date last edited: 2023-09-05 09:03:08
+ * :date last edited: 2023-09-06 20:06:21
  */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 // import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import {Tween} from 'three/examples/jsm/libs/tween.module.js';
 
 const scene = new THREE.Scene();
 
@@ -31,63 +32,29 @@ document.body.appendChild(renderer.domElement);
 const controls = new OrbitControls(camera, renderer.domElement);
 
 
-// const boxGeometry = new THREE.BoxGeometry(1, 1, 100);
-// const boxMaterial = new THREE.MeshBasicMaterial({
-// 	color: 0x00ff00
-// });
-// const box = new THREE.Mesh(boxGeometry, boxMaterial);
-// scene.add(box);
-
-// scene.fog = new THREE.Fog(0x999999, 0.1, 50);
-// scene.background = new THREE.Color(0x999999);
-
-// const gltfloader = new GLTFLoader();
-// gltfloader.load('https://threejs.org/examples/models/gltf/RobotExpressive/RobotExpressive.glb', (gltf) => {
-// 	console.log(gltf);
-// 	scene.add(gltf.scene);
-// })
-
-const sphereGeometry = new THREE.SphereGeometry(1,32,32);
-const sphereMaterial = new THREE.MeshBasicMaterial({
-	color:0x00ff00
-});
-const sphere = new THREE.Mesh(sphereGeometry,sphereMaterial);
-sphere.position.x = -2;
-scene.add(sphere);
-
-const sphereGeometry1 = new THREE.SphereGeometry(1,32,32);
-const sphereMaterial1 = new THREE.MeshBasicMaterial({
-	color:0x0000ff
-});
-const sphere2 = new THREE.Mesh(sphereGeometry1,sphereMaterial1);
-scene.add(sphere2);
-
-const sphereGeometry2 = new THREE.SphereGeometry(1,32,32);
-const sphereMaterial2 = new THREE.MeshBasicMaterial({
-	color:0xff00ff
-});
-
-const sphere3 = new THREE.Mesh(sphereGeometry2,sphereMaterial2);
-sphere3.position.x = 2;
-scene.add(sphere3);
-
-const raycaster = 
- 
+for(let i=0;i < 50;i++) {
+	const geometry = new THREE.BufferGeometry();
+	const vertices = new Float32Array(9);
+	for(let j =0;j < 9;j++) {
+		vertices[j] = Math.random() * 5 - 2.5;
+	}
+	geometry.setAttribute('position',new THREE.BufferAttribute(vertices,3));
+	const color = new THREE.Color(Math.random(),Math.random(),Math.random());
+	const material = new THREE.MeshBasicMaterial({color:color,side:THREE.DoubleSide});
+	const mesh = new THREE.Mesh(geometry,material);
+	scene.add(mesh);
+}
 
 
 
-
-
-
-
-
-
-
+const axesHelper = new THREE.AxesHelper(5);
+scene.add(axesHelper);
 
 
 function render() {
 	requestAnimationFrame(render);
-	renderer.render(scene, camera)
+	renderer.render(scene, camera);
+	
 }
 
 render();
