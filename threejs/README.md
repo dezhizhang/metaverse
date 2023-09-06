@@ -494,3 +494,16 @@ const material = new THREE.MeshBasicMaterial({color:0xff0000,side:THREE.DoubleSi
 const mesh = new THREE.Mesh(geometry,material);
 scene.add(mesh);
 ```
+### 基础材质
+```js
+const textureLoader = new THREE.TextureLoader();
+const texure = textureLoader.load('https://t7.baidu.com/it/u=2851687453,2321283050&fm=193&f=GIF')
+
+const geometry = new THREE.BoxGeometry(1,1,1);
+const material = new THREE.MeshBasicMaterial({
+	color:0xff00ff,
+	map:texure
+});
+const cube = new THREE.Mesh(geometry,material);
+scene.add(cube);
+```
