@@ -5,7 +5,7 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-03-13 05:58:33
  * :last editor: 张德志
- * :date last edited: 2023-09-11 07:39:27
+ * :date last edited: 2023-09-11 07:54:03
  */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -29,13 +29,19 @@ document.body.appendChild(renderer.domElement);
 const controls = new OrbitControls(camera, renderer.domElement);
 
 
+
 const cubeTextureLoader = new THREE.CubeTextureLoader();
-const baseUrl = 'https://threejs.org/examples/textures/cube/angus/'
+const url = `https://threejs.org/examples/textures/cube/angus/`;
 const textureCube = cubeTextureLoader.load([
-	`${baseUrl}cube_m00_c00.jpg`, `${baseUrl}cube_m00_c01.jpg`,
-	`${baseUrl}cube_m00_c02.jpg`, `${baseUrl}cube_m00_c03.jpg`,
-	`${baseUrl}cube_m00_c04.jpg`, `${baseUrl}cube_m00_c05.jpg`,
-])
+	`${url}cube_m00_c00.jpg`,`${url}cube_m00_c01.jpg`,
+	`${url}cube_m00_c02.jpg`,`${url}cube_m00_c03.jpg`,
+	`${url}cube_m00_c04.jpg`,`${url}cube_m00_c05.jpg`
+]);
+scene.background = textureCube;
+scene.environment = textureCube;
+
+
+
 
 
 const light = new THREE.AmbientLight(0xffffff);
