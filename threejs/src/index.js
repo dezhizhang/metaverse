@@ -5,7 +5,7 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-03-13 05:58:33
  * :last editor: 张德志
- * :date last edited: 2023-09-11 05:53:17
+ * :date last edited: 2023-09-11 07:39:27
  */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -29,8 +29,14 @@ document.body.appendChild(renderer.domElement);
 const controls = new OrbitControls(camera, renderer.domElement);
 
 
-const textureLoader = new THREE.TextureLoader();
-const texure = textureLoader.load('https://tugua.oss-cn-hangzhou.aliyuncs.com/model/pictures/soil_normal.jpg');
+const cubeTextureLoader = new THREE.CubeTextureLoader();
+const baseUrl = 'https://threejs.org/examples/textures/cube/angus/'
+const textureCube = cubeTextureLoader.load([
+	`${baseUrl}cube_m00_c00.jpg`, `${baseUrl}cube_m00_c01.jpg`,
+	`${baseUrl}cube_m00_c02.jpg`, `${baseUrl}cube_m00_c03.jpg`,
+	`${baseUrl}cube_m00_c04.jpg`, `${baseUrl}cube_m00_c05.jpg`,
+])
+
 
 const light = new THREE.AmbientLight(0xffffff);
 scene.add(light);
@@ -41,13 +47,7 @@ scene.add(directionLight);
 
 
 const geometry = new THREE.BoxGeometry(1,1,1);
-const material = new THREE.MeshStandardMaterial({
-	color:0xff00ff,
-	// map:texure
-	transparent:true,
-	alphaMap:texure,
-	// opacity:0.5,
-});
+const material = new THREE.MeshBasicMaterial( { color: 0xffffff, envMap: textureCube } );
 const cube = new THREE.Mesh(geometry,material);
 scene.add(cube);
 
