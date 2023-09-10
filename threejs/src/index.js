@@ -5,13 +5,10 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-03-13 05:58:33
  * :last editor: 张德志
- * :date last edited: 2023-09-07 05:44:40
+ * :date last edited: 2023-09-11 05:53:17
  */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-// import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader.js';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-import {Tween} from 'three/examples/jsm/libs/tween.module.js';
 
 const scene = new THREE.Scene();
 
@@ -35,14 +32,21 @@ const controls = new OrbitControls(camera, renderer.domElement);
 const textureLoader = new THREE.TextureLoader();
 const texure = textureLoader.load('https://tugua.oss-cn-hangzhou.aliyuncs.com/model/pictures/soil_normal.jpg');
 
+const light = new THREE.AmbientLight(0xffffff);
+scene.add(light);
+
+const directionLight = new THREE.DirectionalLight(0xffffff,0.5);
+directionLight.position.set(10,10,10);
+scene.add(directionLight);
+
 
 const geometry = new THREE.BoxGeometry(1,1,1);
-const material = new THREE.MeshBasicMaterial({
+const material = new THREE.MeshStandardMaterial({
 	color:0xff00ff,
 	// map:texure
 	transparent:true,
 	alphaMap:texure,
-	opacity:0.5,
+	// opacity:0.5,
 });
 const cube = new THREE.Mesh(geometry,material);
 scene.add(cube);
