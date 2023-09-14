@@ -507,3 +507,23 @@ const material = new THREE.MeshBasicMaterial({
 const cube = new THREE.Mesh(geometry,material);
 scene.add(cube);
 ```
+### 物体投射
+```js
+const mouse = new THREE.Vector2();
+// 创建投射对像
+const raycaster = new THREE.Raycaster();
+
+window.addEventListener('click', (ev) => {
+	mouse.x = ev.clientX / window.innerWidth * 2 - 1;
+	mouse.y = -ev.clientY / window.innerHeight * 2 + 1;
+	raycaster.setFromCamera(mouse,camera);
+	const result = raycaster.intersectObjects(cubeList);
+	console.log(result);
+	if(result.length) {
+		result[0].object.material = new THREE.MeshBasicMaterial({
+			color:'#FF0000'
+		})
+	}
+	
+});
+```
