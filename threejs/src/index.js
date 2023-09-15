@@ -5,16 +5,19 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-03-13 05:58:33
  * :last editor: 张德志
- * :date last edited: 2023-09-15 05:55:36
+ * :date last edited: 2023-09-15 07:56:00
  */
 import * as THREE from 'three';
+import * as CONNON from 'cannon-es';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
 const scene = new THREE.Scene();
 
+const clock = new THREE.Clock();
+
 
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-camera.position.set(0, 0, 10);
+camera.position.set(0, 0, 18);
 // scene.lookAt(0,0,0);
 
 const renderer = new THREE.WebGLRenderer();
@@ -27,43 +30,54 @@ document.body.appendChild(renderer.domElement);
 
 const controls = new OrbitControls(camera, renderer.domElement);
 
+// 球体
+const sphereGeometry = new THREE.SphereGeometry(1, 20, 20);
+const sphereMaterial = new THREE.MeshStandardMaterial();
+const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+sphere.castShadow = true;
+scene.add(sphere);
 
-const gemetry = new THREE.BoxGeometry(1, 1, 1);
-const material = new THREE.MeshBasicMaterial({
-	wireframe: true
+// 地面
+const planeGeometry = new THREE.PlaneGeometry(10, 10);
+const floor = new THREE.Mesh(planeGeometry, sphereMaterial);
+floor.position.set(0, -5, 0);
+floor.rotation.x = -Math.PI / 2;
+floor.receiveShadow = true;
+scene.add(floor);
+
+// 环境光
+const ambitLight = new THREE.AmbientLight(0xffffff, 0.5);
+scene.add(ambitLight);
+
+// 添加平行光
+const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
+scene.add(directionalLight);
+
+
+// 创建物理世界
+const world = new CONNON.World();
+world.gravity.set(0.-9.8,0);
+
+const comMaterial = new CONNON.Material();
+
+// 创建物理小球
+const sphereShape = new CONNON.Sphere(1);
+const shadowBody = new CONNON.Body({
+	shape:sphereShape,
+	position:new CONNON.Vec3(0,0,0),
+	mass:1,
+	material:comMaterial
 });
 
-const cubeList = [];
+world.addBody(shadowBody);
 
-for (let i = -5; i < 5; i++) {
-	for (let j = -5; j < 5; j++) {
-		for (let z = -5; z < 5; z++) {
-			const cube = new THREE.Mesh(gemetry, material);
 
-			cube.position.set(i, j, z);
-			cubeList.push(cube);
-			scene.add(cube);
-		}
-	}
-}
 
-const mouse = new THREE.Vector2();
-// 创建投射对像
-const raycaster = new THREE.Raycaster();
 
-window.addEventListener('click', (ev) => {
-	mouse.x = ev.clientX / window.innerWidth * 2 - 1;
-	mouse.y = -ev.clientY / window.innerHeight * 2 + 1;
-	raycaster.setFromCamera(mouse,camera);
-	const result = raycaster.intersectObjects(cubeList);
-	console.log(result);
-	if(result.length) {
-		result[0].object.material = new THREE.MeshBasicMaterial({
-			color:'#FF0000'
-		})
-	}
-	
-});
+
+
+
+
 
 
 
@@ -74,6 +88,12 @@ scene.add(axesHelper);
 
 function render() {
 	requestAnimationFrame(render);
+
+	const deltaTime = clock.getDelta();
+	// console.log(deltaTime);
+
+	world.step(1/ 120,deltaTime);
+
 	renderer.render(scene, camera);
 }
 
