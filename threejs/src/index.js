@@ -5,7 +5,7 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-03-13 05:58:33
  * :last editor: 张德志
- * :date last edited: 2023-09-18 04:36:44
+ * :date last edited: 2023-09-18 04:49:46
  */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -37,7 +37,8 @@ const plane = new THREE.PlaneGeometry(1,1,64,64);
 
 const material = new THREE.RawShaderMaterial({
 	vertexShader,
-	fragmentShader
+	fragmentShader,
+	side:THREE.DoubleSide,
 })
 
 
