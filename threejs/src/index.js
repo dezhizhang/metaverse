@@ -5,7 +5,7 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-03-13 05:58:33
  * :last editor: 张德志
- * :date last edited: 2023-09-15 07:56:00
+ * :date last edited: 2023-09-17 17:27:22
  */
 import * as THREE from 'three';
 import * as CONNON from 'cannon-es';
@@ -38,7 +38,7 @@ sphere.castShadow = true;
 scene.add(sphere);
 
 // 地面
-const planeGeometry = new THREE.PlaneGeometry(10, 10);
+const planeGeometry = new THREE.PlaneGeometry(20, 20);
 const floor = new THREE.Mesh(planeGeometry, sphereMaterial);
 floor.position.set(0, -5, 0);
 floor.rotation.x = -Math.PI / 2;
@@ -56,26 +56,46 @@ scene.add(directionalLight);
 
 // 创建物理世界
 const world = new CONNON.World();
-world.gravity.set(0.-9.8,0);
+world.gravity.set(0,-9.8,0);
 
 const comMaterial = new CONNON.Material();
 
 // 创建物理小球
 const sphereShape = new CONNON.Sphere(1);
-const shadowBody = new CONNON.Body({
+const sphereBody = new CONNON.Body({
 	shape:sphereShape,
 	position:new CONNON.Vec3(0,0,0),
 	mass:1,
 	material:comMaterial
 });
 
-world.addBody(shadowBody);
+world.addBody(sphereBody); 
+
+
+//创建地面
+const floorShape = new CONNON.Plane();
+const floorBody = new CONNON.Body();
+// 当物理为0时可以使物体保持不变
+floorBody.mass = 0;
+floorBody.position.set(0,-5,0);
+floorBody.addShape(floorShape);
+floorBody.quaternion.setFromAxisAngle(new CONNON.Vec3(1,0,0),-Math.PI / 2);
+world.addBody(floorBody);
 
 
 
+// const audio = new Audio('https://tugua.oss-cn-hangzhou.aliyuncs.com/model/loading.mp3');
 
 
 
+// sphereBody.addEventListener('collide',(ev) => {
+// 	const interplan = ev.contact.getImpactVelocityAlongNormal();
+
+// 	audio.play();
+
+
+// 	console.log(interplan);
+// })
 
 
 
@@ -90,6 +110,7 @@ function render() {
 	requestAnimationFrame(render);
 
 	const deltaTime = clock.getDelta();
+	sphere.position.copy(sphereBody.position);
 	// console.log(deltaTime);
 
 	world.step(1/ 120,deltaTime);
