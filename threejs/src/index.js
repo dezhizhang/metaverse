@@ -5,7 +5,7 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-03-13 05:58:33
  * :last editor: 张德志
- * :date last edited: 2023-09-17 17:27:22
+ * :date last edited: 2023-09-17 20:20:09
  */
 import * as THREE from 'three';
 import * as CONNON from 'cannon-es';
@@ -30,90 +30,40 @@ document.body.appendChild(renderer.domElement);
 
 const controls = new OrbitControls(camera, renderer.domElement);
 
-// 球体
-const sphereGeometry = new THREE.SphereGeometry(1, 20, 20);
-const sphereMaterial = new THREE.MeshStandardMaterial();
-const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
-sphere.castShadow = true;
-scene.add(sphere);
+const plane = new THREE.PlaneGeometry(1,1,64,64);
 
-// 地面
-const planeGeometry = new THREE.PlaneGeometry(20, 20);
-const floor = new THREE.Mesh(planeGeometry, sphereMaterial);
-floor.position.set(0, -5, 0);
-floor.rotation.x = -Math.PI / 2;
-floor.receiveShadow = true;
+
+const material = new THREE.ShaderMaterial({
+	vertexShader:`
+		void main() {
+			gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4(position,1.0);
+		}
+	`,
+	fragmentShader:`
+		void main() {
+			gl_FragColor = vec4(1.0,0.0,0.0,1.0);
+		}
+	`
+
+})
+
+
+const floor = new THREE.Mesh(plane,material);
 scene.add(floor);
 
-// 环境光
-const ambitLight = new THREE.AmbientLight(0xffffff, 0.5);
-scene.add(ambitLight);
-
-// 添加平行光
-const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
-scene.add(directionalLight);
 
 
-// 创建物理世界
-const world = new CONNON.World();
-world.gravity.set(0,-9.8,0);
-
-const comMaterial = new CONNON.Material();
-
-// 创建物理小球
-const sphereShape = new CONNON.Sphere(1);
-const sphereBody = new CONNON.Body({
-	shape:sphereShape,
-	position:new CONNON.Vec3(0,0,0),
-	mass:1,
-	material:comMaterial
-});
-
-world.addBody(sphereBody); 
-
-
-//创建地面
-const floorShape = new CONNON.Plane();
-const floorBody = new CONNON.Body();
-// 当物理为0时可以使物体保持不变
-floorBody.mass = 0;
-floorBody.position.set(0,-5,0);
-floorBody.addShape(floorShape);
-floorBody.quaternion.setFromAxisAngle(new CONNON.Vec3(1,0,0),-Math.PI / 2);
-world.addBody(floorBody);
-
-
-
-// const audio = new Audio('https://tugua.oss-cn-hangzhou.aliyuncs.com/model/loading.mp3');
-
-
-
-// sphereBody.addEventListener('collide',(ev) => {
-// 	const interplan = ev.contact.getImpactVelocityAlongNormal();
-
-// 	audio.play();
-
-
-// 	console.log(interplan);
-// })
+const helper = new THREE.AxesHelper(5);
+scene.add(helper)
 
 
 
 
-
-window.addEventListener('resize', onWindowResize);
-
-const axesHelper = new THREE.AxesHelper(5);
-scene.add(axesHelper);
+window.addEventListener('resize',onWindowResize);
 
 function render() {
 	requestAnimationFrame(render);
 
-	const deltaTime = clock.getDelta();
-	sphere.position.copy(sphereBody.position);
-	// console.log(deltaTime);
-
-	world.step(1/ 120,deltaTime);
 
 	renderer.render(scene, camera);
 }
