@@ -5,12 +5,12 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-03-13 05:58:33
  * :last editor: 张德志
- * :date last edited: 2023-09-18 05:05:57
+ * :date last edited: 2023-09-18 05:35:47
  */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-import vertexShader from './shader/raw/vertex.glsl';
-import fragmentShader from './shader/raw/fragment.glsl';
+import vertexShader from './shader/deep/vertex.glsl';
+import fragmentShader from './shader/deep/fragment.glsl';
 
 const scene = new THREE.Scene();
 
@@ -33,15 +33,11 @@ const plane = new THREE.PlaneGeometry(1,1,64,64);
 
 
 
-const material = new THREE.RawShaderMaterial({
+const material = new THREE.ShaderMaterial({
 	vertexShader,
 	fragmentShader,
 	side:THREE.DoubleSide,
-	uniforms:{
-		uTime:{
-			value:0
-		}
-	}
+	
 })
 
 
@@ -60,11 +56,6 @@ window.addEventListener('resize',onWindowResize);
 const clock = new THREE.Clock();
 
 function render() {
-
-	const elapsedTime = clock.getElapsedTime();
-	console.log(material.uniforms);
-
-	material.uniforms.uTime.value = elapsedTime;
 
 
 	requestAnimationFrame(render);
