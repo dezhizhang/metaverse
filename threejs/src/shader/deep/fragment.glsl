@@ -18,7 +18,15 @@ void main() {
 
 	// gl_FragColor = vec4(strength,strength,strength,1.0);
 
-	// length 返回向量的长度
-	float strength = length(vuv);
-	gl_FragColor = vec4(strength,strength,strength,1.0);
+	// // length 返回向量的长度
+	// float strength = length(vuv);
+	// gl_FragColor = vec4(strength,strength,strength,1.0);
+
+	// distance 向量的距离
+	// float strength = 1.0 - distance(vuv,vec2(0.5,0.5));
+	// gl_FragColor = vec4(strength,strength,strength,1.0);
+
+	// 实现星星
+	float strength = 0.15 / distance(vec2())
+
 }

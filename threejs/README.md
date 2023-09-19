@@ -527,3 +527,21 @@ window.addEventListener('click', (ev) => {
 	
 });
 ```
+### 点材质
+```js
+
+const geometry = new THREE.BufferGeometry();
+const positions = new Float32Array([0,0,0]);
+
+
+geometry.setAttribute('position',new THREE.BufferAttribute(positions,3));
+
+const material = new THREE.ShaderMaterial({
+	vertexShader:vertexShader,
+	fragmentShader:fragmentShader,
+	
+})
+
+const points = new THREE.Points(geometry,material);
+
+```
