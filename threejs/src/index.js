@@ -5,7 +5,7 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-03-13 05:58:33
  * :last editor: 张德志
- * :date last edited: 2023-09-20 07:34:18
+ * :date last edited: 2023-09-21 06:36:31
  */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -33,51 +33,25 @@ document.body.appendChild(renderer.domElement);
 
 const controls = new OrbitControls(camera, renderer.domElement);
 
-const geometry = new THREE.PlaneGeometry(1,1,64,64);
-const material = new THREE.MeshBasicMaterial({
-	color:0xff0000,
-	side:THREE.DoubleSide
-});
-material.onBeforeCompile = (shader,fragment) => {
-	//#include
-	shader.vertexShader = shader.vertexShader.replace('#include <begin_vertex>',
-		`#include <begin_vertex>
-		transformed.x += 2.0;
-		transformed.z += 2.0;
-		`
-	)
-	// console.log({shader});
-	// console.log({fragment})
-}
-const plane = new THREE.Mesh(geometry,material);
-scene.add(plane);
+
+const curve = new THREE.CatmullRomCurve3([
+	new THREE.Vector3(-10,0,10),
+	new THREE.Vector3(-5,5,5),
+	new THREE.Vector3(0,0,0),
+	new THREE.Vector3(5,-5,5),
+	new THREE.Vector3(10,0,10)
+],true
+
+);
+
+const points = curve.getPoints(50);
+const geometry = new THREE.BufferGeometry().setFromPoints(points);
+
+const material = new THREE.LineBasicMaterial({color:0xff0000});
+const curveObject = new THREE.Line(geometry,material);
+scene.add(curveObject);
 
 
-// const geometry = new THREE.BufferGeometry();
-// const positions = new Float32Array([0,0,0]);
-
-
-// geometry.setAttribute('position',new THREE.BufferAttribute(positions,3));
-
-// const textureLoader = new THREE.TextureLoader();
-// const texture = textureLoader.load('https://img0.baidu.com/it/u=3708545959,316194769&fm=253&fmt=auto&app=138&f=PNG?w=500&h=500');
-
-
-// const material = new THREE.ShaderMaterial({
-// 	uniforms:{
-// 		uTexture:{
-// 			value:texture
-// 		}
-// 	},
-// 	vertexShader:vertexShader,
-// 	fragmentShader:fragmentShader,
-// 	transparent:true,
-// })
-
-// const points = new THREE.Points(geometry,material);
-
-
-// scene.add(points);
 
 const helper = new THREE.AxesHelper(5);
 scene.add(helper)
