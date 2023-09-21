@@ -5,10 +5,13 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-03-13 05:58:33
  * :last editor: 张德志
- * :date last edited: 2023-09-21 06:36:31
+ * :date last edited: 2023-09-22 05:31:53
  */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import {EffectComposer} from 'three/examples/jsm/postprocessing/EffectComposer';
+import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass';
+import {DotScreenPass} from 'three/examples/jsm/postprocessing/DotScreenPass';
 // import { TextureLoader } from 'three/examples/jsm/loaders/t'
 import fragmentShader from './shader/point/fragment.glsl';
 import vertexShader from './shader/point/vertex.glsl';
@@ -51,6 +54,18 @@ const material = new THREE.LineBasicMaterial({color:0xff0000});
 const curveObject = new THREE.Line(geometry,material);
 scene.add(curveObject);
 
+// 合成效果
+const effectComposer = new EffectComposer(renderer);
+effectComposer.setSize(window.innerWidth,window.innerHeight);
+
+const renderPass = new RenderPass();
+effectComposer.addPass(renderPass);
+
+const dotScreenPass = new DotScreenPass();
+effectComposer.addPass(dotScreenPass);
+
+
+scene.add(effectComposer)
 
 
 const helper = new THREE.AxesHelper(5);
