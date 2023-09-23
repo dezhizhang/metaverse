@@ -8,7 +8,7 @@
  * :date last edited: 2022-11-13 21:31:56
  */
 
-import * as THREE from '../../js/libs/three';
+import * as THREE from '../../libs/three';
 class GameOverPage {
   constructor(callbacks) {
     this.callbacks = callbacks;

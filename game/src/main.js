@@ -1,14 +1,17 @@
 /*
  * :file description:
- * :name: /metaverse-game/src/main.js
+ * :name: /game/src/main.js
  * :author: 张德志
  * :copyright: (c) 2022, Tungee
  * :date created: 2022-11-13 16:11:31
  * :last editor: 张德志
- * :date last edited: 2023-04-09 16:30:10
+ * :date last edited: 2023-09-23 15:41:08
  */
-
+import * as THREE from '../libs/three'
 import game from './game/game.js';
+
+window.THREE = THREE;
+
 
 
 class Mian {
@@ -20,5 +23,5 @@ class Mian {
   }
 }
 
-export default Mian;
+export default new Mian();
 

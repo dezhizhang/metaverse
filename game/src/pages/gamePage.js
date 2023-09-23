@@ -7,7 +7,7 @@
  * :last editor: 张德志
  * :date last edited: 2022-11-13 21:25:17
  */
-import * as THREE from '../../js/libs/three';
+import * as THREE from '../../libs/three';
 
 class GamePage{
     constructor(callbacks) {
