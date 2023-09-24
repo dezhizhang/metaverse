@@ -5,7 +5,7 @@
  * :copyright: (c) 2022, Tungee
  * :date created: 2022-11-13 19:41:21
  * :last editor: 张德志
- * :date last edited: 2023-09-24 09:50:57
+ * :date last edited: 2023-09-24 11:03:01
  */
 
 import gameView from './view';
@@ -15,6 +15,13 @@ class GameController {
   constructor() {
     this.gameView = gameView;
     this.gameModel = gameModel;
+    this.gameModel.stateChanged.attach((sender,args) => {
+      const stateNmae = args.stage;
+      switch(stateNmae) {
+        case 'game-over':
+          
+      }
+    })
   }
 
   showGameOverPage = () => {

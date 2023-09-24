@@ -5,7 +5,7 @@
  * :copyright: (c) 2022, Tungee
  * :date created: 2022-11-13 19:41:32
  * :last editor: 张德志
- * :date last edited: 2023-09-24 09:48:37
+ * :date last edited: 2023-09-24 10:14:15
  */
 
 import GamePage from '../pages/game-page';
@@ -23,6 +23,9 @@ class GameView {
   }
   initGameOverPage(callbacks) {
     this.gameOverPage = new GameOverPage(callbacks);
+    this.gameOverPage.init({
+      scene:this.gamePage.scene,
+    })
   }
 
 
