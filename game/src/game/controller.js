@@ -1,11 +1,11 @@
 /*
  * :file description:
- * :name: /metaverse-game/src/game/controller.js
+ * :name: /game/src/game/controller.js
  * :author: 张德志
  * :copyright: (c) 2022, Tungee
  * :date created: 2022-11-13 19:41:21
  * :last editor: 张德志
- * :date last edited: 2022-11-13 21:22:47
+ * :date last edited: 2023-09-24 09:50:57
  */
 
 import gameView from './view';
@@ -21,21 +21,21 @@ class GameController {
     this.gameView.showGameOverPage();
   }
 
-  restartGame = () => {
+  restartGame =()=> {
     this.gameView.restartGame();
-    
+
   }
 
-  initPages = ()=> {
-    const gamePageCallbacks =  {
-        showGameOverPage:this.showGameOverPage
+  initPages () {
+    const gamePageCallbacks = {
+      showGameOverPage: this.showGameOverPage
     }
     const gameOverPageCallbacks = {
-        gameRestart:this.restartGame
+      gameRestart: this.restartGame
     }
     this.gameView.initGamePage(gamePageCallbacks)
     this.gameView.initGameOverPage(gameOverPageCallbacks)
-    
+
   }
 }
 

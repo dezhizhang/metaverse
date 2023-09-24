@@ -5,7 +5,7 @@
  * :copyright: (c) 2022, Tungee
  * :date created: 2022-11-13 16:11:31
  * :last editor: 张德志
- * :date last edited: 2023-09-23 15:41:08
+ * :date last edited: 2023-09-23 20:12:10
  */
 import * as THREE from '../libs/three'
 import game from './game/game.js';
@@ -23,5 +23,5 @@ class Mian {
   }
 }
 
-export default new Mian();
+export default Mian;
 

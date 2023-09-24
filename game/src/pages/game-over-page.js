@@ -9,6 +9,7 @@
  */
 
 import * as THREE from '../../libs/three';
+
 class GameOverPage {
   constructor(callbacks) {
     this.callbacks = callbacks;
