@@ -5,7 +5,7 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-07-09 20:13:22
  * :last editor: 张德志
- * :date last edited: 2023-07-11 06:31:00
+ * :date last edited: 2024-01-28 17:19:20
  */
 import * as PIXI from 'pixi.js';
 import './style.css'
@@ -20,24 +20,28 @@ const app = new PIXI.Application({
 });
 
 
-const text = new PIXI.Text('hello world',{
-    fontFamily:'Arial',
-    fontSize:36,
-    fill:'white',
-    align:'center'
-});
+// const text = new PIXI.Text('hello world',{
+//     fontFamily:'Arial',
+//     fontSize:36,
+//     fill:'white',
+//     align:'center'
+// });
 
-text.position.x = app.screen.width / 2;
-text.position.y = app.screen.height / 2;
-
-
-text.anchor.set(0.5);
+// text.position.x = app.screen.width / 2;
+// text.position.y = app.screen.height / 2;
 
 
-app.stage.addChild(text);
+// text.anchor.set(0.5);
 
 
+// app.stage.addChild(text);
 
+const rectangle = new PIXI.Graphics();
+rectangle.beginFill(0x66ccff);
+rectangle.drawRect(200,200,164,64);
+rectangle.endFill();
+
+app.stage.addChild(rectangle);
 
 
 
