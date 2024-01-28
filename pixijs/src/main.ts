@@ -5,7 +5,7 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-07-09 20:13:22
  * :last editor: 张德志
- * :date last edited: 2024-01-28 19:29:17
+ * :date last edited: 2024-01-28 19:44:13
  */
 import * as PIXI from 'pixi.js';
 import './style.css'
@@ -65,6 +65,23 @@ line.moveTo(0,0);
 line.lineTo(100,100);
 line.position.set(500,50);
 app.stage.addChild(line);
+
+// 创建一个纹理
+const texture = PIXI.Texture.from('./vite.svg');
+
+// 创建一个精灵
+const sprite = new PIXI.Sprite(texture);
+
+sprite.x = app.screen.width / 2;
+sprite.y = app.screen.height / 2;
+
+sprite.rotation = Math.PI / 2;
+
+
+app.stage.addChild(sprite);
+
+
+
 
 
 
