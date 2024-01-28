@@ -17,6 +17,7 @@ const app = new PIXI.Application({
 const rectangle = new PIXI.Graphics();
 rectangle.beginFill(0x66ccff);
 rectangle.drawRect(200,200,164,64);
+rectangle.lineStyle(4,0xff0000,1);
 rectangle.endFill();
 
 app.stage.addChild(rectangle);
