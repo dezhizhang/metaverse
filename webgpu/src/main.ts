@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2023-07-13 05:31:18
  * :last editor: 张德志
- * :date last edited: 2024-01-28 21:36:39
+ * :date last edited: 2024-01-29 21:15:08
  */
 
 
@@ -23,7 +23,38 @@ async function  init() {
     device,
     format:format
   });
-  console.log('canvas',context);
+
+
+  // 创建顶点缓冲区表示顶点数据
+  const vertexArray = new Float32Array([
+    0.0,0.0,0.0,
+    1.0,0.0,0.0,
+    0.0,1.0,0.0
+  ]);
+
+  const vertexBuffer = (device as any)?.createBuffer({
+    size:vertexArray.byteLength,
+    usege:GPUBufferUsage.VERTEX | GPUBufferUsage.COPY_DST
+  });
+
+  device?.queue.writeBuffer(vertexBuffer,0,vertexArray);
+
+  // const vertexBuffer = (device as  any)?.createBuffer({
+  //   size:vertexArray.byteLength,
+  // });
+
+  const pipeline = (device as any)?.createRenderPipeline({
+    vertex:{
+      buffers:[]
+    }
+  });
+  
+
+  console.log('vertexBuffer',vertexBuffer);
+
+  
+
+
   
 }
 
