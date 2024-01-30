@@ -5,9 +5,10 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-03-13 05:58:33
  * :last editor: 张德志
- * :date last edited: 2024-01-30 22:38:21
+ * :date last edited: 2024-01-30 22:48:28
  */
 import * as THREE from 'three';
+import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls';
 
 // 创建场影
 const scene = new THREE.Scene();
@@ -30,6 +31,8 @@ scene.add(cube);
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth,window.innerHeight);
 
+const controls = new OrbitControls(camera,renderer.domElement);
+
 document.body.appendChild(renderer.domElement);
 
 const helper = new THREE.GridHelper(10,10);
@@ -38,6 +41,7 @@ scene.add(helper);
 function animate() {
 	requestAnimationFrame(animate);
 	cube.rotation.x += 0.01;
+	controls.update();
 	renderer.render(scene,camera);
 }
 
