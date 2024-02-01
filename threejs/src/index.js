@@ -5,7 +5,7 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-03-13 05:58:33
  * :last editor: 张德志
- * :date last edited: 2024-02-01 20:38:49
+ * :date last edited: 2024-02-01 21:51:48
  */
 import * as THREE from 'three';
 import dat from 'dat.gui';
@@ -24,6 +24,9 @@ const fog = new THREE.Fog(new THREE.Color(0xcccccc, 10, 15));
 
 scene.add(fog);
 
+// 创建纹理
+const texture = new THREE.TextureLoader().load('/01.jpg');
+
 // 创建相机
 const camera = new THREE.PerspectiveCamera();
 camera.position.z = 10;
@@ -32,15 +35,15 @@ camera.lookAt(scene.position);
 
 // 创建立方体
 const geometry = new THREE.BoxGeometry();
-const material = new THREE.MeshBasicMaterial({ color: 0x0ff00 });
+const material = new THREE.MeshBasicMaterial({ 
+	// color: 0x0ff00,
+	map:texture 
+});
 
 const cube = new THREE.Mesh(geometry, material);
 cube.position.set(0, 3, 0);
 
 scene.add(cube);
-
-
-
 
 
 // 创建渲染器
@@ -58,7 +61,7 @@ axesHelper.position.y = 3;
 scene.add(axesHelper);
 
 
-const config = {
+const controlsConfig = {
 	rotationSpeed:0.01,
 	color:'#66ccff',
 	wireframe:false,
@@ -68,18 +71,12 @@ const config = {
 
 const gui = new dat.GUI();
 const f = gui.addFolder('配置');
-f.add(config,'rotationSpeed').min(0.01).max(0.1).step(0.01);
-f.add(config,'color');
-f.add(config,'envMap',['无','全反躲']);
-f.add(config,'wireframe')
+f.add(controlsConfig,'rotationSpeed').min(0.01).max(0.1).step(0.01);
+f.add(controlsConfig,'color');
+f.add(controlsConfig,'envMap',['无','全']);
+f.add(controlsConfig,'wireframe');
 
 f.open();
-
-
-
-
-
-
 
 
 
@@ -92,7 +89,12 @@ scene.add(helper);
 
 function animate() {
   requestAnimationFrame(animate);
-  // cube.rotation.x += 0.01;
+
+//   cube.rotation.x += controlsConfig.rotationSpeed;
+//   cube.material = controlsConfig.wireframe;
+  
+
+
   // controls.update();
   renderer.render(scene, camera);
 }
