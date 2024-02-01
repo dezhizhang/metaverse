@@ -5,7 +5,7 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-03-13 05:58:33
  * :last editor: 张德志
- * :date last edited: 2024-02-01 21:51:48
+ * :date last edited: 2024-02-02 05:56:41
  */
 import * as THREE from 'three';
 import dat from 'dat.gui';
@@ -26,6 +26,21 @@ scene.add(fog);
 
 // 创建纹理
 const texture = new THREE.TextureLoader().load('/01.jpg');
+
+const cubeTexture = new THREE.CubeTextureLoader().setPath('parliament/').load([
+	'negx.jpg',
+	'negy.jpg',
+	'negz.jpg',
+	'posx.jpg',
+	'posy.jpg',
+	'posz.jpg',
+	
+]);
+
+
+scene.background = cubeTexture;
+
+
 
 // 创建相机
 const camera = new THREE.PerspectiveCamera();
