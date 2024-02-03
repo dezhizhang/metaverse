@@ -1,3 +1,12 @@
+/*
+ * :file description: 
+ * :name: /threejs/examples/webgl_test_memory2.js
+ * :author: 张德志
+ * :copyright: (c) 2024, Tungee
+ * :date created: 2024-02-03 16:52:26
+ * :last editor: 张德志
+ * :date last edited: 2024-02-03 16:52:35
+ */
 import * as THREE from 'three';
 
 const N = 100;

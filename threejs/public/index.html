@@ -5,7 +5,7 @@
  * :copyright: (c) 2022, Tungee
  * :date created: 2022-07-12 07:39:26
  * :last editor: 张德志
- * :date last edited: 2024-02-03 14:30:45
+ * :date last edited: 2024-02-03 16:32:00
 -->
 <!DOCTYPE html>
 <html lang="en">
@@ -22,46 +22,28 @@
 		}
 	</style>
 </head>
-<script type="x-shader/x-vertex" id="vertexshader">
-
-	uniform float amplitude;
-
-	attribute float displacement;
-
-	varying vec3 vNormal;
-	varying vec2 vUv;
+<script type="x-shader/x-fragment" id="fragmentShader">
 
 	void main() {
 
-		vNormal = normal;
-		vUv = ( 0.5 + amplitude ) * uv + vec2( amplitude );
+		if ( mod ( gl_FragCoord.x, 4.0001 ) < 1.0 || mod ( gl_FragCoord.y, 4.0001 ) < 1.0 )
 
-		vec3 newPosition = position + amplitude * normal * vec3( displacement );
-		gl_Position = projectionMatrix * modelViewMatrix * vec4( newPosition, 1.0 );
+			gl_FragColor = vec4( XXX, 1.0 );
+
+		else
+
+			gl_FragColor = vec4( 1.0 );
 
 	}
 
 </script>
 
-<script type="x-shader/x-fragment" id="fragmentshader">
-
-	varying vec3 vNormal;
-	varying vec2 vUv;
-
-	uniform vec3 color;
-	uniform sampler2D colorTexture;
+<script type="x-shader/x-vertex" id="vertexShader">
 
 	void main() {
 
-		vec3 light = vec3( 0.5, 0.2, 1.0 );
-		light = normalize( light );
-
-		float dProd = dot( vNormal, light ) * 0.5 + 0.5;
-
-		vec4 tcolor = texture2D( colorTexture, vUv );
-		vec4 gray = vec4( vec3( tcolor.r * 0.3 + tcolor.g * 0.59 + tcolor.b * 0.11 ), 1.0 );
-
-		gl_FragColor = gray * vec4( vec3( dProd ) * vec3( color ), 1.0 );
+		vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );
+		gl_Position = projectionMatrix * mvPosition;
 
 	}
 
