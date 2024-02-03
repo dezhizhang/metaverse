@@ -1,73 +1,49 @@
 import * as THREE from 'three';
 
-const N = 100;
+const scene = new THREE.Scene();
 
-let camera, scene, renderer;
+const geometry = new THREE.BoxGeometry(100,100,100);
+const material = new THREE.MeshLambertMaterial({
+	color:0x000ff
+});
 
-let geometry;
+const mesh = new THREE.Mesh(geometry,material);
+scene.add(mesh);
 
-const meshes = [];
-
-let fragmentShader, vertexShader;
-
-init();
-setInterval(render, 1000 / 60);
-
-function init() {
-
-	vertexShader = document.getElementById('vertexShader').textContent;
-	fragmentShader = document.getElementById('fragmentShader').textContent;
-
-	camera = new THREE.PerspectiveCamera(40,window.innerWidth / window.innerHeight,1,10000);
-	camera.position.z = 2000;
-
-	scene = new THREE.Scene();
-	scene.background = new THREE.Color(0xffffff);
+const directonLight = new THREE.DirectionalLight(0xffffff,0.6);
+directonLight.position.set(400,200,300);
+scene.add(directonLight);
 
 
-	geometry = new THREE.SphereGeometry(15,64,32);
-	for(let i=0;i < N;i++) {
-		const material = new THREE.ShaderMaterial({
-			vertexShader:vertexShader,
-			fragmentShader:fragmentShader,
-		});
-		const mesh = new THREE.Mesh(geometry,material);
+const directonLight2 = new THREE.DirectionalLight(0xffffff,0.6);
+directonLight2.position.set(-400,-200,-300);
+scene.add(directonLight2);
 
-		mesh.position.x = (0.5 - Math.random()) * 1000;
-		mesh.position.y = (0.5 - Math.random()) * 1000;
-		mesh.position.z = (0.5 - Math.random()) * 1000;
+// 环境光
+const ambientLight = new THREE.AmbientLight(0xfffff,0.6);
+scene.add(ambientLight);
 
-		scene.add(mesh);
-		meshes.push(mesh);
-	}
+const width = window.innerWidth;
+const height = window.innerHeight;
 
-	renderer = new THREE.WebGLRenderer();
-	renderer.setPixelRatio(window.devicePixelRatio);
-	renderer.setSize(window.innerWidth,window.innerHeight);
-	document.body.appendChild(renderer.domElement);
+const k = width / height;
+const s = 200;
 
-}
+const camera = new THREE.OrthographicCamera(-s * k,s * k,s,-s,1,1000);
+camera.position.set(200,300,200);
+camera.lookAt(scene.position);
+
+const renderer = new THREE.WebGLRenderer({
+	antialias:true
+});
+
+renderer.setPixelRatio(window.devicePixelRatio);
+renderer.setSize(width,height);
+renderer.setClearColor(0xb9d3ff,1);
+
+document.body.appendChild(renderer.domElement);
+
+renderer.render(scene,camera);
 
 
-//
 
-function generateFragmentShader() {
-  return fragmentShader.replace('XXX', Math.random() + ',' + Math.random() + ',' + Math.random());
-}
-
-function render() {
-	for(let i=0;i < N;i++) {
-		const mesh = meshes[i];
-		mesh.material = new THREE.ShaderMaterial({
-			vertexShader:vertexShader,
-			fragmentShader:generateFragmentShader()
-		})
-	}
-	renderer.render(scene,camera);
-	console.log('before', renderer.info.programs.length);
-	for(let i=0;i < N;i++) {
-		const mesh = meshes[i];
-		mesh.material.dispose();
-	}
-	console.log('after', renderer.info.programs.length);
-}
