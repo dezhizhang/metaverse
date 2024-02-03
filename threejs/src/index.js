@@ -1,49 +1,42 @@
 import * as THREE from 'three';
 
+//创建场影
 const scene = new THREE.Scene();
 
-const geometry = new THREE.BoxGeometry(100,100,100);
-const material = new THREE.MeshLambertMaterial({
-	color:0x000ff
-});
+//创建相机
+const camera = new THREE.PerspectiveCamera(75,window.innerWidth / window.innerHeight,0.1,1000);
 
-const mesh = new THREE.Mesh(geometry,material);
-scene.add(mesh);
+// 设置相机位置
+camera.position.set(0,0,10);
+scene.add(camera);
 
-const directonLight = new THREE.DirectionalLight(0xffffff,0.6);
-directonLight.position.set(400,200,300);
-scene.add(directonLight);
+// 创建几何体
 
+const curve = new THREE.CatmullRomCurve3( [
+	new THREE.Vector3( -10, 0, 10 ),
+	new THREE.Vector3( -5, 5, 5 ),
+	new THREE.Vector3( 0, 0, 0 ),
+	new THREE.Vector3( 5, -5, 5 ),
+	new THREE.Vector3( 10, 0, 10 )
+] );
 
-const directonLight2 = new THREE.DirectionalLight(0xffffff,0.6);
-directonLight2.position.set(-400,-200,-300);
-scene.add(directonLight2);
+curve.closed = true;
 
-// 环境光
-const ambientLight = new THREE.AmbientLight(0xfffff,0.6);
-scene.add(ambientLight);
+const points = curve.getPoints( 50 );
+const geometry = new THREE.BufferGeometry().setFromPoints( points );
 
-const width = window.innerWidth;
-const height = window.innerHeight;
+const material = new THREE.LineBasicMaterial( { color: 0xff0000 } );
 
-const k = width / height;
-const s = 200;
+const curveObject = new THREE.Line( geometry, material );
 
-const camera = new THREE.OrthographicCamera(-s * k,s * k,s,-s,1,1000);
-camera.position.set(200,300,200);
-camera.lookAt(scene.position);
+scene.add(curveObject);
 
-const renderer = new THREE.WebGLRenderer({
-	antialias:true
-});
+// 初始化渲染器
+const renderer = new THREE.WebGL1Renderer();
 
-renderer.setPixelRatio(window.devicePixelRatio);
-renderer.setSize(width,height);
-renderer.setClearColor(0xb9d3ff,1);
+// 设置渲染器大小
+renderer.setSize(window.innerWidth,window.innerHeight);
 
-document.body.appendChild(renderer.domElement);
+document.body.append(renderer.domElement);
 
 renderer.render(scene,camera);
-
-
-
