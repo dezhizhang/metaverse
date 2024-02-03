@@ -5,7 +5,7 @@
  * :copyright: (c) 2022, Tungee
  * :date created: 2022-07-12 07:39:26
  * :last editor: 张德志
- * :date last edited: 2024-02-02 07:24:26
+ * :date last edited: 2024-02-03 14:30:45
 -->
 <!DOCTYPE html>
 <html lang="en">
@@ -22,62 +22,53 @@
 		}
 	</style>
 </head>
+<script type="x-shader/x-vertex" id="vertexshader">
+
+	uniform float amplitude;
+
+	attribute float displacement;
+
+	varying vec3 vNormal;
+	varying vec2 vUv;
+
+	void main() {
+
+		vNormal = normal;
+		vUv = ( 0.5 + amplitude ) * uv + vec2( amplitude );
+
+		vec3 newPosition = position + amplitude * normal * vec3( displacement );
+		gl_Position = projectionMatrix * modelViewMatrix * vec4( newPosition, 1.0 );
+
+	}
+
+</script>
+
+<script type="x-shader/x-fragment" id="fragmentshader">
+
+	varying vec3 vNormal;
+	varying vec2 vUv;
+
+	uniform vec3 color;
+	uniform sampler2D colorTexture;
+
+	void main() {
+
+		vec3 light = vec3( 0.5, 0.2, 1.0 );
+		light = normalize( light );
+
+		float dProd = dot( vNormal, light ) * 0.5 + 0.5;
+
+		vec4 tcolor = texture2D( colorTexture, vUv );
+		vec4 gray = vec4( vec3( tcolor.r * 0.3 + tcolor.g * 0.59 + tcolor.b * 0.11 ), 1.0 );
+
+		gl_FragColor = gray * vec4( vec3( dProd ) * vec3( color ), 1.0 );
+
+	}
+
+</script>
 
 <body>
-	
-	<script id="vertexShader" type="x-shader/x-vertex">
-
-		varying vec2 vUv;
-
-		void main() {
-
-			vUv = uv;
-
-			gl_Position = vec4( position, 1.0 );
-
-		}
-
-	</script>
-	<script id="fragmentShader" type="x-shader/x-fragment">
-
-		uniform sampler2D tAudioData;
-		varying vec2 vUv;
-
-		void main() {
-
-			vec3 backgroundColor = vec3( 0.125, 0.125, 0.125 );
-			vec3 color = vec3( 1.0, 1.0, 0.0 );
-
-			float f = texture2D( tAudioData, vec2( vUv.x, 0.0 ) ).r;
-
-			float i = step( vUv.y, f ) * step( f - 0.0125, vUv.y );
-
-			gl_FragColor = vec4( mix( backgroundColor, color, i ), 1.0 );
-
-		}
-
-	</script>
-	<audio id="song" preload="auto" style="display: none">
-		<source src="
-		https://threejs.org/examples/sounds/358232_j_s_song.ogg" type="audio/ogg">
-		<source src="
-		https://threejs.org/examples/sounds/376737_Skullbeatz___Bad_Cat_Maste.ogg" type="audio/mpeg">
-	</audio>
-	<audio id="skullbeatz" preload="auto" style="display: none">
-		<source src="sounds/376737_Skullbeatz___Bad_Cat_Maste.ogg" type="audio/ogg">
-		<source src="sounds/376737_Skullbeatz___Bad_Cat_Maste.mp3" type="audio/mpeg">
-	</audio>
-	<audio id="utopia" loop preload="auto" style="display: none">
-		<source src="sounds/Project_Utopia.ogg" type="audio/ogg">
-		<source src="sounds/Project_Utopia.mp3" type="audio/mpeg">
-	</audio>
-	<div id="overlay">
-		<button id="startButton">Play</button>
-	</div>
-	<!-- Import maps polyfill -->
-	<!-- Remove this when import maps will be widely supported -->
 	<script async src="https://unpkg.com/es-module-shims@1.8.0/dist/es-module-shims.js"></script>
-
 </body>
 
 </html>
