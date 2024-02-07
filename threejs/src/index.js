@@ -1,120 +1,113 @@
-// /*
-//  * :file description:
-//  * :name: /threejs/src/index.js
-//  * :author: 张德志
-//  * :copyright: (c) 2024, Tungee
-//  * :date created: 2023-03-13 05:58:33
-//  * :last editor: 张德志
-//  * :date last edited: 2024-02-06 21:15:38
-//  */
-// import * as THREE from 'three';
+import * as THREE from 'three';
 
-// let camera, scene, renderer;
-// let mesh;
-// const AMOUNT = 6;
+import Stats from 'three/addons/libs/stats.module.js';
 
-// init();
-// animate();
+let stats;
+let camera, scene, raycaster, renderer;
 
-// function init() {
-//   const ASPECT_RATIO = window.innerWidth / window.innerHeight;
+let INTERSECTED;
+let theta = 0;
 
-//   const WIDTH = (window.innerWidth / AMOUNT) * window.devicePixelRatio;
-//   const HEIGHT = (window.innerHeight / AMOUNT) * window.devicePixelRatio;
+const pointer = new THREE.Vector2();
+const radius = 5;
 
-//   const cameras = [];
+init();
+animate();
 
-//   for (let y = 0; y < AMOUNT; y++) {
-//     for (let x = 0; x < AMOUNT; x++) {
-//       const subcamera = new THREE.PerspectiveCamera(40, ASPECT_RATIO, 0.1, 10);
-//       subcamera.viewport = new THREE.Vector4(
-//         Math.floor(x * WIDTH),
-//         Math.floor(y * HEIGHT),
-//         Math.ceil(WIDTH),
-//         Math.ceil(HEIGHT),
-//       );
-//       subcamera.position.x = x / AMOUNT - 0.5;
-//       subcamera.position.y = 0.5 - y / AMOUNT;
-//       subcamera.position.z = 1.5;
-//       subcamera.position.multiplyScalar(2);
-//       subcamera.lookAt(0, 0, 0);
-//       subcamera.updateMatrixWorld();
-//       cameras.push(subcamera);
-//     }
-//   }
+function init() {
+	camera = new THREE.PerspectiveCamera(70,window.innerWidth / window.innerHeight,0.1,1000);
 
-//   camera = new THREE.ArrayCamera(cameras);
-//   camera.position.z = 3;
+	scene = new THREE.Scene();
+	scene.background = new THREE.Color(0xf0f0f0);
 
-//   scene = new THREE.Scene();
+	const light = new THREE.DirectionalLight(0xffffff,3);
+	light.position.set(1,1,1).normalize();
+	scene.add(light);
 
-//   scene.add(new THREE.AmbientLight(0x999999));
+	const geometry = new THREE.BoxGeometry();
 
-//   const light = new THREE.DirectionalLight(0xffffff, 3);
-//   light.position.set(0.5, 0.5, 1);
-//   light.castShadow = true;
-//   light.shadow.camera.zoom = 4; // tighter shadow map
-//   scene.add(light);
+	for(let i=0;i < 2000;i++) {
+		const object = new THREE.Mesh(
+			geometry,
+			new THREE.MeshLambertMaterial({color: Math.random() * 0xffffff})
+		);
+		object.position.x = Math.random() * 40 - 20;
+		object.position.y = Math.random() * 40 - 20;
+		object.position.z = Math.random() * 40 - 20;
 
-//   const geometryBackground = new THREE.PlaneGeometry(100, 100);
-//   const materialBackground = new THREE.MeshPhongMaterial({ color: 0x000066 });
+		object.rotation.x = Math.random() * 2 * Math.PI;
+		object.rotation.y = Math.random() * 2 * Math.PI;
+		object.rotation.z = Math.random() * 2 * Math.PI;
 
-//   const background = new THREE.Mesh(geometryBackground, materialBackground);
-//   background.receiveShadow = true;
-//   background.position.set(0, 0, -1);
-//   scene.add(background);
+		object.scale.x = Math.random() + 0.5;
+		object.scale.y = Math.random() + 0.5;
+		object.scale.z = Math.random() + 0.5;
 
-//   const geometryCylinder = new THREE.CylinderGeometry(0.5, 0.5, 1, 32);
-//   const materialCylinder = new THREE.MeshPhongMaterial({ color: 0xff0000 });
+		scene.add(object);
+	}
+	raycaster = new THREE.Raycaster();
+	
+	renderer = new THREE.WebGLRenderer({antialias:true});
+	renderer.setPixelRatio(window.devicePixelRatio);
+	renderer.setSize(window.innerWidth,window.innerHeight);
+	document.body.appendChild(renderer.domElement);
 
-//   mesh = new THREE.Mesh(geometryCylinder, materialCylinder);
-//   mesh.castShadow = true;
-//   mesh.receiveShadow = true;
-//   scene.add(mesh);
+	document.addEventListener('mousemove',onPointerMove);
+	window.addEventListener('resize',onWindowResize);
+	
+}
 
-//   renderer = new THREE.WebGLRenderer();
-//   renderer.setPixelRatio(window.devicePixelRatio);
-//   renderer.setSize(window.innerWidth, window.innerHeight);
-//   renderer.shadowMap.enabled = true;
-//   document.body.appendChild(renderer.domElement);
 
-//   //
+function onWindowResize() {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
 
-//   window.addEventListener('resize', onWindowResize);
-// }
+  renderer.setSize(window.innerWidth, window.innerHeight);
+}
 
-// function onWindowResize() {
-//   const ASPECT_RATIO = window.innerWidth / window.innerHeight;
-//   const WIDTH = (window.innerWidth / AMOUNT) * window.devicePixelRatio;
-//   const HEIGHT = (window.innerHeight / AMOUNT) * window.devicePixelRatio;
+function onPointerMove(event) {
+  pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
+  pointer.y = -(event.clientY / window.innerHeight) * 2 + 1;
+}
 
-//   camera.aspect = ASPECT_RATIO;
-//   camera.updateProjectionMatrix();
+//
 
-//   for (let y = 0; y < AMOUNT; y++) {
-//     for (let x = 0; x < AMOUNT; x++) {
-//       const subcamera = camera.cameras[AMOUNT * y + x];
+function animate() {
+  requestAnimationFrame(animate);
 
-//       subcamera.viewport.set(
-//         Math.floor(x * WIDTH),
-//         Math.floor(y * HEIGHT),
-//         Math.ceil(WIDTH),
-//         Math.ceil(HEIGHT),
-//       );
+  render();
+//   stats.update();
+}
 
-//       subcamera.aspect = ASPECT_RATIO;
-//       subcamera.updateProjectionMatrix();
-//     }
-//   }
+function render() {
+  theta += 0.1;
 
-//   renderer.setSize(window.innerWidth, window.innerHeight);
-// }
+  camera.position.x = radius * Math.sin(THREE.MathUtils.degToRad(theta));
+  camera.position.y = radius * Math.sin(THREE.MathUtils.degToRad(theta));
+  camera.position.z = radius * Math.cos(THREE.MathUtils.degToRad(theta));
+  camera.lookAt(scene.position);
 
-// function animate() {
-//   mesh.rotation.x += 0.005;
-//   mesh.rotation.z += 0.01;
+  camera.updateMatrixWorld();
 
-//   renderer.render(scene, camera);
+  // find intersections
 
-//   requestAnimationFrame(animate);
-// }
+  raycaster.setFromCamera(pointer, camera);
+
+  const intersects = raycaster.intersectObjects(scene.children, false);
+
+  if (intersects.length > 0) {
+    if (INTERSECTED != intersects[0].object) {
+      if (INTERSECTED) INTERSECTED.material.emissive.setHex(INTERSECTED.currentHex);
+
+      INTERSECTED = intersects[0].object;
+      INTERSECTED.currentHex = INTERSECTED.material.emissive.getHex();
+      INTERSECTED.material.emissive.setHex(0xff0000);
+    }
+  } else {
+    if (INTERSECTED) INTERSECTED.material.emissive.setHex(INTERSECTED.currentHex);
+
+    INTERSECTED = null;
+  }
+
+  renderer.render(scene, camera);
+}
