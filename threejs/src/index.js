@@ -1,113 +1,100 @@
+
 import * as THREE from 'three';
+import Stats from 'stats.js';
+import { FirstPersonControls } from 'three/examples/jsm/controls/FirstPersonControls.js';
 
-import Stats from 'three/addons/libs/stats.module.js';
 
-let stats;
-let camera, scene, raycaster, renderer;
+let camera,controls,scene,renderer,stats;
 
-let INTERSECTED;
-let theta = 0;
+let mesh,geometry,material,clock;
 
-const pointer = new THREE.Vector2();
-const radius = 5;
+const worldWidth = 128;
+const worldDepth = 128;
 
 init();
 animate();
 
+
+
 function init() {
-	camera = new THREE.PerspectiveCamera(70,window.innerWidth / window.innerHeight,0.1,1000);
+	camera = new THREE.PerspectiveCamera(60,window.innerWidth / window.innerHeight,1,2000);
+	camera.position.y = 200;
+
+	clock = new THREE.Clock();
 
 	scene = new THREE.Scene();
-	scene.background = new THREE.Color(0xf0f0f0);
+	scene.background = new THREE.Color(0xaaccff);
+	scene.fog = new THREE.FogExp2(0xaaccff,0.0007);
 
-	const light = new THREE.DirectionalLight(0xffffff,3);
-	light.position.set(1,1,1).normalize();
-	scene.add(light);
+	geometry = new THREE.PlaneGeometry(2000,2000,worldWidth - 1,worldDepth - 1);
+	geometry.rotateX(-Math.PI / 2);
 
-	const geometry = new THREE.BoxGeometry();
+	const position = geometry.attributes.position;
+	position.usage = THREE.DynamicDrawUsage;
 
-	for(let i=0;i < 2000;i++) {
-		const object = new THREE.Mesh(
-			geometry,
-			new THREE.MeshLambertMaterial({color: Math.random() * 0xffffff})
-		);
-		object.position.x = Math.random() * 40 - 20;
-		object.position.y = Math.random() * 40 - 20;
-		object.position.z = Math.random() * 40 - 20;
+	for(let i=0;i < position.count;i++) {
+		const y = 35 * Math.sin( i / 2);
+		position.setY(i,y);
 
-		object.rotation.x = Math.random() * 2 * Math.PI;
-		object.rotation.y = Math.random() * 2 * Math.PI;
-		object.rotation.z = Math.random() * 2 * Math.PI;
-
-		object.scale.x = Math.random() + 0.5;
-		object.scale.y = Math.random() + 0.5;
-		object.scale.z = Math.random() + 0.5;
-
-		scene.add(object);
 	}
-	raycaster = new THREE.Raycaster();
-	
+
+	const texture = new THREE.TextureLoader().load('textures/water.jpg');
+	texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+	texture.repeat.set(5,5);
+	texture.colorSpace = THREE.SRGBColorSpace;
+
+	material = new THREE.MeshBasicMaterial({color:0x0044ff,map:texture});
+	mesh = new THREE.Mesh(geometry,material);
+	scene.add(mesh);
+
 	renderer = new THREE.WebGLRenderer({antialias:true});
 	renderer.setPixelRatio(window.devicePixelRatio);
 	renderer.setSize(window.innerWidth,window.innerHeight);
 	document.body.appendChild(renderer.domElement);
 
-	document.addEventListener('mousemove',onPointerMove);
-	window.addEventListener('resize',onWindowResize);
+	controls = new FirstPersonControls(camera,renderer.domElement);
+	controls.movementSpeed = 500;
+	controls.lookSpeed = 0.1;
 	
+	stats = new Stats();
+	document.body.appendChild(stats.dom);
+
+	window.addEventListener('resize',onWindowResize);
 }
 
 
 function onWindowResize() {
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
+	camera.aspect = window.innerWidth / window.innerHeight;
+	camera.updateProjectionMatrix();
 
-  renderer.setSize(window.innerWidth, window.innerHeight);
+	renderer.setSize(window.innerWidth,window.innerHeight);
+	controls.handleResize();
+
 }
-
-function onPointerMove(event) {
-  pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
-  pointer.y = -(event.clientY / window.innerHeight) * 2 + 1;
-}
-
-//
 
 function animate() {
-  requestAnimationFrame(animate);
+	requestAnimationFrame(animate);
+	render();
+	stats.update();
 
-  render();
-//   stats.update();
 }
 
 function render() {
-  theta += 0.1;
+	const delta = clock.getDelta();
+	const time = clock.getElapsedTime() * 10;
 
-  camera.position.x = radius * Math.sin(THREE.MathUtils.degToRad(theta));
-  camera.position.y = radius * Math.sin(THREE.MathUtils.degToRad(theta));
-  camera.position.z = radius * Math.cos(THREE.MathUtils.degToRad(theta));
-  camera.lookAt(scene.position);
+	const position = geometry.attributes.position;
 
-  camera.updateMatrixWorld();
+	for ( let i = 0; i < position.count; i ++ ) {
 
-  // find intersections
+		const y = 35 * Math.sin( i / 5 + ( time + i ) / 7 );
+		position.setY( i, y );
 
-  raycaster.setFromCamera(pointer, camera);
+	}
 
-  const intersects = raycaster.intersectObjects(scene.children, false);
+	position.needsUpdate = true;
 
-  if (intersects.length > 0) {
-    if (INTERSECTED != intersects[0].object) {
-      if (INTERSECTED) INTERSECTED.material.emissive.setHex(INTERSECTED.currentHex);
-
-      INTERSECTED = intersects[0].object;
-      INTERSECTED.currentHex = INTERSECTED.material.emissive.getHex();
-      INTERSECTED.material.emissive.setHex(0xff0000);
-    }
-  } else {
-    if (INTERSECTED) INTERSECTED.material.emissive.setHex(INTERSECTED.currentHex);
-
-    INTERSECTED = null;
-  }
-
-  renderer.render(scene, camera);
+	controls.update( delta );
+	renderer.render( scene, camera );
 }
+
