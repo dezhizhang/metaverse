@@ -1,33 +1,46 @@
+// 引入three.js
 import * as THREE from 'three';
-// pointsArrs：一个行政区包含一个或多个轮廓，一个轮廓对应pointsArrs的一个元素
-function outerLine(pointsArrs) {
-  var group = new THREE.Group();//一个国家多个轮廓线条line的父对象
-  pointsArrs.forEach(polygon => {
-    var pointArr = [];//边界线顶点坐标
-    polygon[0].forEach(elem => {
-      pointArr.push(elem[0], elem[1], 0);
-    });
-    group.add(line(pointArr));
+// 引入lon2xyz,经纬度转球面坐标
+import { lon2xyz } from './math.js'
+
+
+function countryLine(R) {
+  const loader = new THREE.FileLoader();
+  loader.setResponseType('json');
+  const group = new THREE.Group();
+  loader.load('https://tugua.oss-cn-hangzhou.aliyuncs.com/world.json',function(data) {
+    data.features.forEach(function(country) {
+      if(country.geometry.type === 'Polygon') {
+        country.geometry.coordinates = [country.geometry.coordinates];
+      }
+      country.geometry.coordinates.forEach((polygon) => {
+        const pointArr = [];
+        polygon[0].forEach((elem) => {
+          const coord = lon2xyz(R,elem[0],elem[1]);
+          pointArr.push(coord.x,coord.y,coord.z);
+        });
+        group.add(line(pointArr));
+      })
+    })
   });
   return group;
+
 }
 
 
 function line(pointArr) {
-    const geometry = new THREE.BufferGeometry();
-    const vertices = new Float32Array(pointArr);
+  const geometry = new THREE.BufferGeometry();
+  const vertices = new Float32Array(pointArr);
 
-    const attribue = new THREE.BufferAttribute(vertices,3);
-    geometry.attributes.position = attribue;
+  const attribue = new THREE.BufferAttribute(vertices,3);
+  geometry.attributes.position = attribue;
+  const material = new THREE.LineBasicMaterial({
+    color:0x00aaaa //线条颜色
+  });
+  const line = new THREE.LineLoop(geometry,material);
+  return line;
 
-    const material = new THREE.LineBasicMaterial({
-        color: 0x00ffff //线条颜色
-    });
-    const line = new THREE.LineLoop(geometry,material);
-    return line;
-    
-}
-
+} 
 
 
-export { outerLine };
+export { countryLine };
