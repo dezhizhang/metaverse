@@ -1,84 +1,57 @@
+// 引入Three.js
 import * as THREE from 'three';
-import Stats from 'three/addons/libs/stats.module.js';
-import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { MeshBasicNodeMaterial, vec4, color, positionLocal, mix } from 'three/nodes';
-import { nodeFrame } from 'three/addons/renderers/webgl-legacy/nodes/WebGLNodes.js';
-
-let stats;
-let camera, scene, renderer;
-
-init().then(animate);
-
-async function init() {
-	const width = window.innerWidth;
-	const height = window.innerHeight;
-
-	camera = new THREE.PerspectiveCamera(40,window.innerWidth / window.innerHeight,1,1000);
-	camera.position.set(700,200,-500);
-
-	scene = new THREE.Scene();
-
-	// 灯光
-	const light = new THREE.DirectionalLight(0xd5deff);
-	light.position.x = 300;
-	light.position.y = 250;
-	light.position.z = -500;
-
-	scene.add(light);
-
-	// SKYDOME
-	const topColor = new THREE.Color().copy(light.color);
-	const bottomColor = new THREE.Color(0xffffff);
-	const offset = 400;
-	const exponent = 0.6;
-	
-	const h = positionLocal.add(offset).normalize().y;
-
-	const skyMat = new MeshBasicNodeMaterial();
-	skyMat.colorNode = vec4(mix(color(bottomColor),color(topColor),h.max(0.0).pow(exponent)),1.0);
-	skyMat.side = THREE.BackSide;
-
-	const sky = new THREE.Mesh(new THREE.SphereGeometry(4000,32,15),skyMat);
-	scene.add(sky);
+// 引入Three.js扩展库
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import { earth } from './earth.js'//绘制地球
 
 
-	renderer = new THREE.WebGLRenderer({antialias:true});
-	renderer.setPixelRatio(window.devicePixelRatio);
-	renderer.setSize(window.innerWidth,window.innerHeight);
-	document.body.appendChild(renderer.domElement);
+const scene = new THREE.Scene();
+scene.add(earth);
 
-	// controls
-	const controls = new OrbitControls(camera,renderer.domElement);
-	controls.maxPolarAngle = (0.9 * Math.PI) / 2;
-	controls.enableZoom = false;
+// 平行光1
+const directionalLight = new THREE.DirectionalLight(0xffffff,0.6);
+directionalLight.position.set(400,200,300);
+scene.add(directionalLight);
 
-	// stats
-	stats = new Stats();
-	document.body.appendChild(stats.dom);
+// 平行光2
+const directionalLight2 = new THREE.DirectionalLight(0xffffff,0.6);
+directionalLight2.position.set(-400,-200,-300);
+scene.add(directionalLight2);
 
-	const loader = new THREE.ObjectLoader();
-	const object = await loader.loadAsync('https://threejs.org/examples/models/json/lightmap/lightmap.json');
-	scene.add(object);
+// 环境光
+const ambient = new THREE.AmbientLight(0xffffff,0.6);
+scene.add(ambient);
 
-	window.addEventListener('resize',onWindowResize);
+const width = window.innerWidth; //窗口文档显示区的宽度
+const height = window.innerHeight;//窗口文档显示区的高度
 
-}
+// 相机设置
+const k = width;
+const s = 200;
+const camera = new THREE.OrthographicCamera(-s * k, s * k, s, -s, 1, 1000);
+camera.position.set(200, 300, 200);
+camera.lookAt(0,0,0);
 
+// 创建渲染器对象
+const renderer = new THREE.WebGLRenderer({
+	antialias: true, //开启锯齿
+});
+renderer.setPixelRatio(window.devicePixelRatio); // /设置设备像素比率,防止Canvas画布输出模糊。
+renderer.setSize(window.innerWidth,window.innerHeight);
+renderer.setClearColor(0xb9d3ff,1);
+document.body.appendChild(renderer.domElement);
 
-function onWindowResize() {
-	camera.aspect = window.innerWidth / window.innerHeight;
-	camera.updateProjectionMatrix();
-
-	renderer.setSize(window.innerWidth,window.innerHeight);
-}
-
-
-function animate() {
-	requestAnimationFrame(animate);
-	nodeFrame.update();
-
+function render() {
 	renderer.render(scene,camera);
-	stats.update();
-
+	requestAnimationFrame(render);
 }
 
+render();
+
+const axesHelper = new THREE.AxesHelper(250);
+scene.add(axesHelper);
+
+
+const controls = new OrbitControls(camera,renderer.domElement);
+
+document.body.appendChild(renderer.domElement);
