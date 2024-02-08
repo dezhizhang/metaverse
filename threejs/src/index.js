@@ -1,44 +1,37 @@
-// 引入Three.js
 import * as THREE from 'three';
-// 引入Three.js扩展库
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-import { earth } from './earth.js'//绘制地球
 
 
 const scene = new THREE.Scene();
-scene.add(earth);
+const geometry = new THREE.BufferGeometry();
+const vertices = new Float32Array([
+	30, 0,30,  250, 0,30,  200,0,150, 20, 0,150, 
+]);
 
-// 平行光1
-const directionalLight = new THREE.DirectionalLight(0xffffff,0.6);
-directionalLight.position.set(400,200,300);
-scene.add(directionalLight);
+const attribue = new THREE.BufferAttribute(vertices,3);
+geometry.attributes.position = attribue;
+const material = new THREE.LineBasicMaterial({
+	color: 0x00ffff, //线条颜色
+});
+const line = new THREE.Line(geometry,material);
+scene.add(line);
 
-// 平行光2
-const directionalLight2 = new THREE.DirectionalLight(0xffffff,0.6);
-directionalLight2.position.set(-400,-200,-300);
-scene.add(directionalLight2);
-
-// 环境光
-const ambient = new THREE.AmbientLight(0xffffff,0.6);
-scene.add(ambient);
-
-const width = window.innerWidth; //窗口文档显示区的宽度
-const height = window.innerHeight;//窗口文档显示区的高度
+const axesHelper = new THREE.AxesHelper(300);
+scene.add(axesHelper);
 
 // 相机设置
-const k = width;
+const width = window.innerWidth;
+const height = window.innerHeight;
+
+const k = width / height;
 const s = 200;
 const camera = new THREE.OrthographicCamera(-s * k, s * k, s, -s, 1, 1000);
 camera.position.set(200, 300, 200);
-camera.lookAt(0,0,0);
+camera.lookAt(scene.position);
 
-// 创建渲染器对象
-const renderer = new THREE.WebGLRenderer({
-	antialias: true, //开启锯齿
-});
-renderer.setPixelRatio(window.devicePixelRatio); // /设置设备像素比率,防止Canvas画布输出模糊。
-renderer.setSize(window.innerWidth,window.innerHeight);
-renderer.setClearColor(0xb9d3ff,1);
+// 创建渲染器
+const renderer = new THREE.WebGLRenderer();
+renderer.setSize(width,height);
 document.body.appendChild(renderer.domElement);
 
 function render() {
@@ -48,10 +41,6 @@ function render() {
 
 render();
 
-const axesHelper = new THREE.AxesHelper(250);
-scene.add(axesHelper);
-
-
 const controls = new OrbitControls(camera,renderer.domElement);
 
-document.body.appendChild(renderer.domElement);
+
