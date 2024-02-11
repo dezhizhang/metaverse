@@ -1,15 +1,12 @@
-
-// // 引入three.js
 import * as THREE from 'three';
-import { lon2xyz } from './math';
-import config from './config';
+import { lon2xyz } from './math.js';
+import config from './config.js';
 
 const R = config.R;
 
 const loader = new THREE.FileLoader();
 loader.setResponseType('json');
 const group = new THREE.Group();
-
 loader.load('https://tugua.oss-cn-hangzhou.aliyuncs.com/airports.json',function(data) {
     const coordArr = data;
     const verticesArr = [];
@@ -19,11 +16,10 @@ loader.load('https://tugua.oss-cn-hangzhou.aliyuncs.com/airports.json',function(
 
         const coord = lon2xyz(R*1.001, lon, lat);
         verticesArr.push(coord.x,coord.y,coord.z);
-
     }
     const geometry = new THREE.BufferGeometry();
-    const attribute = new THREE.BufferAttribute(new Float32Array(verticesArr),3);
-    geometry.attributes.position = attribute;
+    const attribue = new THREE.BufferAttribute(new Float32Array(verticesArr), 3);
+    geometry.attributes.position = attribue;
 
     const material = new THREE.PointsMaterial({
         color: 0xffff00,
