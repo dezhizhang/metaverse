@@ -1,52 +1,33 @@
 import * as THREE from 'three';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-import { earth } from './earth'; // 绘制地球
-
-
-const scene = new THREE.Scene();
-scene.add(earth); // 地球插入场景中
-
-// 平行光1
-const directionalLight = new THREE.DirectionalLight(0xffffff,0.6);
-directionalLight.position.set(400, 200, 300);
-scene.add(directionalLight);
-
-// 平行光2
-const directionalLight2 = new THREE.DirectionalLight(0xffffff,0.6);
-directionalLight2.position.set(-400, -200, -300);
-scene.add(directionalLight2);
-
-// 环境光
-const ambient = new THREE.AmbientLight(0xffffff,0.6);
-scene.add(ambient);
-
-const width = window.innerWidth;
-const height = window.innerHeight;
-
-const k = width / height;
-const s = 120;
-
-const camera = new THREE.OrthographicCamera(-s * k, s * k, s, -s, 1, 1000);
-camera.position.set(-102, 205, -342);
-camera.lookAt(scene.position);
-
-// 创建渲染器对象
-const renderer = new THREE.WebGLRenderer({
-    antialias: true, //开启锯齿
-});
-renderer.setPixelRatio(window.devicePixelRatio);
-renderer.setSize(width,height);
+import { renderer, scene } from './scene.js';
+import { lon2xyz } from './math.js';
 
 document.body.appendChild(renderer.domElement);
 
 
-function render() {
-    renderer.render(scene,camera);
-    requestAnimationFrame(render);
-}
+const R = 100;
+const height = 100;
 
-render();
+const geometry = new THREE.BoxGeometry(10,10,height);
+
+// 经纬度转球面坐标
+const sphereCoord = lon2xyz(R, 0, 0);
+// 先旋转后平移
+geometry.lookAt(new THREE.Vector3(sphereCoord.x,sphereCoord.y,sphereCoord.z));
+
+// 沿着旋转后柱子高度方向平移
+const v3 = new THREE.Vector3(sphereCoord.x,sphereCoord.y,sphereCoord.z).normalize().multiplyScalar(R + height / 2);
+geometry.translate(v3.x, v3.y, v3.z);
+
+const material = new THREE.MeshLambertMaterial({
+    color: 0x00ffff,
+});
+const mesh = new THREE.Mesh(geometry,material);
+scene.add(mesh);
+
+const gridHelper = new THREE.GridHelper(300,25,0x004444,0x004444);
+gridHelper.position.y = -0.5;
+scene.add(gridHelper);
 
 
-const controls = new OrbitControls(camera,renderer.domElement);
 

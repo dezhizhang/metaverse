@@ -5,15 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-02-08 22:54:34
  * :last editor: 张德志
- * :date last edited: 2024-02-08 22:56:12
- */
-// 引入Three.js
-
-/**
- * 经纬度坐标转球面坐标  
- * @param {地球半径} R  
- * @param {经度(角度值)} longitude 
- * @param {维度(角度值)} latitude
+ * :date last edited: 2024-02-12 21:25:37
  */
 function lon2xyz(R,longitude,latitude) {
   var lon = longitude * Math.PI / 180;//转弧度值
