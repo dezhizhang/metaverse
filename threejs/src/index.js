@@ -1,33 +1,25 @@
 import * as THREE from 'three';
-import { renderer, scene } from './scene.js';
-import { lon2xyz } from './math.js';
+    import { scene, renderer, camera } from './scene.js'
+    //Three.js渲染结果Canvas画布插入到body元素中
+    document.body.appendChild(renderer.domElement);
+    import { createSphereMesh } from './earth.js'//绘制地球
+    import { countryLine } from './line.js';//绘制地球国家边界线
+    import { createPointMesh } from './pointMesh.js';//标注某地点
 
-document.body.appendChild(renderer.domElement);
+    var R = 100;//地球半径
+    // 郑州经纬度坐标：113.4668, 33.8818
+    scene.add(createPointMesh(R, 113.4668, 33.8818));
 
+    var earthMesh = createSphereMesh(R);// 创建地球mesh
+    scene.add(earthMesh);//地球Mesh插入场景中
 
-const R = 100;
-const height = 100;
+    // R * 1.001比地球R稍大，以免深度冲突
+    scene.add(countryLine(R * 1.001));//国家边界集合插入场景中
 
-const geometry = new THREE.BoxGeometry(10,10,height);
-
-// 经纬度转球面坐标
-const sphereCoord = lon2xyz(R, 0, 0);
-// 先旋转后平移
-geometry.lookAt(new THREE.Vector3(sphereCoord.x,sphereCoord.y,sphereCoord.z));
-
-// 沿着旋转后柱子高度方向平移
-const v3 = new THREE.Vector3(sphereCoord.x,sphereCoord.y,sphereCoord.z).normalize().multiplyScalar(R + height / 2);
-geometry.translate(v3.x, v3.y, v3.z);
-
-const material = new THREE.MeshLambertMaterial({
-    color: 0x00ffff,
-});
-const mesh = new THREE.Mesh(geometry,material);
-scene.add(mesh);
-
-const gridHelper = new THREE.GridHelper(300,25,0x004444,0x004444);
-gridHelper.position.y = -0.5;
-scene.add(gridHelper);
-
-
-
+    // 渲染循环
+    function render() {
+      renderer.render(scene, camera); //执行渲染操作
+      requestAnimationFrame(render); //请求再次执行渲染函数render，渲染下一帧
+      // console.log(camera.position);
+    }
+    render();
