@@ -1,25 +1,44 @@
+import { scene, renderer } from './scene.js';
+import Delaunator from './delaunator.js'; //开源三角剖分库
 import * as THREE from 'three';
-    import { scene, renderer, camera } from './scene.js'
-    //Three.js渲染结果Canvas画布插入到body元素中
-    document.body.appendChild(renderer.domElement);
-    import { createSphereMesh } from './earth.js'//绘制地球
-    import { countryLine } from './line.js';//绘制地球国家边界线
-    import { createPointMesh } from './pointMesh.js';//标注某地点
+import polygonData from './polygonData.js';
+import { gridPoint } from './gridPoint.js'; //轮廓内均匀填充点
+import polygonGroup from './polygon.js'; //通过线和点展示多边形外轮廓
 
-    var R = 100;//地球半径
-    // 郑州经纬度坐标：113.4668, 33.8818
-    scene.add(createPointMesh(R, 113.4668, 33.8818));
+scene.add(polygonGroup);
 
-    var earthMesh = createSphereMesh(R);// 创建地球mesh
-    scene.add(earthMesh);//地球Mesh插入场景中
+// 多边形边界线坐标 + 多边形内填充点阵坐标
+const polygonPointsArr = gridPoint(polygonData); // 轮廓内均匀填充点
 
-    // R * 1.001比地球R稍大，以免深度冲突
-    scene.add(countryLine(R * 1.001));//国家边界集合插入场景中
+// 作为几何体顶点坐标
+const posArr = [];
+polygonPointsArr.forEach((elem) => {
+    posArr.push(elem[0],elem[1],0);
+});
 
-    // 渲染循环
-    function render() {
-      renderer.render(scene, camera); //执行渲染操作
-      requestAnimationFrame(render); //请求再次执行渲染函数render，渲染下一帧
-      // console.log(camera.position);
-    }
-    render();
+const indexArr = Delaunator.from(polygonPointsArr).triangles;
+
+const geometry = new THREE.BufferGeometry();
+geometry.index = new THREE.BufferAttribute(new Uint16Array(indexArr),1);
+geometry.attributes.position = new THREE.BufferAttribute(new Float32Array(posArr),3);
+
+const material = new THREE.MeshBasicMaterial({
+    color:0x004444,
+    side:THREE.BackSide,
+});
+
+const mesh = new THREE.Mesh(geometry,material);
+mesh.position.z = -0.01;
+scene.add(mesh);
+
+const mesh2 = mesh.clone();
+mesh2.material = new THREE.MeshBasicMaterial({
+    color: 0x009999,
+    wireframe: true,
+});
+mesh.position.z = -0.02;
+scene.add(mesh2);
+
+
+document.body.appendChild(renderer.domElement);
+
