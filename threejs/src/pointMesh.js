@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-02-09 17:50:26
  * :last editor: 张德志
- * :date last edited: 2024-02-14 16:25:12
+ * :date last edited: 2024-02-15 10:00:22
  */
 // 引入three.js
 import * as THREE from 'three';
@@ -24,30 +24,20 @@ var material = new THREE.MeshBasicMaterial({
   depthWrite:false,//禁止写入深度缓冲区数据
 });
 
-// 所有矩形平面mesh材质material和几何体geometry可以共享
-
-// size:
-// log，lat表示标注点的经纬度坐标
-// R:标注的球面半径
 function createPointMesh(R, lon, lat) {
-  var mesh = new THREE.Mesh(geometry, material);
-  // 经纬度转球面坐标
-  var coord = lon2xyz(R*1.001, lon, lat)
-  var size = R*0.05;//矩形平面Mesh的尺寸
-  mesh.scale.set(size, size, size);//设置mesh大小
+  const mesh = new THREE.Mesh(geometry,material);
+  const coord = lon2xyz(R*1.001, lon, lat);
+  const size =  R*0.05;
+  mesh.scale.set(size, size, size);
 
-  //设置mesh位置
+  // 设置mesh位置
   mesh.position.set(coord.x, coord.y, coord.z);
 
-  // mesh姿态设置
-  // mesh在球面上的法线方向(球心和球面坐标构成的方向向量)
-  var coordVec3 = new THREE.Vector3(coord.x, coord.y, coord.z).normalize();
-  // mesh默认在XOY平面上，法线方向沿着z轴new THREE.Vector3(0, 0, 1)
-  var meshNormal = new THREE.Vector3(0, 0, 1); 
-  // 四元数属性.quaternion表示mesh的角度状态
-  //.setFromUnitVectors();计算两个向量之间构成的四元数值
+  const coordVec3 = new THREE.Vector3(coord.x, coord.y, coord.z).normalize();
+  const meshNormal = new THREE.Vector3(0,0,1);
   mesh.quaternion.setFromUnitVectors(meshNormal, coordVec3);
-
   return mesh;
+
 }
+
 export { createPointMesh };

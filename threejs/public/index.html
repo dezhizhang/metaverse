@@ -5,7 +5,7 @@
  * :copyright: (c) 2022, Tungee
  * :date created: 2022-07-12 07:39:26
  * :last editor: 张德志
- * :date last edited: 2024-02-03 16:32:00
+ * :date last edited: 2024-02-15 10:37:16
 -->
 <!DOCTYPE html>
 <html lang="en">
@@ -22,33 +22,6 @@
 		}
 	</style>
 </head>
-<script type="x-shader/x-fragment" id="fragmentShader">
-
-	void main() {
-
-		if ( mod ( gl_FragCoord.x, 4.0001 ) < 1.0 || mod ( gl_FragCoord.y, 4.0001 ) < 1.0 )
-
-			gl_FragColor = vec4( XXX, 1.0 );
-
-		else
-
-			gl_FragColor = vec4( 1.0 );
-
-	}
-
-</script>
-
-<script type="x-shader/x-vertex" id="vertexShader">
-
-	void main() {
-
-		vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );
-		gl_Position = projectionMatrix * mvPosition;
-
-	}
-
-</script>
-
 <body>
 	<script async src="https://unpkg.com/es-module-shims@1.8.0/dist/es-module-shims.js"></script>
 </body>
