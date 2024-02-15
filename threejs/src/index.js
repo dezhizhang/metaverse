@@ -1,125 +1,147 @@
+
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import { CSS2DRenderer, CSS2DObject } from 'three/examples/jsm/renderers/CSS2DRenderer.js';
 
-let scene, camera, renderer, clock;
+let camera,scene,renderer,labelRenderer;
 
-const objects = [];
-const speed = 2.5;
-const height = 3;
-const offset = 0.5;
-const count = 5;
-const radius = 3;
+const clock = new THREE.Clock();
+const textureLoader = new THREE.TextureLoader();
+
+let moon;
 
 init();
+animate();
 
 function init() {
-  scene = new THREE.Scene();
+    const EARTH_RADIUS = 1;
+    const MOON_RADIUS = 0.27;
 
-  clock = new THREE.Clock();
+    camera = new THREE.PerspectiveCamera(45,window.innerWidth / window.innerHeight,0.1,10000);
+    camera.position.set(10,5,20);
+    camera.layers.enableAll();
 
-  camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-  camera.position.set(7, 3, 7);
+    scene = new THREE.Scene();
 
-  // light
-  const ambientLight = new THREE.AmbientLight(0xcccccc);
-  scene.add(ambientLight);
+    const dirLight = new THREE.DirectionalLight(0xffffff,3);
+    dirLight.position.set(0, 0, 1);
+    dirLight.layers.enableAll();
+    scene.add(dirLight);
 
-  const directionalLight = new THREE.DirectionalLight(0xffffff, 2.5);
-  directionalLight.position.set(0, 5, 5);
-  scene.add(directionalLight);
+    const axesHelper = new THREE.AxesHelper(5);
+    axesHelper.layers.enableAll();
+    scene.add(axesHelper);
 
-  const d = 5;
-  directionalLight.castShadow = true;
-  directionalLight.shadow.camera.left = -d;
-  directionalLight.shadow.camera.right = d;
-  directionalLight.shadow.camera.top = d;
-  directionalLight.shadow.camera.bottom = -d;
+    const earthGeometry = new THREE.SphereGeometry(EARTH_RADIUS,16,16);
+    const earthMaterial = new THREE.MeshPhongMaterial({
+        specular: 0x333333,
+        shininess: 5,
+        map: textureLoader.load('https://threejs.org/examples/textures/planets/earth_atmos_2048.jpg'),
+        specularMap: textureLoader.load('https://threejs.org/examples/textures/planets/earth_specular_2048.jpg'),
+        normalMap: textureLoader.load('https://threejs.org/examples/textures/planets/earth_normal_2048.jpg'),
+        normalScale: new THREE.Vector2(0.85, 0.85),
+    });
+    earthMaterial.map.colorSpace = THREE.SRGBColorSpace;
+    const earth = new THREE.Mesh(earthGeometry,earthMaterial);
+    scene.add(earth);
 
-  directionalLight.shadow.camera.near = 1;
-  directionalLight.shadow.camera.far = 20;
+    const moonGeometry = new THREE.SphereGeometry(MOON_RADIUS,16,16);
+    const moonMaterial = new THREE.MeshPhongMaterial({
+        shininess: 5,
+        map: textureLoader.load('https://threejs.org/examples/textures/planets/moon_1024.jpg'),
+    });
+    moonMaterial.map.colorSpace = THREE.SRGBColorSpace;
+    moon = new THREE.Mesh(moonGeometry,moonMaterial);
+    scene.add(moon);
 
-  directionalLight.shadow.mapSize.x = 1024;
-  directionalLight.shadow.mapSize.y = 1024;
+    earth.layers.enableAll();
+    moon.layers.enableAll();
 
-  const audioLoader = new THREE.AudioLoader();
-  const listener = new THREE.AudioListener();
-  camera.add(listener);
+    const earthDiv = document.createElement('div');
+    earthDiv.className = 'label';
+    earthDiv.textContent = 'Earth';
+    earthDiv.style.backgroundColor = 'transparent';
 
-  // floor
-  const floorGeometry = new THREE.PlaneGeometry(10, 10);
-  const floorMaterial = new THREE.MeshLambertMaterial({ color: 0x4676b6 });
-  const floor = new THREE.Mesh(floorGeometry, floorMaterial);
-  floor.rotation.x = Math.PI * -0.5;
-  floor.receiveShadow = true;
-  scene.add(floor);
+    const earthLabel = new CSS2DObject(earthDiv);
+    earthLabel.position.set(1.5 * EARTH_RADIUS, 0, 0);
+    earthLabel.center.set(0, 1);
+    earth.add(earthLabel);
+    earthLabel.layers.set(0);
+  
+    const earthMassDiv = document.createElement('div');
+    earthMassDiv.className = 'label';
+    earthMassDiv.textContent = '5.97237e24 kg';
+    earthMassDiv.style.backgroundColor = 'transparent';
+  
+    const earthMassLabel = new CSS2DObject(earthMassDiv);
+    earthMassLabel.position.set(1.5 * EARTH_RADIUS, 0, 0);
+    earthMassLabel.center.set(0, 0);
+    earth.add(earthMassLabel);
+    earthMassLabel.layers.set(1);
+  
+    const moonDiv = document.createElement('div');
+    moonDiv.className = 'label';
+    moonDiv.textContent = 'Moon';
+    moonDiv.style.backgroundColor = 'transparent';
+  
+    const moonLabel = new CSS2DObject(moonDiv);
+    moonLabel.position.set(1.5 * MOON_RADIUS, 0, 0);
+    moonLabel.center.set(0, 1);
+    moon.add(moonLabel);
+    moonLabel.layers.set(0);
 
-  const ballGeometry = new THREE.SphereGeometry(0.3, 32, 16);
-  ballGeometry.translate(0, 0.3, 0);
-  const ballMaterial = new THREE.MeshLambertMaterial({ color: 0xcccccc });
+    const moonMassDiv = document.createElement('div');
+    moonMassDiv.className = 'label';
+    moonMassDiv.textContent = '7.342e22 kg';
+    moonMassDiv.style.backgroundColor = 'transparent';
+  
+    const moonMassLabel = new CSS2DObject(moonMassDiv);
+    moonMassLabel.position.set(1.5 * MOON_RADIUS, 0, 0);
+    moonMassLabel.center.set(0, 0);
+    moon.add(moonMassLabel);
+    moonMassLabel.layers.set(1);
 
-  audioLoader.load('https://threejs.org/examples/sounds/ping_pong.mp3', function (buffer) {
-    for (let i = 0; i < count; i++) {
-      const s = (i / count) * Math.PI * 2;
-      const ball = new THREE.Mesh(ballGeometry, ballMaterial);
-      ball.castShadow = true;
-      ball.userData.down = false;
+    renderer = new THREE.WebGLRenderer();
+    renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.setSize(window.innerWidth,window.innerHeight);
+    document.body.appendChild(renderer.domElement);
 
-      ball.position.x = radius * Math.cos(s);
-      ball.position.z = radius * Math.sin(s);
+    labelRenderer = new CSS2DRenderer();
+    labelRenderer.setSize(window.innerWidth,window.innerHeight);
+    labelRenderer.domElement.style.position = 'absolute';
+    labelRenderer.domElement.style.top = '0px';
+    document.body.appendChild(labelRenderer.domElement);
 
-      const audio = new THREE.PositionalAudio(listener);
-      audio.setBuffer(buffer);
-      ball.add(audio);
+    const controls = new OrbitControls(camera,labelRenderer.domElement);
+    controls.minDistance = 5;
+    controls.maxDistance = 100;
 
-      scene.add(ball);
-      objects.push(ball);
-    }
-    animate();
-  });
 
-  renderer = new THREE.WebGLRenderer({ antialias: true });
-  renderer.setPixelRatio(window.devicePixelRatio);
+  window.addEventListener('resize', onWindowResize);
+  
+
+}
+
+
+
+function onWindowResize() {
+  camera.aspect = window.innerWidth / window.innerHeight;
+
+  camera.updateProjectionMatrix();
+
   renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.shadowMap.enabled = true;
-  document.body.appendChild(renderer.domElement);
 
-  const controls = new OrbitControls(camera, renderer.domElement);
-  controls.minDistance = 1;
-  controls.maxDistance = 25;
+  labelRenderer.setSize(window.innerWidth, window.innerHeight);
 }
 
 function animate() {
   requestAnimationFrame(animate);
 
-  render();
+  const elapsed = clock.getElapsedTime();
+
+  moon.position.set(Math.sin(elapsed) * 5, 0, Math.cos(elapsed) * 5);
+
+  renderer.render(scene, camera);
+  labelRenderer.render(scene, camera);
 }
 
-
-function render() {
-    const time = clock.getElapsedTime();
-
-    for(let i=0;i < objects.length;i++) {
-        const ball = objects[i];
-
-        const previousHeight = ball.position.y;
-        ball.position.y = Math.abs(Math.sin(i * offset + time * speed) * height);
-
-        if(ball.position.y < previousHeight) {
-            ball.userData.down = true;
-        }else {
-            if(ball.userData.down == true) {
-                const audio = ball.children[0];
-                audio.play();
-                ball.userData.down = false;
-            }
-        }
-    }
-
-    renderer.render(scene,camera);
-
-
-}
-
-
-
-render();
