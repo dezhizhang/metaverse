@@ -1,11 +1,26 @@
+/*
+ * :file description: 
+ * :name: /threejs/src/scene.js
+ * :author: 张德志
+ * :copyright: (c) 2024, Tungee
+ * :date created: 2024-02-09 17:09:51
+ * :last editor: 张德志
+ * :date last edited: 2024-02-17 20:36:08
+ */
 // 引入Three.js
 import * as THREE from 'three';
 // 引入Three.js扩展库
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import { createEarth } from './earth.js'//绘制地球
+    
+
+var R = 100;//地球半径
+var earth = createEarth(R);// 创建地球
 /**
  * 创建场景对象Scene
  */
 var scene = new THREE.Scene();
+scene.add(earth);//地球Mesh插入场景中
 /**
 * 光源设置
 */
@@ -28,12 +43,13 @@ var height = window.innerHeight; //窗口文档显示区的高度
 * 相机设置
 */
 var k = width / height; //Three.js输出的Cnavas画布宽高比
-var s = 10; //控制相机渲染空间左右上下渲染范围，s越大，相机渲染范围越大
+// var s = 200; //控制相机渲染空间左右上下渲染范围，s越大，相机渲染范围越大
+var s = 120;
 //THREE.OrthographicCamera()创建一个正投影相机对象
 // -s * k, s * k, s, -s, 1, 1000定义了一个长方体渲染空间，渲染空间外的模型不会被渲染
 var camera = new THREE.OrthographicCamera(-s * k, s * k, s, -s, 1, 1000);
-camera.position.set(103, 45, 200); //相机在Three.js坐标系中的位置
-camera.lookAt(103, 45, 0);//注意多边形轮廓不居中问题
+camera.position.set(200, 300, 200); //相机在Three.js坐标系中的位置
+camera.lookAt(0, 0, 0); //相机指向Three.js坐标系原点
 /**
  * 创建渲染器对象
  */
@@ -63,7 +79,5 @@ scene.add(axesHelper);
 // 缩放：滚动鼠标中键
 // 平移：拖动鼠标右键
 var controls = new OrbitControls(camera, renderer.domElement);
-// 相机控件与.lookAt()无效( .target属性 )
-controls.target.set(103, 45, 0);
-controls.update();//update()函数内会执行camera.lookAt(controls.target)
+
 export { scene, renderer, camera }
