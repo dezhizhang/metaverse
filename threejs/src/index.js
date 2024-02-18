@@ -1,71 +1,47 @@
-// /*
-//  * :file description:
-//  * :name: /threejs/src/index.js
-//  * :author: 张德志
-//  * :copyright: (c) 2024, Tungee
-//  * :date created: 2023-03-13 05:58:33
-//  * :last editor: 张德志
-//  * :date last edited: 2024-02-18 20:40:44
-//  */
+// // 引入Three.js
+// import * as THREE from 'three';
+// import { scene, renderer, camera } from './scene.js'
+// //Three.js渲染结果Canvas画布插入到body元素中
+// document.body.appendChild(renderer.domElement);
+
 import * as THREE from 'three';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import {  scene, renderer, camera } from './scene.js';
 
-const scene = new THREE.Scene();
+const geometry = new THREE.BufferGeometry();
+const curve = new THREE.CatmullRomCurve3([
+  new THREE.Vector3(100, 0, -100),
+  new THREE.Vector3(0, 80, 0),
+  new THREE.Vector3(-100, 0, 100),
+]);
 
-// 平行光1
-const directionalLight = new THREE.DirectionalLight(0xffffff, 0.6);
-directionalLight.position.set(400, 200, 300);
-scene.add(directionalLight);
-
-// 平行光2
-const directionalLight2 = new THREE.DirectionalLight(0xffffff, 0.6);
-directionalLight2.position.set(-400, -200, -300);
-scene.add(directionalLight2);
-
-// 环境光
-const ambient = new THREE.AmbientLight(0xffffff, 0.6);
-scene.add(ambient);
-
-const width = window.innerWidth;
-const height = window.innerHeight;
-
-const k = width / height;
-const s = 200;
-
-const camera = new THREE.OrthographicCamera(-s * k, s * k, s, -s, 1, 1000);
-camera.position.set(200, 300, 200);
-camera.lookAt(scene.position);
-
-// 创建渲染器对象
-const renderer = new THREE.WebGLRenderer({
-  antialias: true,
+//曲线上等间距返回多个顶点坐标
+const points = curve.getSpacedPoints(100);
+geometry.setFromPoints(points);
+const material = new THREE.LineBasicMaterial({
+  color: 0x006666, //轨迹颜色
 });
-renderer.setSize(width, height);
-renderer.setPixelRatio(window.devicePixelRatio);
 
-document.body.appendChild(renderer.domElement);
+const line = new THREE.Line(geometry,material);
+scene.add(line);
+
+const index = 20;
+const num = 10;
+const points2 = points.slice(index,index + num); // 从曲线上获取一段
+const geometry2 = new THREE.BufferGeometry();
+geometry2.setFromPoints(points2);
+const material2 = new THREE.LineBasicMaterial({
+  color: 0xffff00, //轨迹颜色
+});
+const line2 = new THREE.Line(geometry2,material2);
+scene.add(line2);
+
 
 function render() {
-  renderer.render(scene, camera);
+  renderer.render(scene,camera);
   requestAnimationFrame(render);
 }
 
 render();
 
-const axesHelper = new THREE.AxesHelper(250);
-scene.add(axesHelper);
 
-const geometry = new THREE.BufferGeometry();
-const arc = new THREE.ArcCurve(0, 0, 50, 0, 2 * Math.PI);
-const points = arc.getSpacedPoints(50);
-geometry.setFromPoints(points);
 
-const material = new THREE.LineBasicMaterial({
-  color: 0x00ffff,
-});
-const line = new THREE.Line(geometry, material);
-scene.add(line);
-
-const controls = new OrbitControls(camera, renderer.domElement);
-
-export { scene, renderer, camera };
