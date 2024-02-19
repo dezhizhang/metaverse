@@ -14,14 +14,13 @@ init();
 animate();
 
 function init() {
-  camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 1, 1000);
+  camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 1000);
   camera.position.set(0, 0, 75);
 
   scene = new THREE.Scene();
   scene.background = new THREE.Color(0xffffff);
 
   clock = new THREE.Clock();
-
   raycaster = new THREE.Raycaster();
 
   const hemiLight = new THREE.HemisphereLight(0xffffff, 0x222222, 4);
@@ -31,15 +30,17 @@ function init() {
   const size = new THREE.Vector3(10, 5, 6);
   const geometry = new THREE.BoxGeometry(size.x, size.y, size.z);
 
-  // setup OBB on geometry level (doing this manually for now)
-
   geometry.userData.obb = new OBB();
   geometry.userData.obb.halfSize.copy(size).multiplyScalar(0.5);
 
   for (let i = 0; i < 100; i++) {
-    const object = new THREE.Mesh(geometry, new THREE.MeshLambertMaterial({ color: 0x00ff00 }));
+    const object = new THREE.Mesh(
+      geometry,
+      new THREE.MeshLambertMaterial({
+        color: 0x00ff00,
+      }),
+    );
     object.matrixAutoUpdate = false;
-
     object.position.x = Math.random() * 80 - 40;
     object.position.y = Math.random() * 80 - 40;
     object.position.z = Math.random() * 80 - 40;
@@ -53,44 +54,30 @@ function init() {
     object.scale.z = Math.random() + 0.5;
 
     scene.add(object);
-
-    // bounding volume on object level (this will reflect the current world transform)
-
     object.userData.obb = new OBB();
-
     objects.push(object);
   }
+  hitbox = new THREE.Mesh(geometry,new THREE.MeshBasicMaterial({
+    color: 0x000000,
+    wireframe: true
+  }));
 
-  //
-
-  hitbox = new THREE.Mesh(
-    geometry,
-    new THREE.MeshBasicMaterial({ color: 0x000000, wireframe: true }),
-  );
-
-  //
-
-  renderer = new THREE.WebGLRenderer({ antialias: true });
+  renderer = new THREE.WebGLRenderer({antialias:true});
   renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setSize(window.innerWidth,window.innerHeight);
   document.body.appendChild(renderer.domElement);
 
-  //
-
-  controls = new OrbitControls(camera, renderer.domElement);
+  controls = new OrbitControls(camera,renderer.domElement);
   controls.enableDamping = true;
-
-  //
 
   stats = new Stats();
   document.body.appendChild(stats.dom);
 
-  //
+  window.addEventListener('resize',onWindowResize);
+  window.addEventListener('click',onClick);
 
-  window.addEventListener('resize', onWindowResize);
-
-  document.addEventListener('click', onClick);
 }
+
 
 function onClick(event) {
   event.preventDefault();
@@ -139,18 +126,14 @@ function onWindowResize() {
   renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
-//
-
 function animate() {
   requestAnimationFrame(animate);
 
   controls.update();
 
-  // transform cubes
-
   const delta = clock.getDelta();
 
-  for (let i = 0, il = objects.length; i < il; i++) {
+  for(let i=0,il = objects.length;i < il;i++) {
     const object = objects[i];
 
     object.rotation.x += delta * Math.PI * 0.2;
@@ -159,36 +142,30 @@ function animate() {
     object.updateMatrix();
     object.updateMatrixWorld();
 
-    // update OBB
-
     object.userData.obb.copy(object.geometry.userData.obb);
     object.userData.obb.applyMatrix4(object.matrixWorld);
-
-    // reset
 
     object.material.color.setHex(0x00ff00);
   }
 
-  // collision detection
-
-  for (let i = 0, il = objects.length; i < il; i++) {
+  for(let i=0,il = objects.length;i < il;i++) {
     const object = objects[i];
     const obb = object.userData.obb;
 
-    for (let j = i + 1, jl = objects.length; j < jl; j++) {
-      const objectToTest = objects[j];
+    for(let j=i + 1,jl = object.length;j < jl;j++) {
+      const objectToTest = objects[i];
       const obbToTest = objectToTest.userData.obb;
-
-      // now perform intersection test
-
-      if (obb.intersectsOBB(obbToTest) === true) {
+      
+      if(obb.intersectsOBB(obbToTest) === true) {
         object.material.color.setHex(0xff0000);
         objectToTest.material.color.setHex(0xff0000);
       }
     }
   }
-
-  renderer.render(scene, camera);
-
+  renderer.render(scene,camera);
   stats.update();
+
+
 }
+
+
