@@ -1,3 +1,12 @@
+/*
+ * :file description: 
+ * :name: /threejs/examples/webgl_instancing_dynamic.js
+ * :author: 张德志
+ * :copyright: (c) 2024, Tungee
+ * :date created: 2024-02-19 20:47:00
+ * :last editor: 张德志
+ * :date last edited: 2024-02-19 21:08:52
+ */
 import * as THREE from 'three';
 import Stats from 'stats.js';
 
