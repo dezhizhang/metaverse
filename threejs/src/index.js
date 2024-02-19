@@ -1,77 +1,135 @@
 import * as THREE from 'three';
 
-import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import { Timer } from 'three/addons/misc/Timer.js';
+import { OBB } from 'three/examples/jsm/math/OBB.js';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
-let camera, scene, renderer, timer;
+import Stats from 'stats.js';
 
-let mesh;
+let camera, scene, renderer, clock, controls, stats, raycaster, hitbox;
 
-let sign = 1;
-const speed = 0.5;
+const objects = [],
+  mouse = new THREE.Vector2();
 
 init();
 animate();
 
 function init() {
-  const container = document.getElementById('container');
-
-  camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.2, 100);
-  camera.position.set(0, 5, 5);
+  camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 1, 1000);
+  camera.position.set(0, 0, 75);
 
   scene = new THREE.Scene();
+  scene.background = new THREE.Color(0xffffff);
 
-  timer = new Timer();
+  clock = new THREE.Clock();
 
-  const light1 = new THREE.PointLight(0xff2200, 50000);
-  light1.position.set(100, 100, 100);
-  scene.add(light1);
+  raycaster = new THREE.Raycaster();
 
-  const light2 = new THREE.PointLight(0x22ff00, 10000);
-  light2.position.set(-100, -100, -100);
-  scene.add(light2);
+  const hemiLight = new THREE.HemisphereLight(0xffffff, 0x222222, 4);
+  hemiLight.position.set(1, 1, 1);
+  scene.add(hemiLight);
 
-  scene.add(new THREE.AmbientLight(0x111111));
+  const size = new THREE.Vector3(10, 5, 6);
+  const geometry = new THREE.BoxGeometry(size.x, size.y, size.z);
 
-  const loader = new GLTFLoader();
-  loader.load('https://threejs.org/examples/models/gltf/AnimatedMorphSphere/glTF/AnimatedMorphSphere.gltf', function (gltf) {
-    mesh = gltf.scene.getObjectByName('AnimatedMorphSphere');
-    mesh.rotation.z = Math.PI / 2;
-    scene.add(mesh);
+  // setup OBB on geometry level (doing this manually for now)
 
-    //
+  geometry.userData.obb = new OBB();
+  geometry.userData.obb.halfSize.copy(size).multiplyScalar(0.5);
 
-    const pointsMaterial = new THREE.PointsMaterial({
-      size: 10,
-      sizeAttenuation: false,
-      map: new THREE.TextureLoader().load('https://threejs.org/examples/textures/sprites/disc.png'),
-      alphaTest: 0.5,
-    });
+  for (let i = 0; i < 100; i++) {
+    const object = new THREE.Mesh(geometry, new THREE.MeshLambertMaterial({ color: 0x00ff00 }));
+    object.matrixAutoUpdate = false;
 
-    const points = new THREE.Points(mesh.geometry, pointsMaterial);
-    points.morphTargetInfluences = mesh.morphTargetInfluences;
-    points.morphTargetDictionary = mesh.morphTargetDictionary;
-    mesh.add(points);
-  });
+    object.position.x = Math.random() * 80 - 40;
+    object.position.y = Math.random() * 80 - 40;
+    object.position.z = Math.random() * 80 - 40;
+
+    object.rotation.x = Math.random() * 2 * Math.PI;
+    object.rotation.y = Math.random() * 2 * Math.PI;
+    object.rotation.z = Math.random() * 2 * Math.PI;
+
+    object.scale.x = Math.random() + 0.5;
+    object.scale.y = Math.random() + 0.5;
+    object.scale.z = Math.random() + 0.5;
+
+    scene.add(object);
+
+    // bounding volume on object level (this will reflect the current world transform)
+
+    object.userData.obb = new OBB();
+
+    objects.push(object);
+  }
 
   //
 
-  renderer = new THREE.WebGLRenderer();
+  hitbox = new THREE.Mesh(
+    geometry,
+    new THREE.MeshBasicMaterial({ color: 0x000000, wireframe: true }),
+  );
+
+  //
+
+  renderer = new THREE.WebGLRenderer({ antialias: true });
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
-
   document.body.appendChild(renderer.domElement);
 
   //
 
-  const controls = new OrbitControls(camera, renderer.domElement);
-  controls.minDistance = 1;
-  controls.maxDistance = 20;
+  controls = new OrbitControls(camera, renderer.domElement);
+  controls.enableDamping = true;
+
+  //
+
+  stats = new Stats();
+  document.body.appendChild(stats.dom);
 
   //
 
   window.addEventListener('resize', onWindowResize);
+
+  document.addEventListener('click', onClick);
+}
+
+function onClick(event) {
+  event.preventDefault();
+
+  mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+  mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+  raycaster.setFromCamera(mouse, camera);
+
+  const intersectionPoint = new THREE.Vector3();
+  const intersections = [];
+
+  for (let i = 0, il = objects.length; i < il; i++) {
+    const object = objects[i];
+    const obb = object.userData.obb;
+
+    const ray = raycaster.ray;
+
+    if (obb.intersectRay(ray, intersectionPoint) !== null) {
+      const distance = ray.origin.distanceTo(intersectionPoint);
+      intersections.push({ distance: distance, object: object });
+    }
+  }
+
+  if (intersections.length > 0) {
+    // determine closest intersection and highlight the respective 3D object
+
+    intersections.sort(sortIntersections);
+
+    intersections[0].object.add(hitbox);
+  } else {
+    const parent = hitbox.parent;
+
+    if (parent) parent.remove(hitbox);
+  }
+}
+
+function sortIntersections(a, b) {
+  return a.distance - b.distance;
 }
 
 function onWindowResize() {
@@ -81,26 +139,56 @@ function onWindowResize() {
   renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
+//
+
 function animate() {
   requestAnimationFrame(animate);
-  timer.update();
-  render();
-}
 
-function render() {
-  const delta = timer.getDelta();
+  controls.update();
 
-  if (mesh !== undefined) {
-    const step = delta * speed;
+  // transform cubes
 
-    mesh.rotation.y += step;
+  const delta = clock.getDelta();
 
-    mesh.morphTargetInfluences[1] = mesh.morphTargetInfluences[1] + step * sign;
+  for (let i = 0, il = objects.length; i < il; i++) {
+    const object = objects[i];
 
-    if (mesh.morphTargetInfluences[1] <= 0 || mesh.morphTargetInfluences[1] >= 1) {
-      sign *= -1;
+    object.rotation.x += delta * Math.PI * 0.2;
+    object.rotation.y += delta * Math.PI * 0.1;
+
+    object.updateMatrix();
+    object.updateMatrixWorld();
+
+    // update OBB
+
+    object.userData.obb.copy(object.geometry.userData.obb);
+    object.userData.obb.applyMatrix4(object.matrixWorld);
+
+    // reset
+
+    object.material.color.setHex(0x00ff00);
+  }
+
+  // collision detection
+
+  for (let i = 0, il = objects.length; i < il; i++) {
+    const object = objects[i];
+    const obb = object.userData.obb;
+
+    for (let j = i + 1, jl = objects.length; j < jl; j++) {
+      const objectToTest = objects[j];
+      const obbToTest = objectToTest.userData.obb;
+
+      // now perform intersection test
+
+      if (obb.intersectsOBB(obbToTest) === true) {
+        object.material.color.setHex(0xff0000);
+        objectToTest.material.color.setHex(0xff0000);
+      }
     }
   }
 
   renderer.render(scene, camera);
+
+  stats.update();
 }
