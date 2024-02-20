@@ -20,54 +20,47 @@ init();
 animate();
 
 function init() {
-  scene = new THREE.Scene();
-  scene.background = new THREE.Color(0x050505);
+    scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x050505);
 
-  camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 1, 5000);
-  camera.position.z = 1000;
-  scene.add(camera);
+    camera = new THREE.PerspectiveCamera(70,window.innerWidth / window.innerHeight,0.1,5000);
+    camera.position.z = 1000;
+    scene.add(camera);
 
-  const light1 = new THREE.DirectionalLight(0xffffff, 2.5);
-  light1.position.set(1, 1, 1);
-  scene.add(light1);
+    const light1 = new THREE.DirectionalLight(0xffffff,2.5);
+    light1.position.set(1, 1, 1);
+    scene.add(light1);
 
-  const light2 = new THREE.DirectionalLight(0xffffff, 1.5);
-  light2.position.set(-1, -1, 1);
-  scene.add(light2);
+    const light2 = new THREE.DirectionalLight(0xffffff,1.5);
+    light2.position.set(1,1,1);
+    scene.add(light2);
 
-  root = new THREE.Group();
-  scene.add(root);
+    root = new THREE.Group();
+    scene.add(root);
 
-  //
+    renderer = new THREE.WebGLRenderer({
+        antialias:true
+    });
+    renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.setSize(window.innerWidth,window.innerHeight);
+    document.body.appendChild(renderer.domElement);
 
-  renderer = new THREE.WebGLRenderer({ antialias: true });
-  renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  document.body.appendChild(renderer.domElement);
+    labelRenderer = new CSS2DRenderer();
+    labelRenderer.setSize(window.innerWidth,window.innerHeight);
+    labelRenderer.domElement.style.position = 'absolute';
+    labelRenderer.domElement.style.top = '0px';
+    labelRenderer.domElement.style.pointerEvents = 'none';
+    document.body.appendChild(labelRenderer.domElement);
 
-  labelRenderer = new CSS2DRenderer();
-  labelRenderer.setSize(window.innerWidth, window.innerHeight);
-  labelRenderer.domElement.style.position = 'absolute';
-  labelRenderer.domElement.style.top = '0px';
-  labelRenderer.domElement.style.pointerEvents = 'none';
-  document.body.appendChild(labelRenderer.domElement);
+    controls = new TrackballControls(camera,renderer.domElement);
+    controls.minDistance = 500;
+    controls.maxDistance = 2000;
 
-  //
+    loadMolecule(params.molecule);
+    window.addEventListener('resize',onWindowResize);
 
-  controls = new TrackballControls(camera, renderer.domElement);
-  controls.minDistance = 500;
-  controls.maxDistance = 2000;
-
-  //
-
-  loadMolecule(params.molecule);
-
-  //
-
-  window.addEventListener('resize', onWindowResize);
 }
 
-//
 
 function loadMolecule(model) {
   const url = 'https://threejs.org/examples/models/pdb/' + model;

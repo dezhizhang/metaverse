@@ -1,11 +1,11 @@
 /*
  * :file description: 
- * :name: /threejs/src/index.js
+ * :name: /threejs/examples/webgl_loader_nrrd.js
  * :author: 张德志
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-02-20 22:54:11
  * :last editor: 张德志
- * :date last edited: 2024-02-20 23:12:23
+ * :date last edited: 2024-02-20 23:10:15
  */
 
 import * as THREE from 'three';
