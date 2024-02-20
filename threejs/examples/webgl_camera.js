@@ -1,11 +1,11 @@
 /*
  * :file description: 
- * :name: /threejs/examples/webgl_instancing_scatter.js
+ * :name: /threejs/examples/webgl_camera.js
  * :author: 张德志
  * :copyright: (c) 2024, Tungee
- * :date created: 2024-02-20 07:30:22
+ * :date created: 2024-02-21 06:51:01
  * :last editor: 张德志
- * :date last edited: 2024-02-21 07:04:26
+ * :date last edited: 2024-02-21 07:04:34
  */
 import * as THREE from 'three';
 

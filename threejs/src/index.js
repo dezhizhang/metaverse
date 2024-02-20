@@ -1,164 +1,196 @@
-/*
- * :file description: 
- * :name: /threejs/src/index.js
- * :author: 张德志
- * :copyright: (c) 2024, Tungee
- * :date created: 2024-02-20 22:54:11
- * :last editor: 张德志
- * :date last edited: 2024-02-20 23:12:23
- */
-
 import * as THREE from 'three';
-import Stats from 'three/addons/libs/stats.module.js';
-import { TrackballControls } from 'three/addons/controls/TrackballControls.js';
-import { NRRDLoader } from 'three/addons/loaders/NRRDLoader.js';
-import { VTKLoader } from 'three/addons/loaders/VTKLoader.js';
 
-let stats,
-  camera,
-  controls,
-  scene,
-  renderer;
+import Stats from 'three/addons/libs/stats.module.js';
+
+let SCREEN_WIDTH = window.innerWidth;
+let SCREEN_HEIGHT = window.innerHeight;
+let aspect = SCREEN_WIDTH / SCREEN_HEIGHT;
+
+let container, stats;
+let camera, scene, renderer, mesh;
+let cameraRig, activeCamera, activeHelper;
+let cameraPerspective, cameraOrtho;
+let cameraPerspectiveHelper, cameraOrthoHelper;
+const frustumSize = 600;
 
 init();
 animate();
 
 function init() {
-    camera = new THREE.PerspectiveCamera(60,window.innerWidth / window.innerHeight,0.01, 1e10);
-    camera.position.z = 300;
+  scene = new THREE.Scene();
 
-    scene = new THREE.Scene();
-    scene.add(camera);
+  camera = new THREE.PerspectiveCamera(50,0.5 * aspect,1,10000);
+  camera.position.z = 2500;
 
-    // light
-    const hemiLight = new THREE.HemisphereLight(0xffffff,0x000000,3);
-    scene.add(hemiLight);
+  cameraPerspective = new THREE.PerspectiveCamera(50, 0.5 * aspect, 150, 1000);
+  cameraPerspectiveHelper = new THREE.CameraHelper(cameraPerspective);
+  scene.add(cameraPerspectiveHelper);
 
-    const dirLight = new THREE.DirectionalLight(0xffffff,1.5);
-    dirLight.position.set(200,200,200);
-    scene.add(dirLight);
-    
-    const loader = new NRRDLoader();
-    loader.load('https://threejs.org/examples/models/nrrd/I.nrrd',function(volume) {
-        const geometry = new THREE.BoxGeometry(volume.xLength,volume.yLength,volume.zLength);
-        const material = new THREE.MeshBasicMaterial({
-            color: 0x00ff00
-        });
-        const cube = new THREE.Mesh(geometry,material);
-        cube.visible = false;
-        const box = new THREE.BoxHelper(cube);
-        scene.add(box);
-        box.applyMatrix4(volume.matrix);
-        scene.add(cube);
-        
-    })
-    
+  cameraOrtho = new THREE.OrthographicCamera(
+    (0.5 * frustumSize * aspect) / -2,
+    (0.5 * frustumSize * aspect) / 2,
+    frustumSize / 2,
+    frustumSize / -2,
+    150,
+    1000,
+  );
+
+  cameraOrthoHelper = new THREE.CameraHelper(cameraOrtho);
+  scene.add(cameraOrthoHelper);
+
+  activeCamera = cameraPerspective;
+  activeHelper = cameraPerspectiveHelper;
+
+
+  cameraOrtho.rotation.y = Math.PI;
+  cameraPerspective.rotation.y = Math.PI;
+
+  cameraRig = new THREE.Group();
+
+  cameraRig.add(cameraPerspective);
+  cameraRig.add(cameraOrtho);
+  scene.add(cameraRig);
+
+  mesh = new THREE.Mesh(
+    new THREE.SphereGeometry(100, 16, 8),
+    new THREE.MeshBasicMaterial({ color: 0xffffff, wireframe: true }),
+  );
+  scene.add(mesh);
+
+
+  const mesh2 = new THREE.Mesh(
+    new THREE.SphereGeometry(50, 16, 8),
+    new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe: true }),
+  );
+  mesh2.position.y = 150;
+  mesh.add(mesh2);
+
+  const mesh3 = new THREE.Mesh(
+    new THREE.SphereGeometry(5, 16, 8),
+    new THREE.MeshBasicMaterial({ color: 0x0000ff, wireframe: true }),
+  );
+  mesh3.position.z = 150;
+  cameraRig.add(mesh3);
+
+  //
+
+  const geometry = new THREE.BufferGeometry();
+  const vertices = [];
+
+  for (let i = 0; i < 10000; i++) {
+    vertices.push(THREE.MathUtils.randFloatSpread(2000)); // x
+    vertices.push(THREE.MathUtils.randFloatSpread(2000)); // y
+    vertices.push(THREE.MathUtils.randFloatSpread(2000)); // z
+  }
+
+  geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
+
+  const particles = new THREE.Points(geometry, new THREE.PointsMaterial({ color: 0x888888 }));
+  scene.add(particles);
+
+
+  renderer = new THREE.WebGLRenderer({ antialias: true });
+  renderer.setPixelRatio(window.devicePixelRatio);
+  renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
+  document.body.appendChild(renderer.domElement);
+
+  renderer.autoClear = false;
+  renderer.setScissorTest(true);
+
+  //
+
+  stats = new Stats();
+  document.body.appendChild(stats.dom);
+
+  //
+
+  window.addEventListener('resize', onWindowResize);
+ 
 }
 
-// function init() {
 
-//   camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 0.01, 1e10 );
-//   camera.position.z = 300;
 
-//   scene = new THREE.Scene();
-
-//   scene.add( camera );
-
-//   // light
-
-//   const hemiLight = new THREE.HemisphereLight( 0xffffff, 0x000000, 3 );
-//   scene.add( hemiLight );
-
-//   const dirLight = new THREE.DirectionalLight( 0xffffff, 1.5 );
-//   dirLight.position.set( 200, 200, 200 );
-//   scene.add( dirLight );
-
-//   const loader = new NRRDLoader();
-//   loader.load( 'https://threejs.org/examples/models/nrrd/I.nrrd', function ( volume ) {
-
-//     //box helper to see the extend of the volume
-//     const geometry = new THREE.BoxGeometry( volume.xLength, volume.yLength, volume.zLength );
-//     const material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
-//     const cube = new THREE.Mesh( geometry, material );
-//     cube.visible = false;
-//     const box = new THREE.BoxHelper( cube );
-//     scene.add( box );
-//     box.applyMatrix4( volume.matrix );
-//     scene.add( cube );
-
-//     //z plane
-//     const sliceZ = volume.extractSlice( 'z', Math.floor( volume.RASDimensions[ 2 ] / 4 ) );
-//     scene.add( sliceZ.mesh );
-
-//     //y plane
-//     const sliceY = volume.extractSlice( 'y', Math.floor( volume.RASDimensions[ 1 ] / 2 ) );
-//     scene.add( sliceY.mesh );
-
-//     //x plane
-//     const sliceX = volume.extractSlice( 'x', Math.floor( volume.RASDimensions[ 0 ] / 2 ) );
-//     scene.add( sliceX.mesh );
-
- 
-
-//   } );
-
-//   const vtkmaterial = new THREE.MeshLambertMaterial( { wireframe: false, side: THREE.DoubleSide, color: 0xff0000 } );
-
-//   const vtkloader = new VTKLoader();
-//   vtkloader.load( 'https://threejs.org/examples/models/vtk/liver.vtk', function ( geometry ) {
-
-//     geometry.computeVertexNormals();
-
-//     const mesh = new THREE.Mesh( geometry, vtkmaterial );
-//     scene.add( mesh );
-//     const visibilityControl = {
-//       visible: true
-//     };
-   
-
-//   } );
-//   // renderer
-
-//   renderer = new THREE.WebGLRenderer( { antialias: true } );
-//   renderer.setPixelRatio( window.devicePixelRatio );
-//   renderer.setSize( window.innerWidth, window.innerHeight );
-//   document.body.appendChild( renderer.domElement );
-
-//   controls = new TrackballControls( camera, renderer.domElement );
-//   controls.minDistance = 100;
-//   controls.maxDistance = 500;
-//   controls.rotateSpeed = 5.0;
-//   controls.zoomSpeed = 5;
-//   controls.panSpeed = 2;
-
-//   stats = new Stats();
-//   document.body.appendChild( stats.dom );
-
- 
-
-//   window.addEventListener( 'resize', onWindowResize );
-
-// }
+//
 
 function onWindowResize() {
+  SCREEN_WIDTH = window.innerWidth;
+  SCREEN_HEIGHT = window.innerHeight;
+  aspect = SCREEN_WIDTH / SCREEN_HEIGHT;
 
-  camera.aspect = window.innerWidth / window.innerHeight;
+  renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
+
+  camera.aspect = 0.5 * aspect;
   camera.updateProjectionMatrix();
 
-  renderer.setSize( window.innerWidth, window.innerHeight );
+  cameraPerspective.aspect = 0.5 * aspect;
+  cameraPerspective.updateProjectionMatrix();
 
-  controls.handleResize();
-
+  cameraOrtho.left = (-0.5 * frustumSize * aspect) / 2;
+  cameraOrtho.right = (0.5 * frustumSize * aspect) / 2;
+  cameraOrtho.top = frustumSize / 2;
+  cameraOrtho.bottom = -frustumSize / 2;
+  cameraOrtho.updateProjectionMatrix();
 }
 
+//
+
 function animate() {
+  requestAnimationFrame(animate);
 
-  requestAnimationFrame( animate );
-
-  controls.update();
-
-  renderer.render( scene, camera );
-
+  render();
   stats.update();
+}
 
+function render() {
+  const r = Date.now() * 0.0005;
+
+  mesh.position.x = 700 * Math.cos(r);
+  mesh.position.z = 700 * Math.sin(r);
+  mesh.position.y = 700 * Math.sin(r);
+
+  mesh.children[0].position.x = 70 * Math.cos(2 * r);
+  mesh.children[0].position.z = 70 * Math.sin(r);
+
+  if (activeCamera === cameraPerspective) {
+    cameraPerspective.fov = 35 + 30 * Math.sin(0.5 * r);
+    cameraPerspective.far = mesh.position.length();
+    cameraPerspective.updateProjectionMatrix();
+
+    cameraPerspectiveHelper.update();
+    cameraPerspectiveHelper.visible = true;
+
+    cameraOrthoHelper.visible = false;
+  } else {
+    cameraOrtho.far = mesh.position.length();
+    cameraOrtho.updateProjectionMatrix();
+
+    cameraOrthoHelper.update();
+    cameraOrthoHelper.visible = true;
+
+    cameraPerspectiveHelper.visible = false;
+  }
+
+  cameraRig.lookAt(mesh.position);
+
+  //
+
+  activeHelper.visible = false;
+
+  renderer.setClearColor(0x000000, 1);
+  renderer.setScissor(0, 0, SCREEN_WIDTH / 2, SCREEN_HEIGHT);
+  renderer.clear();
+
+  renderer.setViewport(0, 0, SCREEN_WIDTH / 2, SCREEN_HEIGHT);
+  renderer.render(scene, activeCamera);
+
+  //
+
+  activeHelper.visible = true;
+
+  renderer.setClearColor(0x111111, 1);
+  renderer.setScissor(SCREEN_WIDTH / 2, 0, SCREEN_WIDTH / 2, SCREEN_HEIGHT);
+  renderer.clear();
+
+  renderer.setViewport(SCREEN_WIDTH / 2, 0, SCREEN_WIDTH / 2, SCREEN_HEIGHT);
+  renderer.render(scene, camera);
 }
