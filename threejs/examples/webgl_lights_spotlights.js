@@ -1,3 +1,12 @@
+/*
+ * :file description: 
+ * :name: /threejs/examples/webgl_lights_spotlights.js
+ * :author: 张德志
+ * :copyright: (c) 2024, Tungee
+ * :date created: 2024-02-21 07:36:26
+ * :last editor: 张德志
+ * :date last edited: 2024-02-21 07:36:27
+ */
 import * as THREE from 'three';
 import * as TWEEN from 'tween';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
