@@ -12,7 +12,7 @@ import Stats from 'three/addons/libs/stats.module.js';
 
 import { STLLoader } from 'three/addons/loaders/STLLoader.js';
 
-let container, stats;
+let stats;
 
 let camera, cameraTarget, scene, renderer;
 
