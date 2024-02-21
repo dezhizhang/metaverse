@@ -1,3 +1,13 @@
+/*
+ * :file description: 
+ * :name: /threejs/examples/webgl_animation_keyframes.js
+ * :author: 张德志
+ * :copyright: (c) 2024, Tungee
+ * :date created: 2024-02-21 20:37:06
+ * :last editor: 张德志
+ * :date last edited: 2024-02-21 20:54:39
+ */
+
 import * as THREE from 'three';
 import Stats from 'stats.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -41,9 +51,6 @@ loader.load('https://threejs.org/examples/models/gltf/LittlestTokyo.glb', functi
   model.position.set(1, 1, 0);
   model.scale.set(0.01, 0.01, 0.01);
   scene.add(model);
-
-  console.log(gltf);
-
 
   mixer = new THREE.AnimationMixer(model);
   mixer.clipAction(gltf.animations[0].play());
