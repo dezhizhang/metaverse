@@ -1,3 +1,5 @@
+import gsap from 'gsap';
+import *as dat from 'dat.gui';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
@@ -40,11 +42,56 @@ const axesHelper = new THREE.AxesHelper(250);
 scene.add(axesHelper);
 
 const controls = new OrbitControls(camera, renderer.domElement);
+// 设置控制器阻尼
+controls.enableDamping = true;
+
+window.addEventListener('resize',onWindowResize);
+
+function onWindowResize() {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+
+  renderer.setSize(window.innerWidth,window.innerHeight);
+  renderer.setPixelRatio(window.devicePixelRatio);
+
+}
+
+// 控制页面全屏
+window.addEventListener('dblclick',function() {
+  if(document.fullscreenElement) {
+    document.webkitExitFullscreen();
+  }
+  renderer.domElement.requestFullscreen();
+
+});
+
+const gui = new dat.GUI();
+gui.add(cube.position,"x").min(0).max(5).step(1).name('位置').onChange((value) => {
+  cube.position.x = value;
+});
+gui.add(cube.rotation,'y').min(0).max(10).name('旋转').onChange((value) => {
+  cube.rotation.y = value;
+})
+
+
+
+
+
 
 function render() {
   requestAnimationFrame(render);
-  console.log(click.getElapsedTime());
   const delta = click.getDelta();
+
+  // gsap.to(cube.position,{
+  //   x:5,
+  //   duration:5
+  // });
+  // gsap.to(cube.rotation,{
+  //   x:Math.PI / 2,
+  //   duration:5
+  // });
+  // controls.update();
+
 
   // cube.rotation.y += 0.01;
 
