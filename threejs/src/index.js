@@ -1,171 +1,83 @@
-/*
- * :file description:
- * :name: /threejs/src/index.js
- * :author: 张德志
- * :copyright: (c) 2024, Tungee
- * :date created: 2023-03-13 05:58:33
- * :last editor: 张德志
- * :date last edited: 2024-02-21 22:45:10
- */
 import * as THREE from 'three';
-import Stats from 'three/addons/libs/stats.module.js';
 
-import { STLLoader } from 'three/addons/loaders/STLLoader.js';
+import Stats from 'stats.js';
 
-let container, stats;
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { RectAreaLightHelper } from 'three/addons/helpers/RectAreaLightHelper.js';
+import { RectAreaLightUniformsLib } from 'three/addons/lights/RectAreaLightUniformsLib.js';
 
-let camera, cameraTarget, scene, renderer;
+let renderer, scene, camera;
+let stats, meshKnot;
 
 init();
-animate();
 
 function init() {
-  camera = new THREE.PerspectiveCamera(35,window.innerWidth / window.innerHeight,1,1000);
-  camera.position.set(3, 0.15, 3);
+  renderer = new THREE.WebGLRenderer({ antialias: true });
+  renderer.setPixelRatio(window.devicePixelRatio);
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setAnimationLoop(animation);
+  document.body.appendChild(renderer.domElement);
 
-  cameraTarget =new THREE.Vector3(0, -0.25, 0);
+  camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 1000);
+  camera.position.set(0, 5, -15);
 
   scene = new THREE.Scene();
-  scene.background = new THREE.Color(0x72645b);
-  scene.fog = new THREE.Fog(0x72645b,2, 15);
 
-  const plane = new THREE.Mesh(
-    new THREE.PlaneGeometry(40, 40),
-    new THREE.MeshPhongMaterial({
-      color: 0xcbcbcb,
-      specular: 0x474747
-    }),
-  )
-  plane.rotation.x = -Math.PI / 2;
-  plane.position.y = -0.5;
-  scene.add(plane);
-  plane.receiveShadow = true;
+  RectAreaLightUniformsLib.init();
 
-  const material = new THREE.MeshPhongMaterial({
-    color: 0xd5d5d5,
-    specular: 0x494949,
-    shininess: 200,
+  const rectLight1 = new THREE.RectAreaLight(0xff0000, 5, 4, 10);
+  rectLight1.position.set(-5, 5, 5);
+  scene.add(rectLight1);
+
+  const rectLight2 = new THREE.RectAreaLight(0x00ff00, 5, 4, 10);
+  rectLight2.position.set(0, 5, 5);
+  scene.add(rectLight2);
+
+  const rectLight3 = new THREE.RectAreaLight(0x0000ff, 5, 4, 10);
+  rectLight3.position.set(5, 5, 5);
+  scene.add(rectLight3);
+
+  scene.add(new RectAreaLightHelper(rectLight1));
+  scene.add(new RectAreaLightHelper(rectLight2));
+  scene.add(new RectAreaLightHelper(rectLight3));
+
+  const geoFloor = new THREE.BoxGeometry(2000, 0.1, 2000);
+  const matStdFloor = new THREE.MeshStandardMaterial({
+    color: 0xbcbcbc,
+    roughness: 0.1,
+    metalness: 0,
   });
-  
-  const loader = new STLLoader();
-  loader.load('https://threejs.org/examples/models/stl/ascii/slotted_disk.stl',function(geometry) {
-    const mesh = new THREE.Mesh(geometry,material);
-    mesh.position.set(0, -0.25, 0.6);
-    mesh.rotation.set(0, -Math.PI / 2, 0);
-    mesh.scale.set(0.5, 0.5, 0.5);
+  const mshStdFloor = new THREE.Mesh(geoFloor, matStdFloor);
+  scene.add(mshStdFloor);
 
-    mesh.castShadow = true;
-    mesh.receiveShadow = true;
+  const geoKnot = new THREE.TorusKnotGeometry(1.5, 0.5, 200, 16);
+  const matKnot = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0, metalness: 0 });
+  meshKnot = new THREE.Mesh(geoKnot, matKnot);
+  meshKnot.position.set(0, 5, 0);
+  scene.add(meshKnot);
 
-    scene.add(mesh);
-    
-  });
+  const controls = new OrbitControls(camera, renderer.domElement);
+  controls.target.copy(meshKnot.position);
+  controls.update();
 
+  //
 
-  loader.load('https://threejs.org/examples/models/stl/binary/pr2_head_pan.stl',function(geometry) {
-    const mesh = new THREE.Mesh(geometry,material);
-    mesh.position.set(0, -0.37, -0.6);
-    mesh.rotation.set(-Math.PI / 2, 0, 0);
-    mesh.scale.set(2, 2, 2);
+  window.addEventListener('resize', onWindowResize);
 
-    mesh.castShadow = true;
-    mesh.receiveShadow = true;
-    scene.add(mesh);
-    
-  });
-
-  loader.load('https://threejs.org/examples/models/stl/binary/pr2_head_tilt.stl',function(geometry) {
-    const mesh = new THREE.Mesh(geometry,material);
-    mesh.position.set(0.136, -0.37, -0.6);
-    mesh.rotation.set(-Math.PI / 2, 0.3, 0);
-    mesh.scale.set(2, 2, 2);
-
-    mesh.castShadow = true;
-    mesh.receiveShadow = true;
-    scene.add(mesh);
-    
-  });
-  loader.load('https://threejs.org/examples/models/stl/binary/colored.stl',function(geometry) {
-    let meshMaterial = material;
-    if(geometry.hasColors) {
-      meshMaterial = new THREE.MeshPhongMaterial({
-        opacity: geometry.alpha,
-        vertexColors: true
-      });
-      const mesh = new THREE.Mesh(geometry,meshMaterial);
-      mesh.position.set(0.5, 0.2, 0);
-      mesh.rotation.set(-Math.PI / 2,Math.PI / 2,0);
-      mesh.scale.set(0.3, 0.3, 0.3);
-
-      mesh.castShadow = true;
-      mesh.receiveShadow = true;
-      
-      scene.add(mesh);
-    }
-  });
-
-  scene.add(new THREE.HemisphereLight(0x8d7c7c,0x494966,3));
-  addShadowedLight(1, 1, 1, 0xffffff, 3.5);
-  addShadowedLight(0.5, 1, -1, 0xffd500, 3);
-
-  renderer = new THREE.WebGLRenderer({
-    antialias:true
-  });
-  renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(window.innerWidth,window.innerHeight);
-  renderer.shadowMap.enabled = true;
-
-  document.body.appendChild(renderer.domElement);
-  
   stats = new Stats();
   document.body.appendChild(stats.dom);
-
-  window.addEventListener('resize',onWindowResize);
-
-}
-
-
-
-function addShadowedLight(x, y, z, color, intensity) {
-  const directionalLight = new THREE.DirectionalLight(color, intensity);
-  directionalLight.position.set(x, y, z);
-  scene.add(directionalLight);
-
-  directionalLight.castShadow = true;
-
-  const d = 1;
-  directionalLight.shadow.camera.left = -d;
-  directionalLight.shadow.camera.right = d;
-  directionalLight.shadow.camera.top = d;
-  directionalLight.shadow.camera.bottom = -d;
-
-  directionalLight.shadow.camera.near = 1;
-  directionalLight.shadow.camera.far = 4;
-
-  directionalLight.shadow.bias = -0.002;
 }
 
 function onWindowResize() {
+  renderer.setSize(window.innerWidth, window.innerHeight);
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
-
-  renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
-function animate() {
-  requestAnimationFrame(animate);
-
-  render();
-  stats.update();
-}
-
-function render() {
-  const timer = Date.now() * 0.0005;
-
-  camera.position.x = Math.cos(timer) * 3;
-  camera.position.z = Math.sin(timer) * 3;
-
-  camera.lookAt(cameraTarget);
+function animation(time) {
+  meshKnot.rotation.y = time / 1000;
 
   renderer.render(scene, camera);
+
+  stats.update();
 }
