@@ -1,87 +1,57 @@
+
 import * as THREE from 'three';
-import Stats from 'stats.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-import { RectAreaLightHelper } from 'three/examples/jsm/helpers/RectAreaLightHelper.js';
-import { RectAreaLightUniformsLib } from 'three/examples/jsm/lights/RectAreaLightUniformsLib.js';
 
-let renderer, scene, camera;
-let stats, meshKnot;
+//创建场影
+const scene = new THREE.Scene();
 
-init();
+//创建相机
+const camera = new THREE.PerspectiveCamera(75,window.innerWidth / window.innerHeight,0.1,1000);
 
-function init() {
-  renderer = new THREE.WebGLRenderer({
-    antialias:true
-  });
-  renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(window.innerWidth,window.innerHeight);
-  renderer.setAnimationLoop(animation);
-  document.body.appendChild(renderer.domElement);
+// 设置相机位置
+camera.position.set(0,0,10);
+scene.add(camera);
 
-  camera = new THREE.PerspectiveCamera(45,window.innerWidth / window.innerHeight,0.1,10000);
-  camera.position.set(0, 5, -15);
-
-  scene = new THREE.Scene();
-  RectAreaLightUniformsLib.init();
-
-  const rectLight1 = new THREE.RectAreaLight(0xff0000,5,4,10);
-  rectLight1.position.set(-5, 5, 5);
-  scene.add(rectLight1);
-
-  const rectLight2 = new THREE.RectAreaLight(0x00ff00,5,4,10);
-  rectLight2.position.set(0, 5, 5);
-  scene.add(rectLight2);
-
-  const rectLight3 = new THREE.RectAreaLight(0x0000ff,5,4,10);
-  rectLight3.position.set(5, 5, 5);
-  scene.add(rectLight3);
-
-  scene.add(new RectAreaLightHelper(rectLight1));
-  scene.add(new RectAreaLightHelper(rectLight2));
-  scene.add(new RectAreaLightHelper(rectLight3));
-
-  const geoFloor = new THREE.BoxGeometry(2000, 0.1, 2000);
-  const matStdFloor = new THREE.MeshStandardMaterial({
-    color: 0xbcbcbc,
-    roughness: 0.1,
-    metalness: 0,
-  });
-  const mshStdFloor = new THREE.Mesh(geoFloor,matStdFloor);
-  scene.add(mshStdFloor);
-
-  const geoKnot = new THREE.TorusKnotGeometry(1.5, 0.5, 200, 16);
-  const matKnot = new THREE.MeshStandardMaterial({
-    color: 0xffffff,
-    roughness: 0,
-    metalness: 0
-  });
-  meshKnot = new THREE.Mesh(geoKnot,matKnot);
-  meshKnot.position.set(0,5,0);
-  scene.add(meshKnot);
-
-  const controls = new OrbitControls(camera,renderer.domElement);
-  controls.target.copy(meshKnot.position);
-
-  window.addEventListener('resize',onWindowResize);
-
-  stats = new Stats();
-  document.body.appendChild(stats.dom);
+// 创建几何体
+const cubeGeometry = new THREE.BoxGeometry(1,1,1);
+const cubeMaterial = new THREE.MeshBasicMaterial({color:0xffff00});
+const cube = new THREE.Mesh(cubeGeometry,cubeMaterial);
+// cube.position.x = 2;
+// cube.position.y = 3;
+// cube.position.z = 1;
 
 
+console.log(cube);
+
+
+// 将几何体添加到场景中
+scene.add(cube);
+
+// 初始化渲染器
+const renderer = new THREE.WebGL1Renderer();
+
+
+// 设置渲染器大小
+renderer.setSize(window.innerWidth,window.innerHeight);
+
+document.body.append(renderer.domElement);
+
+
+const axesHelper = new THREE.AxesHelper(250);
+scene.add(axesHelper);
+
+const controls = new OrbitControls(camera,renderer.domElement);
+
+function render(){
+  requestAnimationFrame(render);
+  cube.rotation.x += 0.01;
+  cube.rotation.y += 0.01;
+
+  renderer.render(scene,camera);
 
 }
 
 
-function onWindowResize() {
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-}
 
-function animation(time) {
-  meshKnot.rotation.y = time / 1000;
 
-  renderer.render(scene, camera);
-
-  stats.update();
-}
+render();
