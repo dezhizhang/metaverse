@@ -44,6 +44,13 @@ const controls = new OrbitControls(camera,renderer.domElement);
 
 function render(){
   requestAnimationFrame(render);
+
+  // 缩放
+  // cube.scale.x += 0.001;
+  // cube.scale.y += 0.001;
+  // cube.scale.z += 0.001;
+
+  // 旋转
   cube.rotation.x += 0.01;
   cube.rotation.y += 0.01;
 
