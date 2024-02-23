@@ -1,101 +1,110 @@
-import gsap from 'gsap';
-import *as dat from 'dat.gui';
 import * as THREE from 'three';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import { AnaglyphEffect } from 'three/addons/effects/AnaglyphEffect.js';
 
-//创建场影
-const scene = new THREE.Scene();
+let  camera, scene, renderer, effect;
 
-const click = new THREE.Clock();
+const spheres = [];
 
-//创建相机
-const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+let mouseX = 0;
+let mouseY = 0;
 
-// 设置相机位置
-camera.position.set(0, 0, 10);
-scene.add(camera);
+let windowHalfX = window.innerWidth / 2;
+let windowHalfY = window.innerHeight / 2;
 
-// 创建几何体
-const cubeGeometry = new THREE.BoxGeometry(1, 1, 1);
-const cubeMaterial = new THREE.MeshBasicMaterial({ color: 0xffff00 });
-const cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
-// cube.position.x = 2;
-// cube.position.y = 3;
-// cube.position.z = 1;
+document.addEventListener('mousemove', onDocumentMouseMove);
 
-// cube.rotation.set(Math.PI / 4,0,0);
+init();
+animate();
 
-// console.log(cube);
+function init() {
+  camera = new THREE.PerspectiveCamera(60,window.innerWidth / window.innerHeight,0.01,1000);
+  camera.position.z = 3;
 
-// 将几何体添加到场景中
-scene.add(cube);
+  const path = 'https://threejs.org/examples/textures/cube/pisa/';
+  const format = '.png';
+  const urls = [
+    path + 'px' + format,
+    path + 'nx' + format,
+    path + 'py' + format,
+    path + 'ny' + format,
+    path + 'pz' + format
+  ];
+  const textureCube = new THREE.CubeTextureLoader().load(urls);
 
-// 初始化渲染器
-const renderer = new THREE.WebGL1Renderer();
+  scene = new THREE.Scene();
+  scene.background = textureCube;
 
-// 设置渲染器大小
-renderer.setSize(window.innerWidth, window.innerHeight);
+  const geometry = new THREE.SphereGeometry(0.1,32,16);
+  const material = new THREE.MeshBasicMaterial({
+    color: 0xffffff,
+    envMap: {textureCube }
+  });
 
-document.body.append(renderer.domElement);
+  for(let i=0;i < 500;i++) {
+    const mesh = new THREE.Mesh(geometry,material);
+    mesh.position.x = Math.random() * 10 - 5;
+    mesh.position.y = Math.random() * 10 - 5;
+    mesh.position.z = Math.random() * 10 - 5;
 
-const axesHelper = new THREE.AxesHelper(250);
-scene.add(axesHelper);
+    mesh.scale.x = mesh.scale.y = mesh.scale.z = Math.random() * 3 + 1;
+    scene.add(mesh);
+    spheres.push(mesh);
 
-const controls = new OrbitControls(camera, renderer.domElement);
-// 设置控制器阻尼
-controls.enableDamping = true;
+  }
 
-window.addEventListener('resize',onWindowResize);
+  renderer = new THREE.WebGLRenderer();
+  renderer.setPixelRatio(window.devicePixelRatio);
+  renderer.setSize(window.innerWidth,window.innerHeight);
+
+  effect = new AnaglyphEffect(renderer);
+
+  document.body.appendChild(renderer.domElement);
+
+  window.addEventListener('resize',onWindowResize);
+
+  
+}
+
 
 function onWindowResize() {
+  windowHalfX = window.innerWidth / 2;
+  windowHalfY = window.innerHeight / 2;
+
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
 
-  renderer.setSize(window.innerWidth,window.innerHeight);
-  renderer.setPixelRatio(window.devicePixelRatio);
-
+  effect.setSize(window.innerWidth, window.innerHeight);
 }
 
-// 控制页面全屏
-window.addEventListener('dblclick',function() {
-  if(document.fullscreenElement) {
-    document.webkitExitFullscreen();
-  }
-  renderer.domElement.requestFullscreen();
+function onDocumentMouseMove(event) {
+  mouseX = (event.clientX - windowHalfX) / 100;
+  mouseY = (event.clientY - windowHalfY) / 100;
+}
 
-});
+//
 
-const gui = new dat.GUI();
-gui.add(cube.position,"x").min(0).max(5).step(1).name('位置').onChange((value) => {
-  cube.position.x = value;
-});
-gui.add(cube.rotation,'y').min(0).max(10).name('旋转').onChange((value) => {
-  cube.rotation.y = value;
-})
+function animate() {
+  requestAnimationFrame(animate);
 
-
-
-
-
+  render();
+}
 
 function render() {
-  requestAnimationFrame(render);
-  const delta = click.getDelta();
+  const timer = 0.0001 * Date.now();
+  camera.position.x += (mouseX - camera.position.x) * 0.05;
+  camera.position.y += (-mouseY - camera.position.y) * 0.05;
 
-  // gsap.to(cube.position,{
-  //   x:5,
-  //   duration:5
-  // });
-  // gsap.to(cube.rotation,{
-  //   x:Math.PI / 2,
-  //   duration:5
-  // });
-  // controls.update();
+  camera.lookAt(scene.position);
 
+  for(let i=0;i < spheres.length;i++) {
+    const sphere = spheres[i];
 
-  // cube.rotation.y += 0.01;
+    sphere.position.x  = 5 * Math.cos(timer + i);
+    sphere.position.y = 5 * Math.sin(timer + i * 1.1);
 
-  renderer.render(scene, camera);
+  }
+
+  effect.render(scene,camera);
+
 }
 
-render();
