@@ -8,6 +8,13 @@ scene.add(camera);
 
 const textureLoader = new THREE.TextureLoader();
 const texture = textureLoader.load('./01.jpg');
+texture.wrapS = THREE.RepeatWrapping;
+texture.wrapT = THREE.MirroredRepeatWrapping;
+
+
+
+
+
 
 const cubeGeometry = new THREE.BoxGeometry();
 const cubeMaterial = new THREE.MeshBasicMaterial({
