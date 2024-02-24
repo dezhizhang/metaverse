@@ -1,110 +1,70 @@
+/*
+ * :file description: 
+ * :name: /threejs/src/index.js
+ * :author: 张德志
+ * :copyright: (c) 2024, Tungee
+ * :date created: 2023-03-13 05:58:33
+ * :last editor: 张德志
+ * :date last edited: 2024-02-24 13:13:00
+ */
+
 import * as THREE from 'three';
-import { AnaglyphEffect } from 'three/addons/effects/AnaglyphEffect.js';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 
-let  camera, scene, renderer, effect;
+//创建场影
+const scene = new THREE.Scene();
 
-const spheres = [];
+//创建相机
+const camera = new THREE.PerspectiveCamera(75,window.innerWidth / window.innerHeight,0.1,1000);
 
-let mouseX = 0;
-let mouseY = 0;
+// 设置相机位置
+camera.position.set(0,0,10);
+scene.add(camera);
 
-let windowHalfX = window.innerWidth / 2;
-let windowHalfY = window.innerHeight / 2;
+// 创建几何体
+const geometry = new THREE.BufferGeometry();
+const vertices = new Float32Array([
+  -1.0,-1.0,1.0,
+  1.0,-1.0,1.0,
+  1.0,1.0,1.0,
+  1.0,1.0,1.0,
+  -1.0,1.0,1.0,
+  -1.0,-1.0,1.0
+]);
 
-document.addEventListener('mousemove', onDocumentMouseMove);
-
-init();
-animate();
-
-function init() {
-  camera = new THREE.PerspectiveCamera(60,window.innerWidth / window.innerHeight,0.01,1000);
-  camera.position.z = 3;
-
-  const path = 'https://threejs.org/examples/textures/cube/pisa/';
-  const format = '.png';
-  const urls = [
-    path + 'px' + format,
-    path + 'nx' + format,
-    path + 'py' + format,
-    path + 'ny' + format,
-    path + 'pz' + format
-  ];
-  const textureCube = new THREE.CubeTextureLoader().load(urls);
-
-  scene = new THREE.Scene();
-  scene.background = textureCube;
-
-  const geometry = new THREE.SphereGeometry(0.1,32,16);
-  const material = new THREE.MeshBasicMaterial({
-    color: 0xffffff,
-    envMap: {textureCube }
-  });
-
-  for(let i=0;i < 500;i++) {
-    const mesh = new THREE.Mesh(geometry,material);
-    mesh.position.x = Math.random() * 10 - 5;
-    mesh.position.y = Math.random() * 10 - 5;
-    mesh.position.z = Math.random() * 10 - 5;
-
-    mesh.scale.x = mesh.scale.y = mesh.scale.z = Math.random() * 3 + 1;
-    scene.add(mesh);
-    spheres.push(mesh);
-
-  }
-
-  renderer = new THREE.WebGLRenderer();
-  renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(window.innerWidth,window.innerHeight);
-
-  effect = new AnaglyphEffect(renderer);
-
-  document.body.appendChild(renderer.domElement);
-
-  window.addEventListener('resize',onWindowResize);
-
-  
-}
+geometry.setAttribute('position',new THREE.BufferAttribute(vertices,3));
 
 
-function onWindowResize() {
-  windowHalfX = window.innerWidth / 2;
-  windowHalfY = window.innerHeight / 2;
+const material = new THREE.MeshBasicMaterial({
+  color:0xffff00,
+  side:THREE.DoubleSide
+});
+const mesh = new THREE.Mesh(geometry,material);
 
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
+console.log(mesh);
 
-  effect.setSize(window.innerWidth, window.innerHeight);
-}
 
-function onDocumentMouseMove(event) {
-  mouseX = (event.clientX - windowHalfX) / 100;
-  mouseY = (event.clientY - windowHalfY) / 100;
-}
+// 将几何体添加到场景中
+scene.add(mesh);
 
-//
+// 初始化渲染器
+const renderer = new THREE.WebGL1Renderer();
 
-function animate() {
-  requestAnimationFrame(animate);
+// 设置渲染器大小
+renderer.setSize(window.innerWidth,window.innerHeight);
 
-  render();
-}
+const controls = new OrbitControls(camera,renderer.domElement);
+
+
 
 function render() {
-  const timer = 0.0001 * Date.now();
-  camera.position.x += (mouseX - camera.position.x) * 0.05;
-  camera.position.y += (-mouseY - camera.position.y) * 0.05;
-
-  camera.lookAt(scene.position);
-
-  for(let i=0;i < spheres.length;i++) {
-    const sphere = spheres[i];
-
-    sphere.position.x  = 5 * Math.cos(timer + i);
-    sphere.position.y = 5 * Math.sin(timer + i * 1.1);
-
-  }
-
-  effect.render(scene,camera);
-
+  requestAnimationFrame(render);
+  renderer.render(scene,camera);
 }
+
+render();
+
+document.body.append(renderer.domElement);
+
+// renderer.render(scene,camera);
 
