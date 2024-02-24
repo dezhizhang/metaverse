@@ -1,158 +1,80 @@
+/*
+ * :file description: 
+ * :name: /threejs/examples/loadingManager.js
+ * :author: 张德志
+ * :copyright: (c) 2024, Tungee
+ * :date created: 2024-02-15 21:48:14
+ * :last editor: 张德志
+ * :date last edited: 2024-02-24 19:36:38
+ */
 import * as THREE from 'three';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
-let camera, scene, raycaster, renderer, parentTransform, sphereInter;
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(75,window.innerWidth / window.innerHeight,0.01,10000);
+camera.position.set(0,0,10);
 
-const pointer = new THREE.Vector2();
-const radius = 100;
-let theta = 0;
 
-init();
-animate();
 
-function init() {
-  const info = document.createElement('div');
-  info.style.position = 'absolute';
-  info.style.top = '10px';
-  info.style.width = '100%';
-  info.style.textAlign = 'center';
+const manager = new THREE.LoadingManager();
+manager.onStart = function ( url, itemsLoaded, itemsTotal ) {
+	console.log( 'Started loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.' );
+};
 
-  info.innerHTML =
-    '<a href="https://threejs.org" target="_blank" rel="noopener">three.js</a> webgl - interactive lines';
-  document.body.appendChild(info);
+manager.onLoad = function ( ) {
+	console.log( 'Loading complete!');
+};
 
-  camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 1, 10000);
+manager.onProgress = function ( url, itemsLoaded, itemsTotal ) {
+	console.log( 'Loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.' );
+};
 
-  scene = new THREE.Scene();
-  scene.background = new THREE.Color(0xf0f0f0);
+manager.onError = function ( url ) {
+	console.log( 'There was an error loading ' + url );
+};
 
-  const geometry = new THREE.SphereGeometry(5);
-  const material = new THREE.MeshBasicMaterial({
-    color: 0xff0000,
-  });
 
-  sphereInter = new THREE.Mesh(geometry, material);
-  sphereInter.visible = false;
-  scene.add(sphereInter);
+const textureLoader = new THREE.TextureLoader(manager);
+const texture = textureLoader.load('./01.jpg');
+const texture1 = textureLoader.load('./wood-2.jpg');
 
-  const lineGeometry = new THREE.BufferGeometry();
 
-  const points = [];
-  const point = new THREE.Vector3();
-  const direction = new THREE.Vector3();
 
-  for (let i = 0; i < 50; i++) {
-    direction.x += Math.random() - 0.5;
-    direction.y += Math.random() - 0.5;
-    direction.z += Math.random() - 0.5;
+const geometry = new THREE.BoxGeometry();
+const material = new THREE.MeshStandardMaterial({
+  // map:texture1,
+  // displacementMap:texture,
+  // roughness: 0,
+  metalness:1,
+  metalnessMap:texture1,
+  // roughnessMap:texture,
+});
 
-    direction.normalize().multiplyScalar(10);
+const cube = new THREE.Mesh(geometry,material);
+scene.add(cube);
 
-    point.add(direction);
-    points.push(point.x, point.y, point.z);
-  }
-  lineGeometry.setAttribute('position', new THREE.Float32BufferAttribute(points, 3));
+const light = new THREE.AmbientLight(0xffffff,0.5);
+scene.add(light);
 
-  parentTransform = new THREE.Object3D();
-  parentTransform.position.x = Math.random() * 40 - 20;
-  parentTransform.position.y = Math.random() * 40 - 20;
-  parentTransform.position.z = Math.random() * 40 - 20;
+const directionalLight = new THREE.DirectionalLight(0xffffff,0.5);
+directionalLight.position.set(10,10,10);
+scene.add(directionalLight);
 
-  parentTransform.rotation.x = Math.random() * 2 * Math.PI;
-  parentTransform.rotation.y = Math.random() * 2 * Math.PI;
-  parentTransform.rotation.z = Math.random() * 2 * Math.PI;
 
-  parentTransform.scale.x = Math.random() + 0.5;
-  parentTransform.scale.y = Math.random() + 0.5;
-  parentTransform.scale.z = Math.random() + 0.5;
+const renderer = new THREE.WebGLRenderer();
+renderer.setSize(window.innerWidth,window.innerHeight);
+renderer.setPixelRatio(window.devicePixelRatio);
 
-  for (let i = 0; i < 50; i++) {
-    let object;
-
-    const lineMaterial = new THREE.LineBasicMaterial({ color: Math.random() * 0xffffff });
-    if (Math.random() > 0.5) {
-      object = new THREE.Line(lineGeometry, lineMaterial);
-    } else {
-      object = new THREE.LineSegments(lineGeometry, lineMaterial);
-    }
-    object.position.x = Math.random() * 400 - 200;
-    object.position.y = Math.random() * 400 - 200;
-    object.position.z = Math.random() * 400 - 200;
-
-    object.rotation.x = Math.random() * 2 * Math.PI;
-    object.rotation.y = Math.random() * 2 * Math.PI;
-    object.rotation.z = Math.random() * 2 * Math.PI;
-
-    object.scale.x = Math.random() + 0.5;
-    object.scale.y = Math.random() + 0.5;
-    object.scale.z = Math.random() + 0.5;
-
-    parentTransform.add(object);
-  }
-
-  scene.add(parentTransform);
-
-  raycaster = new THREE.Raycaster();
-  raycaster.params.Line.threshold = 3;
-
-  renderer = new THREE.WebGLRenderer({
-    antialias: true,
-  });
-  renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  document.body.appendChild(renderer.domElement);
-
-  document.addEventListener('pointermove', onPointerMove);
-
-  window.addEventListener('resize', onWindowResize);
-
-}
-
-function onWindowResize() {
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-
-  renderer.setSize(window.innerWidth, window.innerHeight);
-}
-
-function onPointerMove(event) {
-  pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
-  pointer.y = -(event.clientY / window.innerHeight) * 2 + 1;
-}
-
-//
-
-function animate() {
-  requestAnimationFrame(animate);
-
-  render();
-}
-
+const controls = new OrbitControls(camera,renderer.domElement);
 
 function render() {
-    theta += 0.1;
-
-    camera.position.x = radius * Math.sin(THREE.MathUtils.degToRad(theta));
-    camera.position.y = radius * Math.sin(THREE.MathUtils.degToRad(theta));
-    camera.position.z = radius * Math.cos(THREE.MathUtils.degToRad(theta));
-
-    camera.lookAt(scene.position);
-
-    camera.updateMatrixWorld();
-    raycaster.setFromCamera(pointer, camera);
-
-    const intersects = raycaster.intersectObjects(parentTransform.children, true);
-
-    if(intersects.length > 0) {
-        sphereInter.visible = true;
-        sphereInter.position.copy(intersects[0].point);
-    }else {
-        sphereInter.visible = false;
-    }
-
-    renderer.render(scene,camera);
-
-
-
+  requestAnimationFrame(render);
+  renderer.render(scene,camera);
 }
+
+render();
+
+document.body.appendChild(renderer.domElement);
+
 
 
