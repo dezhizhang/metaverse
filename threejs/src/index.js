@@ -8,21 +8,28 @@ scene.add(camera);
 
 const textureLoader = new THREE.TextureLoader();
 const texture = textureLoader.load('./01.jpg');
-texture.wrapS = THREE.RepeatWrapping;
-texture.wrapT = THREE.MirroredRepeatWrapping;
-
-
-
-
 
 
 const cubeGeometry = new THREE.BoxGeometry();
 const cubeMaterial = new THREE.MeshBasicMaterial({
-  map:texture,
-  side:THREE.DoubleSide
+  color:0xff00ff,
+  // map:texture,
+  side:THREE.DoubleSide,
+  alphaMap:texture,
+  transparent:true,
+  opacity:0.3,
 });
 const cube = new THREE.Mesh(cubeGeometry,cubeMaterial);
 scene.add(cube);
+
+
+const planeGeometry = new THREE.PlaneGeometry(1,1);
+const plane = new THREE.Mesh(planeGeometry,new THREE.MeshBasicMaterial({
+  side:THREE.DoubleSide,
+}));
+scene.add(plane);
+
+
 
 
 const renderer = new THREE.WebGLRenderer();
