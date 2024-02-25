@@ -1,3 +1,12 @@
+/*
+ * :file description: 
+ * :name: /threejs/src/index.js
+ * :author: 张德志
+ * :copyright: (c) 2024, Tungee
+ * :date created: 2023-03-13 05:58:33
+ * :last editor: 张德志
+ * :date last edited: 2024-02-25 14:24:01
+ */
 
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -8,57 +17,46 @@ const scene = new THREE.Scene();
 
 //创建相机
 const camera = new THREE.PerspectiveCamera(75,window.innerWidth / window.innerHeight,0.1,1000);
-
-// 设置相机位置
 camera.position.set(0,0,10);
 scene.add(camera);
 
-
-const cubeTextureLoader = new THREE.CubeTextureLoader();
-const envMap = cubeTextureLoader.load([
-  '/parliament/negx.jpg',
-  '/parliament/negy.jpg',
-  '/parliament/negz.jpg',
-  '/parliament/posx.jpg',
-  '/parliament/posy.jpg',
-  '/parliament/posz.jpg',
-]);
-
-scene.background = envMap;
-
-
-
+// 
 const sphereGeometry = new THREE.SphereGeometry(1,20,20);
-const sphereMaterial = new THREE.MeshStandardMaterial({
-  metalness:0.7,
-  roughness:0.1,
-  envMap:envMap
+const material = new THREE.MeshStandardMaterial({
+
 });
-const sphere = new THREE.Mesh(sphereGeometry,sphereMaterial);
+
+const sphere = new THREE.Mesh(sphereGeometry,material);
+sphere.castShadow = true;
 scene.add(sphere);
 
-
-// 创建几何体
-const cubeGeometry = new THREE.BoxGeometry(1,1,1);
-const cubeMaterial = new THREE.MeshBasicMaterial({color:0xffff00});
-const cube = new THREE.Mesh(cubeGeometry,cubeMaterial);
-
-// 将几何体添加到场景中
-scene.add(cube);
-
-// 初始化渲染器
-const renderer = new THREE.WebGL1Renderer();
+const planeGeometry = new THREE.PlaneGeometry(10,10);
+const plane = new THREE.Mesh(planeGeometry,material);
+plane.position.set(0,-1,0);
+plane.rotation.x = -Math.PI / 2;
+plane.receiveShadow = true;
+scene.add(plane);
 
 
-const controls = new OrbitControls(camera,renderer.domElement);
+// 灯光
+const directionalLight = new THREE.DirectionalLight(0xffffff,0.5);
+directionalLight.position.set(10,10,10);
+directionalLight.castShadow = true;
+scene.add(directionalLight);
+
+const light = new THREE.AmbientLight(0xffffff,0.5);
+scene.add(light);
 
 
 
-
-// 设置渲染器大小
+const renderer = new THREE.WebGLRenderer(); 
 renderer.setSize(window.innerWidth,window.innerHeight);
+renderer.setPixelRatio(window.devicePixelRatio);
+renderer.shadowMap.enabled = true; 
 
-document.body.append(renderer.domElement);
+
+const axesHelper = new THREE.AxesHelper(10);
+scene.add(axesHelper);
 
 
 function render() {
@@ -67,6 +65,11 @@ function render() {
 }
 
 render();
+
+const controls = new OrbitControls(camera,renderer.domElement);
+
+
+document.body.appendChild(renderer.domElement);
 
 
 
