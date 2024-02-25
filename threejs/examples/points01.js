@@ -1,38 +1,33 @@
+/*
+ * :file description: 
+ * :name: /threejs/examples/points01.js
+ * :author: 张德志
+ * :copyright: (c) 2024, Tungee
+ * :date created: 2024-02-25 16:17:38
+ * :last editor: 张德志
+ * :date last edited: 2024-02-25 16:18:30
+ */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
 const scene = new THREE.Scene();
 
-const camera = new THREE.PerspectiveCamera(75,window.innerWidth / window.innerHeight,0.1,10000);
+// 创建相机
+const camera = new THREE.PerspectiveCamera(75,window.innerWidth / window.innerHeight,0.1,1000);
 camera.position.set(0,0,10);
 scene.add(camera);
 
-
-const textureLoader = new THREE.TextureLoader();
-const snowflake = textureLoader.load('./snowflake1.png');
-
-const sphereGeometry = new THREE.SphereGeometry(3,30,30);
+const sphereGeometry = new THREE.SphereGeometry(3,20,20);
 const pointMaterial = new THREE.PointsMaterial();
 pointMaterial.size = 0.01;
-pointMaterial.color.set(0xff0000);
-pointMaterial.map = snowflake;
-pointMaterial.alphaMap = snowflake;
-pointMaterial.transparent = true;
-pointMaterial.sizeAttenuation = true;
-pointMaterial.depthWrite = false;
-pointMaterial.blending = THREE.AdditiveBlending;
 
 
 const sphere = new THREE.Points(sphereGeometry,pointMaterial);
 scene.add(sphere);
 
+
 const light = new THREE.AmbientLight(0xfffff);
 scene.add(light);
-
-
-const pointLight = new THREE.PointLight(0xfffff,0.5);
-pointLight.position.set(3,3,3);
-scene.add(pointLight);
 
 
 const renderer = new THREE.WebGLRenderer();
@@ -42,6 +37,7 @@ renderer.shadowMap.enabled = true;
 
 const axesHelper = new THREE.AxesHelper(10);
 scene.add(axesHelper);
+
 
 function render() {
   requestAnimationFrame(render);
@@ -53,5 +49,3 @@ render();
 const controls = new OrbitControls(camera,renderer.domElement);
 
 document.body.appendChild(renderer.domElement);
-
-
