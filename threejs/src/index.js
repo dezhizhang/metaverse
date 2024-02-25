@@ -2,11 +2,9 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
 const scene = new THREE.Scene();
-
 const camera = new THREE.PerspectiveCamera(75,window.innerWidth / window.innerHeight,0.1,10000);
 camera.position.set(0,0,10);
 scene.add(camera);
-
 
 const textureLoader = new THREE.TextureLoader();
 const snowflake = textureLoader.load('./snowflake1.png');
@@ -20,8 +18,7 @@ pointMaterial.alphaMap = snowflake;
 pointMaterial.transparent = true;
 pointMaterial.sizeAttenuation = true;
 pointMaterial.depthWrite = false;
-pointMaterial.blending = THREE.AdditiveBlending;
-
+pointMaterial.blendAlpha = THREE.AdditiveBlending;
 
 const sphere = new THREE.Points(sphereGeometry,pointMaterial);
 scene.add(sphere);
@@ -29,11 +26,9 @@ scene.add(sphere);
 const light = new THREE.AmbientLight(0xfffff);
 scene.add(light);
 
-
 const pointLight = new THREE.PointLight(0xfffff,0.5);
 pointLight.position.set(3,3,3);
 scene.add(pointLight);
-
 
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth,window.innerHeight);
@@ -53,5 +48,3 @@ render();
 const controls = new OrbitControls(camera,renderer.domElement);
 
 document.body.appendChild(renderer.domElement);
-
-
