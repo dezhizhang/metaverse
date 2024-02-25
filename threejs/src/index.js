@@ -9,18 +9,37 @@ scene.add(camera);
 const textureLoader = new THREE.TextureLoader();
 const snowflake = textureLoader.load('./snowflake1.png');
 
-const sphereGeometry = new THREE.SphereGeometry(3,30,30);
+const geometry = new THREE.BufferGeometry();
+
+
+const count = 5000;
+
+const colors = new Float32Array(count * 3);
+const positions = new Float32Array(count * 3);
+
+for(let i=0;i < count * 3;i++) {
+  colors[i] = new THREE.Color(0xffffff * Math.random());
+  positions[i] = (Math.random()  - 0.5) * 100;
+  
+}
+
+geometry.setAttribute('position',new THREE.BufferAttribute(positions,3));
+geometry.setAttribute('color',new THREE.BufferAttribute(colors,3))
+
+
+// const sphereGeometry = new THREE.SphereGeometry(3,30,30);
 const pointMaterial = new THREE.PointsMaterial();
-pointMaterial.size = 0.01;
+pointMaterial.size = 1;
 pointMaterial.color.set(0xff0000);
 pointMaterial.map = snowflake;
 pointMaterial.alphaMap = snowflake;
 pointMaterial.transparent = true;
 pointMaterial.sizeAttenuation = true;
 pointMaterial.depthWrite = false;
+pointMaterial.vertexColors = true;
 pointMaterial.blendAlpha = THREE.AdditiveBlending;
 
-const sphere = new THREE.Points(sphereGeometry,pointMaterial);
+const sphere = new THREE.Points(geometry,pointMaterial);
 scene.add(sphere);
 
 const light = new THREE.AmbientLight(0xfffff);
