@@ -23,19 +23,15 @@ plane.receiveShadow = true;
 scene.add(plane);
 
 
-// 灯光
-const spotLight = new THREE.SpotLight(0xffffff,0.5);
-spotLight.position.set(5,5,5);
-spotLight.castShadow = true;
-spotLight.shadow.radius = 20;
-spotLight.color = new THREE.Color(0xff00ff);
-spotLight.shadow.mapSize.set(4096,4096);
-spotLight.target = sphere;
-scene.add(spotLight);
+const pointLight = new THREE.PointLight(0xff0000,1);
+pointLight.position.set(2,2,2);
+pointLight.castShadow = true;
+pointLight.intensity = 2;
+scene.add(pointLight);
 
+const pointLightHelper = new THREE.PointLightHelper(pointLight);
+scene.add(pointLightHelper);
 
-const spotLightHelper = new THREE.SpotLightHelper( spotLight );
-scene.add(spotLightHelper)
 
 const light = new THREE.AmbientLight(0xffffff,0.5);
 scene.add(light);
