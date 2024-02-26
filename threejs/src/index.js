@@ -1,84 +1,100 @@
-
 import * as THREE from 'three';
-import * as CANNON from 'cannon-es';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
+
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+let container, camera, scene, renderer, mesh;
+
+init();
+
+function init() {
+  container = document.getElementById('container');
+
+  scene = new THREE.Scene();
+  scene.background = new THREE.Color(0x8fbcd4);
+
+  camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 20);
+  camera.position.z = 10;
+  scene.add(camera);
+
+  scene.add(new THREE.AmbientLight(0x8fbcd4, 1.5));
+
+  const pointLight = new THREE.PointLight(0xffffff, 200);
+  camera.add(pointLight);
+
+  const geometry = createGeometry();
+
+  const material = new THREE.MeshPhongMaterial({
+    color: 0xff0000,
+    flatShading: true,
+  });
+
+  mesh = new THREE.Mesh(geometry, material);
+  scene.add(mesh);
 
 
-const clock = new THREE.Clock();
-//创建场影
-const scene = new THREE.Scene();
+  renderer = new THREE.WebGLRenderer({ antialias: true });
+  renderer.setPixelRatio(window.devicePixelRatio);
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setAnimationLoop(function () {
+    renderer.render(scene, camera);
+  });
+  document.body.appendChild(renderer.domElement);
 
-//创建相机
-const camera = new THREE.PerspectiveCamera(75,window.innerWidth / window.innerHeight,0.1,1000);
+  const controls = new OrbitControls(camera, renderer.domElement);
+  controls.enableZoom = false;
 
-// 设置相机位置
-camera.position.set(0,0,10);
-scene.add(camera);
-
-
-const sphereGeometry = new THREE.SphereGeometry(1,20,20);
-const sphereMaterial = new THREE.MeshStandardMaterial();
-const sphere = new THREE.Mesh(sphereGeometry,sphereMaterial);
-sphere.castShadow = true;
-scene.add(sphere);
-
-const floor = new THREE.Mesh(
-  new THREE.PlaneGeometry(20,20),
-  new THREE.MeshStandardMaterial(),
-);
-floor.position.set(0,-5,0)
-floor.rotation.x = -Math.PI / 2;
-floor.receiveShadow = true;
-scene.add(floor);
-
-
-const ambientLight = new THREE.AmbientLight(0xffffff,0.5);
-scene.add(ambientLight);
-
-
-const directionalLight = new THREE.DirectionalLight(0xffffff,0.5);
-directionalLight.castShadow = true;
-scene.add(directionalLight);
-
-
-const renderer = new THREE.WebGL1Renderer();
-
-// 设置渲染器大小
-renderer.setSize(window.innerWidth,window.innerHeight);
-renderer.shadowMap.enabled = true; 
-
-document.body.append(renderer.domElement);
-
-
-const controls = new OrbitControls(camera,renderer.domElement);
-
-
-const axesHelper = new THREE.AxesHelper(10);
-scene.add(axesHelper);
-
-
-const world = new CANNON.World();
-world.gravity.set(0,-9.8,0);
-const sphereShape = new CANNON.Sphere(1);
-
-const sphereBody = new CANNON.Body({
-  shape:sphereShape,
-  position:new CANNON.Vec3(0,0,0),
-  mass:1,
-  material:new CANNON.Material(),
-});
-
-world.addBody(sphereBody);
-
-
-function render() {
-  requestAnimationFrame(render);
-  world.step(1 / 120,clock.getDelta());
-  sphere.position.copy(sphereBody.position);
-  renderer.render(scene,camera);
+  window.addEventListener('resize', onWindowResize);
 }
 
-render();
+function createGeometry() {
+  const geometry = new THREE.BoxGeometry(2, 2, 2, 32, 32, 32);
 
+  // create an empty array to  hold targets for the attribute we want to morph
+  // morphing positions and normals is supported
+  geometry.morphAttributes.position = [];
 
+  // the original positions of the cube's vertices
+  const positionAttribute = geometry.attributes.position;
 
+  // for the first morph target we'll move the cube's vertices onto the surface of a sphere
+  const spherePositions = [];
+
+  // for the second morph target, we'll twist the cubes vertices
+  const twistPositions = [];
+  const direction = new THREE.Vector3(1, 0, 0);
+  const vertex = new THREE.Vector3();
+
+  for (let i = 0; i < positionAttribute.count; i++) {
+    const x = positionAttribute.getX(i);
+    const y = positionAttribute.getY(i);
+    const z = positionAttribute.getZ(i);
+
+    spherePositions.push(
+      x * Math.sqrt(1 - (y * y) / 2 - (z * z) / 2 + (y * y * z * z) / 3),
+      y * Math.sqrt(1 - (z * z) / 2 - (x * x) / 2 + (z * z * x * x) / 3),
+      z * Math.sqrt(1 - (x * x) / 2 - (y * y) / 2 + (x * x * y * y) / 3),
+    );
+
+    // stretch along the x-axis so we can see the twist better
+    vertex.set(x * 2, y, z);
+
+    vertex
+      .applyAxisAngle(direction, (Math.PI * x) / 2)
+      .toArray(twistPositions, twistPositions.length);
+  }
+
+  // add the spherical positions as the first morph target
+  geometry.morphAttributes.position[0] = new THREE.Float32BufferAttribute(spherePositions, 3);
+
+  // add the twisted positions as the second morph target
+  geometry.morphAttributes.position[1] = new THREE.Float32BufferAttribute(twistPositions, 3);
+
+  return geometry;
+}
+
+function onWindowResize() {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+
+  renderer.setSize(window.innerWidth, window.innerHeight);
+}
