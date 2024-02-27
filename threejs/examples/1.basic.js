@@ -1,3 +1,12 @@
+/*
+ * :file description: 
+ * :name: /threejs/examples/1.basic.js
+ * :author: 张德志
+ * :copyright: (c) 2024, Tungee
+ * :date created: 2023-03-13 05:58:33
+ * :last editor: 张德志
+ * :date last edited: 2024-02-27 22:16:20
+ */
 
 import * as THREE from 'three';
 
@@ -12,9 +21,17 @@ camera.position.set(0,0,10);
 scene.add(camera);
 
 // 创建几何体
-const cubeGeometry = new THREE.BoxGeometry(1,1,1);
-const cubeMaterial = new THREE.MeshBasicMaterial({color:0xffff00});
-const cube = new THREE.Mesh(cubeGeometry,cubeMaterial);
+// const cubeGeometry = new THREE.BoxGeometry(1,1,1);
+// const cubeMaterial = new THREE.MeshBasicMaterial({color:0xffff00});
+// const cube = new THREE.Mesh(cubeGeometry,cubeMaterial);
+
+const geometry = new THREE.PlaneGeometry();
+const material = new THREE.MeshBasicMaterial({
+    color:'#00ff00',
+});
+const floor = new THREE.Mesh(geometry,material);
+scene.add(floor);
+
 
 // 将几何体添加到场景中
 scene.add(cube);

@@ -1,135 +1,72 @@
+/*
+ * :file description:
+ * :name: /threejs/src/index.js
+ * :author: 张德志
+ * :copyright: (c) 2024, Tungee
+ * :date created: 2023-03-13 05:58:33
+ * :last editor: 张德志
+ * :date last edited: 2024-02-27 22:27:32
+ */
+
 import * as THREE from 'three';
-import Stats from 'three/addons/libs/stats.module.js';
-import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
-import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
-import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
-import { TAARenderPass } from 'three/addons/postprocessing/TAARenderPass.js';
-import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
-let camera, scene, renderer, controls, stats, mesh, material;
+//创建场影
+const scene = new THREE.Scene();
 
-let composer, renderPass, taaRenderPass, outputPass;
+//创建相机
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 
-let needsUpdate = false;
+// 设置相机位置
+camera.position.set(0, 0, 10);
+scene.add(camera);
 
-const amount = parseInt(window.location.search.slice(1)) || 3;
-const count = Math.pow(amount, 3);
 
-const color = new THREE.Color();
+const geometry = new THREE.PlaneGeometry();
 
-const params = {
-  alpha: 0.5,
-  alphaHash: true,
-  taa: true,
-  sampleLevel: 2,
-};
 
-init();
-animate();
-
-function init() {
-  camera = new THREE.PerspectiveCamera(60,window.innerWidth / window.innerHeight,0.1,10000);
-  camera.position.set(amount,amount,amount);
-  camera.lookAt(0,0,0);
-
-  scene = new THREE.Scene();
-  const geometry = new THREE.IcosahedronGeometry(0.5,3);
-  material = new THREE.MeshStandardMaterial({
-    color: 0xffffff,
-    alphaHash: params.alphaHash,
-    opacity: params.alpha,
-  });
-  mesh = new THREE.InstancedMesh(geometry,material,count);
-
-  let i=0;
-  const offset = (amount - 1) / 2;
-  const matrix = new THREE.Matrix4();
-
-  for(let x = 0; x < amount;x++) {
-    for(let y = 0;y < amount;y++) {
-      for(let z =0;z < amount;z++) {
-        matrix.setPosition(offset - x,offset - y,offset - z);
-        mesh.setMatrixAt(i,matrix);
-        mesh.setColorAt(i,color.setHex(Math.random() * 0xffffff));
-        i++;
-      }
+const shaderMaterial = new THREE.ShaderMaterial({
+  vertexShader:`
+    void main() {
+      gl_Position = vec4(position,1.0);
     }
-  }
-  scene.add(mesh);
+  `,
+  fragmentShader:`
+    void main() {
+      gl_FragColor = vec4(1.0,0.0,0.0,1.0);
+    }
+  `
+});
 
-  renderer = new THREE.WebGLRenderer({
-    antialias:true
-  });
-  renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(window.innerWidth,window.innerHeight);
-  document.body.appendChild(renderer.domElement);
-
-  const environment = new RoomEnvironment(renderer);
-  const pmremGenerator = new THREE.PMREMGenerator(renderer);
-
-  scene.environment = pmremGenerator.fromScene(environment).texture;
-  environment.dispose();
-
-  composer = new EffectComposer(renderer);
-  renderPass = new RenderPass(scene,camera);
-  renderPass.enabled = false;
-
-
-  taaRenderPass = new TAARenderPass(scene,camera);
-  outputPass = new OutputPass();
-
-  composer.addPass(renderPass);
-  composer.addPass(taaRenderPass);
-  composer.addPass(outputPass);
-
-  controls = new OrbitControls(camera,renderer.domElement);
-  controls.enableZoom = false;
-  controls.enablePan = false;
+const material = new THREE.MeshBasicMaterial({
+  color: '#00ff00',
+  side: THREE.DoubleSide,
   
-  controls.addEventListener('change',() => (needsUpdate = true));
-
-  stats = new Stats();
-  document.body.appendChild(stats.dom);
-
-  window.addEventListener('resize',onWindowResize);
+});
 
 
 
-}
+const floor = new THREE.Mesh(geometry, shaderMaterial);
+scene.add(floor);
+
+// 初始化渲染器
+const renderer = new THREE.WebGL1Renderer();
+
+// 设置渲染器大小
+renderer.setSize(window.innerWidth, window.innerHeight);
+
+document.body.append(renderer.domElement);
 
 
-
-function onWindowResize() {
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  composer.setSize(window.innerWidth, window.innerHeight);
-
-  needsUpdate = true;
-}
+const axesHelper = new THREE.AxesHelper(5);
+scene.add(axesHelper);
 
 
-
-function animate() {
-  requestAnimationFrame(animate);
-
-  render();
-
-  stats.update();
-}
+const controls = new OrbitControls(camera, renderer.domElement);
 
 function render() {
-  if (needsUpdate) {
-    taaRenderPass.accumulate = false;
-    taaRenderPass.sampleLevel = 0;
-
-    needsUpdate = false;
-  } else {
-    taaRenderPass.accumulate = true;
-    taaRenderPass.sampleLevel = params.sampleLevel;
-  }
-
-  composer.render();
+  requestAnimationFrame(render);
+  renderer.render(scene, camera);
 }
+
+render();
