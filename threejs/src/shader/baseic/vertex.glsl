@@ -1,5 +1,3 @@
-
-
 precision mediump float;
 
 attribute vec3 position;
@@ -10,7 +8,6 @@ uniform mat4 projectionMatrix;
 uniform mat4 viewMatrix;
 
 varying vec2 vUv;
-
 
 void main() {
 	vUv = uv;
