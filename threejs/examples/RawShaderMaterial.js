@@ -1,15 +1,6 @@
-/*
- * :file description: 
- * :name: /threejs/src/index.js
- * :author: 张德志
- * :copyright: (c) 2024, Tungee
- * :date created: 2023-03-13 05:58:33
- * :last editor: 张德志
- * :date last edited: 2024-02-28 23:00:26
- */
 import * as THREE from 'three';
-import vertexShader from './shader/baseic/vertex.glsl';
-import fragmentShader from './shader/baseic/fragment.glsl';
+// import vertexShader from './shader/baseic/vertex.glsl';
+// import fragmentShader from './shader/baseic/fragment.glsl';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
 //创建场影
@@ -27,8 +18,36 @@ const geometry = new THREE.PlaneGeometry();
 
 
 const shaderMaterial = new THREE.RawShaderMaterial({
-  vertexShader,
-  fragmentShader,
+  vertexShader:`
+    
+    precision mediump float;
+
+    attribute vec3 position;
+    attribute vec2 uv;
+
+    uniform mat4 modelMatrix;
+    uniform mat4 projectionMatrix;
+    uniform mat4 viewMatrix;
+
+    varying vec2 vUv;
+
+
+    void main() {
+        vUv = uv;
+        gl_Position = modelMatrix * projectionMatrix * viewMatrix * vec4(position,1.0);
+    }
+
+  `,
+  fragmentShader:`
+    precision mediump float;
+
+    varying vec2 vUv;
+    
+    
+    void main() {
+        gl_FragColor = vec4(vUv, 0.0, 1.0);
+    }
+  `,
   side:THREE.DoubleSide,
 });
 
