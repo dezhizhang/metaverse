@@ -9,10 +9,14 @@ uniform mat4 viewMatrix;
 
 varying vec2 vUv;
 
+// 获取时间
+uniform float uTime;
+
 void main() {
 	vUv = uv;
 	vec4 modelPosition = modelMatrix * vec4(position,1.0);
-	modelPosition.z = sin(modelPosition.x * 5.0);
+	modelPosition.z = sin((modelPosition.x + uTime) * 10.0) * 0.1;
+	modelPosition.y += sin((modelPosition.x + uTime) * 10.0)* 0.1;
 
 	gl_Position =  projectionMatrix * viewMatrix * modelPosition;
 }

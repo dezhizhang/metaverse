@@ -3,6 +3,10 @@ import vertexShader from './shader/baseic/vertex.glsl';
 import fragmentShader from './shader/baseic/fragment.glsl';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
+
+const clock = new THREE.Clock();
+
+
 //创建场影
 const scene = new THREE.Scene();
 
@@ -13,6 +17,9 @@ const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerH
 camera.position.set(0, 0, 10);
 scene.add(camera);
 
+const textureLoader = new THREE.TextureLoader();
+const textMap  = textureLoader.load('./01.jpg');
+
 
 const geometry = new THREE.PlaneGeometry(1,1,64,64);
 
@@ -22,6 +29,14 @@ const shaderMaterial = new THREE.RawShaderMaterial({
   fragmentShader,
   side:THREE.DoubleSide,
   wireframe:true,
+  uniforms:{
+    uTime:{
+      value:0
+    },
+    uTexture:{
+      value:textMap
+    }
+  }
 });
 
 
@@ -52,6 +67,8 @@ window.addEventListener('resize',() => {
 
 function render() {
   requestAnimationFrame(render);
+  const elapsedTime = clock.getElapsedTime();
+  shaderMaterial.uniforms.uTime.value = elapsedTime;
   renderer.render(scene, camera);
 }
 
