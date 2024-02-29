@@ -1,102 +1,58 @@
 import * as THREE from 'three';
 import vertexShader from './shader/baseic/vertex.glsl';
 import fragmentShader from './shader/baseic/fragment.glsl';
-import Stats from 'stats.js';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
-let stats;
+//创建场影
+const scene = new THREE.Scene();
 
-let camera, scene, renderer;
+//创建相机
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 
-init();
-animate();
+// 设置相机位置
+camera.position.set(0, 0, 10);
+scene.add(camera);
 
-function init() {
-  
-  camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 10);
-  camera.position.z = 2;
 
-  scene = new THREE.Scene();
-  scene.background = new THREE.Color(0x101010);
+const geometry = new THREE.PlaneGeometry(1,1,64,64);
 
-  // geometry
-  // nr of triangles with 3 vertices per triangle
-  const vertexCount = 200 * 3;
 
-  const geometry = new THREE.BufferGeometry();
+const shaderMaterial = new THREE.RawShaderMaterial({
+  vertexShader,
+  fragmentShader,
+  side:THREE.DoubleSide,
+  wireframe:true,
+});
 
-  const positions = [];
-  const colors = [];
 
-  for (let i = 0; i < vertexCount; i++) {
-    // adding x,y,z
-    positions.push(Math.random() - 0.5);
-    positions.push(Math.random() - 0.5);
-    positions.push(Math.random() - 0.5);
+const floor = new THREE.Mesh(geometry, shaderMaterial);
+scene.add(floor);
 
-    // adding r,g,b,a
-    colors.push(Math.random() * 255);
-    colors.push(Math.random() * 255);
-    colors.push(Math.random() * 255);
-    colors.push(Math.random() * 255);
-  }
+// 初始化渲染器
+const renderer = new THREE.WebGL1Renderer();
 
-  const positionAttribute = new THREE.Float32BufferAttribute(positions, 3);
-  const colorAttribute = new THREE.Uint8BufferAttribute(colors, 4);
+// 设置渲染器大小
+renderer.setSize(window.innerWidth, window.innerHeight);
 
-  colorAttribute.normalized = true; // this will map the buffer values to 0.0f - +1.0f in the shader
+document.body.append(renderer.domElement);
 
-  geometry.setAttribute('position', positionAttribute);
-  geometry.setAttribute('color', colorAttribute);
 
-  // material
+const axesHelper = new THREE.AxesHelper(5);
+scene.add(axesHelper);
 
-  const material = new THREE.RawShaderMaterial({
-    uniforms: {
-      time: { value: 1.0 },
-    },
-    vertexShader,
-    fragmentShader,
-    side: THREE.DoubleSide,
-    transparent: true,
-  });
 
-  const mesh = new THREE.Mesh(geometry, material);
-  scene.add(mesh);
+const controls = new OrbitControls(camera, renderer.domElement);
 
-  renderer = new THREE.WebGLRenderer();
-  renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  document.body.appendChild(renderer.domElement);
 
-  stats = new Stats();
-  document.body.appendChild(stats.dom);
-
-  window.addEventListener('resize', onWindowResize);
-}
-
-function onWindowResize() {
+window.addEventListener('resize',() => {
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
-
-  renderer.setSize(window.innerWidth, window.innerHeight);
-}
-
-//
-
-function animate() {
-  requestAnimationFrame(animate);
-
-  render();
-  stats.update();
-}
+  renderer.setSize(window.innerWidth,window.innerHeight);
+})
 
 function render() {
-  const time = performance.now();
-
-  const object = scene.children[0];
-
-  object.rotation.y = time * 0.0005;
-  object.material.uniforms.time.value = time * 0.005;
-
+  requestAnimationFrame(render);
   renderer.render(scene, camera);
 }
+
+render();
