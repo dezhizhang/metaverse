@@ -35,7 +35,54 @@ void main() {
 	// gl_FragColor = vec4(strength,strength,strength,1.0);
 
 	// 利用绝对值境像渐变
-	float strength = abs(vUv.x - 0.5);
-	gl_FragColor = vec4(strength, strength, strength, 1.0);
+	// float strength = abs(vUv.x - 0.5);
+	// gl_FragColor = vec4(strength, strength, strength, 1.0);
+
+	// float strength = abs(vUv.y - 0.5);
+	// gl_FragColor = vec4(strength,strength,strength,1.0);
+
+	// 利于最小值
+	// float strength = min(abs(vUv.x - 0.5),abs(vUv.y - 0.5));
+	// gl_FragColor = vec4(strength,strength,strength,1.0);
+
+	// 利用最大值
+	// float strength = max(abs(vUv.x - 0.5),abs(vUv.y - 0.5));
+	// gl_FragColor = vec4(strength,strength,strength,1.0);
+
+	// float strength = 1.0 - step(0.2,max(abs(vUv.x - 0.5),abs(vUv.y - 0.5)));
+	// gl_FragColor = vec4(strength,strength,strength,1.0);
+
+	// 利用向下取整
+	// float strength = floor(vUv.y * 10.0) / 10.0;
+	// gl_FragColor = vec4(strength,strength,strength,1.0);
+
+	// float strength = (floor(vUv.x * 10.0) / 10.0) * (floor(vUv.y * 10.0) / 10.0);
+	// gl_FragColor = vec4(strength,strength,strength,1.0);
+
+
+	// float strength = length(vUv);
+	// gl_FragColor = vec4(strength,strength,strength,1.0);
+
+
+	// float strength = 1.0 -  distance(vUv,vec2(0.5,0.5));
+	// gl_FragColor = vec4(strength,strength,strength,1.0);
+
+	// float strength = 0.15 / distance(vUv,vec2(0.5,0.5)) - 1.0;
+	// gl_FragColor = vec4(strength,strength,strength,strength);
+
+	// float strength = 0.15 / distance(vec2(vUv.x,(vUv.y - 0.5) * 0.5),vec2(0.5,0.5)) - 1.0;
+	
+	// gl_FragColor = vec4(strength,strength,strength,1.0);
+
+	// float strength = 0.15 / distance(vec2(vUv.x,vUv.y),vec2(0.5,0.5)) - 1.0;
+	// gl_FragColor = vec4(strength,strength,strength,strength);
+
+
+	// float strength = distance(vUv,vec2(0.5,0.5));
+	// gl_FragColor = vec4(strength,strength,strength,1.0);
+
+
+
+
 
 }
