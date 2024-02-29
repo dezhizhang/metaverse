@@ -1,15 +1,20 @@
 precision mediump float;
+precision mediump int;
+
+uniform mat4 modelViewMatrix; // optional
+uniform mat4 projectionMatrix; // optional
 
 attribute vec3 position;
-attribute vec2 uv;
+attribute vec4 color;
 
-uniform mat4 modelMatrix;
-uniform mat4 projectionMatrix;
-uniform mat4 viewMatrix;
-
-varying vec2 vUv;
+varying vec3 vPosition;
+varying vec4 vColor;
 
 void main() {
-	vUv = uv;
-	gl_Position = modelMatrix * projectionMatrix * viewMatrix * vec4(position,1.0);
+
+	vPosition = position;
+	vColor = color;
+
+	gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+
 }
