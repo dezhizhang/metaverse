@@ -1,75 +1,53 @@
 import * as THREE from 'three';
-import vertexShader from './shader/baseic/vertex.glsl';
-import fragmentShader from './shader/baseic/fragment.glsl';
+import vertexShader from './shader/deep/vertex.glsl';
+import fragmentShader from './shader/deep/fragment.glsl';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
 
 const clock = new THREE.Clock();
 
-
-//创建场影
 const scene = new THREE.Scene();
 
-//创建相机
-const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-
-// 设置相机位置
-camera.position.set(0, 0, 10);
+const camera = new THREE.PerspectiveCamera(75,window.innerWidth / window.innerHeight,0.1,1000);
+camera.position.set(0,0,10);
 scene.add(camera);
 
 const textureLoader = new THREE.TextureLoader();
-const textMap  = textureLoader.load('./01.jpg');
-
+const uTexture = textureLoader.load('./01.jpg');
 
 const geometry = new THREE.PlaneGeometry(1,1,64,64);
-
 
 const shaderMaterial = new THREE.RawShaderMaterial({
   vertexShader,
   fragmentShader,
   side:THREE.DoubleSide,
   wireframe:true,
-  uniforms:{
-    uTime:{
-      value:0
-    },
-    uTexture:{
-      value:textMap
-    }
-  }
 });
 
-
-const floor = new THREE.Mesh(geometry, shaderMaterial);
+const floor = new THREE.Mesh(geometry,shaderMaterial);
 scene.add(floor);
 
-// 初始化渲染器
-const renderer = new THREE.WebGL1Renderer();
-
-// 设置渲染器大小
-renderer.setSize(window.innerWidth, window.innerHeight);
-
-document.body.append(renderer.domElement);
-
+const renderer = new THREE.WebGLRenderer();
+renderer.setSize(window.innerWidth,window.innerHeight);
+document.body.appendChild(renderer.domElement);
 
 const axesHelper = new THREE.AxesHelper(5);
 scene.add(axesHelper);
 
+const controls = new OrbitControls(camera,renderer.domElement);
 
-const controls = new OrbitControls(camera, renderer.domElement);
-
-
-window.addEventListener('resize',() => {
+window.addEventListener('resize',function() {
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
   renderer.setSize(window.innerWidth,window.innerHeight);
-})
+});
 
 function render() {
   requestAnimationFrame(render);
-  const elapsedTime = clock.getElapsedTime();
-  shaderMaterial.uniforms.uTime.value = elapsedTime;
-  renderer.render(scene, camera);
+  // const elapsedTime = clock.getElapsedTime();
+  // shaderMaterial.uniforms.uTime.value = elapsedTime;
+  renderer.render(scene,camera);
 }
 
 render();
+
