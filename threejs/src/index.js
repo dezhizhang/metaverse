@@ -5,10 +5,12 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2023-03-13 05:58:33
  * :last editor: 张德志
- * :date last edited: 2024-03-02 21:09:07
+ * :date last edited: 2024-03-03 18:24:02
  */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import vertexShader from './shader/water/vertex.glsl';
+import fragmentShader from './shader/water/fragment.glsl';
 
 
 const scene = new THREE.Scene();
@@ -17,9 +19,14 @@ const camera = new THREE.PerspectiveCamera(75,window.innerWidth / window.innerHe
 camera.position.set(0,0,10);
 scene.add(camera);
 
-const plane = new THREE.Mesh(new THREE.PlaneGeometry(1,1),new THREE.MeshBasicMaterial({
-	color:0xff00ff,
-}));
+const planeGeometry = new THREE.PlaneGeometry(1,1);
+
+const  shaderMaterial = new THREE.ShaderMaterial({
+	vertexShader,
+	fragmentShader
+})
+
+const plane = new THREE.Mesh(planeGeometry,shaderMaterial);
 plane.rotation.x = -Math.PI / 2;
 scene.add(plane);
 
