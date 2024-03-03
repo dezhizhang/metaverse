@@ -1,80 +1,76 @@
-/*
- * :file description:
- * :name: /threejs/src/index.js
- * :author: 张德志
- * :copyright: (c) 2024, Tungee
- * :date created: 2023-03-13 05:58:33
- * :last editor: 张德志
- * :date last edited: 2024-03-03 21:14:14
- */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 
 const clock = new THREE.Clock();
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 camera.position.set(0, 0, 10);
+
 scene.add(camera);
 
 
-const planeGeometry = new THREE.PlaneGeometry(1, 1, 512, 512);
+const directionalLight = new THREE.DirectionalLight(0xffffff,1);
+directionalLight.castShadow = true;
+directionalLight.position.set(0,0,200);
+scene.add(directionalLight);
 
 
-const meshBasicMaterial = new THREE.MeshBasicMaterial({
-	color:0xff00ff
-});
+const planeGeometry = new THREE.PlaneGeometry(20,20);
+const meshBasicMaterial = new THREE.MeshBasicMaterial();
 
-const basicUnifrom = {
-	uTime:{
-		value:0,
-	}
-}
 
-meshBasicMaterial.onBeforeCompile = function(shader,renderer) {
-	console.log(shader.vertexShader)
 
-	console.log(basicUnifrom)
+const textureLoader = new THREE.TextureLoader();
+const mapColor = textureLoader.load('https://threejs.org/examples/models/gltf/LeePerrySmith/Map-COL.jpg');
 
-	shader.uniforms.uTime = basicUnifrom.uTime;
-	shader.vertexShader = shader.vertexShader.replace(
-		'#include <common>',
-		`
-		#include <common>
-		uniform float uTime;
-		`
-	)
-	shader.vertexShader = shader.vertexShader.replace(
-		'#include <begin_vertex>',
-		`
-		#include <begin_vertex>
-		transformed.x += sin(uTime) * 2.0;
-		transformed.z += cos(uTime) * 2.0;
-		`
-	)
-}
+const normalMap = textureLoader.load('https://threejs.org/examples/models/gltf/LeePerrySmith/Infinite-Level_02_Tangent_SmoothUV.jpg')
 
-const plane = new THREE.Mesh(planeGeometry, meshBasicMaterial);
-plane.rotation.y = -Math.PI / 2;
+
+const meshStandardMaterial = new THREE.MeshStandardMaterial({
+	map:mapColor,
+	normalMap:normalMap,
+	side:THREE.DoubleSide,
+})
+
+const loader = new GLTFLoader();
+loader.load('https://threejs.org/examples/models/gltf/LeePerrySmith/LeePerrySmith.glb',(gltf) => {
+	const mesh = gltf.scene.children[0];
+	mesh.material = meshStandardMaterial;
+	scene.add(mesh);
+})
+
+
+const plane = new THREE.Mesh(planeGeometry,meshBasicMaterial);
+plane.position.set(0,0,-6);
+plane.castShadow = true;
 scene.add(plane);
 
 
 const renderer = new THREE.WebGLRenderer();
 renderer.setPixelRatio(window.devicePixelRatio);
-renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setSize(window.innerWidth,window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
-const controls = new OrbitControls(camera, renderer.domElement);
+
+
+window.addEventListener('resize',() => {
+	camera.aspect = window.innerWidth / window.innerHeight;
+	camera.updateProjectionMatrix();
+	normalMap.setSize(window.innerWidth,window.innerHeight);
+	renderer.setPixelRatio(window.devicePixelRatio);
+
+})
+
+const controls = new OrbitControls(camera,renderer.domElement);
 
 const axesHelper = new THREE.AxesHelper(5);
 scene.add(axesHelper);
 
 function render() {
-  requestAnimationFrame(render);
-  const elapsedTime = clock.getElapsedTime();
-  basicUnifrom.uTime.value = elapsedTime;
-  renderer.render(scene, camera);
+	requestAnimationFrame(render);
+	renderer.render(scene,camera);
 }
 
 render();
