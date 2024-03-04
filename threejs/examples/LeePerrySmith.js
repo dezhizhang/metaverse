@@ -1,9 +1,15 @@
+/*
+ * :file description: 
+ * :name: /threejs/examples/LeePerrySmith.js
+ * :author: 张德志
+ * :copyright: (c) 2024, Tungee
+ * :date created: 2024-03-04 09:08:31
+ * :last editor: 张德志
+ * :date last edited: 2024-03-04 09:08:32
+ */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
-
-
-const baseUrl = 'https://threejs.org/examples'
 
 const clock = new THREE.Clock();
 
@@ -26,42 +32,16 @@ const meshBasicMaterial = new THREE.MeshBasicMaterial();
 
 
 const textureLoader = new THREE.TextureLoader();
-const mapColor = textureLoader.load(`${baseUrl}/models/gltf/LeePerrySmith/Map-COL.jpg`);
+const mapColor = textureLoader.load('https://threejs.org/examples/models/gltf/LeePerrySmith/Map-COL.jpg');
 
-const normalMap = textureLoader.load(`${baseUrl}/models/gltf/LeePerrySmith/Infinite-Level_02_Tangent_SmoothUV.jpg`);
+const normalMap = textureLoader.load('https://threejs.org/examples/models/gltf/LeePerrySmith/Infinite-Level_02_Tangent_SmoothUV.jpg')
 
 
 const meshStandardMaterial = new THREE.MeshStandardMaterial({
 	map:mapColor,
 	normalMap:normalMap,
 	side:THREE.DoubleSide,
-});
-
-
-
-
-meshStandardMaterial.onBeforeCompile = function(shader) {
-  shader.vertexShader =shader.vertexShader.replace(
-    '#include <common>',
-    `
-    #include <common>
-    mat2 rotate2d(float _angle){
-      return mat2(cos(_angle),-sin(_angle),sin(_angle),cos(_angle));
-    }
-    `
-  );
-
-  shader.vertexShader = shader.vertexShader.replace(
-    '#include <begin_vertex>',
-    `
-    #include <begin_vertex>
-    float angle = transformed.y * 0.5;
-    mat2 rotateMatrix = rotate2d(angle);
-    transformed.xz = rotateMatrix * transformed.xz;
-    `
-  );
-
-}
+})
 
 const loader = new GLTFLoader();
 loader.load('https://threejs.org/examples/models/gltf/LeePerrySmith/LeePerrySmith.glb',(gltf) => {
@@ -87,7 +67,7 @@ document.body.appendChild(renderer.domElement);
 window.addEventListener('resize',() => {
 	camera.aspect = window.innerWidth / window.innerHeight;
 	camera.updateProjectionMatrix();
-	renderer.setSize(window.innerWidth,window.innerHeight);
+	normalMap.setSize(window.innerWidth,window.innerHeight);
 	renderer.setPixelRatio(window.devicePixelRatio);
 
 })
