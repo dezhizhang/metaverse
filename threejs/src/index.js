@@ -9,16 +9,29 @@ const camera = new THREE.PerspectiveCamera(75,window.innerWidth / window.innerHe
 camera.position.set(0,0,10);
 scene.add(camera);
 
+
+// 导入纹理
+const textureLoader = new THREE.TextureLoader();
+const texture = textureLoader.load('/snowflake4.png');
+
 const geometry = new THREE.BufferGeometry();
 const position = new Float32Array([0,0,0]);
+
 geometry.setAttribute('position',new THREE.BufferAttribute(position,3));
 const material = new THREE.ShaderMaterial({
   vertexShader,
   fragmentShader,
   transparent:true,
+  uniforms:{
+    uTexture:{
+      value:texture
+    }
+  }
 });
 const points = new THREE.Points(geometry,material);
 scene.add(points);
+
+
 
 const axesHelper = new THREE.AxesHelper(5);
 scene.add(axesHelper);
