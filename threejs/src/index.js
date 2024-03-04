@@ -1,105 +1,56 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+import vertexShader from './shader/point/vertex.glsl';
+import fragmentShader from './shader/point/fragment.glsl';
 
 
-const baseUrl = 'https://threejs.org/examples'
-
-const clock = new THREE.Clock();
-
+//创建场影
 const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-camera.position.set(0, 0, 10);
 
+//创建相机
+const camera = new THREE.PerspectiveCamera(75,window.innerWidth / window.innerHeight,0.1,1000);
+
+// 设置相机位置
+camera.position.set(0,0,10);
 scene.add(camera);
 
 
-const directionalLight = new THREE.DirectionalLight(0xffffff,1);
-directionalLight.castShadow = true;
-directionalLight.position.set(0,0,200);
-scene.add(directionalLight);
-
-
-const planeGeometry = new THREE.PlaneGeometry(20,20);
-const meshBasicMaterial = new THREE.MeshBasicMaterial();
-
-
-
-const textureLoader = new THREE.TextureLoader();
-const mapColor = textureLoader.load(`${baseUrl}/models/gltf/LeePerrySmith/Map-COL.jpg`);
-
-const normalMap = textureLoader.load(`${baseUrl}/models/gltf/LeePerrySmith/Infinite-Level_02_Tangent_SmoothUV.jpg`);
-
-
-const meshStandardMaterial = new THREE.MeshStandardMaterial({
-	map:mapColor,
-	normalMap:normalMap,
-	side:THREE.DoubleSide,
+const geometry = new THREE.BufferGeometry();
+const position = new Float32Array([0,0,0]);
+geometry.setAttribute('position',new THREE.BufferAttribute(position,3));
+const material = new THREE.ShaderMaterial({
+  vertexShader,
+  fragmentShader
 });
 
 
 
 
-meshStandardMaterial.onBeforeCompile = function(shader) {
-  shader.vertexShader =shader.vertexShader.replace(
-    '#include <common>',
-    `
-    #include <common>
-    mat2 rotate2d(float _angle){
-      return mat2(cos(_angle),-sin(_angle),sin(_angle),cos(_angle));
-    }
-    `
-  );
 
-  shader.vertexShader = shader.vertexShader.replace(
-    '#include <begin_vertex>',
-    `
-    #include <begin_vertex>
-    float angle = transformed.y * 0.5;
-    mat2 rotateMatrix = rotate2d(angle);
-    transformed.xz = rotateMatrix * transformed.xz;
-    `
-  );
+//  生成点
+const points  = new THREE.Points(geometry,material);
+scene.add(points);
 
-}
-
-const loader = new GLTFLoader();
-loader.load('https://threejs.org/examples/models/gltf/LeePerrySmith/LeePerrySmith.glb',(gltf) => {
-	const mesh = gltf.scene.children[0];
-	mesh.material = meshStandardMaterial;
-	scene.add(mesh);
-})
-
-
-const plane = new THREE.Mesh(planeGeometry,meshBasicMaterial);
-plane.position.set(0,0,-6);
-plane.castShadow = true;
-scene.add(plane);
-
-
-const renderer = new THREE.WebGLRenderer();
-renderer.setPixelRatio(window.devicePixelRatio);
-renderer.setSize(window.innerWidth,window.innerHeight);
-document.body.appendChild(renderer.domElement);
-
-
-
-window.addEventListener('resize',() => {
-	camera.aspect = window.innerWidth / window.innerHeight;
-	camera.updateProjectionMatrix();
-	renderer.setSize(window.innerWidth,window.innerHeight);
-	renderer.setPixelRatio(window.devicePixelRatio);
-
-})
-
-const controls = new OrbitControls(camera,renderer.domElement);
 
 const axesHelper = new THREE.AxesHelper(5);
 scene.add(axesHelper);
 
+
+// 初始化渲染器
+const renderer = new THREE.WebGL1Renderer();
+
+// 设置渲染器大小
+renderer.setSize(window.innerWidth,window.innerHeight);
+
+document.body.append(renderer.domElement);
+
+const controls = new OrbitControls(camera,renderer.domElement);
+
+
+
 function render() {
-	requestAnimationFrame(render);
-	renderer.render(scene,camera);
+  requestAnimationFrame(render);
+  renderer.render(scene,camera);
 }
 
 render();
