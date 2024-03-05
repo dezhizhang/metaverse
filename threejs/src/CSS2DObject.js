@@ -1,3 +1,12 @@
+/*
+ * :file description: 
+ * :name: /threejs/src/CSS2DObject.js
+ * :author: 张德志
+ * :copyright: (c) 2024, Tungee
+ * :date created: 2024-03-06 07:30:43
+ * :last editor: 张德志
+ * :date last edited: 2024-03-06 07:30:44
+ */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { CSS2DObject, CSS2DRenderer } from 'three/examples/jsm/renderers/CSS2DRenderer.js';
