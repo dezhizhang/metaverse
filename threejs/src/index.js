@@ -1,122 +1,141 @@
 import * as THREE from 'three';
-import Stats from 'stats.js';
-import * as BufferGeometryUtils from 'three/examples/jsm/utils/BufferGeometryUtils.js';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import vertexShader from './shader/point/vertex.glsl';
+import fragmentShader from './shader/point/fragment.glsl';
 
-let renderer, scene, camera, stats;
+const scene = new THREE.Scene();
 
-let particles;
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+camera.position.set(0, 0, 10);
+scene.add(camera);
 
-const PARTICLE_SIZE = 20;
+const textureLoader = new THREE.TextureLoader();
+const texture = textureLoader.load('/snowflake4.png');
+const texture1 = textureLoader.load('/snowflake1.png');
+const texture2 = textureLoader.load('/snowflake3.png');
 
-let raycaster, intersects;
-let pointer, INTERSECTED;
+let points = null;
+let geometry = null;
+let material = null;
 
-init();
-animate();
+let params = {
+  count:1000,
+  size:0.1,
+  radius:5,
+  branches:4,
+  spin:0.5,
+  color:'#ff6030',
+  outColor:'#1b3984',
+}
 
-function init() {
-  scene = new THREE.Scene();
 
-  camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 10000);
-  camera.position.z = 250;
+let galaxyColor = new THREE.Color(params.color);
+let outGalaxyColor = new THREE.Color(params.color);
 
-  let boxGeometry = new THREE.BoxGeometry(200, 200, 200, 16, 16, 16);
-  boxGeometry.deleteAttribute('normal');
-  boxGeometry.deleteAttribute('uv');
 
-  boxGeometry = BufferGeometryUtils.mergeVertices(boxGeometry);
 
-  const positionAttribute = boxGeometry.getAttribute('position');
+function generateGalaxy() {
+  // if(points !== null && geometry != null) {
+  //   geometry.dispose();
+  //   material.dispose();
+  //   scene.remove(points);
+  // }
 
-  const colors = [];
-  const sizes = [];
+  geometry = new THREE.BufferGeometry();
+  const positions = new Float32Array(params.count * 3);
+  const colors = new Float32Array(params.count * 3);
+  const scales = new Float32Array(params.count);
 
-  const color = new THREE.Color();
+  // 图案属性
+  const imgIndex = new Float32Array(params.count);
 
-  for (let i = 0, l = positionAttribute.count; i < l; i++) {
-    color.setHSL(0.01 + 0.1 * (i / l), 1.0, 0.5);
-    color.toArray(colors, i * 3);
-    sizes[i] = PARTICLE_SIZE * 0.5;
+
+
+  for(let i=0;i < params.count;i++) {
+    const current = i * 3;
+    const branchAngle = (i % params.branches) * ((2 * Math.PI) / params.branches);
+    const radius = Math.random() * params.radius;
+
+    const randomX = Math.pow(Math.random() * 2 - 1,3) * 0.5 * (params.radius - radius) * 0.3;
+    const randomY = Math.pow(Math.random() * 2 - 1,3) * 0.5 * (params.radius - radius) * 0.3;
+    const randomZ = Math.pow(Math.random() * 2 - 1,3) * 0.5 * (params.radius - radius) * 0.3;
+
+    positions[current] = Math.cos(branchAngle) * radius + randomX;
+    positions[current + 1] = randomY;
+    positions[current + 2] = Math.sin(branchAngle) * radius + randomZ;
+
+    const maxColor = galaxyColor.clone();
+    maxColor.lerp(outGalaxyColor,radius / params.radius);
+
+    colors[current] = maxColor.r;
+    colors[current + 1] = maxColor.g;
+    colors[current + 2] = maxColor.b;
+
+
+    scales[current] = Math.random();
+
+    imgIndex[current] = current % 3;
+
   }
 
-  const geometry = new THREE.BufferGeometry();
-  geometry.setAttribute('position', positionAttribute);
-  geometry.setAttribute('customColor', new THREE.Float32BufferAttribute(colors, 3));
-  geometry.setAttribute('size', new THREE.Float32BufferAttribute(sizes, 1));
+  geometry.setAttribute('position',new THREE.BufferAttribute(positions,3));
+  geometry.setAttribute('color',new THREE.BufferAttribute(colors,3));
+  geometry.setAttribute('aScale',new THREE.BufferAttribute(scales,1));
+  geometry.setAttribute('imgIndex',new THREE.BufferAttribute(imgIndex,1));
+
+
 
   const material = new THREE.ShaderMaterial({
+    vertexShader,
+    fragmentShader,
+    transparent:true,
+    vertexColors:true,
+    blending:THREE.AdditiveBlending,
+    depthWrite:false,
     uniforms: {
-      color: { value: new THREE.Color(0xffffff) },
-      pointTexture: {
-        value: new THREE.TextureLoader().load(
-          'https://threejs.org/examples/textures/sprites/disc.png',
-        ),
+      uTexture: {
+        value: texture,
       },
-      alphaTest: { value: 0.9 },
+      uTexture1: {
+        value: texture1,
+      },
+      uTexture2: {
+        value: texture2,
+      },
     },
-    vertexShader: document.getElementById('vertexshader').textContent,
-    fragmentShader: document.getElementById('fragmentshader').textContent,
   });
-  particles = new THREE.Points(geometry, material);
-  scene.add(particles);
 
-  renderer = new THREE.WebGLRenderer();
-  renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  document.body.appendChild(renderer.domElement);
+  console.log(geometry);
 
-  raycaster = new THREE.Raycaster();
-  pointer = new THREE.Vector2();
 
-  stats = new Stats();
-  document.body.appendChild(stats.dom);
+  points = new THREE.Points(geometry,material);
+  scene.add(points);
 
-  window.addEventListener('resize', onWindowResize);
-  document.addEventListener('pointermove', onPointerMove);
+
 }
 
-function onPointerMove(event) {
-  pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
-  pointer.y = -(event.clientY / window.innerHeight) * 2 + 1;
-}
+generateGalaxy();
 
-function onWindowResize() {
+const axesHelper = new THREE.AxesHelper(5);
+scene.add(axesHelper);
+
+const renderer = new THREE.WebGLRenderer();
+renderer.setSize(window.innerWidth,window.innerHeight);
+document.body.appendChild(renderer.domElement);
+
+
+window.addEventListener('resize',() =>{
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
-  renderer.setSize(window.innerWidth, window.innerHeight);
-}
+  renderer.setSize(window.innerWidth,window.innerHeight);
+})
 
-function animate() {
-  requestAnimationFrame(animate);
-  render();
-  stats.update();
-}
+const controls = new OrbitControls(camera,renderer.domElement);
 
 function render() {
-  particles.rotation.x += 0.0005;
-  particles.rotation.y += 0.001;
-
-  const geometry = particles.geometry;
-  const attributes = geometry.attributes;
-
-  raycaster.setFromCamera(pointer, camera);
-
-  intersects = raycaster.intersectObject(particles);
-
-  if (intersects.length > 0) {
-    if (INTERSECTED != intersects[0].index) {
-      attributes.size.array[INTERSECTED] = PARTICLE_SIZE;
-
-      INTERSECTED = intersects[0].index;
-
-      attributes.size.array[INTERSECTED] = PARTICLE_SIZE * 1.25;
-      attributes.size.needsUpdate = true;
-    }
-  } else if (INTERSECTED !== null) {
-    attributes.size.array[INTERSECTED] = PARTICLE_SIZE;
-    attributes.size.needsUpdate = true;
-    INTERSECTED = null;
-  }
-
-  renderer.render(scene, camera);
+  requestAnimationFrame(render);
+  renderer.render(scene,camera);
 }
+
+render();
+

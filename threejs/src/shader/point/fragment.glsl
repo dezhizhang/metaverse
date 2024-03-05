@@ -1,4 +1,10 @@
+precision mediump float;
+
 uniform sampler2D uTexture;
+uniform sampler2D uTexture1;
+uniform sampler2D uTexture2;
+
+varying float vImgIndex;
 
 void main() {
 	// 渐变圆
@@ -13,8 +19,18 @@ void main() {
 	// gl_FragColor = vec4(strength);
 
 	// 根据纹理设置图案
-	vec4 textureColor = texture2D(uTexture,gl_PointCoord);
-	gl_FragColor = vec4(textureColor.rgb,textureColor.r) ;
+	// vec4 textureColor = texture2D(uTexture,gl_PointCoord);
+	// gl_FragColor = vec4(gl_PointCoord,1.0,textureColor.r) ;
+	vec4 textureColor;
+	if(vImgIndex == 0.0) {
+		textureColor = texture2D(uTexture, gl_PointCoord);
+	} else if(vImgIndex == 1.0) {
+		textureColor = texture2D(uTexture1, gl_PointCoord);
+	} else if(vImgIndex == 2.0) {
+		textureColor = texture2D(uTexture2, gl_PointCoord);
+	}
 
+	// vec4 textureColor = texture2D(uTexture,gl_PointCoord);
+	gl_FragColor = vec4(gl_PointCoord, 1.0, textureColor.r);
 
 }
