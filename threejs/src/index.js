@@ -1,50 +1,122 @@
 import * as THREE from 'three';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-import vertexShader from './shader/point/vertex.glsl';
-import fragmentShader from './shader/point/fragment.glsl';
+import Stats from 'stats.js';
+import * as BufferGeometryUtils from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 
-const scene = new THREE.Scene();
+let renderer, scene, camera, stats;
 
-const camera = new THREE.PerspectiveCamera(75,window.innerWidth / window.innerHeight,0.1,1000);
-camera.position.set(0,0,10);
-scene.add(camera);
+let particles;
 
+const PARTICLE_SIZE = 20;
 
-// 导入纹理
-const textureLoader = new THREE.TextureLoader();
-const texture = textureLoader.load('/snowflake4.png');
+let raycaster, intersects;
+let pointer, INTERSECTED;
 
-const geometry = new THREE.BufferGeometry();
-const position = new Float32Array([0,0,0]);
+init();
+animate();
 
-geometry.setAttribute('position',new THREE.BufferAttribute(position,3));
-const material = new THREE.ShaderMaterial({
-  vertexShader,
-  fragmentShader,
-  transparent:true,
-  uniforms:{
-    uTexture:{
-      value:texture
-    }
+function init() {
+  scene = new THREE.Scene();
+
+  camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 10000);
+  camera.position.z = 250;
+
+  let boxGeometry = new THREE.BoxGeometry(200, 200, 200, 16, 16, 16);
+  boxGeometry.deleteAttribute('normal');
+  boxGeometry.deleteAttribute('uv');
+
+  boxGeometry = BufferGeometryUtils.mergeVertices(boxGeometry);
+
+  const positionAttribute = boxGeometry.getAttribute('position');
+
+  const colors = [];
+  const sizes = [];
+
+  const color = new THREE.Color();
+
+  for (let i = 0, l = positionAttribute.count; i < l; i++) {
+    color.setHSL(0.01 + 0.1 * (i / l), 1.0, 0.5);
+    color.toArray(colors, i * 3);
+    sizes[i] = PARTICLE_SIZE * 0.5;
   }
-});
-const points = new THREE.Points(geometry,material);
-scene.add(points);
 
+  const geometry = new THREE.BufferGeometry();
+  geometry.setAttribute('position', positionAttribute);
+  geometry.setAttribute('customColor', new THREE.Float32BufferAttribute(colors, 3));
+  geometry.setAttribute('size', new THREE.Float32BufferAttribute(sizes, 1));
 
+  const material = new THREE.ShaderMaterial({
+    uniforms: {
+      color: { value: new THREE.Color(0xffffff) },
+      pointTexture: {
+        value: new THREE.TextureLoader().load(
+          'https://threejs.org/examples/textures/sprites/disc.png',
+        ),
+      },
+      alphaTest: { value: 0.9 },
+    },
+    vertexShader: document.getElementById('vertexshader').textContent,
+    fragmentShader: document.getElementById('fragmentshader').textContent,
+  });
+  particles = new THREE.Points(geometry, material);
+  scene.add(particles);
 
-const axesHelper = new THREE.AxesHelper(5);
-scene.add(axesHelper);
+  renderer = new THREE.WebGLRenderer();
+  renderer.setPixelRatio(window.devicePixelRatio);
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  document.body.appendChild(renderer.domElement);
 
-const renderer = new THREE.WebGL1Renderer();
-renderer.setSize(window.innerWidth,window.innerHeight);
-document.body.appendChild(renderer.domElement);
+  raycaster = new THREE.Raycaster();
+  pointer = new THREE.Vector2();
 
-const controls = new OrbitControls(camera,renderer.domElement);
+  stats = new Stats();
+  document.body.appendChild(stats.dom);
 
-function render() {
-  requestAnimationFrame(render);
-  renderer.render(scene,camera);
+  window.addEventListener('resize', onWindowResize);
+  document.addEventListener('pointermove', onPointerMove);
 }
 
-render();
+function onPointerMove(event) {
+  pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
+  pointer.y = -(event.clientY / window.innerHeight) * 2 + 1;
+}
+
+function onWindowResize() {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+}
+
+function animate() {
+  requestAnimationFrame(animate);
+  render();
+  stats.update();
+}
+
+function render() {
+  particles.rotation.x += 0.0005;
+  particles.rotation.y += 0.001;
+
+  const geometry = particles.geometry;
+  const attributes = geometry.attributes;
+
+  raycaster.setFromCamera(pointer, camera);
+
+  intersects = raycaster.intersectObject(particles);
+
+  if (intersects.length > 0) {
+    if (INTERSECTED != intersects[0].index) {
+      attributes.size.array[INTERSECTED] = PARTICLE_SIZE;
+
+      INTERSECTED = intersects[0].index;
+
+      attributes.size.array[INTERSECTED] = PARTICLE_SIZE * 1.25;
+      attributes.size.needsUpdate = true;
+    }
+  } else if (INTERSECTED !== null) {
+    attributes.size.array[INTERSECTED] = PARTICLE_SIZE;
+    attributes.size.needsUpdate = true;
+    INTERSECTED = null;
+  }
+
+  renderer.render(scene, camera);
+}
