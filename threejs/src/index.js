@@ -1,3 +1,12 @@
+/*
+ * :file description: 
+ * :name: /threejs/src/index.js
+ * :author: 张德志
+ * :copyright: (c) 2024, Tungee
+ * :date created: 2024-03-04 22:01:21
+ * :last editor: 张德志
+ * :date last edited: 2024-03-06 19:42:56
+ */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import {  CSS2DObject, CSS2DRenderer } from 'three/examples/jsm/renderers/CSS2DRenderer.js';
@@ -7,8 +16,13 @@ const clock = new THREE.Clock();
 const EARTH_RADIUS = 1;
 const MOON_RADIUS = 0.27;
 
+const WIDTH = window.innerWidth;
+const HEOGHT = window.innerHeight;
+
+const raycaster = new THREE.Raycaster();
+
 const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(45,window.innerWidth / window.innerHeight,0.1,2000);
+const camera = new THREE.PerspectiveCamera(45,WIDTH / HEOGHT,0.1,2000);
 camera.position.set(10,5,20);
 
 scene.add(new THREE.AmbientLight(0xffffff,3));
@@ -58,6 +72,14 @@ const earthLabel = new CSS2DObject(earthDiv);
 earthLabel.position.set(0,1,0);
 earth.add(earthLabel);
 
+const chinaDiv = document.createElement('div');
+chinaDiv.className = 'label';
+chinaDiv.innerHTML = '中国';
+const chinaLabel = new CSS2DObject(chinaDiv);
+chinaLabel.position.set(-0.3,0.5,-0.9);
+earth.add(chinaLabel);
+
+
 const moonDiv = document.createElement('div');
 moonDiv.className = 'label';
 moonDiv.innerHTML = '月球';
@@ -67,7 +89,7 @@ moon.add(moonLabel);
 
 // 实例化css2d渲染器
 const labelRender = new CSS2DRenderer();
-labelRender.setSize(window.innerWidth,window.innerHeight);
+labelRender.setSize(WIDTH,HEOGHT);
 document.body.appendChild(labelRender.domElement);
 labelRender.domElement.style.position = 'fixed';
 labelRender.domElement.style.top = '0px';
@@ -78,9 +100,11 @@ labelRender.domElement.style.zIndex = 10;
 const controls = new OrbitControls(camera,labelRender.domElement);
 
 window.addEventListener('resize',() => {
-  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.aspect = WIDTH / HEOGHT;
   camera.updateProjectionMatrix();
-  renderer.setSize(window.innerWidth,window.innerHeight);
+  renderer.setSize(WIDTH,HEOGHT);
+  labelRender.setSize(WIDTH,HEOGHT);
+  
 });
 
 function render() {
@@ -88,6 +112,14 @@ function render() {
   const elapsed = clock.getElapsedTime();
 
   moon.position.set(Math.sin(elapsed) * 5,0,Math.cos(elapsed) * 5);
+
+  // 检测射线的碰撞
+  chinaLabel.position.project(camera);
+  raycaster.setFromCamera(chinaLabel.position,camera);
+
+
+  const intersects = raycaster.intersectObjects(scene.children,true);
+  
   renderer.render(scene,camera);
   labelRender.render(scene,camera);
 }
