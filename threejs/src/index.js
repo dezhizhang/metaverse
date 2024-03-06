@@ -1,61 +1,83 @@
 import * as THREE from 'three';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
-const clock = new THREE.Clock();
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
+import { DotScreenPass } from 'three/examples/jsm/postprocessing/DotScreenPass.js';
 
-const textureLoader = new THREE.TextureLoader();
+let  renderer, scene, camera, controls;
 
 
-const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(75,window.innerWidth / window.innerHeight,0.1,200);
-camera.position.set(0,0,10);
-scene.add(camera);
 
-const curve = new THREE.CatmullRomCurve3([
-  new THREE.Vector3(-10,0,10),
-  new THREE.Vector3(-5,5,5),
-  new THREE.Vector3(0,0,0),
-  new THREE.Vector3(5,-5,5),
-  new THREE.Vector3(10,0,10)
-]);
+scene = new THREE.Scene();
+scene.background = new THREE.Color(0xff00ff)
+
+
+camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.25, 20);
+camera.position.set(-1.8, 0.6, 2.7);
+
+renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setPixelRatio(window.devicePixelRatio);
+renderer.setSize(window.innerWidth, window.innerHeight);
+document.body.appendChild(renderer.domElement);
+
+
+
+// 后期合成
+const effectComposer = new EffectComposer(renderer);
+effectComposer.setSize(window.innerWidth,window.innerHeight);
+
+//添加渲染通道
+const renderPass = new RenderPass(scene,camera);
+effectComposer.addPass(renderPass);
+
+// 点效果
+const dotScreenPass = new DotScreenPass();
+effectComposer.addPass(dotScreenPass);
+
+
+controls = new OrbitControls(camera, renderer.domElement);
+controls.addEventListener('change', render); // use if there is no animation loop
+controls.enableZoom = false;
+controls.enablePan = false;
+controls.target.set(0, 0, -0.2);
+controls.update();
 
 scene.add(new THREE.AmbientLight(0xffffff,3));
 
-const points = curve.getPoints(50);
-const geometry = new THREE.BufferGeometry().setFromPoints(points);
-const material = new THREE.LineBasicMaterial({color:0xff0000});
-const curveObject = new THREE.LineLoop(geometry,material);
-scene.add(curveObject);
+const directionalLight = new THREE.DirectionalLight(0xffffff,1);
+directionalLight.castShadow = true;
+directionalLight.position.set(0,0,200);
+scene.add(directionalLight);
 
 
-const moonGeometry = new THREE.SphereGeometry(0.75, 16, 16);
-const moonMaterial = new THREE.MeshPhongMaterial({
-  shininess: 5,
-  map: textureLoader.load('https://threejs.org/examples/textures/planets/moon_1024.jpg'),
-});
-moonMaterial.map.colorSpace = THREE.SRGBColorSpace;
-const moon = new THREE.Mesh(moonGeometry, moonMaterial);
-scene.add(moon);
+const gltfLoader = new GLTFLoader();
+gltfLoader.load('https://threejs.org/examples/models/gltf/DamagedHelmet/glTF/DamagedHelmet.gltf',(gltf) => {
+  const mesh = gltf.scene.children[0];
+  console.log('mes',mesh);
 
-const renderer = new THREE.WebGLRenderer();
-const controls = new OrbitControls(camera,renderer.domElement);
+  scene.add(mesh)
+})
 
-renderer.setSize(window.innerWidth,window.innerHeight);
-document.body.appendChild(renderer.domElement);
+
+window.addEventListener('resize', onWindowResize);
+
+function onWindowResize() {
+  camera.aspect = window.innerWidth / window.innerHeight;
+
+  camera.updateProjectionMatrix();
+
+  renderer.setSize(window.innerWidth, window.innerHeight);
+
+  render();
+}
 
 function render() {
   requestAnimationFrame(render);
-  const elapsed = clock.getElapsedTime();
-
-  const time = elapsed % 1 * 0.1;
-  const point = curve.getPoint(time);
-  moon.position.copy(point);
-  renderer.render(scene,camera);
+  effectComposer.render(scene, camera);
 }
 
 render();
-
-
-
 
 
