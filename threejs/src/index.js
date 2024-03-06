@@ -4,9 +4,11 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
 import { DotScreenPass } from 'three/examples/jsm/postprocessing/DotScreenPass.js';
+import { SMAAPass } from 'three/examples/jsm/postprocessing/SMAAPass.js';
+import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';
 
 const scene = new THREE.Scene();
-scene.background = new THREE.Color(0xff00ff);
+// scene.background = new THREE.Color(0xff00ff);
 
 const camera = new THREE.PerspectiveCamera(45,window.innerWidth / window.innerHeight,0.1,1000);
 camera.position.set(-1.8,0.6,2.7);
@@ -22,11 +24,23 @@ document.body.appendChild(renderer.domElement);
 const effectComposer = new EffectComposer(renderer);
 effectComposer.setSize(window.innerWidth,window.innerHeight);
 
+// 渲染通道
 const renderPass = new RenderPass(scene,camera);
 effectComposer.addPass(renderPass);
 
+// 点效果
 const dotScreenPass = new DotScreenPass();
+dotScreenPass.enabled = false;
 effectComposer.addPass(dotScreenPass);
+
+// 抗锯齿感
+const smaaPass = new SMAAPass();
+effectComposer.addPass(smaaPass);
+
+// 发光效果
+const unrealBloomPass = new UnrealBloomPass();
+effectComposer.addPass(unrealBloomPass)
+
 
 
 const controls = new OrbitControls(camera,renderer.domElement);
