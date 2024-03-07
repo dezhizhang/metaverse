@@ -5,14 +5,16 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-03-04 22:01:21
  * :last editor: 张德志
- * :date last edited: 2024-03-08 06:14:50
+ * :date last edited: 2024-03-08 06:23:58
  */
+
+
+
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader';
-
 
 //创建场影
 const scene = new THREE.Scene();
@@ -34,9 +36,6 @@ directionalLight.position.set(1,1,1);
 scene.add(directionalLight);
 
 
-
-
-
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth,window.innerHeight);
 document.body.appendChild(renderer.domElement);
@@ -54,15 +53,17 @@ gltfLoader.load('xiaozhi.glb',(gltf) => {
   
 });
 
+const draciLoader = new DRACOLoader();
+draciLoader.setDecoderPath('/draco/');
+gltfLoader.setDRACOLoader(gltfLoader);
+
 const rgbLoader = new RGBELoader();
 rgbLoader.load('/Alex_Hart-Nature_Lab_Bones_2k.hdr',(envMap) => {
   envMap.mapping = THREE.EquirectangularReflectionMapping;
-
   scene.environment = envMap;
   scene.background = envMap;
   
 })
-
 
 window.addEventListener('resize', () => {
   camera.aspect = window.innerWidth / window.innerHeight;
