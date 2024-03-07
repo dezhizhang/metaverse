@@ -1,26 +1,25 @@
 import * as THREE from 'three';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
-import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
-import { DotScreenPass } from 'three/examples/jsm/postprocessing/DotScreenPass.js';
-import { SMAAPass } from 'three/examples/jsm/postprocessing/SMAAPass.js';
-import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+import { SMAAPass } from 'three/examples/jsm/postprocessing/SMAAPass'
+import { GlitchPass } from 'three/examples/jsm/postprocessing/GlitchPass';
+import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass';
+import { DotScreenPass } from 'three/examples/jsm/postprocessing/DotScreenPass';
+import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass'
 
 const scene = new THREE.Scene();
-// scene.background = new THREE.Color(0xff00ff);
+scene.background = new THREE.Color(0xff00ff);
 
 const camera = new THREE.PerspectiveCamera(45,window.innerWidth / window.innerHeight,0.1,1000);
 camera.position.set(-1.8,0.6,2.7);
 
-const renderer = new THREE.WebGLRenderer({
-  antialias:true
-});
+const renderer = new THREE.WebGLRenderer();
 renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setSize(window.innerWidth,window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
-// 后期后成
+// 后期合成
 const effectComposer = new EffectComposer(renderer);
 effectComposer.setSize(window.innerWidth,window.innerHeight);
 
@@ -28,18 +27,16 @@ effectComposer.setSize(window.innerWidth,window.innerHeight);
 const renderPass = new RenderPass(scene,camera);
 effectComposer.addPass(renderPass);
 
-// 点效果
 const dotScreenPass = new DotScreenPass();
-dotScreenPass.enabled = false;
 effectComposer.addPass(dotScreenPass);
 
-// 抗锯齿感
 const smaaPass = new SMAAPass();
 effectComposer.addPass(smaaPass);
 
-// 发光效果
+//发光效果
 const unrealBloomPass = new UnrealBloomPass();
-effectComposer.addPass(unrealBloomPass)
+effectComposer.addPass(unrealBloomPass);
+
 
 
 
@@ -52,10 +49,9 @@ directionalLight.position.set(0,0,200);
 scene.add(directionalLight);
 
 const gltfLoader = new GLTFLoader();
-gltfLoader.load('https://threejs.org/examples/models/gltf/DamagedHelmet/glTF/DamagedHelmet.gltf',(gltf) => {
+gltfLoader.load('https://threejs.org/examples/models/gltf/DamagedHelmet/glTF/DamagedHelmet.gltf',(gltf)=> {
   const mesh = gltf.scene.children[0];
   scene.add(mesh);
-
 });
 
 window.addEventListener('resize',onWindowResize);
@@ -64,16 +60,21 @@ function onWindowResize() {
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
   renderer.setSize(window.innerWidth,window.innerHeight);
-  
 }
 
 function render() {
   requestAnimationFrame(render);
-  // renderer.render(scene,camera);
-  effectComposer.render(scene, camera);
+  effectComposer.render(scene,camera);
+
 }
 
 render();
+
+
+
+
+
+
 
 
 
