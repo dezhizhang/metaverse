@@ -1,5 +1,16 @@
+/*
+ * :file description: 
+ * :name: /threejs/src/index.js
+ * :author: 张德志
+ * :copyright: (c) 2024, Tungee
+ * :date created: 2024-03-04 22:01:21
+ * :last editor: 张德志
+ * :date last edited: 2024-03-07 23:10:53
+ */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+
 
 //创建场影
 const scene = new THREE.Scene();
@@ -8,17 +19,21 @@ const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 
 // 设置相机位置
-camera.position.set(10, 10, 10);
+camera.position.set(1, 1, 10);
 camera.lookAt(scene.position);
 
 scene.add(camera);
 
-const boxGeometry = new THREE.BoxGeometry(1,1,50);
-const boxMaterial = new THREE.MeshBasicMaterial({
-  color:0x00ff00
-});
-const box = new THREE.Mesh(boxGeometry,boxMaterial);
-scene.add(box);
+scene.add(new THREE.AmbientLight(0xffffff,3));
+
+const directionalLight = new THREE.DirectionalLight(0xffffff,3);
+
+directionalLight.position.set(1,1,1);
+scene.add(directionalLight);
+
+
+
+
 
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth,window.innerHeight);
@@ -29,11 +44,11 @@ const controls = new OrbitControls(camera,renderer.domElement);
 const axesHelper = new THREE.AxesHelper(5);
 scene.add(axesHelper);
 
-scene.fog = new THREE.Fog(0x999999,0.1,50);
-
-// scene.fog = new THREE.FogExp2(0x999999,0.1);
-scene.background = new THREE.Color(0x999999);
-
+const gltfLoader = new GLTFLoader();
+gltfLoader.load('xiaozhi.glb',(gltf) => {
+  scene.add(gltf.scene);
+  
+})
 
 
 
