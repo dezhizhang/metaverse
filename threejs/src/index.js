@@ -5,11 +5,12 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-03-04 22:01:21
  * :last editor: 张德志
- * :date last edited: 2024-03-07 23:10:53
+ * :date last edited: 2024-03-07 23:22:55
  */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader';
 
 
 //创建场影
@@ -46,13 +47,20 @@ scene.add(axesHelper);
 
 const gltfLoader = new GLTFLoader();
 gltfLoader.load('xiaozhi.glb',(gltf) => {
+  console.log(gltf);
+  
   scene.add(gltf.scene);
   
+});
+
+const rgbLoader = new RGBELoader();
+rgbLoader.load('/Alex_Hart-Nature_Lab_Bones_2k.hdr',(envMap) => {
+  envMap.mapping = THREE.EquirectangularReflectionMapping;
+
+  scene.environment = envMap;
+  scene.background = envMap;
+  
 })
-
-
-
-
 
 
 window.addEventListener('resize', () => {
