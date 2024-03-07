@@ -16,6 +16,7 @@ scene.add(camera);
 const textureLoader = new THREE.TextureLoader();
 
 const texture = textureLoader.load('/watercover/CityNewYork002_COL_VAR1_1K.png');
+texture.colorSpace = THREE.SRGBColorSpace;
 // ao贴图
 const aotexture = textureLoader.load('/watercover/CityNewYork002_AO_1K.jpg');
 // 透时度贴图
@@ -42,7 +43,7 @@ const planeMaterial = new THREE.MeshBasicMaterial({
   auMap: aotexture,
   aoMapIntensity:1,
   // alphaMap:alphaTexture
-  lightMap:colorTexture,
+  // lightMap:colorTexture,
 });
 const plane = new THREE.Mesh(planeGeometry, planeMaterial);
 

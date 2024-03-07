@@ -9,6 +9,8 @@ scene.add(camera);
 
 const textureLoader = new THREE.TextureLoader();
 const texture = textureLoader.load('/watercover/CityNewYork002_COL_VAR1_1K.png');
+texture.colorSpace = THREE.SRGBColorSpace;
+
 const aotexture = textureLoader.load('/watercover/CityNewYork002_AO_1K.jpg');
 const colorTexture = textureLoader.load('/colors.png');
 
