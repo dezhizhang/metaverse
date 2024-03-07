@@ -1,16 +1,16 @@
 /*
  * :file description: 
- * :name: /threejs/src/index.js
+ * :name: /threejs/examples/gltf.js
  * :author: 张德志
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-03-04 22:01:21
  * :last editor: 张德志
- * :date last edited: 2024-03-08 06:19:00
+ * :date last edited: 2024-03-08 06:14:50
  */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
 import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader';
 
 
@@ -53,12 +53,6 @@ gltfLoader.load('xiaozhi.glb',(gltf) => {
   scene.add(gltf.scene);
   
 });
-
-const draciLoader = new DRACOLoader();
-draciLoader.setDecoderPath('/draco/');
-gltfLoader.setDRACOLoader(gltfLoader);
-
-
 
 const rgbLoader = new RGBELoader();
 rgbLoader.load('/Alex_Hart-Nature_Lab_Bones_2k.hdr',(envMap) => {
