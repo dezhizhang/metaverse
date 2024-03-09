@@ -1,59 +1,31 @@
+/*
+ * :file description: 
+ * :name: /threejs/src/index.js
+ * :author: 张德志
+ * :copyright: (c) 2024, Tungee
+ * :date created: 2024-03-04 22:01:21
+ * :last editor: 张德志
+ * :date last edited: 2024-03-09 20:45:07
+ */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader.js'
+
+
 
 const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(72,window.innerWidth / window.innerHeight,0.1,1000);
+
+const camera = new THREE.PerspectiveCamera(75,window.innerWidth / window.innerHeight,0.1,1000);
 camera.position.set(1,1,10);
-scene.add(camera);
+camera.lookAt(scene.position);
 
-const ambientLight = new THREE.AmbientLight(0xffffff,3);
-scene.add(ambientLight);
+scene.add(new THREE.AmbientLight(0xffffff,3));
+const directionalLight = new THREE.DirectionalLight(0xffffff,3);
+directionalLight.position.set(1,1,1);
+scene.add(directionalLight);
 
-const sphere1 = new THREE.Mesh(
-  new THREE.SphereGeometry(0.5,32,32),
-  new THREE.MeshBasicMaterial({
-    color:0xff0000
-  })
-);
-sphere1.position.x = -3;
-scene.add(sphere1);
-
-const sphere2 = new THREE.Mesh(
-  new THREE.SphereGeometry(0,5,32,32),
-  new THREE.MeshBasicMaterial({
-    color:0x00ff00
-  })
-);
-sphere2.position.x = 0;
-scene.add(sphere2);
-
-const sphere3 = new THREE.Mesh(
-  new THREE.SphereGeometry(0.5,32,32),
-  new THREE.MeshBasicMaterial({
-    color:0x0000ff
-  })
-);
-sphere3.position.x = 3;
-scene.add(sphere3);
-
-const box = new THREE.Box3();
-const arrSphere = [sphere1,sphere2,sphere3];
-
-for(let i=0;i < arrSphere.length;i++) {
-  arrSphere[i].geometry.computeBoundingBox();
-  const box3 = arrSphere[i].geometry.boundingBox;
-
-  arrSphere[i].updateWorldMatrix();
-  box3.applyMatrix4(arrSphere[i].matrixWorld);
-
-  box.union(box3);
-}
-
-const boxHelper = new THREE.Box3Helper(box,0xffff00);
-scene.add(boxHelper);
-
-const axesHelper = new THREE.AxesHelper(5);
-scene.add(axesHelper);
 
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth,window.innerHeight);
@@ -61,16 +33,52 @@ document.body.appendChild(renderer.domElement);
 
 const controls = new OrbitControls(camera,renderer.domElement);
 
+const axesHelper = new THREE.AxesHelper(5);
+scene.add(axesHelper);
+
+const gltfLoader = new GLTFLoader();
+const draciLoader = new DRACOLoader();
+draciLoader.setDecoderPath('/draco/');
+gltfLoader.setDRACOLoader(draciLoader);
+
+gltfLoader.load('/city.glb',(gltf) => {
+  scene.add(gltf.scene);
+
+  gltf.scene.traverse((child) => {
+    if(child.isMesh) {
+    
+      const geometry = child.geometry;
+
+      // 获取边缘geometry
+      const edgesGeometry = new THREE.EdgesGeometry(geometry);
+      const edgesMaterial = new THREE.LineBasicMaterial({
+        color:0xffffff
+      });
+      const edges = new THREE.LineSegments(edgesGeometry,edgesMaterial);
+      child.updateWorldMatrix(true,true);
+      edges.matrix.copy(child.matrixWorld);
+      edges.matrix.decompose(edges.position,edges.quaternion,edges.scale);
+      scene.add(edges);
+    }
+  });
+});
+
+const rgbLoader = new RGBELoader();
+rgbLoader.load('/Alex_Hart-Nature_Lab_Bones_2k.hdr',(envMap) => {
+  envMap.mapping = THREE.EquirectangularReflectionMapping;
+  scene.environment = envMap;
+  scene.background = envMap;
+});
+
 window.addEventListener('resize',() => {
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
-  renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth,window.innerHeight);
 });
 
-function render() {
-  requestAnimationFrame(render);
+function remder() {
+  requestAnimationFrame(remder);
   renderer.render(scene,camera);
 }
 
-render();
+remder();
