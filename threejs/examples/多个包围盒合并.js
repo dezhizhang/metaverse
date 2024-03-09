@@ -1,3 +1,12 @@
+/*
+ * :file description: 
+ * :name: /threejs/examples/多个包围盒合并.js
+ * :author: 张德志
+ * :copyright: (c) 2024, Tungee
+ * :date created: 2024-03-09 19:24:37
+ * :last editor: 张德志
+ * :date last edited: 2024-03-09 19:24:38
+ */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
@@ -12,16 +21,17 @@ scene.add(ambientLight);
 const sphere1 = new THREE.Mesh(
   new THREE.SphereGeometry(0.5,32,32),
   new THREE.MeshBasicMaterial({
-    color:0xff0000
+    color:0xff0000,
   })
 );
+
 sphere1.position.x = -3;
 scene.add(sphere1);
 
 const sphere2 = new THREE.Mesh(
-  new THREE.SphereGeometry(0,5,32,32),
+  new THREE.SphereGeometry(0.5,32,32),
   new THREE.MeshBasicMaterial({
-    color:0x00ff00
+    color:0x00ff00,
   })
 );
 sphere2.position.x = 0;
@@ -36,7 +46,9 @@ const sphere3 = new THREE.Mesh(
 sphere3.position.x = 3;
 scene.add(sphere3);
 
+
 const box = new THREE.Box3();
+
 const arrSphere = [sphere1,sphere2,sphere3];
 
 for(let i=0;i < arrSphere.length;i++) {
@@ -46,23 +58,31 @@ for(let i=0;i < arrSphere.length;i++) {
   arrSphere[i].updateWorldMatrix();
   box3.applyMatrix4(arrSphere[i].matrixWorld);
 
+  // 合并包围合
   box.union(box3);
+
 }
 
 const boxHelper = new THREE.Box3Helper(box,0xffff00);
 scene.add(boxHelper);
 
+
+console.log(box);
+
 const axesHelper = new THREE.AxesHelper(5);
 scene.add(axesHelper);
+
 
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth,window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
+
+
 const controls = new OrbitControls(camera,renderer.domElement);
 
 window.addEventListener('resize',() => {
-  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.aspect= window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth,window.innerHeight);
