@@ -1,88 +1,83 @@
-/*
- * :file description: 
- * :name: /threejs/src/index.js
- * :author: 张德志
- * :copyright: (c) 2024, Tungee
- * :date created: 2024-03-04 22:01:21
- * :last editor: 张德志
- * :date last edited: 2024-03-09 13:48:13
- */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
-import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader';
-//创建场影
+
 const scene = new THREE.Scene();
-
-//创建相机
-const camera = new THREE.PerspectiveCamera(75,window.innerWidth / window.innerHeight,0.1,1000);
-
-// 设置相机位置
+const camera = new THREE.PerspectiveCamera(72,window.innerWidth / window.innerHeight,0.1,1000);
 camera.position.set(1,1,10);
 scene.add(camera);
 
 const ambientLight = new THREE.AmbientLight(0xffffff,3);
 scene.add(ambientLight);
 
+const sphere1 = new THREE.Mesh(
+  new THREE.SphereGeometry(0.5,32,32),
+  new THREE.MeshBasicMaterial({
+    color:0xff0000,
+  })
+);
 
-const rgbLoader = new RGBELoader();
-rgbLoader.load('Alex_Hart-Nature_Lab_Bones_2k.hdr',(envMap) => {
-  envMap.mapping = THREE.EquirectangularReflectionMapping;
-  scene.environment = envMap;
-  scene.background = envMap;
+sphere1.position.x = -3;
+scene.add(sphere1);
 
-})
+const sphere2 = new THREE.Mesh(
+  new THREE.SphereGeometry(0.5,32,32),
+  new THREE.MeshBasicMaterial({
+    color:0x00ff00,
+  })
+);
+sphere2.position.x = 0;
+scene.add(sphere2);
 
-
-const gltfLoader = new GLTFLoader();
-gltfLoader.load('/Duck.glb',(gltf) => {
-  scene.add(gltf.scene);
-  
-  const duckMesh = gltf.scene.getObjectByName('LOD3spShape');
-  const duckGeometry = duckMesh.geometry;
-
-  duckMesh.updateWorldMatrix(true,true);
-
-
-
-  // 计算包围盒
-  duckGeometry.computeBoundingBox();
-
-  const duckBox = duckGeometry.boundingBox;
-  duckBox.applyMatrix4(duckMesh.matrixWorld);
-
-
-
-  const boxHelper = new THREE.Box3Helper(duckBox,0xff00ff);
-  scene.add(boxHelper);
+const sphere3 = new THREE.Mesh(
+  new THREE.SphereGeometry(0.5,32,32),
+  new THREE.MeshBasicMaterial({
+    color:0x0000ff
+  })
+);
+sphere3.position.x = 3;
+scene.add(sphere3);
 
 
-  console.log('duckBox',duckBox);
+const box = new THREE.Box3();
+
+const arrSphere = [sphere1,sphere2,sphere3];
+
+for(let i=0;i < arrSphere.length;i++) {
+  arrSphere[i].geometry.computeBoundingBox();
+  const box3 = arrSphere[i].geometry.boundingBox;
+
+  arrSphere[i].updateWorldMatrix();
+  box3.applyMatrix4(arrSphere[i].matrixWorld);
+
+  // 合并包围合
+  box.union(box3);
+
+}
+
+const boxHelper = new THREE.Box3Helper(box,0xffff00);
+scene.add(boxHelper);
 
 
-})
+console.log(box);
+
+const axesHelper = new THREE.AxesHelper(5);
+scene.add(axesHelper);
 
 
-
-
-// 初始化渲染器
-const renderer = new THREE.WebGL1Renderer();
-
-// 设置渲染器大小
+const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth,window.innerHeight);
+document.body.appendChild(renderer.domElement);
 
-document.body.append(renderer.domElement);
+
 
 const controls = new OrbitControls(camera,renderer.domElement);
 
 window.addEventListener('resize',() => {
-  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.aspect= window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth,window.innerHeight);
 });
-
-
 
 function render() {
   requestAnimationFrame(render);
@@ -90,6 +85,3 @@ function render() {
 }
 
 render();
-
-
-
