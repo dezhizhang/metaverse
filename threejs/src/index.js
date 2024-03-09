@@ -1,3 +1,12 @@
+/*
+ * :file description: 
+ * :name: /threejs/src/index.js
+ * :author: 张德志
+ * :copyright: (c) 2024, Tungee
+ * :date created: 2024-03-04 22:01:21
+ * :last editor: 张德志
+ * :date last edited: 2024-03-09 13:48:13
+ */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
@@ -25,24 +34,32 @@ rgbLoader.load('Alex_Hart-Nature_Lab_Bones_2k.hdr',(envMap) => {
 })
 
 
-
-
 const gltfLoader = new GLTFLoader();
-gltfLoader.load('/柱子.glb',(gltf) => {
-  const duckMesh = gltf.scene.getObjectByName('Scene');
-
-  // console.log(duckMesh);
-
+gltfLoader.load('/Duck.glb',(gltf) => {
+  scene.add(gltf.scene);
+  
+  const duckMesh = gltf.scene.getObjectByName('LOD3spShape');
   const duckGeometry = duckMesh.geometry;
 
+  duckMesh.updateWorldMatrix(true,true);
 
+
+
+  // 计算包围盒
   duckGeometry.computeBoundingBox();
 
   const duckBox = duckGeometry.boundingBox;
+  duckBox.applyMatrix4(duckMesh.matrixWorld);
 
+
+
+  const boxHelper = new THREE.Box3Helper(duckBox,0xff00ff);
+  scene.add(boxHelper);
 
 
   console.log('duckBox',duckBox);
+
+
 })
 
 
@@ -57,6 +74,14 @@ renderer.setSize(window.innerWidth,window.innerHeight);
 document.body.append(renderer.domElement);
 
 const controls = new OrbitControls(camera,renderer.domElement);
+
+window.addEventListener('resize',() => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setPixelRatio(window.devicePixelRatio);
+  renderer.setSize(window.innerWidth,window.innerHeight);
+});
+
 
 
 function render() {
