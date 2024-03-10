@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-03-04 22:01:21
  * :last editor: 张德志
- * :date last edited: 2024-03-10 13:51:43
+ * :date last edited: 2024-03-10 15:00:11
  */
 import * as THREE from 'three';
 import  {OrbitControls} from 'three/examples/jsm/controls/OrbitControls.js';
@@ -25,20 +25,29 @@ rgbLoader.load('/Alex_Hart-Nature_Lab_Bones_2k.hdr',(envMap) => {
   envMap.mapping = THREE.EquirectangularRefractionMapping;
   scene.environment = envMap;
   scene.background = envMap;
-
-  const gltfLoader = new GLTFLoader();
-  gltfLoader.load('/sword.glb',(gltf) => {
-    scene.add(gltf.scene);
-
-    const mesh = gltf.scene.getObjectByName('Pommeau_Plane001');
-    mesh.material.aoMap = envMap;
-    
-  })
 });
 
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth,window.innerHeight);
 document.body.appendChild(renderer.domElement);
+
+const axesHelper = new THREE.AxesHelper(5);
+scene.add(axesHelper);
+
+
+const geometry = new THREE.BoxGeometry(1,1,1);
+const material = new THREE.MeshPhysicalMaterial({
+  transform:true,
+  transmission:0.95,
+  roughness:0.05,
+  thickness:1.0,
+});
+const box = new THREE.Mesh(geometry,material);
+scene.add(box);
+
+
+
+
 
 const controls = new OrbitControls(camera,renderer.domElement);
 
