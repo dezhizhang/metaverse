@@ -1,3 +1,12 @@
+/*
+ * :file description: 
+ * :name: /threejs/examples/castShadow1.js
+ * :author: 张德志
+ * :copyright: (c) 2024, Tungee
+ * :date created: 2024-03-10 21:51:38
+ * :last editor: 张德志
+ * :date last edited: 2024-03-10 21:51:39
+ */
 import * as THREE from 'three';
 import Stat from 'stats.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
