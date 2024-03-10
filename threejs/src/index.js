@@ -1,17 +1,17 @@
 /*
- * :file description: 
+ * :file description:
  * :name: /threejs/src/index.js
  * :author: 张德志
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-03-10 15:35:55
  * :last editor: 张德志
- * :date last edited: 2024-03-10 15:55:04
+ * :date last edited: 2024-03-10 16:05:46
  */
 
 import * as THREE from 'three';
 import dat from 'dat.gui';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader.js';
+import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader';
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75,window.innerWidth / window.innerHeight,0.1,1000);
@@ -26,6 +26,7 @@ rgbLoader.load('/Alex_Hart-Nature_Lab_Bones_2k.hdr',(envMap) => {
   envMap.mapping = THREE.EquirectangularRefractionMapping;
   scene.environment = envMap;
   scene.background = envMap;
+  
 });
 
 const renderer = new THREE.WebGLRenderer();
@@ -37,11 +38,10 @@ scene.add(axesHelper);
 
 const textureLoader = new THREE.TextureLoader();
 const texture = textureLoader.load('/diamond/diamond_emissive.png');
-
-const textureNormal = textureLoader.load('/diamond/diamond_normal.png')
+const textureNormal = textureLoader.load('/diamond/diamond_normal.png');
 
 const geometry = new THREE.BoxGeometry(1,1,1);
-const material = new THREE.MeshPhysicalMaterial({
+const material = new THREE.MeshPhongMaterial({
   transform:true,
   color:0xffff00,
   roughness:0.5,
@@ -51,7 +51,6 @@ const material = new THREE.MeshPhysicalMaterial({
   clearcoatRoughnessMap:texture,
   normalMap:textureNormal,
   clearcoatNormalMap:textureNormal
-
 });
 
 const box = new THREE.Mesh(geometry,material);
@@ -61,8 +60,7 @@ const gui = new dat.GUI();
 gui.add(box.material,'attenuationDistance',0,10).name('衰减距离');
 gui.add(box.material,'thickness',0,2).name('厚度');
 
-
-const controls = new OrbitControls(camera,renderer.domElement);
+const contains = new OrbitControls(camera,renderer.domElement);
 
 window.addEventListener('resize',() => {
   camera.aspect = window.innerWidth / window.innerHeight;
@@ -77,3 +75,4 @@ function render() {
 }
 
 render();
+
