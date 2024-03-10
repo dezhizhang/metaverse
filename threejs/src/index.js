@@ -1,82 +1,71 @@
+/*
+ * :file description:
+ * :name: /threejs/src/index.js
+ * :author: 张德志
+ * :copyright: (c) 2024, Tungee
+ * :date created: 2024-03-04 22:01:21
+ * :last editor: 张德志
+ * :date last edited: 2024-03-10 11:55:11
+ */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader.js';
-
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader';
+//创建场影
 const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(75,window.innerWidth / window.innerHeight,0.1,1000);
-camera.position.set(1,1,10);
-camera.lookAt(scene.position);
 
+//创建相机
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 
-scene.add(new THREE.AmbientLight(0xffffff,0.3));
-const directionalLight = new THREE.DirectionalLight(0xffffff,3);
-directionalLight.position.set(1,1,1);
-scene.add(directionalLight);
+// 设置相机位置
+camera.position.set(1, 1, 10);
+scene.add(camera);
 
-// 添加点光源
-const pointLight = new THREE.PointLight(0xffffff,1);
-pointLight.position.set(0,3,0);
-scene.add(pointLight);
-
-
-
-const renderer = new THREE.WebGLRenderer({
-  antialias:true
-});
-renderer.setSize(window.innerWidth,window.innerHeight);
-document.body.appendChild(renderer.domElement);
-
-const controls = new OrbitControls(camera,renderer.domElement);
-
-const axesHelper = new THREE.AxesHelper(5);
-scene.add(axesHelper);
-
-// 添加纹理
-const textureLoader = new THREE.TextureLoader();
-const colorTexture = textureLoader.load('/watercover/CityNewYork002_COL_VAR1_1K.png');
-colorTexture.colorSpace = THREE.SRGBColorSpace;
-
-// 设置高光贴图 
-const specularTexture = textureLoader.load(
-  '/watercover/CityNewYork002_GLOSS_1K.jpg'
-);
-
-
-const planeGeometry = new THREE.PlaneGeometry(1,1);
-const planeMaterial = new THREE.MeshPhongMaterial({
-  map:colorTexture,
-  transparent:true,
-  specularMap:specularTexture
-});
-const plane = new THREE.Mesh(planeGeometry,planeMaterial);
-plane.rotation.x = -Math.PI / 2;
-scene.add(plane);
-
-
+const ambientLight = new THREE.AmbientLight(0xffffff, 3);
+scene.add(ambientLight);
 
 const rgbLoader = new RGBELoader();
-rgbLoader.load('/Alex_Hart-Nature_Lab_Bones_2k.hdr',(envMap) => {
-  envMap.mapping = THREE.EquirectangularReflectionMapping;
+rgbLoader.load('/Alex_Hart-Nature_Lab_Bones_2k.hdr', (envMap) => {
+  envMap.mapping = THREE.EquirectangularRefractionMapping;
   scene.environment = envMap;
   scene.background = envMap;
-  plane.envMap = envMap;
+
+  const gltfLoader = new GLTFLoader();
+  gltfLoader.load('/Duck.glb', (gltf) => {
+    scene.add(gltf.scene);
+
+    const duckMesh = gltf.scene.getObjectByName('LOD3spShape');
+    const preMaterial = duckMesh.material;
+    duckMesh.material = new THREE.MeshPhongMaterial({
+      color: 0xffffff,
+      map: preMaterial.map,
+      refractionRatio: 0.7,
+      reflectivity: 0.99,
+      envMap: envMap,
+    });
+  });
 });
 
+// 初始化渲染器
+const renderer = new THREE.WebGL1Renderer();
 
+// 设置渲染器大小
+renderer.setSize(window.innerWidth, window.innerHeight);
 
+document.body.append(renderer.domElement);
 
-window.addEventListener('resize',() => {
+const controls = new OrbitControls(camera, renderer.domElement);
+
+window.addEventListener('resize', () => {
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
-  renderer.setSize(window.innerWidth,window.innerHeight);
+  renderer.setPixelRatio(window.devicePixelRatio);
+  renderer.setSize(window.innerWidth, window.innerHeight);
 });
 
 function render() {
   requestAnimationFrame(render);
-  renderer.render(scene,camera);
+  renderer.render(scene, camera);
 }
 
 render();
-
