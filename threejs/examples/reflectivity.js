@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-03-10 15:35:55
  * :last editor: 张德志
- * :date last edited: 2024-03-10 15:36:13
+ * :date last edited: 2024-03-10 15:40:53
  */
 
 import * as THREE from 'three';
@@ -41,12 +41,14 @@ const texture = textureLoader.load('/diamond/diamond_emissive.png');
 const geometry = new THREE.BoxGeometry(1,1,1);
 const material = new THREE.MeshPhysicalMaterial({
   transform:true,
-  transmission:0.95,
-  roughness:0.05,
-  thickness:2.0,
-  thicknessMap:texture,
-  attenuationColor:new THREE.Color(0.9,0.6,0),
-  attenuationDistance:1.0,
+  color:0xffff00,
+  // transmission:0.95,
+  roughness:0.5,
+//   thickness:2.0,
+//   thicknessMap:texture,
+//   attenuationColor:new THREE.Color(0.9,0.6,0),
+//   attenuationDistance:1.0,
+
 });
 
 const box = new THREE.Mesh(geometry,material);
@@ -57,9 +59,9 @@ gui.add(box.material,'attenuationDistance',0,10).name('衰减距离');
 gui.add(box.material,'thickness',0,2).name('厚度');
 
 
-// ior
-gui.add(box.material,'ior',0,2).name('折射率');
-gui.add(box.material,'reflectivity',0,1).name('反射率');
+// // ior
+// gui.add(box.material,'ior',0,2).name('折射率');
+// gui.add(box.material,'reflectivity',0,1).name('反射率');
 
 
 
