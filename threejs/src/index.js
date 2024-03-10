@@ -13,7 +13,6 @@ const stat = new Stat();
 document.body.appendChild(stat.domElement);
 
 const renderer = new THREE.WebGLRenderer();
-// 允许影响
 renderer.shadowMap.enabled = true;
 renderer.setSize(window.innerWidth,window.innerHeight);
 document.body.appendChild(renderer.domElement);
@@ -26,6 +25,7 @@ const box = new THREE.Mesh(boxGemonetry,boxMaterial);
 box.position.set(-4,0,0);
 scene.add(box);
 
+
 const sphereGeometry = new THREE.SphereGeometry(1,64,64);
 const sphereMaterial = new THREE.MeshBasicMaterial();
 const sphere = new THREE.Mesh(sphereGeometry,sphereMaterial);
@@ -35,9 +35,8 @@ scene.add(sphere);
 const planeGeometry = new THREE.PlaneGeometry(24,24,1,1);
 const planeMaterial = new THREE.MeshPhysicalMaterial({
   color:0x999999,
-  side:THREE.DoubleSide,
+  side:THREE.DoubleSide
 });
-
 const plane = new THREE.Mesh(planeGeometry,planeMaterial);
 plane.receiveShadow = true;
 plane.rotation.x = -Math.PI / 2;
@@ -63,11 +62,13 @@ window.addEventListener('resize',() => {
   camera.updateProjectionMatrix();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth,window.innerHeight);
-})
+});
 
 function render() {
   requestAnimationFrame(render);
-  renderer.render(scene, camera);
+  renderer.render(scene,camera);
 }
 
 render();
+
+
