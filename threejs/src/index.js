@@ -5,13 +5,12 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-03-10 15:35:55
  * :last editor: 张德志
- * :date last edited: 2024-03-10 16:05:46
+ * :date last edited: 2024-03-10 17:18:24
  */
-
 import * as THREE from 'three';
 import dat from 'dat.gui';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader';
+import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader.js';
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75,window.innerWidth / window.innerHeight,0.1,1000);
@@ -22,11 +21,11 @@ const ambientLight = new THREE.AmbientLight(0xffffff,3);
 scene.add(ambientLight);
 
 const rgbLoader = new RGBELoader();
+
 rgbLoader.load('/Alex_Hart-Nature_Lab_Bones_2k.hdr',(envMap) => {
   envMap.mapping = THREE.EquirectangularRefractionMapping;
   scene.environment = envMap;
   scene.background = envMap;
-  
 });
 
 const renderer = new THREE.WebGLRenderer();
@@ -37,36 +36,37 @@ const axesHelper = new THREE.AxesHelper(5);
 scene.add(axesHelper);
 
 const textureLoader = new THREE.TextureLoader();
-const texture = textureLoader.load('/diamond/diamond_emissive.png');
-const textureNormal = textureLoader.load('/diamond/diamond_normal.png');
+const sheenColorMap = textureLoader.load('/colors.png');
 
-const geometry = new THREE.BoxGeometry(1,1,1);
-const material = new THREE.MeshPhongMaterial({
-  transform:true,
-  color:0xffff00,
-  roughness:0.5,
-  clearcoat:1,
-  clearcoatRoughness:0,
-  clearcoatMap:texture,
-  clearcoatRoughnessMap:texture,
-  normalMap:textureNormal,
-  clearcoatNormalMap:textureNormal
-});
+const sphereGeometry = new THREE.SphereGeometry(1,32,32);
 
-const box = new THREE.Mesh(geometry,material);
-scene.add(box);
+const sphereMaterial = new THREE.MeshPhysicalMaterial({
+  color:0xffffff,
+  roughness:0.05,
+  transmission:1,
+  thickness:0.1,
+  iridescence:1,
+  reflectivity:1,
+  iridescenceThicknessRange:[200,600],
+  iridescenceThicknessMap:sheenColorMap,
+})
+
+const sphere = new THREE.Mesh(sphereGeometry,sphereMaterial);
+scene.add(sphere);
+
 
 const gui = new dat.GUI();
-gui.add(box.material,'attenuationDistance',0,10).name('衰减距离');
-gui.add(box.material,'thickness',0,2).name('厚度');
+gui.add(sphereMaterial,'iridescence',0,1).name('彩虹色');
+gui.add(sphereMaterial,'reflectivity',0,1).name('反射痃');
 
-const contains = new OrbitControls(camera,renderer.domElement);
 
+
+const controls = new OrbitControls(camera,renderer.domElement);
 window.addEventListener('resize',() => {
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
-  renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth,window.innerHeight);
+  renderer.setPixelRatio(window.devicePixelRatio);
 });
 
 function render() {
