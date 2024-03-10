@@ -19,12 +19,11 @@ document.body.appendChild(renderer.domElement);
 
 const boxGemonetry = new THREE.BoxGeometry(1,1,1);
 const boxMaterial = new THREE.MeshBasicMaterial({
-  color: 0xff00ff,
+  color:0xff00ff
 });
 const box = new THREE.Mesh(boxGemonetry,boxMaterial);
 box.position.set(-4,0,0);
 scene.add(box);
-
 
 const sphereGeometry = new THREE.SphereGeometry(1,64,64);
 const sphereMaterial = new THREE.MeshBasicMaterial();
@@ -46,14 +45,15 @@ scene.add(plane);
 const axesHelper = new THREE.AxesHelper(5);
 scene.add(axesHelper);
 
-const directionalLight = new THREE.DirectionalLight(0xffffff,0.6);
-directionalLight.castShadow = true;
-directionalLight.position.set(10,10,0);
-directionalLight.target.position.set(0,0,0);
-scene.add(directionalLight);
+const spotLight = new THREE.SpotLight(0xffffff,0.8);
+spotLight.position.set(0,10,0);
+spotLight.castShadow = true;
+spotLight.angle = Math.PI / 8;
+scene.add(spotLight);
 
-const directionalLightHelper = new THREE.DirectionalLightHelper(directionalLight);
-scene.add(directionalLightHelper);
+
+const spotLightHelper = new THREE.SpotLightHelper(spotLight);
+scene.add(spotLightHelper);
 
 const control = new OrbitControls(camera,renderer.domElement);
 
@@ -62,7 +62,7 @@ window.addEventListener('resize',() => {
   camera.updateProjectionMatrix();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth,window.innerHeight);
-});
+})
 
 function render() {
   requestAnimationFrame(render);
@@ -70,5 +70,4 @@ function render() {
 }
 
 render();
-
 
