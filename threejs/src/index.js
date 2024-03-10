@@ -5,9 +5,10 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-03-04 22:01:21
  * :last editor: 张德志
- * :date last edited: 2024-03-10 15:00:11
+ * :date last edited: 2024-03-10 15:16:22
  */
 import * as THREE from 'three';
+import dat from 'dat.gui';
 import  {OrbitControls} from 'three/examples/jsm/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader.js';
@@ -34,19 +35,26 @@ document.body.appendChild(renderer.domElement);
 const axesHelper = new THREE.AxesHelper(5);
 scene.add(axesHelper);
 
+const  textureLoader= new THREE.TextureLoader();
+const texture = textureLoader.load('/diamond/diamond_emissive.png');
+
 
 const geometry = new THREE.BoxGeometry(1,1,1);
 const material = new THREE.MeshPhysicalMaterial({
   transform:true,
   transmission:0.95,
   roughness:0.05,
-  thickness:1.0,
+  thickness:2.0,
+  thicknessMap:texture,
+  attenuationColor:new THREE.Color(0.9,0.6,0),
+  attenuationDistance:1.0,
 });
 const box = new THREE.Mesh(geometry,material);
 scene.add(box);
 
-
-
+const gui = new dat.GUI();
+gui.add(box.material,"attenuationDistance",0,10).name('衰减距离');
+gui.add(box.material,"thickness",0,2).name('厚度');
 
 
 const controls = new OrbitControls(camera,renderer.domElement);
