@@ -1,78 +1,51 @@
-/*
- * :file description:
- * :name: /threejs/src/index.js
- * :author: 张德志
- * :copyright: (c) 2024, Tungee
- * :date created: 2024-03-04 22:01:21
- * :last editor: 张德志
- * :date last edited: 2024-03-11 06:51:45
- */
 import * as THREE from 'three';
-import Stat from 'stats.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
 const scene = new THREE.Scene();
+
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-camera.position.set(1, 1, 10);
+camera.position.set(2, 10, 2);
 
-const ambientLight = new THREE.AmbientLight(0xffffff, 0.2);
-scene.add(ambientLight);
-
-const stat = new Stat();
-document.body.appendChild(stat.domElement);
-
-const renderer = new THREE.WebGLRenderer();
-renderer.shadowMap.enabled = true;
+const renderer = new THREE.WebGL1Renderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setPixelRatio(window.devicePixelRatio);
 document.body.appendChild(renderer.domElement);
 
-const boxGemonetry = new THREE.BoxGeometry(1, 1, 1);
-const boxMaterial = new THREE.MeshBasicMaterial({
-  color: 0xff00ff,
-});
-const box = new THREE.Mesh(boxGemonetry, boxMaterial);
-box.position.set(-4, 0, 0);
-box.castShadow = true;
-scene.add(box);
+const textureLoader = new THREE.TextureLoader();
+const texture = textureLoader.load('/watercover/CityNewYork002_COL_VAR1_1K.png')
 
-const sphereGeometry = new THREE.SphereGeometry(1, 64, 64);
-const sphereMaterial = new THREE.MeshBasicMaterial();
-const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
-sphere.castShadow = true;
-sphere.receiveShadow = true;
-scene.add(sphere);
-
-const planeGeometry = new THREE.PlaneGeometry(24, 24, 1, 1);
-const planeMaterial = new THREE.MeshPhysicalMaterial({
-  color: 0x999999,
-  side: THREE.DoubleSide,
-  alphaTest: 0.5,
+const planeGeometry = new THREE.PlaneGeometry(1, 1);
+const planeMaterial = new THREE.MeshBasicMaterial({
+  // color: 0xff00ff,
+  side:THREE.DoubleSide,
+  map:texture
 });
-const plane = new THREE.Mesh(planeGeometry, planeMaterial);
-plane.receiveShadow = true;
-plane.rotation.x = -Math.PI / 2;
-plane.position.set(0, -2, 0);
+const plane = new THREE.Mesh(planeGeometry,planeMaterial);
 scene.add(plane);
+texture.offset.set(0.5,0.5);
+
+texture.repeat.set(4,4);
+// texture.wrapS = THREE.RepeatWrapping;
+texture.wrapS = THREE.MirroredRepeatWrapping;
+texture.wrapT = THREE.RepeatWrapping;
+texture.center.set(0.5,0.5);
+texture.rotation = Math.PI / 4;
+
 
 const axesHelper = new THREE.AxesHelper(5);
 scene.add(axesHelper);
 
-const pointLight = new THREE.PointLight(0xffffff, 2);
-pointLight.position.set(0, 5, 0);
-pointLight.castShadow = true;
-scene.add(pointLight);
 
-const pointLightHelper = new THREE.PointLightHelper(pointLight);
-scene.add(pointLightHelper);
-
-const control = new OrbitControls(camera, renderer.domElement);
-
-window.addEventListener('resize', () => {
+window.addEventListener('resize',() => {
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth,window.innerHeight);
   renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(window.innerWidth, window.innerHeight);
-});
+})
+
+
+
+const control = new OrbitControls(camera, renderer.domElement);
 
 function render() {
   requestAnimationFrame(render);
