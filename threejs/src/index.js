@@ -10,10 +10,17 @@ camera.position.set(1,1,10);
 camera.lookAt(scene.position);
 
 
-scene.add(new THREE.AmbientLight(0xffffff,3));
+scene.add(new THREE.AmbientLight(0xffffff,0.3));
 const directionalLight = new THREE.DirectionalLight(0xffffff,3);
 directionalLight.position.set(1,1,1);
 scene.add(directionalLight);
+
+// 添加点光源
+const pointLight = new THREE.PointLight(0xffffff,1);
+pointLight.position.set(0,3,0);
+scene.add(pointLight);
+
+
 
 const renderer = new THREE.WebGLRenderer({
   antialias:true
@@ -26,30 +33,39 @@ const controls = new OrbitControls(camera,renderer.domElement);
 const axesHelper = new THREE.AxesHelper(5);
 scene.add(axesHelper);
 
-const gltfLoader = new GLTFLoader();
-gltfLoader.load('/Duck.glb',(gltf) => {
-  scene.add(gltf.scene);
+// 添加纹理
+const textureLoader = new THREE.TextureLoader();
+const colorTexture = textureLoader.load('/watercover/CityNewYork002_COL_VAR1_1K.png');
+colorTexture.colorSpace = THREE.SRGBColorSpace;
 
-  const duckMesh = gltf.scene.getObjectByName('LOD3spShape');
-  const matcapTexture = new THREE.TextureLoader().load('/matcaps/9.jpg');
-  const preMaterial =  duckMesh.material;
+// 设置高光贴图 
+const specularTexture = textureLoader.load(
+  '/watercover/CityNewYork002_GLOSS_1K.jpg'
+);
 
-  duckMesh.material = new THREE.MeshMatcapMaterial({
-    matcap:matcapTexture,
-    map:preMaterial.map,
-  })
+
+const planeGeometry = new THREE.PlaneGeometry(1,1);
+const planeMaterial = new THREE.MeshPhongMaterial({
+  map:colorTexture,
+  transparent:true,
+  specularMap:specularTexture
 });
+const plane = new THREE.Mesh(planeGeometry,planeMaterial);
+plane.rotation.x = -Math.PI / 2;
+scene.add(plane);
 
-const draciLoader = new DRACOLoader();
-draciLoader.setDecoderPath('/draco/');
-gltfLoader.setDRACOLoader(draciLoader);
+
 
 const rgbLoader = new RGBELoader();
 rgbLoader.load('/Alex_Hart-Nature_Lab_Bones_2k.hdr',(envMap) => {
   envMap.mapping = THREE.EquirectangularReflectionMapping;
   scene.environment = envMap;
   scene.background = envMap;
+  plane.envMap = envMap;
 });
+
+
+
 
 window.addEventListener('resize',() => {
   camera.aspect = window.innerWidth / window.innerHeight;
