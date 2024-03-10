@@ -1,12 +1,13 @@
 /*
- * :file description:
- * :name: /threejs/src/index.js
+ * :file description: 
+ * :name: /threejs/examples/reflectivity.js
  * :author: 张德志
  * :copyright: (c) 2024, Tungee
- * :date created: 2024-03-04 22:01:21
+ * :date created: 2024-03-10 15:35:55
  * :last editor: 张德志
- * :date last edited: 2024-03-10 15:34:04
+ * :date last edited: 2024-03-10 15:36:13
  */
+
 import * as THREE from 'three';
 import dat from 'dat.gui';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
