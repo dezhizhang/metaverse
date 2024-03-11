@@ -1,5 +1,4 @@
-import * as THREE from 'three';
-import dat from 'dat.gui';
+ import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { KTX2Loader } from 'three/examples/jsm/loaders/KTX2Loader.js';
 
@@ -14,6 +13,7 @@ const renderer = new THREE.WebGL1Renderer({
 renderer.setSize(window.innerWidth,window.innerHeight);
 renderer.setPixelRatio(window.devicePixelRatio);
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
+
 document.body.appendChild(renderer.domElement);
 
 const controls = new OrbitControls(camera,renderer.domElement);
@@ -31,7 +31,7 @@ window.addEventListener('resize',() => {
   camera.updateProjectionMatrix();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth,window.innerHeight);
-})
+});
 
 const textureLoader = new THREE.TextureLoader();
 const texture = textureLoader.load('/brick/brick_diffuse.jpg');
@@ -42,16 +42,14 @@ const planeMaterial = new THREE.MeshBasicMaterial({
   map:texture,
   transparent:true
 });
+
 const plane = new THREE.Mesh(planeGeometry,planeMaterial);
 scene.add(plane);
 
-
 texture.colorSpace = THREE.SRGBColorSpace;
 texture.magFilter = THREE.LinearFilter;
-texture.minFilter = THREE.LinearMipMapNearestFilter;
+
 texture.anisotropy = 4;
-
-
 
 function render() {
   requestAnimationFrame(render);
@@ -59,6 +57,8 @@ function render() {
 }
 
 render();
+
+
 
 
 
