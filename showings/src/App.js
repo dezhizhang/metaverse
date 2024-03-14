@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-03-14 22:25:31
  * :last editor: 张德志
- * :date last edited: 2024-03-15 05:41:09
+ * :date last edited: 2024-03-15 06:00:40
  */
 import React, { useEffect } from 'react';
 import * as THREE from 'three';
@@ -51,8 +51,6 @@ function App() {
 
      textureArr.forEach((item) => {
       const texture = textureLoader.load(textureUrl + item + '.jpg');
-      console.log('texture',texture);
-
       boxMaterial.push(new THREE.MeshBasicMaterial({
         map:texture
       }))
@@ -63,28 +61,52 @@ function App() {
      scene.add(box);
 
 
-
-
-
-
-
-
-
     const renderer = new THREE.WebGLRenderer();
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setPixelRatio(window.devicePixelRatio);
 
-    const controls = new OrbitControls(camera, renderer.domElement);
+    // const controls = new OrbitControls(camera, renderer.domElement);
+    const container =  document.getElementById('container');
+
+    container.appendChild(renderer.domElement);
 
 
-    document.getElementById('container').appendChild(renderer.domElement)
+    let isMouseDown = false;
+
+    container.addEventListener('mousedown',() => {
+      isMouseDown = true;
+    });
+
+    container.addEventListener('mouseup',() => {
+      isMouseDown = false;
+    });
+
+    container.addEventListener('mouseleave',() => {
+      isMouseDown = false
+    });
+
+    container.addEventListener('mousemove',(event) => {
+      if(isMouseDown) {
+        console.log('hello')
+        camera.rotation.y += event.movementX * 0.01;
+        camera.rotation.x += event.movementY * 0.01;
+        camera.rotation.order = 'YXZ';
+    
+      }
+    })
+
+    
+
+
+
+
 
     const axesHelper = new THREE.AxesHelper(5);
     scene.add(axesHelper);
 
     function render() {
-      controls.update();
-
+      // controls.update();
+      camera.updateProjectionMatrix();
       requestAnimationFrame(render);
       renderer.render(scene,camera);
     }
