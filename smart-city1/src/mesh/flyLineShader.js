@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-03-17 20:10:22
  * :last editor: 张德志
- * :date last edited: 2024-03-17 20:20:43
+ * :date last edited: 2024-03-17 20:57:11
  */
 import * as THREE from 'three';
 import vertexShader from '../shader/vertexShader.glsl';
@@ -23,14 +23,23 @@ class FlyLineShader {
 
     const points = this.lineCurve.getPoints(1000);
 
+    // 给每一个点设置几何属性
+    const aSizeArray = new Float32Array(points.length);
+
+    for (let i = 0; i < aSizeArray.length; i++) {
+      aSizeArray[i] = i;
+    }
+
     this.geometry = new THREE.BufferGeometry().setFromPoints(points);
+    this.geometry.setAttribute('aSize', new THREE.BufferAttribute(aSizeArray, 1));
+
     this.material = new THREE.ShaderMaterial({
       vertexShader,
       fragmentShader,
+      transparent: true,
     });
 
-    this.mesh = new THREE.Points(this.geometry,this.material);
-    
+    this.mesh = new THREE.Points(this.geometry, this.material);
   }
 }
 
