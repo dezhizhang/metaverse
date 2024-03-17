@@ -5,11 +5,10 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-03-14 22:25:31
  * :last editor: 张德志
- * :date last edited: 2024-03-15 06:00:40
+ * :date last edited: 2024-03-15 06:43:42
  */
 import React, { useEffect } from 'react';
 import * as THREE from 'three';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
 
 
