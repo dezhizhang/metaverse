@@ -5,111 +5,106 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-03-13 22:44:48
  * :last editor: 张德志
- * :date last edited: 2024-03-17 09:15:13
+ * :date last edited: 2024-03-17 23:10:10
  */
-import * as THREE from 'three';
-import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
-const clock = new THREE.Clock();
+import * as THREE from 'three';
+
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import * as d3 from 'd3';
+
+//创建场影
 const scene = new THREE.Scene();
 
-const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+//创建相机
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+
+// 设置相机位置
 camera.position.set(0, 0, 10);
+scene.add(camera);
 
-const renderer = new THREE.WebGL1Renderer({
-  antialias: true,
-});
-renderer.setSize(window.innerWidth, window.innerHeight);
-renderer.setPixelRatio(window.devicePixelRatio);
-document.body.appendChild(renderer.domElement);
 
-const ambientLight = new THREE.AmbientLight(0xffffff, 3);
-scene.add(ambientLight);
+scene.add(new THREE.AmbientLight(0xffffff,3));
 
 const axesHelper = new THREE.AxesHelper(5);
 scene.add(axesHelper);
 
-const boxGeometry = new THREE.BoxGeometry(1, 1, 1);
-const boxMaterial = new THREE.MeshBasicMaterial({
-  color: 0xff33ff,
+
+
+const loader = new THREE.FileLoader();
+loader.load('https://tugua.oss-cn-hangzhou.aliyuncs.com/model/china.json', (data) => {
+  const jsonData = JSON.parse(data);
+  operactionData(jsonData);
 });
-const cube = new THREE.Mesh(boxGeometry, boxMaterial);
-cube.name = 'cube';
-scene.add(cube);
+
+const map = new THREE.Object3D();
+
+
+function operactionData(jsonData) {
+  const features = jsonData.features;
+  features.forEach((feature) => {
+    const province = new THREE.Object3D();
+    province.properties = feature.properties.name;
+    const coordinates = feature.geometry.coordinates;
+
+    if (feature.geometry.type === 'Polygon') {
+      coordinates.forEach((coordinate) => {
+        const mesh = createMesh(coordinate);
+        mesh.properties = feature.properties.name;
+        province.add(mesh);
+
+      });
+    }
+    if(feature.geometry.type === 'MultiPolygon') {
+      coordinates.forEach((item) => {
+        item.forEach((coor) => {
+          const mesh = createMesh(coor);
+          mesh.properties = feature.properties.name;
+          province.add(mesh);
+        }) 
+      })
+    }
+    map.add(province);
+  });
+  scene.add(map);
+
+}
+
+const projection = d3.geoMercator().center([116.5, 38.5]).translate([0,0]);
+
+function createMesh(polygon) {
+  const shape = new THREE.Shape();
+  polygon.forEach((row,index) => {
+    const [longitude, latitude] = projection(row);
+    if(index === 0) {
+      shape.moveTo(longitude,-latitude);
+    }
+    shape.lineTo(longitude,-latitude);
+  });
+  const geometry = new THREE.ExtrudeGeometry(shape,{depth:5});
+  const material = new THREE.MeshBasicMaterial({
+    color:new THREE.Color(0xffffff * Math.random())
+  });
+  return new THREE.Mesh(geometry,material);
+}
+
+// 初始化渲染器
+const renderer = new THREE.WebGL1Renderer();
+
+// 设置渲染器大小
+renderer.setSize(window.innerWidth, window.innerHeight);
+
+document.body.append(renderer.domElement);
+
+renderer.render(scene, camera);
 
 const controls = new OrbitControls(camera, renderer.domElement);
 
-const positionKF = new THREE.VectorKeyframeTrack(
-  'cube.position',
-  [0, 1, 2],
-  [0, 0, 0, 2, 0, 0, 4, 0, 0],
-);
-
-const colorKF = new THREE.ColorKeyframeTrack(
-  'cube.material.color',
-  [0, 2, 4],
-  [1, 0, 1, 1, 1, 0, 1, 0, 1],
-);
-
-let mixer1;
-const mixer = new THREE.AnimationMixer(cube);
-const clip = new THREE.AnimationClip('move', 4, [positionKF, colorKF]);
-const action = mixer.clipAction(clip);
-action.play();
-
-const dracoLoader = new DRACOLoader();
-const gltfLoader = new GLTFLoader();
-dracoLoader.setDecoderPath('/draco/');
-
-gltfLoader.setDRACOLoader(gltfLoader);
-
-gltfLoader.load('/moon.glb', (gltf) => {
-  const moon = gltf.scene.getObjectByName('defaultMaterial');
-  moon.material.transparent = true;
-  // moon.material.opacity = 0.5;
-
-  const opacityKF = new THREE.NumberKeyframeTrack(
-    'defaultMaterial.material.opacity',
-    [0, 1, 2, 3, 4],
-    [1, 0.5, 0, 0.5, 1],
-  );
-  const positionZKF = new THREE.VectorKeyframeTrack(
-    'defaultMaterial.scale.z',
-    [0, 2, 4],
-    [0, 0, 0, 0, 0, 2, 0, 0, 0],
-  );
-
-  mixer1 = new THREE.AnimationMixer(cube);
-  const clip1 = new THREE.AnimationClip('opacity', 4, [opacityKF, positionZKF]);
-  const action1 = mixer1.clipAction(clip1);
-  action1.play();
-
-  scene.add(gltf.scene);
-});
-
-const quaternion = new THREE.Quaternion();
-quaternion.setFromAxisAngle(new THREE.Vector3(1, 0, 0), 0);
-action.play();
-
-window.addEventListener('resize', () => {
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.setPixelRatio(window.devicePixelRatio);
-});
-
 function render() {
-  const delta = clock.getDelta();
-  if (mixer) {
-    mixer.update(delta);
-  }
-  if (mixer1) {
-    mixer1.update(delta);
-  }
   requestAnimationFrame(render);
   renderer.render(scene, camera);
 }
 
 render();
+
+//

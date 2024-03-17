@@ -15,6 +15,7 @@
     "@tweenjs/tween.js": "^20.0.3",
     "ammo.js": "0.0.10",
     "cannon-es": "0.18.0",
+    "d3": "^7.9.0",
     "dat.gui": "0.7.9",
     "file-loader": "^6.2.0",
     "gsap": "^3.11.3",
