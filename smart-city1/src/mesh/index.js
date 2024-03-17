@@ -1,16 +1,17 @@
 /*
  * :file description:
- * :name: /smart-city/src/mesh/city/index.js
+ * :name: /smart-city1/src/mesh/index.js
  * :author: 张德志
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-03-17 15:07:00
  * :last editor: 张德志
- * :date last edited: 2024-03-17 19:39:37
+ * :date last edited: 2024-03-17 20:21:22
  */
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
-import scene from '../../scene';
+import scene from '../scene';
 import FlyLine from './flyLine';
+import FlyLineShader from './flyLineShader';
 import modifyMaterial from './modifyMaterial';
 
 export default function createCity() {
@@ -28,8 +29,13 @@ export default function createCity() {
     
     scene.add(gltf.scene);
 
-    const flyline = new FlyLine();
-    scene.add(flyline.mesh);
+    // const flyline = new FlyLine();
+    // scene.add(flyline.mesh);
+
+    const flyLineShader = new FlyLineShader();
+    scene.add(flyLineShader.mesh);
+
+
     
   });
 }

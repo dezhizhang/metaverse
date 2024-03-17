@@ -1,11 +1,11 @@
 /*
  * :file description:
- * :name: /smart-city/src/App.js
+ * :name: /smart-city1/src/App.js
  * :author: 张德志
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-03-17 09:37:43
  * :last editor: 张德志
- * :date last edited: 2024-03-17 15:22:20
+ * :date last edited: 2024-03-17 20:07:47
  */
 import * as THREE from 'three';
 import scene from './scene';
@@ -13,7 +13,7 @@ import renderer from './renderer';
 import './controls';
 import { resize } from './resize';
 import { animate } from './animate';
-import createMesh from './mesh/city';
+import createMesh from './mesh';
 import React, { useRef, useEffect } from 'react';
 
 
