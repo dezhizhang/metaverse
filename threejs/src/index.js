@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-03-13 22:44:48
  * :last editor: 张德志
- * :date last edited: 2024-03-18 22:22:10
+ * :date last edited: 2024-03-18 22:37:31
  */
 
 import * as THREE from 'three';
@@ -50,8 +50,10 @@ function operactionData(jsonData) {
     if (feature.geometry.type === 'Polygon') {
       coordinates.forEach((coordinate) => {
         const mesh = createMesh(coordinate);
+        const line = createLine(coordinate);
         mesh.properties = feature.properties.name;
         province.add(mesh);
+        province.add(line);
 
       });
     }
@@ -59,8 +61,10 @@ function operactionData(jsonData) {
       coordinates.forEach((item) => {
         item.forEach((coor) => {
           const mesh = createMesh(coor);
+          const line = createLine(coor);
           mesh.properties = feature.properties.name;
           province.add(mesh);
+          province.add(line);
         }) 
       })
     }
@@ -72,6 +76,7 @@ function operactionData(jsonData) {
 
 const projection = d3.geoMercator().center([116.5, 38.5]).translate([0,0]);
 
+// 生成物体
 function createMesh(polygon) {
   const shape = new THREE.Shape();
   polygon.forEach((row,index) => {
@@ -86,6 +91,24 @@ function createMesh(polygon) {
     color:new THREE.Color(0xffffff * Math.random())
   });
   return new THREE.Mesh(geometry,material);
+}
+
+// 生成经纬线
+function createLine(polygon) {
+  const lineGeometry = new THREE.BufferGeometry();
+  const pointArray = [];
+  polygon.forEach((row,index) => {
+    const [longitude,latitude] = projection(row);
+    pointArray.push(new THREE.Vector3(longitude,-latitude,10));
+  });
+  lineGeometry.setFromPoints(pointArray);
+  const color = new THREE.Color(Math.random() * 0xffffff);
+  // 创建线的材质
+  const lineMaterial = new THREE.LineBasicMaterial({
+    color:color
+  });
+
+  return new THREE.Line(lineGeometry,lineMaterial);
 }
 
 // 初始化渲染器
