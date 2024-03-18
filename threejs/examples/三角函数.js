@@ -1,5 +1,14 @@
 /*
  * :file description: 
+ * :name: /threejs/examples/三角函数.js
+ * :author: 张德志
+ * :copyright: (c) 2024, Tungee
+ * :date created: 2024-03-19 06:35:18
+ * :last editor: 张德志
+ * :date last edited: 2024-03-19 06:35:19
+ */
+/*
+ * :file description: 
  * :name: /threejs/src/index.js
  * :author: 张德志
  * :copyright: (c) 2024, Tungee
@@ -24,8 +33,6 @@ const geometry = new THREE.SphereGeometry(3);
 const material = new THREE.MeshBasicMaterial({
   color:0x00ffff
 });
-
-
 
 const R = 100;
 const N = 36;
