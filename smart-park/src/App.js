@@ -5,11 +5,14 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-03-19 04:38:30
  * :last editor: 张德志
- * :date last edited: 2024-03-19 04:41:07
+ * :date last edited: 2024-03-19 04:56:48
  */
 import * as THREE from 'three';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+
 import React, { useEffect, useRef } from 'react';
 function App() {
   const containerRef = useRef();
@@ -23,21 +26,40 @@ function App() {
       0.1,
       10000,
     );
-    camera.position.set(0, 0, 10);
+    camera.position.set(1000, 1000, 1000);
 
     const renderer = new THREE.WebGL1Renderer();
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.5;
+    
     container.appendChild(renderer.domElement);
+
+    // 加载环境贴图
+    const hdrLoader = new RGBELoader();
+    hdrLoader.load('/textures/023.hdr',(envMap) => {
+      scene.background = envMap;
+      scene.environment = envMap;
+      scene.environment.mapping = THREE.EquirectangularReflectionMapping;
+      
+    });
+
+    const controls = new OrbitControls(camera,renderer.domElement);
+    
+
 
 
     const gltfLoader = new GLTFLoader();
     const dracoLoader = new DRACOLoader();
-    dracoLoader.setDecoderPath('/three/examples/jsm/libs/draco/gltf/');
+    dracoLoader.setDecoderPath('/draco/');
     gltfLoader.setDRACOLoader(dracoLoader);
 
 
-    gltfLoader.load('/')
+    gltfLoader.load('/model/city4.glb',(gltf) => {
+      scene.add(gltf.scene);
+
+    })
 
 
     window.addEventListener('resize', () => {
