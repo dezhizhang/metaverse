@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-03-13 22:44:48
  * :last editor: 张德志
- * :date last edited: 2024-03-17 23:10:10
+ * :date last edited: 2024-03-18 22:22:10
  */
 
 import * as THREE from 'three';
@@ -98,6 +98,34 @@ document.body.append(renderer.domElement);
 
 renderer.render(scene, camera);
 
+let lastPicker = null;
+
+window.addEventListener('click',(event)=> {
+  const mouse = new THREE.Vector2();
+  mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+  mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+  const raycaster = new THREE.Raycaster();
+  raycaster.setFromCamera(mouse,camera);
+
+  const intersects = raycaster.intersectObjects(map.children);
+  if(intersects.length > 0) {
+
+    if(lastPicker) {
+      lastPicker.material.color.copy(lastPicker.material.oldColor);
+    }
+
+    lastPicker = intersects[0].object;
+    lastPicker.material.oldColor = lastPicker.material.color.clone();
+    lastPicker.material.color.set(0xffffff);
+  }else {
+    if(lastPicker) {
+      lastPicker.material.color.copy(lastPicker.material.oldColor);
+    }
+  }
+  
+})
+
 const controls = new OrbitControls(camera, renderer.domElement);
 
 function render() {
@@ -108,3 +136,4 @@ function render() {
 render();
 
 //
+
