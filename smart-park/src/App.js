@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-03-19 04:38:30
  * :last editor: 张德志
- * :date last edited: 2024-03-19 05:06:31
+ * :date last edited: 2024-03-19 05:29:38
  */
 import * as THREE from 'three';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
@@ -18,6 +18,7 @@ function App() {
   const containerRef = useRef();
 
   useEffect(() => {
+    const clock = new THREE.Clock();
     const container = containerRef.current;
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(
@@ -59,8 +60,21 @@ function App() {
     dracoLoader.setDecoderPath('/draco/');
     gltfLoader.setDRACOLoader(dracoLoader);
 
-    gltfLoader.load('/model/city.glb', (gltf) => {
+    let mixer = null;
+
+    gltfLoader.load('/model/city3.glb', (gltf) => {
       scene.add(gltf.scene);
+
+      gltf.scene.traverse((child) => {
+        if(child.name === '热气球') {
+          mixer = new THREE.AnimationAction(child);
+          const clip = gltf.antialias[0];
+          const action = mixer.clipAction(clip);
+          action.play();
+          
+          console.log(child);
+        }
+      })
     });
 
     window.addEventListener('resize', () => {
@@ -72,6 +86,9 @@ function App() {
 
     function animate() {
       requestAnimationFrame(animate);
+      if(mixer) {
+        mixer.update(clock.getDelta());
+      }
       renderer.render(scene, camera);
     }
 
