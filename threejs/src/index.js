@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-03-13 22:44:48
  * :last editor: 张德志
- * :date last edited: 2024-03-20 04:51:52
+ * :date last edited: 2024-03-20 05:22:14
  */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -19,33 +19,38 @@ camera.position.set(0,0,400);
 camera.lookAt(0,0,0);
 
 
-const geometry = new THREE.SphereGeometry(3);
+const geometry = new THREE.BoxGeometry(10,10,10);
 const material = new THREE.MeshBasicMaterial({
   color:0x00ffff
 });
 
-const sphere1 = new THREE.Mesh(geometry,material);
-scene.add(sphere1);
 
 
-const sphere2 = new THREE.Mesh(geometry,material);
-scene.add(sphere2);
-
-
-const A = new THREE.Vector3(30,30,0);
-
-const v = new THREE.Vector3(1,1,0);
-const walk = v.clone().multiplyScalar(50);
-
-
-const B = A.clone().add(walk);
-
-sphere1.position.copy(A);
-sphere2.position.copy(B);
+const cube = new THREE.Mesh(geometry,material);
+cube.position.set(-50,0,-50);
+scene.add(cube);
 
 
 
+const A = new THREE.Vector3(-50,0,-50);
+const B = new THREE.Vector3(100,0,100);
 
+const AB = B.clone().sub(A);
+AB.normalize();
+
+
+const T = AB.clone().multiplyScalar(100);
+
+cube.position.add(T);
+
+
+
+window.addEventListener('resize',() => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth,window.innerHeight);
+  renderer.setPixelRatio(window.devicePixelRatio);
+})
 
 
 // 初始化渲染器
