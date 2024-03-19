@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-03-13 22:44:48
  * :last editor: 张德志
- * :date last edited: 2024-03-20 05:22:14
+ * :date last edited: 2024-03-20 05:34:17
  */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -24,13 +24,9 @@ const material = new THREE.MeshBasicMaterial({
   color:0x00ffff
 });
 
-
-
 const cube = new THREE.Mesh(geometry,material);
 cube.position.set(-50,0,-50);
 scene.add(cube);
-
-
 
 const A = new THREE.Vector3(-50,0,-50);
 const B = new THREE.Vector3(100,0,100);
@@ -38,11 +34,8 @@ const B = new THREE.Vector3(100,0,100);
 const AB = B.clone().sub(A);
 AB.normalize();
 
-
 const T = AB.clone().multiplyScalar(100);
-
 cube.position.add(T);
-
 
 
 window.addEventListener('resize',() => {
