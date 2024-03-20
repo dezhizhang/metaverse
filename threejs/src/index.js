@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-03-13 22:44:48
  * :last editor: 张德志
- * :date last edited: 2024-03-20 23:22:56
+ * :date last edited: 2024-03-21 06:01:01
  */
 
 import * as THREE from 'three';
@@ -58,24 +58,21 @@ scene.add(axesHelper);
 const controls = new OrbitControls(camera,renderer.domElement);
 
 
-const v = new THREE.Vector3(10,0,10);
+const p1 = new THREE.Vector3(0,0,0);
+const p2 = new THREE.Vector3(20,0,0);
+const p3 = new THREE.Vector3(10,15,0);
 
-let t = 0; // 
-const clock = new THREE.Clock();
+const a = p3.clone().sub(p1);
 
-const pos = mesh.position.clone(); //记录物体原始位置
+const b = p2.clone().sub(p1);
+
+const cos = a.normalize().dot(b.normalize());
+
+console.log(THREE.MathUtils.radToDeg(Math.acos(cos)));
+
 
 
 function render() {
-  const spt = clock.getDelta();
-  t += spt;
-
-  const dis = v.clone().multiplyScalar(t);
-
-  const newPos = pos.clone().add(dis);
-
-  mesh.position.copy(newPos);
-
 
   requestAnimationFrame(render);
   renderer.render(scene,camera)
