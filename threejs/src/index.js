@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-03-13 22:44:48
  * :last editor: 张德志
- * :date last edited: 2024-03-21 06:39:42
+ * :date last edited: 2024-03-21 07:23:53
  */
 
 import * as THREE from 'three';
@@ -81,24 +81,28 @@ gltfLoader.load('/人.glb',(gltf) => {
 person.position.set(0,0,2);
 mesh.position.set(2,0,-3);
 
-const a = new THREE.Vector3(0,0,-1);
+// const a = new THREE.Vector3(0,0,-1);
 
-const R = 20;
-const angle = 60;
+// const R = 20;
+// const angle = 1;
 
-const b = mesh.position.clone().sub(person.position);
+// const b = mesh.position.clone().sub(person.position);
 
-const L = b.length();
-if(L > R) {
-  console.log('在外');
-  return;
-}
+// const L = b.length();
 
+// const cos = a.dot(b.normalize());
 
+// const rad = THREE.MathUtils.degToRad(angle);
 
+// const rangeCos = Math.cos(rad / 2);
 
-
-
+// if(L < R) {
+//   if(cos > rangeCos) {
+//     console.log('物体在内');
+//   }else {
+//     console.log('物体在外')
+//   }
+// }
 
 
 
