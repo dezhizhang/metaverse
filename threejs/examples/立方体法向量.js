@@ -1,3 +1,4 @@
+
 /*
  * :file description: 
  * :name: /threejs/src/index.js
@@ -5,9 +6,8 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-03-13 22:44:48
  * :last editor: 张德志
- * :date last edited: 2024-03-20 23:22:56
+ * :date last edited: 2024-03-20 23:03:30
  */
-
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
@@ -22,8 +22,6 @@ const material = new THREE.MeshBasicMaterial({
   color:0x00ffff,
 });
 const mesh = new THREE.Mesh(geometry,material);
-mesh.position.set(-50,0,-50);
-
 scene.add(mesh);
 
 const p = mesh.geometry.attributes.position; // 顶点位置
@@ -57,26 +55,7 @@ scene.add(axesHelper);
 
 const controls = new OrbitControls(camera,renderer.domElement);
 
-
-const v = new THREE.Vector3(10,0,10);
-
-let t = 0; // 
-const clock = new THREE.Clock();
-
-const pos = mesh.position.clone(); //记录物体原始位置
-
-
 function render() {
-  const spt = clock.getDelta();
-  t += spt;
-
-  const dis = v.clone().multiplyScalar(t);
-
-  const newPos = pos.clone().add(dis);
-
-  mesh.position.copy(newPos);
-
-
   requestAnimationFrame(render);
   renderer.render(scene,camera)
 }
