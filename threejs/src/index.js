@@ -5,11 +5,12 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-03-13 22:44:48
  * :last editor: 张德志
- * :date last edited: 2024-03-21 06:01:01
+ * :date last edited: 2024-03-21 06:39:42
  */
 
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 
 const scene = new THREE.Scene();
 
@@ -22,7 +23,7 @@ const material = new THREE.MeshBasicMaterial({
   color:0x00ffff,
 });
 const mesh = new THREE.Mesh(geometry,material);
-mesh.position.set(-50,0,-50);
+// mesh.position.set(-50,0,-50);
 
 scene.add(mesh);
 
@@ -58,17 +59,46 @@ scene.add(axesHelper);
 const controls = new OrbitControls(camera,renderer.domElement);
 
 
-const p1 = new THREE.Vector3(0,0,0);
-const p2 = new THREE.Vector3(20,0,0);
-const p3 = new THREE.Vector3(10,15,0);
+const ambientLight = new THREE.AmbientLight(0xfffff,3);
+scene.add(ambientLight);
 
-const a = p3.clone().sub(p1);
+const directionalLight = new THREE.DirectionalLight(0xffffff,3);
+scene.add(directionalLight);
 
-const b = p2.clone().sub(p1);
 
-const cos = a.normalize().dot(b.normalize());
 
-console.log(THREE.MathUtils.radToDeg(Math.acos(cos)));
+const model = new THREE.Group();
+
+const gltfLoader = new GLTFLoader();
+const person = new THREE.Group();
+model.add(person);
+
+gltfLoader.load('/人.glb',(gltf) => {
+  console.log(gltf)
+  person.add(gltf.scene);
+});
+
+person.position.set(0,0,2);
+mesh.position.set(2,0,-3);
+
+const a = new THREE.Vector3(0,0,-1);
+
+const R = 20;
+const angle = 60;
+
+const b = mesh.position.clone().sub(person.position);
+
+const L = b.length();
+if(L > R) {
+  console.log('在外');
+  return;
+}
+
+
+
+
+
+
 
 
 
