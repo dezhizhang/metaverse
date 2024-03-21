@@ -5,12 +5,11 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-03-13 22:44:48
  * :last editor: 张德志
- * :date last edited: 2024-03-21 07:58:49
+ * :date last edited: 2024-03-21 09:21:09
  */
 
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 
 const scene = new THREE.Scene();
 
@@ -49,21 +48,23 @@ scene.add(directionalLight);
 
 
 const a = new THREE.Vector3(50,0,0);
-const b = new THREE.Vector3(30,0,30);
-
-const center = new THREE.Vector3(0,0,0);
-const arrowA = new THREE.ArrowHelper(a.clone().normalize(),center,a.length(),0xff00ff);
-scene.add(arrowA);
-
-const arrowB = new THREE.ArrowHelper(b.clone().normalize(),center,b.length(),0x00ff00);
-scene.add(arrowB);
+const b = new THREE.Vector3(50,0,30);
 
 const c = new THREE.Vector3();
-c.crossVectors(a,b);
+const arrowA = new THREE.ArrowHelper(a.clone().normalize(),c,a.length(),0xff00ff);
+scene.add(arrowA);
 
-const arrowC = new THREE.ArrowHelper(c.clone().normalize(),center,c.length() / 30,0xffff00);
+const arrowB = new THREE.ArrowHelper(b.clone().normalize(),c,b.length(),0x00ff00);
+scene.add(arrowB);
+
+
+const d = new THREE.Vector3();
+d.crossVectors(a,b);
+
+
+
+const arrowC = new THREE.ArrowHelper(c.clone().normalize(),c,d.length() / 30,0xffff00);
 scene.add(arrowC);
-
 
 
 function render() {
