@@ -5,15 +5,16 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-03-13 22:44:48
  * :last editor: 张德志
- * :date last edited: 2024-03-22 05:37:22
+ * :date last edited: 2024-03-22 07:28:03
  */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(45,window.innerWidth / window.innerHeight,0.1,1000);
-camera.position.set(4,6,10);
+camera.position.set(125,200,100);
 camera.lookAt(0,0,0);
 
 const gridHelper = new THREE.GridHelper(30,25,0x004444,0x004444);
@@ -46,40 +47,27 @@ scene.add(axesHelper);
 
 const controls = new OrbitControls(camera,renderer.domElement);
 
-const geometry = new THREE.BufferGeometry();
-
-const vertices = new Float32Array([
-  0,0,0,
-  50,0,0,
-  0,100,0,
-  0,0,10,
-  0,0,100,
-  50,0,10
-]);
-
-const position = new THREE.BufferAttribute(vertices,3);
-geometry.attributes.position = position;
-
-const material = new THREE.MeshBasicMaterial({
-  color:0x00ffff,
-  side:THREE.DoubleSide
-});
-
-const mesh = new THREE.Mesh(geometry,material);
+const A = new THREE.Vector3(30,0,0);
+const mesh = createMesh(0xfff00,2);
+mesh.position.copy(A);
 scene.add(mesh);
 
-const p1 = new THREE.Vector3(0,0,0);
-const p2 = new THREE.Vector3(50,0,0);
-const p3 = new THREE.Vector3(0,100,0);
+function createMesh(color,R) {
+  const geometry = new THREE.SphereGeometry(R);
+  const material = new THREE.MeshLambertMaterial({
+    color:color,
+  });
+  const mesh = new THREE.Mesh(geometry,material);
+  return mesh;
+}
 
-const a = p2.clone().sub(p1);
+const quaternion = new THREE.Quaternion();
+quaternion.setFromAxisAngle(new THREE.Vector3(0,0,1),Math.PI / 6);
 
-const b = p3.clone().sub(p2);
+const b = A.clone().applyQuaternion(quaternion);
 
-const c = a.clone().cross(b);
+mesh.position.copy(b);
 
-const arrow = new THREE.ArrowHelper(c.clone().normalize(),p3,50,0xff00ff);
-scene.add(arrow);
 
 
 
