@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-03-13 22:44:48
  * :last editor: 张德志
- * :date last edited: 2024-03-22 05:37:22
+ * :date last edited: 2024-03-22 05:20:45
  */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -46,40 +46,58 @@ scene.add(axesHelper);
 
 const controls = new OrbitControls(camera,renderer.domElement);
 
-const geometry = new THREE.BufferGeometry();
+const A = new THREE.Vector3(0,0,10);
+const B = new THREE.Vector3(100,0,10);
 
-const vertices = new Float32Array([
-  0,0,0,
-  50,0,0,
-  0,100,0,
-  0,0,10,
-  0,0,100,
-  50,0,10
-]);
+const p1 = new THREE.Vector3(20,0,40);
+const p2 = new THREE.Vector3(80,0,40);
 
-const position = new THREE.BufferAttribute(vertices,3);
-geometry.attributes.position = position;
+function createMesh(color) {
+  const geometry = new THREE.SphereGeometry(2);
+  const material = new THREE.MeshBasicMaterial({
+    color
+  });
+  const mesh = new THREE.Mesh(geometry,material);
+  return mesh;
+}
 
-const material = new THREE.MeshBasicMaterial({
-  color:0x00ffff,
-  side:THREE.DoubleSide
-});
 
-const mesh = new THREE.Mesh(geometry,material);
-scene.add(mesh);
+const aMesh = createMesh(0xffff00);
+aMesh.position.copy(A);
+scene.add(aMesh);
 
-const p1 = new THREE.Vector3(0,0,0);
-const p2 = new THREE.Vector3(50,0,0);
-const p3 = new THREE.Vector3(0,100,0);
 
-const a = p2.clone().sub(p1);
+const bMesh = createMesh(0xffff00);
+bMesh.position.copy(B);
+scene.add(bMesh);
 
-const b = p3.clone().sub(p2);
+const p1Mesh = createMesh(0x00ff00);
+p1Mesh.position.copy(p1);
+scene.add(p1Mesh);
 
-const c = a.clone().cross(b);
+const p2Mesh = createMesh(0x00ff00);
+p2Mesh.position.copy(p2);
+scene.add(p2Mesh);
 
-const arrow = new THREE.ArrowHelper(c.clone().normalize(),p3,50,0xff00ff);
-scene.add(arrow);
+
+const a1 = A.clone().sub(p1);
+const b1 = B.clone().sub(p1);
+
+const arrowA1 = new THREE.ArrowHelper(a1.clone().normalize(),p1,a1.length(),0xff00ff);
+scene.add(arrowA1);
+
+const arrowB1 = new THREE.ArrowHelper(b1.clone().normalize(),p1,b1.length(),0xff00ff);
+scene.add(arrowB1);
+
+
+const a2 = A.clone().sub(p2);
+const b2 = B.clone().sub(p2);
+
+const arrowA2 = new THREE.ArrowHelper(a2.clone().normalize(),p2,a2.length(),0xff00ff);
+scene.add(arrowA2);
+
+const arrowB2 = new THREE.ArrowHelper(b2.clone().normalize(),p2,b2.length(),0xff00ff);
+scene.add(arrowB2);
 
 
 
