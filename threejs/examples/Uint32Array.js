@@ -1,11 +1,11 @@
 /*
  * :file description: 
- * :name: /threejs/src/index.js
+ * :name: /threejs/examples/Uint32Array.js
  * :author: 张德志
  * :copyright: (c) 2024, Tungee
- * :date created: 2024-03-13 22:44:48
+ * :date created: 2024-03-23 19:14:47
  * :last editor: 张德志
- * :date last edited: 2024-03-23 19:17:37
+ * :date last edited: 2024-03-23 19:14:49
  */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -45,7 +45,6 @@ scene.add(axesHelper);
 
 const controls = new OrbitControls(camera,renderer.domElement);
 
-
 const geometry = new THREE.BufferGeometry();
 const vertices = new Float32Array([
   0,0,0,
@@ -53,14 +52,15 @@ const vertices = new Float32Array([
   80,80,0,
   0,80,0
 ]);
+
 const attributes = new THREE.BufferAttribute(vertices,3);
 geometry.attributes.position = attributes;
 
 const indexs = new Uint32Array([
   0,1,2,0,2,3
 ]);
-geometry.index = new THREE.BufferAttribute(indexs,1);
 
+geometry.index = new THREE.BufferAttribute(indexs,1);
 const material = new THREE.MeshBasicMaterial({
   color:0xffff00,
   side:THREE.DoubleSide,
@@ -68,7 +68,6 @@ const material = new THREE.MeshBasicMaterial({
 
 const mesh = new THREE.Mesh(geometry,material);
 scene.add(mesh);
-
 
 
 
