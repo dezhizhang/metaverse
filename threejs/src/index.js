@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-03-13 22:44:48
  * :last editor: 张德志
- * :date last edited: 2024-03-23 19:17:37
+ * :date last edited: 2024-03-23 19:39:55
  */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -56,20 +56,30 @@ const vertices = new Float32Array([
 const attributes = new THREE.BufferAttribute(vertices,3);
 geometry.attributes.position = attributes;
 
+// 法向量位置数据
+const normal = new Float32Array([
+  0,0,1,
+  0,0,1,
+  0,0,1,
+  0,0,1
+]);
+geometry.attributes.normal = new THREE.BufferAttribute(normal,3);
+
+
 const indexs = new Uint32Array([
   0,1,2,0,2,3
 ]);
 geometry.index = new THREE.BufferAttribute(indexs,1);
 
-const material = new THREE.MeshBasicMaterial({
+const material = new THREE.MeshLambertMaterial({
   color:0xffff00,
   side:THREE.DoubleSide,
 });
 
+
+
 const mesh = new THREE.Mesh(geometry,material);
 scene.add(mesh);
-
-
 
 
 function render() {
