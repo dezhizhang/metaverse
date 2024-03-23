@@ -5,10 +5,12 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-03-13 22:44:48
  * :last editor: 张德志
- * :date last edited: 2024-03-23 17:47:05
+ * :date last edited: 2024-03-23 16:26:21
  */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(45,window.innerWidth / window.innerHeight,0.1,1000);
@@ -45,26 +47,36 @@ scene.add(axesHelper);
 
 const controls = new OrbitControls(camera,renderer.domElement);
 
+const gltfLoader = new GLTFLoader();
+const dracoLoader = new DRACOLoader();
+dracoLoader.setDecoderPath('/draco/');
+gltfLoader.setDRACOLoader(dracoLoader);
 
 const geometry = new THREE.BufferGeometry();
 const vertices = new Float32Array([
-  0,0,0,
-  50,0,0,
-  0,100,0,
-  0,0,10,
-  0,0,100,
-  50,0,10
+  100,25,0,
+  100,-25,25,
+  100,-25,-25
 ]);
 
 const position = new THREE.BufferAttribute(vertices,3);
 geometry.attributes.position = position;
-const material = new THREE.LineBasicMaterial({
-  color:0xffff00,
+
+const material = new THREE.MeshBasicMaterial({
+  color:0x00ffff,
+  side:THREE.DoubleSide,
 });
-const line = new THREE.Line(geometry,material);
-scene.add(line);
+
+const mesh = new THREE.Mesh(geometry,material);
+scene.add(mesh);
 
 
+const point = new THREE.Vector3();
+const box = new THREE.Box3();
+box.expandByObject(mesh);
+box.getSize(point);
+
+console.log('point',point);
 
 function render() {
   requestAnimationFrame(render);
