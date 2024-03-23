@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-03-13 22:44:48
  * :last editor: 张德志
- * :date last edited: 2024-03-23 15:32:56
+ * :date last edited: 2024-03-23 15:24:18
  */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -53,6 +53,7 @@ dracoLoader.setDecoderPath('/draco/');
 gltfLoader.setDRACOLoader(dracoLoader);
 
 const geometry = new THREE.BufferGeometry();
+
 const vertices = new Float32Array([
   100,25,0,
   100,-25,25,
@@ -70,6 +71,7 @@ const material = new THREE.MeshBasicMaterial({
 const mesh = new THREE.Mesh(geometry,material);
 scene.add(mesh);
 
+
 const ray = new THREE.Ray();
 ray.origin = new THREE.Vector3(0,0,0);
 
@@ -81,10 +83,9 @@ const p3 = new THREE.Vector3(100,-25,-25);
 
 const point = new THREE.Vector3();
 
-const result = ray.intersectTriangle(p1,p2,p3,false,point);
+
+const result = ray.intersectTriangle(p1,p2,p3,true,point);
 console.log('result',result);
-
-
 
 
 function render() {
