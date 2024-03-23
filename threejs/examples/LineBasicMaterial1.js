@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-03-13 22:44:48
  * :last editor: 张德志
- * :date last edited: 2024-03-23 19:01:37
+ * :date last edited: 2024-03-23 17:47:05
  */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -45,26 +45,25 @@ scene.add(axesHelper);
 
 const controls = new OrbitControls(camera,renderer.domElement);
 
+
 const geometry = new THREE.BufferGeometry();
 const vertices = new Float32Array([
   0,0,0,
-  80,0,0,
-  80,80,0,
-  0,0,0,
-  80,80,0,
-  0,80,0
+  50,0,0,
+  0,100,0,
+  0,0,10,
+  0,0,100,
+  50,0,10
 ]);
 
-const attributes = new THREE.BufferAttribute(vertices,3);
-geometry.attributes.position = attributes;
-
-const material = new THREE.MeshBasicMaterial({
+const position = new THREE.BufferAttribute(vertices,3);
+geometry.attributes.position = position;
+const material = new THREE.LineBasicMaterial({
   color:0xffff00,
-  side:THREE.DoubleSide,
 });
+const line = new THREE.Line(geometry,material);
+scene.add(line);
 
-const mesh = new THREE.Mesh(geometry,material);
-scene.add(mesh);
 
 
 function render() {
