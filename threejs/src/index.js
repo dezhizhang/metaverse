@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-03-13 22:44:48
  * :last editor: 张德志
- * :date last edited: 2024-03-23 15:32:56
+ * :date last edited: 2024-03-23 15:53:25
  */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -70,19 +70,21 @@ const material = new THREE.MeshBasicMaterial({
 const mesh = new THREE.Mesh(geometry,material);
 scene.add(mesh);
 
-const ray = new THREE.Ray();
-ray.origin = new THREE.Vector3(0,0,0);
+const raycaster = new THREE.Raycaster();
+raycaster.ray.origin.set(-100,0,0);
+raycaster.ray.direction = new THREE.Vector3(1,0,0);
 
-ray.direction = new THREE.Vector3(1,0,0);
+const result = raycaster.intersectObjects([mesh]);
+if(result.length > 0) {
+  result[0].object.material.color = new THREE.Color(0x00ff00)
+}
 
-const p1 = new THREE.Vector3(100,25,0);
-const p2 = new THREE.Vector3(100,-25,25);
-const p3 = new THREE.Vector3(100,-25,-25);
 
-const point = new THREE.Vector3();
 
-const result = ray.intersectTriangle(p1,p2,p3,false,point);
-console.log('result',result);
+
+
+
+
 
 
 
