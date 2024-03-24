@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-03-13 22:44:48
  * :last editor: 张德志
- * :date last edited: 2024-03-24 14:17:41
+ * :date last edited: 2024-03-24 14:32:01
  */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -38,56 +38,38 @@ window.addEventListener('resize', () => {
   renderer.setSize(window.innerWidth, window.innerHeight);
 });
 
-
-
 const axesHelper = new THREE.AxesHelper(100);
 scene.add(axesHelper);
 
-const controls = new OrbitControls(camera,renderer.domElement);
+const controls = new OrbitControls(camera, renderer.domElement);
 
 const geometry = new THREE.BufferGeometry();
-const vertices = new Float32Array([
-  0,0,0,
-  160,0,0,
-  160,80,0,
-  0,80,0
-]);
+const vertices = new Float32Array([0, 0, 0, 160, 0, 0, 160, 80, 0, 0, 80, 0]);
 
-const attribute = new THREE.BufferAttribute(vertices,3);
+const attribute = new THREE.BufferAttribute(vertices, 3);
+
 geometry.attributes.position = attribute;
 
-const indexs = new Uint16Array([
-  0,1,2,0,2,3
-]);
+const indexs = new Uint16Array([0, 1, 2, 0, 2, 3]);
 
-const uvs = new Float32Array([
-  0,0,
-  1,0,
-  1,1,
-  0,1
-])
+const uvs = new Float32Array([0, 0, 1, 0, 1, 1, 0, 1]);
 
-geometry.index = new THREE.BufferAttribute(indexs,1);
-geometry.attributes.uv = new THREE.BufferAttribute(uvs,2);
-
+geometry.index = new THREE.BufferAttribute(indexs, 1);
+geometry.attributes.uv = new THREE.BufferAttribute(uvs, 2);
 
 const textureLoader = new THREE.TextureLoader();
 const texture = textureLoader.load('/earth.png');
+
 const material = new THREE.MeshBasicMaterial({
-  map:texture,
-  side:THREE.DoubleSide
+  map: texture,
+  side: THREE.DoubleSide,
 });
 
-const mesh = new THREE.Mesh(geometry,material);
+const mesh = new THREE.Mesh(geometry, material);
 scene.add(mesh);
 
-
-
-
 function render() {
-
   requestAnimationFrame(render);
-  // cube.rotateY(0.01);
   renderer.render(scene, camera);
 }
 
