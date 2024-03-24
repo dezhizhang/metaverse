@@ -1,12 +1,13 @@
 /*
- * :file description:
- * :name: /threejs/src/index.js
+ * :file description: 
+ * :name: /threejs/examples/getWorldPosition.js
  * :author: 张德志
  * :copyright: (c) 2024, Tungee
- * :date created: 2024-03-13 22:44:48
+ * :date created: 2024-03-24 11:27:10
  * :last editor: 张德志
- * :date last edited: 2024-03-24 11:32:07
+ * :date last edited: 2024-03-24 11:27:11
  */
+
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
@@ -45,29 +46,23 @@ const controls = new OrbitControls(camera,renderer.domElement);
 
 const group = new THREE.Group();
 
+// const geometry = new THREE.BoxGeometry(20,20,20);
+// const material = new THREE.MeshLambertMaterial({
+//   color:0x00ffff
+// });
+// const cube = new THREE.Mesh(geometry,material);
+// cube.position.x = 50;
+// group.add(cube);
+// group.position.x = 50;
 
+// const axesHelper1 = new THREE.AxesHelper(50);
+// cube.add(axesHelper1);
 
-const geometry = new THREE.BoxGeometry(20,20,20);
-const material = new THREE.MeshLambertMaterial({
-  color:0x00ffff
-});
-const cube = new THREE.Mesh(geometry,material);
-cube.position.x = 50;
-group.add(cube);
-group.position.x = 50;
+// scene.add(group);
 
-const axesHelper1 = new THREE.AxesHelper(50);
-cube.add(axesHelper1);
-
-scene.add(group);
-
-const v3 = new THREE.Vector3();
-cube.getWorldPosition(v3);
-
-console.log('v3',v3);
-
-
-
+// const v3 = new THREE.Vector3();
+// // 获取世界坐标
+// cube.getWorldPosition(v3);
 
 
 console.log('v3',v3);
