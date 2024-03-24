@@ -5,10 +5,12 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-03-13 22:44:48
  * :last editor: 张德志
- * :date last edited: 2024-03-24 16:16:26
+ * :date last edited: 2024-03-24 16:33:10
  */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 10000);
@@ -44,24 +46,20 @@ scene.add(axesHelper);
 const controls = new OrbitControls(camera, renderer.domElement);
 
 
-const textureLoader = new THREE.TextureLoader();
-const texture = textureLoader.load('/纹理1.jpg');
-texture.wrapT = THREE.RepeatWrapping;
-texture.wrapS = THREE.RepeatWrapping;
+const gltfLoader = new GLTFLoader();
+const dracoLoader = new DRACOLoader();
+dracoLoader.setDecoderPath('/draco/');
+gltfLoader.setDRACOLoader(dracoLoader);
 
-const geometry = new THREE.PlaneGeometry(200,20);
-const material = new THREE.MeshLambertMaterial({
-  map:texture
+
+gltfLoader.load('/factory.gltf',(gltf) => {
+  scene.add(gltf.scene);
 });
-
-const mesh = new THREE.Mesh(geometry,material);
-mesh.rotateX(-Math.PI / 2);
-scene.add(mesh);
 
 
 function render() {
   requestAnimationFrame(render);
-  texture.offset.x +=0.01;
+  // texture.offset.x +=0.01;
 
   renderer.render(scene, camera);
 }
