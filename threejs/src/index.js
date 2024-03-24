@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-03-13 22:44:48
  * :last editor: 张德志
- * :date last edited: 2024-03-24 21:02:10
+ * :date last edited: 2024-03-24 21:40:07
  */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -31,6 +31,8 @@ const ambientLight = new THREE.AmbientLight(0xffffff, 1);
 scene.add(ambientLight);
 
 const renderer = new THREE.WebGLRenderer();
+// renderer.outputEncoding = THREE.sRGBEncoding;
+// renderer.outputEncoding = THREE.sea
 renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setSize(window.innerWidth, window.innerHeight);
 
@@ -49,24 +51,24 @@ scene.add(axesHelper);
 const controls = new OrbitControls(camera,renderer.domElement);
 
 
+const textureLoader = new THREE.TextureLoader();
+const texture = textureLoader.load('/黑色.png');
+texture.flipY = false;
+texture.encoding = THREE.sRGBEncoding;
 
 const gltfLoader = new GLTFLoader();
 const dracoLoader = new DRACOLoader();
 dracoLoader.setDecoderPath('/draco/');
 gltfLoader.setDRACOLoader(dracoLoader);
 
-gltfLoader.load('/简易小区.glb',(gltf) => {
-  gltf.scene.traverse(function(obj) {
-    if(obj.isMesh) {
-      const mesh1 = gltf.scene.getObjectByName('3号楼');
-      mesh1.material = obj.material.clone();
-      mesh1.material = new THREE.MeshLambertMaterial({
-        color:0x00ff00
-      })
-    }
-  });
+gltfLoader.load('/phone.glb',(gltf) => {
   scene.add(gltf.scene);
-});
+
+  const mesh = gltf.scene.children[0];
+  mesh.material.map = texture;
+})
+
+
 
 function render() {
   requestAnimationFrame(render);
