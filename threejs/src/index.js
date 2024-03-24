@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-03-13 22:44:48
  * :last editor: 张德志
- * :date last edited: 2024-03-23 21:16:14
+ * :date last edited: 2024-03-24 09:56:09
  */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -45,16 +45,23 @@ const controls = new OrbitControls(camera,renderer.domElement);
 
 const boxGeometry = new THREE.BoxGeometry(1,1,1);
 const material = new THREE.MeshBasicMaterial({
-  color:0xff00ff
+  color:0xff00ff,
+  opacity:0.5,
+  transparent:true
 });
-
-const color = new THREE.Color(0x00ff00);
-material.color = color;
 
 const cube = new THREE.Mesh(boxGeometry,material);
 scene.add(cube);
 
 
+const cube1 = cube.clone();
+cube1.position.set(10,0,0);
+cube1.material.color = new THREE.Color(0x00ff00);
+
+scene.add(cube1);
+
+
+// console.log(v1 === v2);
 
 
 
