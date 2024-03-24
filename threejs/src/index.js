@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-03-13 22:44:48
  * :last editor: 张德志
- * :date last edited: 2024-03-24 16:33:10
+ * :date last edited: 2024-03-24 17:13:49
  */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -13,6 +13,7 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
 
 const scene = new THREE.Scene();
+scene.background = new THREE.Color(0xffffff);
 const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 10000);
 camera.position.set(200, 200, 200);
 camera.lookAt(0, 0, 0);
@@ -41,21 +42,18 @@ window.addEventListener('resize', () => {
 });
 
 const axesHelper = new THREE.AxesHelper(100);
-scene.add(axesHelper);
+scene.add(axesHelper)
 
-const controls = new OrbitControls(camera, renderer.domElement);
-
+const controls = new OrbitControls(camera,renderer.domElement);
 
 const gltfLoader = new GLTFLoader();
 const dracoLoader = new DRACOLoader();
 dracoLoader.setDecoderPath('/draco/');
 gltfLoader.setDRACOLoader(dracoLoader);
 
-
 gltfLoader.load('/factory.gltf',(gltf) => {
   scene.add(gltf.scene);
 });
-
 
 function render() {
   requestAnimationFrame(render);
