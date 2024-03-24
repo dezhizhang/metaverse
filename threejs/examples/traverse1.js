@@ -1,11 +1,11 @@
 /*
- * :file description:
- * :name: /threejs/src/index.js
+ * :file description: 
+ * :name: /threejs/examples/traverse1.js
  * :author: 张德志
  * :copyright: (c) 2024, Tungee
- * :date created: 2024-03-13 22:44:48
+ * :date created: 2024-03-24 20:43:30
  * :last editor: 张德志
- * :date last edited: 2024-03-24 20:50:02
+ * :date last edited: 2024-03-24 20:43:30
  */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -48,8 +48,6 @@ scene.add(axesHelper);
 
 const controls = new OrbitControls(camera,renderer.domElement);
 
-
-
 const gltfLoader = new GLTFLoader();
 const dracoLoader = new DRACOLoader();
 dracoLoader.setDecoderPath('/draco/');
@@ -60,14 +58,14 @@ gltfLoader.load('/简易小区.glb',(gltf) => {
     if(obj.isMesh) {
       obj.material = new THREE.MeshLambertMaterial({
         color:0x00ff00
-      })
+      }) 
     }
-  });
+  })
   scene.add(gltf.scene);
 });
 
 function render() {
-  requestAnimationFrame(render);
+  requestAnimationFrame(render);  
   renderer.render(scene,camera);
 }
 
