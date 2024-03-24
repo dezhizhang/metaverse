@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-03-13 22:44:48
  * :last editor: 张德志
- * :date last edited: 2024-03-24 22:27:53
+ * :date last edited: 2024-03-25 05:31:48
  */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -56,21 +56,26 @@ texture.flipY = false;
 texture.encoding = THREE.sRGBEncoding;
 
 
+
 const gltfLoader = new GLTFLoader();
 const dracoLoader = new DRACOLoader();
 dracoLoader.setDecoderPath('/draco/');
 gltfLoader.setDRACOLoader(dracoLoader);
 
-gltfLoader.load('/金属.glb',function(gltf){
+const textureCube = new THREE.CubeTextureLoader()
+.setPath('/environment')
+.load(['px.jpg','nx.jpg','py.jpg','ny.jpg','pz.jpg','nz.jpg']);
+
+
+gltfLoader.load('/金属.glb',function(gltf) {
   gltf.scene.traverse(function(obj) {
     if(obj.isMesh) {
       obj.material.metalness = 1.0;
       obj.material.roughness = 0.5;
+      obj.material.envMap = textureCube;
     }
   });
-  
   scene.add(gltf.scene);
-  
 })
 
 
