@@ -1,11 +1,11 @@
 /*
- * :file description: 
+ * :file description:
  * :name: /threejs/examples/repeat.js
  * :author: 张德志
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-03-24 15:00:49
  * :last editor: 张德志
- * :date last edited: 2024-03-24 15:00:50
+ * :date last edited: 2024-03-24 15:04:43
  */
 
 import * as THREE from 'three';
@@ -44,18 +44,17 @@ scene.add(axesHelper);
 
 const controls = new OrbitControls(camera, renderer.domElement);
 
-
-const geometry = new THREE.PlaneGeometry(2000,2000);
+const geometry = new THREE.PlaneGeometry(2000, 2000);
 const textureLoader = new THREE.TextureLoader();
 const texture = textureLoader.load('/瓷砖.jpg');
 texture.wrapS = THREE.RepeatWrapping;
 texture.wrapT = THREE.RepeatWrapping;
 
-texture.repeat.set(12,12);
+texture.repeat.set(12, 12);
 
 const material = new THREE.MeshLambertMaterial({
-  map:texture,
-  side:THREE.DoubleSide
+  map: texture,
+  side: THREE.DoubleSide,
 });
 
 const mesh = new THREE.Mesh(geometry,material);
