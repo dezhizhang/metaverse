@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-03-13 22:44:48
  * :last editor: 张德志
- * :date last edited: 2024-03-24 11:54:30
+ * :date last edited: 2024-03-24 14:01:27
  */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -22,7 +22,7 @@ const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
 directionalLight.position.set(100, 60, 50);
 scene.add(directionalLight);
 
-const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
+const ambientLight = new THREE.AmbientLight(0xffffff, 1);
 scene.add(ambientLight);
 
 const renderer = new THREE.WebGLRenderer();
@@ -38,27 +38,29 @@ window.addEventListener('resize', () => {
   renderer.setSize(window.innerWidth, window.innerHeight);
 });
 
+
+
 const axesHelper = new THREE.AxesHelper(100);
 scene.add(axesHelper);
 
 const controls = new OrbitControls(camera,renderer.domElement);
 
+const textureLoader = new THREE.TextureLoader();
+const texture = textureLoader.load('/earth.png');
 
-const geometry = new THREE.BoxGeometry(20,20,20);
+const geometry = new THREE.SphereGeometry(50);
 const material = new THREE.MeshLambertMaterial({
-  color:0x00ffff
+  map:texture
 });
-const cube = new THREE.Mesh(geometry,material);
-cube.visible = true;
-cube.translateX(20);
-scene.add(cube);
+const sphere = new THREE.Mesh(geometry,material);
+scene.add(sphere);
 
 
 
 function render() {
 
   requestAnimationFrame(render);
-  cube.rotateY(0.01);
+  // cube.rotateY(0.01);
   renderer.render(scene, camera);
 }
 
