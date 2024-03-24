@@ -1,11 +1,11 @@
 /*
- * :file description:
- * :name: /threejs/src/index.js
+ * :file description: 
+ * :name: /threejs/examples/group.js
  * :author: 张德志
  * :copyright: (c) 2024, Tungee
- * :date created: 2024-03-13 22:44:48
+ * :date created: 2024-03-24 10:25:44
  * :last editor: 张德志
- * :date last edited: 2024-03-24 10:27:59
+ * :date last edited: 2024-03-24 10:25:45
  */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -43,19 +43,28 @@ scene.add(axesHelper);
 
 const controls = new OrbitControls(camera,renderer.domElement);
 
+// const boxGeometry = new THREE.BoxGeometry(1,1,1);
+// const material = new THREE.MeshBasicMaterial({
+//   color:0xff00ff,
+// });
 
-const geometry = new THREE.BoxGeometry(1,1,1);
-const material = new THREE.MeshBasicMaterial({
-  color:0xff00ff,
-});
-const cube = new THREE.Mesh(geometry,material);
-const cube1 = new THREE.Mesh(geometry,material);
+// const cube = new THREE.Mesh(boxGeometry,material);
+// const cube1 = new THREE.Mesh(boxGeometry,material);
+// cube1.translateX(5);
 
-cube1.translateX(5);
 
-const group = new THREE.Group();
-group.add(cube,cube1);
-scene.add(group);
+// const group = new THREE.Group();
+// group.add(cube);
+// group.add(cube1);
+
+// scene.add(group);
+
+// console.log('scene',scene);
+
+
+
+
+
 
 
 function render() {
