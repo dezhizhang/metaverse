@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-03-13 22:44:48
  * :last editor: 张德志
- * :date last edited: 2024-03-24 20:50:02
+ * :date last edited: 2024-03-24 21:02:10
  */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -58,7 +58,9 @@ gltfLoader.setDRACOLoader(dracoLoader);
 gltfLoader.load('/简易小区.glb',(gltf) => {
   gltf.scene.traverse(function(obj) {
     if(obj.isMesh) {
-      obj.material = new THREE.MeshLambertMaterial({
+      const mesh1 = gltf.scene.getObjectByName('3号楼');
+      mesh1.material = obj.material.clone();
+      mesh1.material = new THREE.MeshLambertMaterial({
         color:0x00ff00
       })
     }
