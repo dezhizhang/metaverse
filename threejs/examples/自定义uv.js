@@ -1,11 +1,11 @@
 /*
- * :file description:
- * :name: /threejs/src/index.js
+ * :file description: 
+ * :name: /threejs/examples/自定义uv.js
  * :author: 张德志
  * :copyright: (c) 2024, Tungee
- * :date created: 2024-03-13 22:44:48
+ * :date created: 2024-03-24 14:17:59
  * :last editor: 张德志
- * :date last edited: 2024-03-24 14:17:41
+ * :date last edited: 2024-03-24 14:17:59
  */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -70,7 +70,6 @@ const uvs = new Float32Array([
 geometry.index = new THREE.BufferAttribute(indexs,1);
 geometry.attributes.uv = new THREE.BufferAttribute(uvs,2);
 
-
 const textureLoader = new THREE.TextureLoader();
 const texture = textureLoader.load('/earth.png');
 const material = new THREE.MeshBasicMaterial({
@@ -80,8 +79,6 @@ const material = new THREE.MeshBasicMaterial({
 
 const mesh = new THREE.Mesh(geometry,material);
 scene.add(mesh);
-
-
 
 
 function render() {
