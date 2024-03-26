@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-03-13 22:44:48
  * :last editor: 张德志
- * :date last edited: 2024-03-27 04:50:19
+ * :date last edited: 2024-03-27 04:41:16
  */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -37,6 +37,7 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 
 const geometry = new THREE.BufferGeometry();
 
+
 const R = 100;
 const N = 50;
 const sp = 2 * Math.PI / N;
@@ -46,7 +47,7 @@ for(let i=0;i < N;i++) {
   const angle = sp * i;
   const x = R * Math.cos(angle);
   const y = R * Math.sin(angle);
-  arr.push(x,y,0);
+  arr.push(x,y,0)
 }
 
 const vertices = new Float32Array(arr);
@@ -55,11 +56,9 @@ geometry.attributes.position = attribute;
 const material = new THREE.LineBasicMaterial({
   color:0xff00ff
 });
+
 const line = new THREE.LineLoop(geometry,material);
 scene.add(line);
-
-
-
 
 
 
