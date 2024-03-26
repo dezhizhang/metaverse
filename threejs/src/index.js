@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-03-13 22:44:48
  * :last editor: 张德志
- * :date last edited: 2024-03-27 05:22:52
+ * :date last edited: 2024-03-27 05:48:39
  */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -35,10 +35,17 @@ renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setSize(window.innerWidth, window.innerHeight);
 
 
+const arr = [
+  new THREE.Vector3(-50,20,90),
+  new THREE.Vector3(-10,40,40),
+  new THREE.Vector3(0,0,0),
+  new THREE.Vector3(60,-60,0),
+  new THREE.Vector3(70,0,80)
+];
 
-const arc = new THREE.ArcCurve(0,0,50,0,Math.PI * 1.5,false);
+const curve = new THREE.CatmullRomCurve3(arr);
 
-const pointsArr = arc.getPoints(50);
+const pointsArr = curve.getPoints(100);
 
 const geometry = new THREE.BufferGeometry();
 geometry.setFromPoints(pointsArr);
@@ -49,8 +56,6 @@ const material = new THREE.LineBasicMaterial({
 
 const line = new THREE.Line(geometry,material);
 scene.add(line);
-
-
 
 
 

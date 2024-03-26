@@ -1,87 +1,87 @@
+/*
+ * :file description:
+ * :name: /threejs/examples/CatmullRomCurve3.js
+ * :author: 张德志
+ * :copyright: (c) 2024, Tungee
+ * :date created: 2024-03-13 22:44:48
+ * :last editor: 张德志
+ * :date last edited: 2024-03-27 05:50:32
+ */
 import * as THREE from 'three';
-import Stats from 'stats.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
-let stats;
 
-let camera, scene, renderer;
+const scene = new THREE.Scene();
+// scene.background = new THREE.Color(0xffffff);
+const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 10000);
+camera.position.set(348, 348, 348);
 
+camera.lookAt(0, 0, 0);
 
+// const gridHelper = new THREE.GridHelper(30, 25, 0x004444, 0x004444);
+// scene.add(gridHelper);
 
+const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+directionalLight.position.set(100, 60, 50);
+scene.add(directionalLight);
 
-init();
+const ambientLight = new THREE.AmbientLight(0xffffff, 1);
+scene.add(ambientLight);
 
-function init() {
- 
-  camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.01, 10000);
-  camera.position.set(0, 50, 500);
-
-  // scene
-
-  scene = new THREE.Scene();
-  scene.background = new THREE.Color(0xf0f0f0);
-
-  // light
-
-  scene.add(new THREE.AmbientLight(0xffffff));
-
-  const light = new THREE.DirectionalLight(0xffffff, 1.5);
-  light.position.set(0, 0, 1);
-  scene.add(light);
+const renderer = new THREE.WebGLRenderer();
+// renderer.outputEncoding = THREE.sRGBEncoding;
+// renderer.outputEncoding = THREE.sea
+renderer.setPixelRatio(window.devicePixelRatio);
+renderer.setSize(window.innerWidth, window.innerHeight);
 
 
+const arr = [
+  new THREE.Vector3(-50,20,90),
+  new THREE.Vector3(-10,40,40),
+  new THREE.Vector3(0,0,0),
+  new THREE.Vector3(60,-60,0),
+  new THREE.Vector3(70,0,80)
+];
 
-  const curve = new THREE.CatmullRomCurve3( [
-    new THREE.Vector3( -10, 0, 10 ),
-    new THREE.Vector3( -5, 5, 5 ),
-    new THREE.Vector3( 0, 0, 0 ),
-    new THREE.Vector3( 5, -5, 5 ),
-    new THREE.Vector3( 10, 0, 10 )
-  ] );
-  
-  const points = curve.getPoints( 50 );
-  const geometry = new THREE.BufferGeometry().setFromPoints( points );
-  
-  const material = new THREE.LineBasicMaterial( { color: 0xff0000 } );
-  
-  // Create the final object to add to the scene
-  const curveObject = new THREE.Line( geometry, material );
-  scene.add(curveObject);
+const curve = new THREE.CatmullRomCurve3(arr);
 
-  // renderer
+const pointsArr = curve.getPoints(100);
 
-  renderer = new THREE.WebGLRenderer({ antialias: true });
-  renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  document.body.appendChild(renderer.domElement);
+const geometry = new THREE.BufferGeometry();
+geometry.setFromPoints(pointsArr);
 
-  // stats
+const material = new THREE.LineBasicMaterial({
+  color:0x00ffff
+});
 
-  stats = new Stats();
-  document.body.appendChild(stats.dom);
+const line = new THREE.Line(geometry,material);
+scene.add(line);
 
-  const controls = new OrbitControls(camera, renderer.domElement);
-  controls.minDistance = 100;
-  controls.maxDistance = 2000;
 
-  window.addEventListener('resize', onWindowResize);
-}
 
-function onWindowResize() {
+
+
+document.body.appendChild(renderer.domElement);
+
+window.addEventListener('resize', () => {
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
-
+  renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
-}
+});
 
+const axesHelper = new THREE.AxesHelper(100);
+scene.add(axesHelper);
+
+const controls = new OrbitControls(camera, renderer.domElement);
 
 
 
 function render() {
-  // animate camera along spline
-  renderer.render(scene,camera);
   requestAnimationFrame(render);
+  // console.log(camera.position);
+
+  renderer.render(scene, camera);
 }
 
 render();
-
