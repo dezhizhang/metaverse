@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-03-13 22:44:48
  * :last editor: 张德志
- * :date last edited: 2024-03-26 21:03:41
+ * :date last edited: 2024-03-26 21:36:24
  */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -16,7 +16,6 @@ const scene = new THREE.Scene();
 // scene.background = new THREE.Color(0xffffff);
 const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 10000);
 camera.position.set(-25, 35, 215);
-
 
 camera.lookAt(0, 0, 0);
 
@@ -48,40 +47,40 @@ window.addEventListener('resize', () => {
 const axesHelper = new THREE.AxesHelper(100);
 scene.add(axesHelper);
 
-const controls = new OrbitControls(camera,renderer.domElement);
+const controls = new OrbitControls(camera, renderer.domElement);
 
 const gltfLoader = new GLTFLoader();
 const dracoLoader = new DRACOLoader();
 dracoLoader.setDecoderPath('/draco/');
 gltfLoader.setDRACOLoader(dracoLoader);
 
-
-
 const textureCube = new THREE.CubeTextureLoader()
-.setPath('/environment/')
-.load(['px.jpg','nx.jpg','py.jpg','ny.jpg','pz.jpg','nz.jpg']);
+  .setPath('/environment/')
+  .load(['px.jpg', 'nx.jpg', 'py.jpg', 'ny.jpg', 'pz.jpg', 'nz.jpg']);
 scene.environment = textureCube;
 
-
-
-gltfLoader.load('/factory.gltf',function(gltf) {
-  gltf.scene.traverse(function(obj) {
-    if(obj.isMesh) {
-      obj.material.metalness = 1.0;
-      obj.material.roughness = 0.5;
+gltfLoader.load('/car.glb', function (gltf) {
+  gltf.scene.traverse(function (obj) {
+    if (obj.isMesh) {
+      const mesh = gltf.scene.getObjectByName('外壳01');
+      mesh.material = new THREE.MeshPhysicalMaterial({
+        color: mesh.material.color,
+        metalness: 0.9,
+        roughness: 0.5,
+        clearcoat: 1.5,
+        clearcoatRoughness: 0.1,
+        envMap: textureCube,
+        envMapIntensity: 2.5,
+      });
+      console.log('mesh', mesh);
     }
   });
   scene.add(gltf.scene);
-})
-
-
-
-
+});
 
 function render() {
   requestAnimationFrame(render);
-  renderer.render(scene,camera);
+  renderer.render(scene, camera);
 }
-
 
 render();
