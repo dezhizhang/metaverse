@@ -1,15 +1,14 @@
 /*
- * :file description:
- * :name: /threejs/src/index.js
+ * :file description: 
+ * :name: /threejs/examples/3D交互.js
  * :author: 张德志
  * :copyright: (c) 2024, Tungee
- * :date created: 2024-03-13 22:44:48
+ * :date created: 2024-03-26 22:50:33
  * :last editor: 张德志
- * :date last edited: 2024-03-26 22:50:39
+ * :date last edited: 2024-03-26 22:50:35
  */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-
 
 const scene = new THREE.Scene();
 // scene.background = new THREE.Color(0xffffff);
