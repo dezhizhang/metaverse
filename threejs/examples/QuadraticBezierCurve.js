@@ -1,11 +1,11 @@
 /*
- * :file description:
- * :name: /threejs/src/index.js
+ * :file description: 
+ * :name: /threejs/examples/QuadraticBezierCurve.JS
  * :author: 张德志
  * :copyright: (c) 2024, Tungee
- * :date created: 2024-03-13 22:44:48
+ * :date created: 2024-03-27 06:11:22
  * :last editor: 张德志
- * :date last edited: 2024-03-27 06:53:36
+ * :date last edited: 2024-03-27 06:11:23
  */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -14,9 +14,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 const scene = new THREE.Scene();
 // scene.background = new THREE.Color(0xffffff);
 const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 10000);
-camera.position.set(-133, -4, 587);
-
-
+camera.position.set(348, 348, 348);
 
 camera.lookAt(0, 0, 0);
 
@@ -38,20 +36,14 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 
 
 
+const p1 = new THREE.Vector3(-80,0);
+const p2 = new THREE.Vector3(20,100);
+const p3 = new THREE.Vector3(80,0);
 
-const p1 = new THREE.Vector3(-100,0,-100);
-const p3 = new THREE.Vector3(100,0,100);
-
-const x2 = (p1.x + p3.x) / 2;
-const z2 = (p1.z + p3.z) / 2;
-const h = 50;
-const p2 = new THREE.Vector3(x2,h,z2);
-
-const arr = [p1,p2,p3];
-
-const curve = new THREE.CatmullRomCurve3(arr);
+const curve = new THREE.QuadraticBezierCurve(p1,p2,p3);
 
 const pointsArr = curve.getPoints(100);
+
 const geometry = new THREE.BufferGeometry();
 geometry.setFromPoints(pointsArr);
 
@@ -60,9 +52,6 @@ const material = new THREE.LineBasicMaterial({
 });
 const line = new THREE.Line(geometry,material);
 scene.add(line);
-
-
-
 
 
 document.body.appendChild(renderer.domElement);
@@ -83,6 +72,7 @@ const controls = new OrbitControls(camera, renderer.domElement);
 
 function render() {
   requestAnimationFrame(render);
+  // console.log(camera.position);
 
   renderer.render(scene, camera);
 }
