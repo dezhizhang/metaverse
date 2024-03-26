@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-03-27 05:01:46
  * :last editor: 张德志
- * :date last edited: 2024-03-27 05:01:46
+ * :date last edited: 2024-03-27 05:09:12
  */
 /*
  * :file description:
@@ -59,10 +59,6 @@ const material = new THREE.PointsMaterial({
 });
 const points = new THREE.Points(geometry,material);
 scene.add(points);
-
-
-
-
 
 
 

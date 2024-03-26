@@ -1,11 +1,11 @@
 /*
- * :file description:
- * :name: /threejs/src/index.js
+ * :file description: 
+ * :name: /threejs/examples/ArcCurve1.js
  * :author: 张德志
  * :copyright: (c) 2024, Tungee
- * :date created: 2024-03-13 22:44:48
+ * :date created: 2024-03-27 05:24:13
  * :last editor: 张德志
- * :date last edited: 2024-03-27 05:22:52
+ * :date last edited: 2024-03-27 05:24:15
  */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -53,9 +53,6 @@ scene.add(line);
 
 
 
-
-
-
 document.body.appendChild(renderer.domElement);
 
 window.addEventListener('resize', () => {
@@ -80,3 +77,4 @@ function render() {
 }
 
 render();
+
