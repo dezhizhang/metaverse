@@ -1,11 +1,11 @@
 /*
- * :file description:
- * :name: /threejs/src/index.js
+ * :file description: 
+ * :name: /threejs/examples/EllipseCurve1.js
  * :author: 张德志
  * :copyright: (c) 2024, Tungee
- * :date created: 2024-03-13 22:44:48
+ * :date created: 2024-03-27 05:07:22
  * :last editor: 张德志
- * :date last edited: 2024-03-27 05:06:52
+ * :date last edited: 2024-03-27 05:08:27
  */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -49,9 +49,6 @@ const material = new THREE.PointsMaterial({
 
 const points = new THREE.Points(geometry,material);
 scene.add(points);
-
-
-
 
 
 

@@ -1,11 +1,20 @@
 /*
+ * :file description: 
+ * :name: /threejs/examples/setFromPoints.js
+ * :author: 张德志
+ * :copyright: (c) 2024, Tungee
+ * :date created: 2024-03-27 05:01:46
+ * :last editor: 张德志
+ * :date last edited: 2024-03-27 05:01:46
+ */
+/*
  * :file description:
  * :name: /threejs/src/index.js
  * :author: 张德志
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-03-13 22:44:48
  * :last editor: 张德志
- * :date last edited: 2024-03-27 05:06:52
+ * :date last edited: 2024-03-27 05:00:52
  */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -35,20 +44,22 @@ renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setSize(window.innerWidth, window.innerHeight);
 
 
-
-const arc = new THREE.EllipseCurve(0,0,120,50);
-const pointsArr = arc.getPoints(50);
-
 const geometry = new THREE.BufferGeometry();
+const pointsArr = [
+  new THREE.Vector3(0,0,0),
+  new THREE.Vector3(0,100,0),
+  new THREE.Vector3(0,100,100),
+  new THREE.Vector3(0,0,100)
+];
+
 geometry.setFromPoints(pointsArr);
-
 const material = new THREE.PointsMaterial({
-  color:0xffff00,
-  size:10.0
+  color:0xff00ff,
+  size:10
 });
-
 const points = new THREE.Points(geometry,material);
 scene.add(points);
+
 
 
 
