@@ -1,11 +1,11 @@
 /*
  * :file description: 
- * :name: /threejs/examples/curvePath.js
+ * :name: /threejs/examples/TubeGeometry.js
  * :author: 张德志
  * :copyright: (c) 2024, Tungee
- * :date created: 2024-03-27 07:16:18
+ * :date created: 2024-03-27 07:35:12
  * :last editor: 张德志
- * :date last edited: 2024-03-27 07:32:24
+ * :date last edited: 2024-03-27 07:35:14
  */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -37,25 +37,23 @@ renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setSize(window.innerWidth, window.innerHeight);
 
 
-const R = 80;
-const H = 200;
 
-const line1 = new THREE.LineCurve(new THREE.Vector2(R,H),new THREE.Vector2(R,0));
-const arc = new THREE.ArcCurve(0,0,R,0,Math.PI,true);
+const arr = [
+  new THREE.Vector3(-50,20,90),
+  new THREE.Vector3(-10,40,40),
+  new THREE.Vector3(0,0,0),
+  new THREE.Vector3(60,-60,0),
+  new THREE.Vector3(70,0,80),
+];
 
-const line2 = new THREE.LineCurve(new THREE.Vector2(-R,0),new THREE.Vector2(-R,H));
-const curvePath = new THREE.CurvePath();
-curvePath.curves.push(line1,arc,line2);
-
-const points = curvePath.getPoints(16);
-const geometry = new THREE.BufferGeometry();
-geometry.setFromPoints(points);
-const material = new THREE.LineBasicMaterial({
-  color:0x00ff00
+const path = new THREE.CatmullRomCurve3(arr);
+const geometry = new THREE.TubeGeometry(path,20,2,8,false);
+const material = new THREE.MeshLambertMaterial({
+  color:0xff00ff,
+  side:THREE.DoubleSide
 });
-const line = new THREE.Line(geometry,material);
-scene.add(line);
-
+const mesh = new THREE.Mesh(geometry,material);
+scene.add(mesh);
 
 
 
