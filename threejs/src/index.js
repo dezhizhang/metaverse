@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-03-13 22:44:48
  * :last editor: 张德志
- * :date last edited: 2024-03-26 21:36:24
+ * :date last edited: 2024-03-26 21:54:35
  */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -72,7 +72,15 @@ gltfLoader.load('/car.glb', function (gltf) {
         envMap: textureCube,
         envMapIntensity: 2.5,
       });
-      console.log('mesh', mesh);
+      const mes1 = gltf.scene.getObjectByName('玻璃01');
+      mes1.material = new THREE.MeshPhysicalMaterial({
+        metalness: 0.0,
+        roughness: 0.0,
+        envMap:textureCube,
+        envMapIntensity:1.0,
+        transmission:1.0,
+        ior:1.5,
+      })
     }
   });
   scene.add(gltf.scene);

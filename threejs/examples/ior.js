@@ -1,11 +1,11 @@
 /*
- * :file description:
- * :name: /threejs/examples/meshPhysicalMaterial.js
+ * :file description: 
+ * :name: /threejs/examples/ior.js
  * :author: 张德志
  * :copyright: (c) 2024, Tungee
- * :date created: 2024-03-13 22:44:48
+ * :date created: 2024-03-26 21:56:00
  * :last editor: 张德志
- * :date last edited: 2024-03-26 21:49:08
+ * :date last edited: 2024-03-26 21:56:00
  */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -49,34 +49,42 @@ scene.add(axesHelper);
 
 const controls = new OrbitControls(camera, renderer.domElement);
 
-
-
 const gltfLoader = new GLTFLoader();
 const dracoLoader = new DRACOLoader();
 dracoLoader.setDecoderPath('/draco/');
 gltfLoader.setDRACOLoader(dracoLoader);
 
 const textureCube = new THREE.CubeTextureLoader()
-.setPath('/environment/')
-.load(['px.jpg', 'nx.jpg', 'py.jpg', 'ny.jpg', 'pz.jpg', 'nz.jpg']);
+  .setPath('/environment/')
+  .load(['px.jpg', 'nx.jpg', 'py.jpg', 'ny.jpg', 'pz.jpg', 'nz.jpg']);
 scene.environment = textureCube;
 
-gltfLoader.load('/car.glb',function(gltf) {
-    if(obj.isMesh) {
-        const mesh = gltf.scene.getObjectByName('外壳01');
-        mesh.material = new THREE.MeshPhysicalMaterial({
-            color: mesh.material.color,
-            metalness: 0.9,
-            roughness: 0.5,
-            clearcoat: 1.5,
-            clearcoatRoughness: 0.1,
-            envMap: textureCube,
-            envMapIntensity: 2.5,
-        })
-        scene.add(gltf.scene);
+gltfLoader.load('/car.glb', function (gltf) {
+  gltf.scene.traverse(function (obj) {
+    if (obj.isMesh) {
+      const mesh = gltf.scene.getObjectByName('外壳01');
+      mesh.material = new THREE.MeshPhysicalMaterial({
+        color: mesh.material.color,
+        metalness: 0.9,
+        roughness: 0.5,
+        clearcoat: 1.5,
+        clearcoatRoughness: 0.1,
+        envMap: textureCube,
+        envMapIntensity: 2.5,
+      });
+      const mes1 = gltf.scene.getObjectByName('玻璃01');
+      mes1.material = new THREE.MeshPhysicalMaterial({
+        metalness: 0.0,
+        roughness: 0.0,
+        envMap:textureCube,
+        envMapIntensity:1.0,
+        transmission:1.0,
+        ior:1.5,
+      })
     }
-})
-
+  });
+  scene.add(gltf.scene);
+});
 
 function render() {
   requestAnimationFrame(render);
