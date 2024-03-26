@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-03-13 22:44:48
  * :last editor: 张德志
- * :date last edited: 2024-03-27 04:50:19
+ * :date last edited: 2024-03-27 05:00:52
  */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -14,7 +14,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 const scene = new THREE.Scene();
 // scene.background = new THREE.Color(0xffffff);
 const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 10000);
-camera.position.set(-25, 35, 215);
+camera.position.set(348, 348, 348);
 
 camera.lookAt(0, 0, 0);
 
@@ -36,28 +36,20 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 
 
 const geometry = new THREE.BufferGeometry();
+const pointsArr = [
+  new THREE.Vector3(0,0,0),
+  new THREE.Vector3(0,100,0),
+  new THREE.Vector3(0,100,100),
+  new THREE.Vector3(0,0,100)
+];
 
-const R = 100;
-const N = 50;
-const sp = 2 * Math.PI / N;
-
-const arr = [];
-for(let i=0;i < N;i++) {
-  const angle = sp * i;
-  const x = R * Math.cos(angle);
-  const y = R * Math.sin(angle);
-  arr.push(x,y,0);
-}
-
-const vertices = new Float32Array(arr);
-const attribute = new THREE.BufferAttribute(vertices,3);
-geometry.attributes.position = attribute;
-const material = new THREE.LineBasicMaterial({
-  color:0xff00ff
+geometry.setFromPoints(pointsArr);
+const material = new THREE.PointsMaterial({
+  color:0xff00ff,
+  size:10
 });
-const line = new THREE.LineLoop(geometry,material);
-scene.add(line);
-
+const points = new THREE.Points(geometry,material);
+scene.add(points);
 
 
 
@@ -83,6 +75,8 @@ const controls = new OrbitControls(camera, renderer.domElement);
 
 function render() {
   requestAnimationFrame(render);
+  // console.log(camera.position);
+
   renderer.render(scene, camera);
 }
 
