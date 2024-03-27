@@ -1,11 +1,11 @@
 /*
- * :file description:
- * :name: /threejs/src/index.js
+ * :file description: 
+ * :name: /threejs/examples/LatheGeometry.js
  * :author: 张德志
  * :copyright: (c) 2024, Tungee
- * :date created: 2024-03-13 22:44:48
+ * :date created: 2024-03-27 07:46:01
  * :last editor: 张德志
- * :date last edited: 2024-03-27 22:36:03
+ * :date last edited: 2024-03-27 07:46:02
  */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -33,26 +33,15 @@ const renderer = new THREE.WebGLRenderer();
 renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setSize(window.innerWidth, window.innerHeight);
 
+const pointsArr = [new THREE.Vector2(50, 60), new THREE.Vector2(25, 0), new THREE.Vector2(50, -60)];
 
-
-
-const curve = new THREE.SplineCurve([
-  new THREE.Vector2(50,60),
-  new THREE.Vector2(25,0),
-  new THREE.Vector2(50,-60),
-]);
-
-const pointArr = curve.getPoints(50);
-const geometry = new THREE.LatheGeometry(pointArr,30,0,Math.PI * 2);
+const geometry = new THREE.LatheGeometry(pointsArr);
 const material = new THREE.MeshLambertMaterial({
-  color:0x00ffff,
-  side:THREE.DoubleSide
+  color: 0x00ffff,
+  side: THREE.DoubleSide,
 });
-const mesh = new THREE.Mesh(geometry,material);
+const mesh = new THREE.Mesh(geometry, material);
 scene.add(mesh);
-
-
-
 
 document.body.appendChild(renderer.domElement);
 
@@ -75,3 +64,4 @@ function render() {
 }
 
 render();
+
