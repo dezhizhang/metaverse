@@ -1,36 +1,25 @@
 /*
+ * :file description: 
+ * :name: /threejs/examples/ExtrudeGeometry.JS
+ * :author: 张德志
+ * :copyright: (c) 2024, Tungee
+ * :date created: 2024-03-28 05:45:04
+ * :last editor: 张德志
+ * :date last edited: 2024-03-28 06:22:39
+ */
+/*
  * :file description:
  * :name: /threejs/src/index.js
  * :author: 张德志
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-03-13 22:44:48
  * :last editor: 张德志
- * :date last edited: 2024-03-28 06:39:09
+ * :date last edited: 2024-03-28 05:41:52
  */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
 const scene = new THREE.Scene();
-// scene.background = new THREE.Color(0xffffff);
-// const width = window.innerWidth;
-// const height = window.innerHeight;
-
-// const k = width / height;
-// const s = 600;
-
-// const camera = new THREE.OrthographicCamera(-s * k,s * k,s,-s,1,8000);
-// camera.position.set(0,2000,0);
-// camera.lookAt(0,0,0);
-
-// const width = window.innerWidth;
-// const height = window.innerHeight;
-
-// const k = width / height;
-// const s = 600;
-
-// const camera = new THREE.OrthographicCamera(-s * k,s * k,s,-s,1,8000);
-// camera.position.set(0,2000,0);
-// camera.lookAt(0,0,0);
 
 const width = window.innerWidth;
 const height = window.innerHeight;
@@ -41,9 +30,6 @@ const s = 600;
 const camera = new THREE.OrthographicCamera(-s * k,s * k,s,-s,1,8000);
 camera.position.set(0,2000,0);
 camera.lookAt(0,0,0);
-
-
-
 
 
 // const gridHelper = new THREE.GridHelper(30, 25, 0x004444, 0x004444);
@@ -78,11 +64,6 @@ const material = new THREE.MeshLambertMaterial({
 })
 const mesh = new THREE.Mesh(geometry,material);
 scene.add(mesh);
-
-
-
-
-
 
 
 
