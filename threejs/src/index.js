@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-03-13 22:44:48
  * :last editor: 张德志
- * :date last edited: 2024-03-27 23:09:52
+ * :date last edited: 2024-03-27 23:16:08
  */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -32,6 +32,21 @@ const renderer = new THREE.WebGLRenderer();
 // renderer.outputEncoding = THREE.sea
 renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setSize(window.innerWidth, window.innerHeight);
+
+const shape = new THREE.Shape([
+  new THREE.Vector2(-50,-50),
+  new THREE.Vector2(-50,50),
+  new THREE.Vector2(50,50),
+  new THREE.Vector2(50,-50)
+]);
+
+const geometry = new THREE.ExtrudeGeometry([shape],{depth:20});
+const material = new THREE.MeshLambertMaterial({
+  color:0x00ffff
+});
+const mesh = new THREE.Mesh(geometry,material);
+scene.add(mesh);
+
 
 
 
