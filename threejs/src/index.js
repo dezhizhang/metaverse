@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-03-13 22:44:48
  * :last editor: 张德志
- * :date last edited: 2024-03-27 23:08:50
+ * :date last edited: 2024-03-27 23:09:52
  */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -33,22 +33,6 @@ const renderer = new THREE.WebGLRenderer();
 renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setSize(window.innerWidth, window.innerHeight);
 
-
-// const pointArr = [
-//   new THREE.Vector2(-50,-50),
-//   new THREE.Vector2(-60,0),
-//   new THREE.Vector2(0,50),
-//   new THREE.Vector2(60,0),
-//   new THREE.Vector2(50,-50),
-// ];
-
-// const shape = new THREE.Sphere();
-// const geometry = new THREE.ShapeGeometry(shape);
-// const material = new THREE.MeshLambertMaterial({
-//   color:0x00ffff
-// });
-// const mesh = new THREE.Mesh(geometry,material);
-// scene.add(mesh);
 
 
 
