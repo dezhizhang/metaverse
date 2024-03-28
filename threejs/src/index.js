@@ -5,42 +5,24 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-03-13 22:44:48
  * :last editor: 张德志
- * :date last edited: 2024-03-28 06:39:09
+ * :date last edited: 2024-03-28 09:18:07
  */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import data from './data.js';
+
 
 const scene = new THREE.Scene();
-// scene.background = new THREE.Color(0xffffff);
-// const width = window.innerWidth;
-// const height = window.innerHeight;
-
-// const k = width / height;
-// const s = 600;
-
-// const camera = new THREE.OrthographicCamera(-s * k,s * k,s,-s,1,8000);
-// camera.position.set(0,2000,0);
-// camera.lookAt(0,0,0);
-
-// const width = window.innerWidth;
-// const height = window.innerHeight;
-
-// const k = width / height;
-// const s = 600;
-
-// const camera = new THREE.OrthographicCamera(-s * k,s * k,s,-s,1,8000);
-// camera.position.set(0,2000,0);
-// camera.lookAt(0,0,0);
 
 const width = window.innerWidth;
 const height = window.innerHeight;
 
 const k = width / height;
-const s = 600;
+const s = 1.5;
 
 const camera = new THREE.OrthographicCamera(-s * k,s * k,s,-s,1,8000);
-camera.position.set(0,2000,0);
-camera.lookAt(0,0,0);
+camera.position.set(300,300,300);
+camera.lookAt(113.51,33.88,0);
 
 
 
@@ -62,24 +44,32 @@ const renderer = new THREE.WebGLRenderer();
 renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setSize(window.innerWidth, window.innerHeight);
 
-
-const shape = new THREE.Shape([
-  new THREE.Vector2(-50,-50),
-  new THREE.Vector2(-50,50),
-  new THREE.Vector2(50,50),
-  new THREE.Vector2(50,-50)
-]);
-const geometry = new THREE.ExtrudeGeometry([shape],{
-  depth:20
+const pointArr = [];
+data.forEach(function(e) {
+  const v2 = new THREE.Vector2(e[0],e[1]);
+  pointArr.push(v2)
 });
-const material = new THREE.MeshLambertMaterial({
-  color:0x00ffff
 
-})
+const shape = new THREE.Shape(pointArr);
+const geometry = new THREE.ShapeGeometry(shape);
+const material = new THREE.MeshLambertMaterial({
+  color:0x00ffff,
+  side:THREE.DoubleSide,
+});
+
 const mesh = new THREE.Mesh(geometry,material);
 scene.add(mesh);
 
+const box = new THREE.Box3();
+box.expandByObject(mesh);
 
+const size = new THREE.Vector3();
+box.getSize(size);
+console.log('size',size);
+
+const center = new THREE.Vector3();
+box.getCenter(center);
+console.log('center',center);
 
 
 
@@ -99,6 +89,9 @@ const axesHelper = new THREE.AxesHelper(100);
 scene.add(axesHelper);
 
 const controls = new OrbitControls(camera, renderer.domElement);
+controls.target.set(113.51,33.88,0);
+controls.update();
+
 
 function render() {
   requestAnimationFrame(render);
