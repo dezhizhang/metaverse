@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-03-13 22:44:48
  * :last editor: 张德志
- * :date last edited: 2024-03-28 09:18:07
+ * :date last edited: 2024-03-28 20:39:26
  */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -21,15 +21,12 @@ const k = width / height;
 const s = 1.5;
 
 const camera = new THREE.OrthographicCamera(-s * k,s * k,s,-s,1,8000);
-camera.position.set(300,300,300);
-camera.lookAt(113.51,33.88,0);
+camera.position.set(10,10,10);
+camera.lookAt(0,0,0);
 
 
 
 
-
-// const gridHelper = new THREE.GridHelper(30, 25, 0x004444, 0x004444);
-// scene.add(gridHelper);
 
 const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
 directionalLight.position.set(100, 60, 50);
@@ -39,39 +36,15 @@ const ambientLight = new THREE.AmbientLight(0xffffff, 1);
 scene.add(ambientLight);
 
 const renderer = new THREE.WebGLRenderer();
-// renderer.outputEncoding = THREE.sRGBEncoding;
-// renderer.outputEncoding = THREE.sea
 renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setSize(window.innerWidth, window.innerHeight);
 
-const pointArr = [];
-data.forEach(function(e) {
-  const v2 = new THREE.Vector2(e[0],e[1]);
-  pointArr.push(v2)
+const geometry = new THREE.BoxGeometry(1,1,1);
+const material = new THREE.MeshBasicMaterial({
+  color:0x00ff00
 });
-
-const shape = new THREE.Shape(pointArr);
-const geometry = new THREE.ShapeGeometry(shape);
-const material = new THREE.MeshLambertMaterial({
-  color:0x00ffff,
-  side:THREE.DoubleSide,
-});
-
-const mesh = new THREE.Mesh(geometry,material);
-scene.add(mesh);
-
-const box = new THREE.Box3();
-box.expandByObject(mesh);
-
-const size = new THREE.Vector3();
-box.getSize(size);
-console.log('size',size);
-
-const center = new THREE.Vector3();
-box.getCenter(center);
-console.log('center',center);
-
-
+const box = new THREE.Mesh(geometry,material);
+scene.add(box);
 
 
 
@@ -93,8 +66,18 @@ controls.target.set(113.51,33.88,0);
 controls.update();
 
 
+let angle = 0;
+let R = 100;
+
+
 function render() {
+  angle+= 0.01;
   requestAnimationFrame(render);
+  camera.position.x = R * Math.cos(angle);
+  camera.position.z = R * Math.sin(angle);
+  camera.updateProjectionMatrix();
+  camera.lookAt(0,0,0);
+
 
   renderer.render(scene, camera);
 }
