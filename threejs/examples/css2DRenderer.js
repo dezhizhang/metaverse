@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-03-30 06:13:31
  * :last editor: 张德志
- * :date last edited: 2024-03-30 06:13:32
+ * :date last edited: 2024-03-30 06:15:30
  */
 import * as THREE from 'three';
 import { CSS2DObject, CSS2DRenderer } from 'three/examples/jsm/renderers/CSS2DRenderer.js'
@@ -51,7 +51,7 @@ group.add(mesh);
 
 const div = document.getElementById('tag');
 const tag = new CSS2DObject(div);
-tag.position.set(50,0,50);
+tag.position.set(20,0,20);
 group.add(tag);
 
 

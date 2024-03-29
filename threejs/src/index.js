@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-03-13 22:44:48
  * :last editor: 张德志
- * :date last edited: 2024-03-30 06:10:53
+ * :date last edited: 2024-03-30 07:34:50
  */
 import * as THREE from 'three';
 import { CSS2DObject, CSS2DRenderer } from 'three/examples/jsm/renderers/CSS2DRenderer.js'
@@ -39,31 +39,31 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
 
-const group = new THREE.Group();
+// const group = new THREE.Group();
+// const geometry = new THREE.BoxGeometry(10,10,10);
+// const material = new THREE.MeshBasicMaterial({
+//   color:0x00ff00
+// });
+// const mesh = new THREE.Mesh(geometry,material);
+// mesh.position.set(10,0,10);
+// group.add(mesh);
 
-const geometry = new THREE.BoxGeometry(10,10,10);
-const material = new THREE.MeshBasicMaterial({
-  color:0x00ff00
-});
+// const div = document.getElementById('tag');
+// const tag = new CSS2DObject(div);
+// mesh.add(tag);
 
-const mesh = new THREE.Mesh(geometry,material);
-group.add(mesh);
+// const css2DRenderer = new CSS2DRenderer();
+// css2DRenderer.domElement.style.position = 'absolute';
+// css2DRenderer.domElement.style.top = '0px';
+// css2DRenderer.domElement.style.pointerEvents = 'none';
 
-const div = document.getElementById('tag');
-const tag = new CSS2DObject(div);
-tag.position.set(50,0,50);
-group.add(tag);
+// css2DRenderer.setSize(window.innerWidth,window.innerHeight);
+// document.body.appendChild(css2DRenderer.domElement);
+
+// scene.add(group);
 
 
-const css2DRenderer = new CSS2DRenderer();
-css2DRenderer.domElement.style.position = 'absolute';
-css2DRenderer.domElement.style.top = '0px';
-css2DRenderer.setSize(window.innerWidth,window.innerHeight);
-// css2DRenderer.setPixelRatio(window.devicePixelRatio);
-css2DRenderer.domElement.style.pointerEvents = 'none';
-document.body.appendChild(css2DRenderer.domElement);
 
-scene.add(group)
 
 
 
@@ -71,6 +71,7 @@ window.addEventListener('resize', () => {
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
   renderer.setPixelRatio(window.devicePixelRatio);
+  css2DRenderer.setSize(window.innerWidth,window.innerHeight);
   renderer.setSize(window.innerWidth, window.innerHeight);
 });
 
