@@ -5,7 +5,7 @@
  * :copyright: (c) 2022, Tungee
  * :date created: 2022-07-12 07:39:26
  * :last editor: 张德志
- * :date last edited: 2024-03-27 04:42:16
+ * :date last edited: 2024-03-29 21:58:48
 -->
 <!DOCTYPE html>
 <html lang="en">
@@ -19,29 +19,18 @@
         margin: 0px;
         padding: 0px;
       }
-
-      .wrapper {
-        position: absolute;
-        bottom: 20%;
-        left: 45%;
-        z-index: 1;
-        color: #fff;
-      }
-
-      .wrapper > span {
+      #tag{
         padding: 10px;
-        border-radius: 50%;
-		background-color: #ccc;
-		cursor: pointer;
+        color: #fff;
+        background-color: rgba(25,25,25,0.5);
+        border-radius: 5px;
+        width: 65px;
       }
-	  .wrapper > span:nth-of-type(1) {
-		display: inline-block;
-		margin-right: 10px;
-	  }
     </style>
   </head>
 
   <body>
+    <div id="tag">标签内容</div>
     <script async src="https://unpkg.com/es-module-shims@1.8.0/dist/es-module-shims.js"></script>
   </body>
 </html>
