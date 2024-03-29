@@ -1,11 +1,20 @@
 /*
+ * :file description: 
+ * :name: /threejs/examples/spotLight.js
+ * :author: 张德志
+ * :copyright: (c) 2024, Tungee
+ * :date created: 2024-03-29 20:38:58
+ * :last editor: 张德志
+ * :date last edited: 2024-03-29 20:43:29
+ */
+/*
  * :file description:
  * :name: /threejs/src/index.js
  * :author: 张德志
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-03-13 22:44:48
  * :last editor: 张德志
- * :date last edited: 2024-03-29 20:48:17
+ * :date last edited: 2024-03-29 20:38:09
  */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -43,7 +52,7 @@ gltfLoader.setDRACOLoader(dracoLoader);
 
 
 
-const spotLight = new THREE.SpotLight(0xfffff,1.0);
+const spotLight = new THREE.SpotLight(0xffffff,1.0);
 spotLight.angle = Math.PI / 6;
 spotLight.position.set(4,4,4);
 spotLight.target.position.set(0,0,0);
