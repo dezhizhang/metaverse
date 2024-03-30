@@ -1,11 +1,11 @@
 /*
- * :file description:
- * :name: /threejs/src/index.js
+ * :file description: 
+ * :name: /threejs/examples/gltfloaderTag.js
  * :author: 张德志
  * :copyright: (c) 2024, Tungee
- * :date created: 2024-03-13 22:44:48
+ * :date created: 2024-03-30 21:29:04
  * :last editor: 张德志
- * :date last edited: 2024-03-30 21:27:50
+ * :date last edited: 2024-03-30 21:29:05
  */
 import * as THREE from 'three';
 import { CSS2DObject, CSS2DRenderer } from 'three/examples/jsm/renderers/CSS2DRenderer.js'
