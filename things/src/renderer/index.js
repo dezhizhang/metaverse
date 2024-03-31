@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-03-31 16:55:17
  * :last editor: 张德志
- * :date last edited: 2024-03-31 17:17:41
+ * :date last edited: 2024-03-31 20:09:32
  */
 import * as THREE from 'three';
 import camera from '../camera';
@@ -16,6 +16,7 @@ const renderer = new THREE.WebGLRenderer({
 });
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setPixelRatio(window.devicePixelRatio);
+renderer.outputEncoding = THREE.sRGBEncoding;
 
 window.addEventListener('resize',() => {
     renderer.setSize(window.innerWidth,window.innerHeight);

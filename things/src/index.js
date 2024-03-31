@@ -5,15 +5,15 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-03-24 20:16:05
  * :last editor: 张德志
- * :date last edited: 2024-03-31 17:23:27
+ * :date last edited: 2024-03-31 20:34:54
  */
-import { lightGroup } from './light';
+import light from './light';
 import scene from './scene';
 import renderer from './renderer';
 import controls from './controls';
 
 
-scene.add(lightGroup);
+scene.add(light);
 
 controls.update();
 
