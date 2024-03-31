@@ -5,22 +5,20 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-03-24 20:16:05
  * :last editor: 张德志
- * :date last edited: 2024-03-31 17:13:09
+ * :date last edited: 2024-03-31 17:23:27
  */
 import { lightGroup } from './light';
 import scene from './scene';
-import camera from './camera';
 import renderer from './renderer';
+import controls from './controls';
 
 
 scene.add(lightGroup);
 
-function render() {
-  requestAnimationFrame(render);
-  renderer.render(scene,camera)
-}
+controls.update();
 
-render();
+
+document.body.appendChild(renderer.domElement);
 
 
 

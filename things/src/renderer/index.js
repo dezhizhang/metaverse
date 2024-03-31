@@ -5,10 +5,11 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-03-31 16:55:17
  * :last editor: 张德志
- * :date last edited: 2024-03-31 17:12:30
+ * :date last edited: 2024-03-31 17:17:41
  */
 import * as THREE from 'three';
 import camera from '../camera';
+import scene from '../scene';
 
 const renderer = new THREE.WebGLRenderer({
   antialias: true
@@ -16,16 +17,20 @@ const renderer = new THREE.WebGLRenderer({
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setPixelRatio(window.devicePixelRatio);
 
-document.body.appendChild(renderer.domElement);
-
-
 window.addEventListener('resize',() => {
     renderer.setSize(window.innerWidth,window.innerHeight);
     renderer.setPixelRatio(window.devicePixelRatio);
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
+});
 
-})
+function render() {
+  requestAnimationFrame(render);
+  renderer.render(scene,camera);
+};
+
+render();
+
 
 
 export default renderer;
