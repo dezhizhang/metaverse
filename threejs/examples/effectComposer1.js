@@ -1,12 +1,13 @@
 /*
- * :file description:
- * :name: /threejs/src/index.js
+ * :file description: 
+ * :name: /threejs/examples/effectComposer1.js
  * :author: 张德志
  * :copyright: (c) 2024, Tungee
- * :date created: 2024-03-13 22:44:48
+ * :date created: 2024-04-01 06:09:40
  * :last editor: 张德志
- * :date last edited: 2024-04-01 06:07:36
+ * :date last edited: 2024-04-01 06:09:41
  */
+
 import * as THREE from 'three';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer';
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
