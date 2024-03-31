@@ -1,11 +1,11 @@
 /*
- * :file description:
- * :name: /threejs/src/index.js
+ * :file description: 
+ * :name: /threejs/examples/unrealBloomPass.js
  * :author: 张德志
  * :copyright: (c) 2024, Tungee
- * :date created: 2024-03-13 22:44:48
+ * :date created: 2024-04-01 06:59:57
  * :last editor: 张德志
- * :date last edited: 2024-04-01 06:59:23
+ * :date last edited: 2024-04-01 06:59:58
  */
 import * as THREE from 'three';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer';
@@ -44,6 +44,8 @@ const v2 = new THREE.Vector2(window.innerWidth,window.innerHeight)
 const unrealBloomPass = new UnrealBloomPass(v2);
 unrealBloomPass.strength = 2.0;
 effectComposer.addPass(unrealBloomPass);
+
+
 
 
 
