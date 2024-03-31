@@ -1,11 +1,11 @@
 /*
- * :file description:
- * :name: /threejs/src/index.js
+ * :file description: 
+ * :name: /threejs/examples/小球加速度.js
  * :author: 张德志
  * :copyright: (c) 2024, Tungee
- * :date created: 2024-03-13 22:44:48
+ * :date created: 2024-03-31 11:40:59
  * :last editor: 张德志
- * :date last edited: 2024-03-31 11:40:10
+ * :date last edited: 2024-03-31 11:41:00
  */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -52,15 +52,12 @@ body.position.y = 100;
 world.addBody(body);
 
 
-
 window.addEventListener('resize',() => {
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
   renderer.setSize(window.innerWidth,window.innerHeight);
   renderer.setPixelRatio(window.devicePixelRatio);
 });
-
-
 
 function render() {;
   world.step(1 / 60);
