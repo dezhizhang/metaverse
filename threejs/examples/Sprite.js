@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-03-31 09:58:58
  * :last editor: 张德志
- * :date last edited: 2024-03-31 09:58:58
+ * :date last edited: 2024-03-31 10:00:19
  */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';

@@ -1,11 +1,11 @@
 /*
- * :file description:
- * :name: /threejs/src/index.js
+ * :file description: 
+ * :name: /threejs/examples/cannon1.js
  * :author: 张德志
  * :copyright: (c) 2024, Tungee
- * :date created: 2024-03-13 22:44:48
+ * :date created: 2024-03-31 11:02:58
  * :last editor: 张德志
- * :date last edited: 2024-03-31 11:02:07
+ * :date last edited: 2024-03-31 11:02:59
  */
 import * as CANNON from 'cannon-es';
 
@@ -27,7 +27,4 @@ function render() {
 }
 
 render();
-
-
-
 
