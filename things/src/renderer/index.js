@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-03-31 16:55:17
  * :last editor: 张德志
- * :date last edited: 2024-03-31 20:09:32
+ * :date last edited: 2024-03-31 20:49:50
  */
 import * as THREE from 'three';
 import camera from '../camera';
@@ -27,6 +27,7 @@ window.addEventListener('resize',() => {
 
 function render() {
   requestAnimationFrame(render);
+  console.log(camera.position);
   renderer.render(scene,camera);
 };
 
