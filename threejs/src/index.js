@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-03-13 22:44:48
  * :last editor: 张德志
- * :date last edited: 2024-04-01 06:07:36
+ * :date last edited: 2024-04-01 06:21:18
  */
 import * as THREE from 'three';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer';
@@ -34,16 +34,27 @@ const material = new THREE.MeshBasicMaterial({
 const cube = new THREE.Mesh(geometry, material);
 scene.add(cube);
 
-// 后期处理
-const effectComposer = new EffectComposer(renderer);
 
-const renderPass = new RenderPass(scene, camera);
+
+const effectComposer = new EffectComposer(renderer);
+const renderPass = new RenderPass(scene,camera);
 effectComposer.addPass(renderPass);
 
-const v2 = new THREE.Vector2(window.innerWidth, window.innerHeight);
-const outlinePass = new OutlinePass(v2, scene, camera);
+const v2 = new THREE.Vector2(window.innerWidth,window.innerHeight);
+const outlinePass = new OutlinePass(v2,scene,camera);
 outlinePass.selectedObjects = [cube];
+outlinePass.visibleEdgeColor.set(0xffff00);
+// 描边的宽度
+outlinePass.edgeThickness = 4;
+// 描边亮度
+outlinePass.edgeStrength = 6;
+// 描边烁
+outlinePass.pulsePeriod = 2;
+
+
+
 effectComposer.addPass(outlinePass);
+
 
 
 
@@ -61,7 +72,6 @@ window.addEventListener('resize', () => {
 
 function render() {
   effectComposer.render();
-  // renderer.render(scene, camera);
   requestAnimationFrame(render);
 }
 
