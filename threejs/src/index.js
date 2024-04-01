@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-03-13 22:44:48
  * :last editor: 张德志
- * :date last edited: 2024-04-02 05:42:18
+ * :date last edited: 2024-04-02 05:51:18
  */
 import * as THREE from 'three';
 import {
@@ -46,6 +46,8 @@ const meshGroup = new THREE.Group();
 const lineGroup = new THREE.Group();
 const mapGroup = new THREE.Group();
 
+lineGroup.position.z = 0.1;
+
 
 loader.load('https://tugua.oss-cn-hangzhou.aliyuncs.com/model/china.json', (data) => {
   data.features.forEach(function (area) {
@@ -53,9 +55,8 @@ loader.load('https://tugua.oss-cn-hangzhou.aliyuncs.com/model/china.json', (data
       area.geometry.coordinates = [area.geometry.coordinates]
     }
     lineGroup.add(lineLoop(area.geometry.coordinates));
-    scene.add(lineGroup)
-    // meshGroup.add(shapeMesh(area.geometry.coordinates));
-    // mapGroup.add(lineGroup, meshGroup);
+    meshGroup.add(shapeMesh(area.geometry.coordinates));
+    mapGroup.add(lineGroup, meshGroup);
   });
 
   // 包围盒
@@ -68,11 +69,10 @@ loader.load('https://tugua.oss-cn-hangzhou.aliyuncs.com/model/china.json', (data
   const center = new THREE.Vector3();
   box3.getCenter(center);
 
-  console.log('center', center);
-
-
-
 });
+
+scene.add(mapGroup);
+
 
 
 function lineLoop(pointArr) {
@@ -101,12 +101,24 @@ function line(pointArr) {
 
 }
 
-function shapeMesh() {
-
+function shapeMesh(pointsArrs) {
+  const shapeArr = [];
+  pointsArrs.forEach((pointsArr) => {
+    const vector2Arr = [];
+    pointsArr[0].forEach((elem) => {
+      vector2Arr.push(new THREE.Vector2(elem[0],elem[1]))
+    });
+    const shape = new THREE.Shape(vector2Arr);
+    shapeArr.push(shape)
+  });
+  const material = new THREE.MeshBasicMaterial({
+    color: 0x002222,//对应陆地颜色
+    side:THREE.DoubleSide,
+  });
+  const geometry = new THREE.ShapeGeometry(shapeArr);
+  const mesh = new THREE.Mesh(geometry,material);
+  return mesh;
 }
-
-
-
 
 
 
