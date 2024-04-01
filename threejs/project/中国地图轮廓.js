@@ -1,11 +1,11 @@
 /*
  * :file description:
- * :name: /threejs/src/index.js
+ * :name: /threejs/project/中国地图轮廓.js
  * :author: 张德志
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-03-13 22:44:48
  * :last editor: 张德志
- * :date last edited: 2024-04-02 06:00:39
+ * :date last edited: 2024-04-02 05:59:39
  */
 import * as THREE from 'three';
 import {
@@ -50,8 +50,12 @@ lineGroup.position.z = 0.01;
     meshGroup.add(shapeMesh(area.geometry.coordinates));
     mapGroup.add(lineGroup, meshGroup);
   });
+
+
+
 });
 
+console.log('mapGroup',mapGroup);
 
  // 包围盒
  const box3 = new THREE.Box3();
@@ -126,9 +130,6 @@ function shapeMesh(pointsArrs) {
   const mesh = new THREE.Mesh(geometry,material);
   return mesh;
 }
-
-
-
 
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.target.set(104, 35, 0);
