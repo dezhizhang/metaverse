@@ -1,18 +1,17 @@
 /*
  * :file description: 
- * :name: /threejs/src/index.js
+ * :name: /threejs/project/中国地图拉伸.js
  * :author: 张德志
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-04-03 07:02:22
  * :last editor: 张德志
- * :date last edited: 2024-04-03 07:30:51
+ * :date last edited: 2024-04-03 07:02:22
  */
 import * as THREE from 'three';
 import {
   OrbitControls
 } from 'three/examples/jsm/controls/OrbitControls.js';
 import { ExtrudeMesh } from './ExtrudeMesh';
-import { cityPointMesh } from './cityPointMesh';
 
 const scene = new THREE.Scene();
 
@@ -49,15 +48,6 @@ loader.load('https://tugua.oss-cn-hangzhou.aliyuncs.com/model/china.json', (data
     }
     lineGroup.add(lineLoop(area.geometry.coordinates));
     meshGroup.add(ExtrudeMesh(area.geometry.coordinates,2));
-    //cityPointMesh
-    console.log('area',area);
-    const pos = area.properties.cp;
-    console.log('pos',pos,area.properties)
-    const mesh = cityPointMesh(1.2,pos[0],pos[1]);
-    mesh.position.z =2;
-    mapGroup.add(mesh);
-    
-    // const pos = area.pro
     mapGroup.add(lineGroup, meshGroup);
   });
 });

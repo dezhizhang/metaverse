@@ -1,11 +1,11 @@
 /*
  * :file description: 
- * :name: /threejs/src/index.js
+ * :name: /threejs/project/中国地图添加光圈.js
  * :author: 张德志
  * :copyright: (c) 2024, Tungee
- * :date created: 2024-04-03 07:02:22
+ * :date created: 2024-04-03 07:32:32
  * :last editor: 张德志
- * :date last edited: 2024-04-03 07:30:51
+ * :date last edited: 2024-04-03 07:32:33
  */
 import * as THREE from 'three';
 import {
