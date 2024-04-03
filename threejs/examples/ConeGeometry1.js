@@ -1,12 +1,13 @@
 /*
  * :file description: 
- * :name: /threejs/src/index.js
+ * :name: /threejs/examples/ConeGeometry1.js
  * :author: 张德志
  * :copyright: (c) 2024, Tungee
- * :date created: 2024-04-03 07:16:14
+ * :date created: 2024-04-03 22:31:42
  * :last editor: 张德志
- * :date last edited: 2024-04-03 22:30:50
+ * :date last edited: 2024-04-03 22:31:43
  */
+
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
