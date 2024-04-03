@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-04-03 07:16:14
  * :last editor: 张德志
- * :date last edited: 2024-04-03 22:30:50
+ * :date last edited: 2024-04-03 23:00:00
  */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -23,20 +23,43 @@ renderer.setPixelRatio(window.devicePixelRatio);
 document.body.appendChild(renderer.domElement);
 
 
-const height = 100;
-const radius = 25;
-
-const geometry = new THREE.ConeGeometry(radius, height,4);
-geometry.computeVertexNormals();
-
-geometry.rotateX(-Math.PI / 2);
-geometry.translate(0,0,height / 2);
-
-const material = new THREE.MeshBasicMaterial({
-  color:0x00ffff
+const geometry = new THREE.BoxGeometry(30,30,30);
+const material = new THREE.MeshLambertMaterial({
+  color:0x0000ff
 });
-const mesh = new THREE.Mesh(geometry,material);
-scene.add(mesh);
+const box = new THREE.Mesh(geometry,material);
+box.position.set(80,0,0);
+scene.add(box);
+
+// 获取网络世界坐标
+const worldVector = box.position.clone();
+const standardVector = worldVector.project(camera);
+
+const a = window.innerHeight / 2;
+const b = window.innerHeight / 2;
+
+const x = Math.random(standardVector.x * a + a);
+const y = Math.random(-standardVector.y * b + b);
+
+const div = document.createElement('div');
+div.innerHTML = '立方体';
+div.style.padding = '10px';
+div.style.color = '#fff';
+div.style.position = 'absolute';
+div.style.backgroundColor = 'rgba(25,25,25,0.5)';
+div.style.borderRadius = '5px';
+document.body.appendChild(div);
+
+
+div.style.left = x + 'px';
+div.style.top = y + 130 + 'px';
+
+
+
+
+
+
+
 
 
 const gridHelper = new THREE.GridHelper(200,25,0x004444,0x004444);
@@ -67,7 +90,6 @@ window.addEventListener('resize', () => {
 });
 
 function render() {
-  mesh.rotateZ(0.01);
   renderer.render(scene, camera);
   // effectComposer.render();
   requestAnimationFrame(render);
