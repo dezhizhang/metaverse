@@ -1,13 +1,12 @@
 /*
  * :file description: 
- * :name: /threejs/src/index.js
+ * :name: /threejs/examples/提取线段某一部分.js
  * :author: 张德志
  * :copyright: (c) 2024, Tungee
- * :date created: 2023-03-13 05:58:33
+ * :date created: 2024-04-04 22:45:43
  * :last editor: 张德志
- * :date last edited: 2024-04-04 22:42:04
+ * :date last edited: 2024-04-04 22:45:44
  */
-
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 
