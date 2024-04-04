@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-03-13 22:44:48
  * :last editor: 张德志
- * :date last edited: 2024-04-04 22:53:12
+ * :date last edited: 2024-04-04 23:03:21
  */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -16,12 +16,11 @@ const camera = new THREE.PerspectiveCamera(45,window.innerWidth / window.innerHe
 camera.position.set(200,200,200);
 camera.lookAt(scene.position);
 
-
 const geometry = new THREE.BufferGeometry();
 const curve = new THREE.CatmullRomCurve3([
-  new THREE.Vector3(100, 0, -100),
-  new THREE.Vector3(0, 80, 0),
-  new THREE.Vector3(-100, 0, 100),
+  new THREE.Vector3(100,0,-100),
+  new THREE.Vector3(0,80,0),
+  new THREE.Vector3(-100,0,100),
 ]);
 
 const points = curve.getSpacedPoints(100);
@@ -33,6 +32,7 @@ const material = new THREE.LineBasicMaterial({
 const line = new THREE.Line(geometry,material);
 scene.add(line);
 
+
 const index = 20;
 const num = 10;
 
@@ -41,15 +41,13 @@ const geometry2 = new THREE.BufferGeometry();
 geometry2.setFromPoints(points2);
 
 const material2 = new THREE.LineBasicMaterial({
-  color:0xffff00,
+  color:0xffff00
 });
 const line2 = new THREE.Line(geometry2,material2);
 scene.add(line2);
 
 const axesHelper = new THREE.AxesHelper(100);
 scene.add(axesHelper);
-
-
 
 
 const renderer = new THREE.WebGLRenderer();
