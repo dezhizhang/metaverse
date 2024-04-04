@@ -1,11 +1,11 @@
 /*
- * :file description:
- * :name: /threejs/src/index.js
+ * :file description: 
+ * :name: /threejs/project/北京城市公交线路图.js
  * :author: 张德志
  * :copyright: (c) 2024, Tungee
- * :date created: 2024-04-03 07:02:22
+ * :date created: 2024-04-04 21:15:48
  * :last editor: 张德志
- * :date last edited: 2024-04-04 21:14:48
+ * :date last edited: 2024-04-04 21:15:49
  */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
