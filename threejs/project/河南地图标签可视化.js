@@ -1,11 +1,11 @@
 /*
- * :file description:
- * :name: /threejs/src/index.js
+ * :file description: 
+ * :name: /threejs/project/河南地图标签可视化.js
  * :author: 张德志
  * :copyright: (c) 2024, Tungee
- * :date created: 2024-04-03 07:02:22
+ * :date created: 2024-04-04 17:27:00
  * :last editor: 张德志
- * :date last edited: 2024-04-04 17:26:28
+ * :date last edited: 2024-04-04 17:27:01
  */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -191,3 +191,4 @@ function render() {
 }
 
 render();
+
