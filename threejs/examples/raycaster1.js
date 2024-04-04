@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-04-04 14:38:05
  * :last editor: 张德志
- * :date last edited: 2024-04-04 14:38:06
+ * :date last edited: 2024-04-04 14:48:16
  */
 
 import * as THREE from 'three';
@@ -53,28 +53,25 @@ scene.add(cylinder);
 
 const controls = new OrbitControls(camera,renderer.domElement);
 
-
 window.addEventListener('click',(event) => {
-  const sx = event.clientX;
-  const sy = event.clientY;
+    const sx = event.clientX;
+    const sy = event.clientY;
 
-  const x = (sx / window.innerWidth) * 2 - 1;
-  const y = -(sy / window.innerHeight) * 2 + 1;
+    const x = (sx / window.innerWidth) * 2 - 1;
+    const y = -(sy / window.innerHeight) * 2 + 1;
 
-  const raycaster = new THREE.Raycaster();
-  raycaster.setFromCamera(new THREE.Vector2(x,y),camera);
+    const raycaster = new THREE.Raycaster();
+    raycaster.setFromCamera(new THREE.Vector2(x,y),camera);
 
-  const intersect = raycaster.intersectObjects([box,sphere,cylinder]);
+    const intersect = raycaster.intersectObjects([box,sphere,cylinder]);
+    if(intersect.length > 0) {
+        intersect[0].object.material.transparent = true;
+        intersect[0].object.material.opacity = 0.6;
+        intersect[0].object.material.color = new THREE.Color(0x00ff00);
+    }
+});
 
-  console.log('intersect',intersect);
-  
-  if(intersect.length > 0) {
-    intersect[0].object.material.transparent = true;
-    intersect[0].object.material.opacity = 0.6;
-    intersect[0].object.material.color = new THREE.Color(0x00ff00);
-  }
 
-})
 
 
 const axesHelper = new THREE.AxesHelper(100);

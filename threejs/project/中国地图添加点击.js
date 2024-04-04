@@ -1,11 +1,11 @@
 /*
  * :file description: 
- * :name: /threejs/src/index.js
+ * :name: /threejs/project/中国地图添加点击.js
  * :author: 张德志
  * :copyright: (c) 2024, Tungee
- * :date created: 2024-04-03 07:02:22
+ * :date created: 2024-04-04 15:11:32
  * :last editor: 张德志
- * :date last edited: 2024-04-04 15:10:25
+ * :date last edited: 2024-04-04 15:11:34
  */
 import * as THREE from 'three';
 import {
