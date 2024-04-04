@@ -5,14 +5,13 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-04-03 07:02:22
  * :last editor: 张德志
- * :date last edited: 2024-04-04 15:10:25
+ * :date last edited: 2024-04-04 15:58:40
  */
 import * as THREE from 'three';
 import {
   OrbitControls
 } from 'three/examples/jsm/controls/OrbitControls.js';
 import { ExtrudeMesh } from './ExtrudeMesh';
-import { every } from 'd3';
 
 const scene = new THREE.Scene();
 
@@ -42,16 +41,37 @@ const mapGroup = new THREE.Group();
 
 lineGroup.position.z = 2.1;
 
-loader.load('https://tugua.oss-cn-hangzhou.aliyuncs.com/model/china.json', (data) => {
+loader.load('https://tugua.oss-cn-hangzhou.aliyuncs.com/model/gdp.json',({arr}) => {
+  const gdpObj = {};
+  const color1 = new THREE.Color(0xffffff);
+  const color2 = new THREE.Color(0xff0000);
+
+  const gdpMax = 110000;
+  arr.forEach((obj) => {
+    const gdp = obj.value;
+    gdpObj[obj.name] = gdp;
+  });
+
+  loader.load('https://tugua.oss-cn-hangzhou.aliyuncs.com/model/china.json', (data) => {
   data.features.forEach(function (area) {
     if (area.geometry.type === 'Polygon') {
       area.geometry.coordinates = [area.geometry.coordinates]
     }
+
+    const mesh = ExtrudeMesh(area.geometry.coordinates,2);
+    const name = area.properties.name
+    const color = color1.clone().lerp(color2.clone(),Number(gdpObj[area.properties.name]) / gdpMax)
+
+
+    mesh.material.color.copy(color);
     lineGroup.add(lineLoop(area.geometry.coordinates));
-    meshGroup.add(ExtrudeMesh(area.geometry.coordinates,2));
+    meshGroup.add(mesh);
     mapGroup.add(lineGroup, meshGroup);
   });
 });
+})
+
+
 
 console.log('mapGroup',mapGroup);
 
@@ -137,11 +157,11 @@ controls.update();
 
 let chooseMesh  = null;
 
-window.addEventListener('click',(evnet) => {
+window.addEventListener('click',(event) => {
   if(chooseMesh) {
     chooseMesh.material.color.set(0x004444);
   }
-  const sx = evnet.clientX;
+  const sx = event.clientX;
   const sy = event.clientY;
 
   const x = (sx / window.innerWidth) * 2 - 1;
@@ -150,11 +170,11 @@ window.addEventListener('click',(evnet) => {
   const raycaster = new THREE.Raycaster();
   raycaster.setFromCamera(new THREE.Vector2(x,y),camera);
 
-  const intersects = raycaster.intersectObjects(meshGroup.children);
+  const intersect = raycaster.intersectObjects(meshGroup.children);
 
-  if(intersects.length > 0) {
-    intersects[0].object.material.color.set(0x009999);
-    chooseMesh = intersects[0].object;
+  if(intersect.length > 0) {
+    intersect[0].object.material.color.set(0x009999);
+    chooseMesh = intersect[0].object;
   }
 })
 
