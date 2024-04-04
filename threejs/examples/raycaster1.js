@@ -1,12 +1,13 @@
 /*
  * :file description: 
- * :name: /threejs/src/index.js
+ * :name: /threejs/examples/Raycaster1.js
  * :author: 张德志
  * :copyright: (c) 2024, Tungee
- * :date created: 2024-04-03 07:02:22
+ * :date created: 2024-04-04 14:38:05
  * :last editor: 张德志
- * :date last edited: 2024-04-04 14:37:27
+ * :date last edited: 2024-04-04 14:38:06
  */
+
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
