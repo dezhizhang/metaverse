@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-03-13 22:44:48
  * :last editor: 张德志
- * :date last edited: 2024-04-05 17:48:49
+ * :date last edited: 2024-04-05 19:27:39
  */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -16,25 +16,32 @@ const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerH
 camera.position.set(200, 200, 200);
 camera.lookAt(scene.position);
 
+
 const geometry = new THREE.BufferGeometry();
-const vertices = new Float32Array([-25, 0, 0, 25, 0, 0, 0, 40, 0]);
+const vertices = new Float32Array([
+  -25, 0, 0, 
+  25,0,0,
+  0,40,0
+]);
+geometry.attributes.position = new THREE.BufferAttribute(vertices,3);
 
-geometry.attributes.position = new THREE.BufferAttribute(vertices, 3);
-
-const colors = new Float32Array([1, 0, 0, 0, 0, 1, 0, 1, 0]);
-geometry.attributes.color = new THREE.BufferAttribute(colors, 3);
+const colors = new Float32Array([
+  1, 0, 0,
+  0, 0, 1,
+  0, 1, 0
+]);
+geometry.attributes.color = new THREE.BufferAttribute(colors,3);
 
 const vertexShader = `
   varying vec3 vColor;
   void main() {
-    // 投影矩阵 * 模型矩阵 * 视图矩阵
     vColor = color;
     gl_Position = projectionMatrix * modelMatrix * viewMatrix * vec4(position,1.0);
   }
 `;
 
 const fragmentShader = `
-varying vec3 vColor;
+  varying vec3 vColor;
   void main() {
     gl_FragColor = vec4(vColor,1.0);
   }
@@ -43,12 +50,13 @@ varying vec3 vColor;
 const material = new THREE.ShaderMaterial({
   vertexShader,
   fragmentShader,
-  vertexColors: true,
-  side: THREE.DoubleSide,
+  vertexColors:true,
+  side:THREE.DoubleSide
 });
 
-const mesh = new THREE.Mesh(geometry, material);
+const mesh = new THREE.Mesh(geometry,material);
 scene.add(mesh);
+
 
 const axesHelper = new THREE.AxesHelper(100);
 scene.add(axesHelper);
