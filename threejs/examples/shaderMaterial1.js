@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-04-05 11:50:31
  * :last editor: 张德志
- * :date last edited: 2024-04-05 11:50:32
+ * :date last edited: 2024-04-05 16:38:22
  */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -16,29 +16,29 @@ const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerH
 camera.position.set(2, 2, 2);
 camera.lookAt(scene.position);
 
-
-
 const vertexShader = `
- void main() {
-  gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4(position,1.0);
- }
+    void main() {
+        gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4(position,1.0);
+    }
 `;
 
 const fragmentShader = `
- void main() {
-  gl_FragColor = vec4(1.0,1.0,0.0,1.0);
- }
+    void main() {
+        gl_FragColor = vec4(1.0,1.0,0.0,1.0);
+    }
 `;
 
 const planeGeometry = new THREE.PlaneGeometry(1,1);
 const planeMaterial = new THREE.ShaderMaterial({
-  vertexShader,
-  fragmentShader,
-  side:THREE.DoubleSide
+    vertexShader,
+    fragmentShader,
+    side:THREE.DoubleSide,
+    transparent:true,
+    opacity:0.3,
 });
 
-const mesh = new THREE.Mesh(planeGeometry,planeMaterial);
-scene.add(mesh);
+const plane = new THREE.Mesh(planeGeometry,planeMaterial);
+scene.add(plane);
 
 
 const axesHelper = new THREE.AxesHelper(100);
