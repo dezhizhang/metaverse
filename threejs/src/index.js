@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-03-13 22:44:48
  * :last editor: 张德志
- * :date last edited: 2024-04-05 16:51:47
+ * :date last edited: 2024-04-05 17:19:07
  */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -17,41 +17,39 @@ camera.position.set(2, 2, 2);
 camera.lookAt(scene.position);
 
 const vertexShader = `
- void main() {
-  gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4(position,1.0);
- }
+  void main() {
+    gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4(position,1.0);
+  }
 `;
 
 const fragmentShader = `
-uniform float opacity;
-uniform vec3 color;
- void main() {
-  gl_FragColor = vec4(color,opacity);
- }
+  uniform float opacity;
+  uniform vec3 color;
+  void main() {
+    gl_FragColor = vec4(color,opacity);
+  }
 `;
 
-const planeGeometry = new THREE.PlaneGeometry(1, 1);
+const planeGeometry = new THREE.PlaneGeometry(1,1);
 const planeMaterial = new THREE.ShaderMaterial({
   vertexShader,
   fragmentShader,
-  side: THREE.DoubleSide,
-  transparent: true,
-  // opacity: 0.3,
+  side:THREE.DoubleSide,
+  transparent:true,
   uniforms:{
     opacity:{
       value:0.3,
     },
     color:{
-      value: new THREE.Color(0x00ffff)
+      value:new THREE.Color(0x00ffff)
     }
   }
 });
-planeMaterial.uniforms.opacity.value = 1.0;
-planeMaterial.uniforms.color.value = new THREE.Color(0x00ff00);
 
-
-const mesh = new THREE.Mesh(planeGeometry, planeMaterial);
+const mesh = new THREE.Mesh(planeGeometry,planeMaterial);
 scene.add(mesh);
+
+
 
 const axesHelper = new THREE.AxesHelper(100);
 scene.add(axesHelper);
