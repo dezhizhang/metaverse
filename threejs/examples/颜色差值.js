@@ -1,12 +1,13 @@
 /*
- * :file description:
- * :name: /threejs/src/index.js
+ * :file description: 
+ * :name: /threejs/examples/颜色差值.js
  * :author: 张德志
  * :copyright: (c) 2024, Tungee
- * :date created: 2024-03-13 22:44:48
+ * :date created: 2024-04-05 20:00:11
  * :last editor: 张德志
- * :date last edited: 2024-04-05 19:59:23
+ * :date last edited: 2024-04-05 20:00:12
  */
+
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
