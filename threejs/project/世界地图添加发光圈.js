@@ -1,11 +1,11 @@
 /*
- * :file description:
- * :name: /threejs/src/index.js
+ * :file description: 
+ * :name: /threejs/project/世界地图添加发光圈.js
  * :author: 张德志
  * :copyright: (c) 2024, Tungee
- * :date created: 2024-03-13 22:44:48
+ * :date created: 2024-04-06 15:21:07
  * :last editor: 张德志
- * :date last edited: 2024-04-06 15:19:52
+ * :date last edited: 2024-04-06 15:21:08
  */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
