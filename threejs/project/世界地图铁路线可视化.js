@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-04-06 17:01:42
  * :last editor: 张德志
- * :date last edited: 2024-04-06 17:01:43
+ * :date last edited: 2024-04-06 19:01:14
  */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -45,7 +45,7 @@ const pointGroup = new THREE.Group();
 const R = 120;
 
 
-loader.load('https://tugua.oss-cn-hangzhou.aliyuncs.com/model/world.json',(data) => {
+loader.load('/world.json',(data) => {
   data.features.forEach(function(country) {
     if(country.geometry.type === 'Polygon') {
       country.geometry.coordinates = [country.geometry.coordinates];

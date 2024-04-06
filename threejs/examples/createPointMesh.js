@@ -1,11 +1,11 @@
 /*
  * :file description: 
- * :name: /threejs/src/index.js
+ * :name: /threejs/examples/createPointMesh.js
  * :author: 张德志
  * :copyright: (c) 2024, Tungee
- * :date created: 2024-04-06 16:01:43
+ * :date created: 2024-04-06 19:21:40
  * :last editor: 张德志
- * :date last edited: 2024-04-06 19:21:49
+ * :date last edited: 2024-04-06 19:21:41
  */
 
 import * as THREE from 'three';
