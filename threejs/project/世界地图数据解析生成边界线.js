@@ -1,12 +1,13 @@
 /*
- * :file description:
- * :name: /threejs/src/index.js
+ * :file description: 
+ * :name: /threejs/project/世界地图数据解析生成边界线.js
  * :author: 张德志
  * :copyright: (c) 2024, Tungee
- * :date created: 2024-03-13 22:44:48
+ * :date created: 2024-04-06 14:44:37
  * :last editor: 张德志
- * :date last edited: 2024-04-06 14:45:08
+ * :date last edited: 2024-04-06 14:44:38
  */
+
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { lon2xyz } from './math';
@@ -106,7 +107,6 @@ const controls = new OrbitControls(camera, renderer.domElement);
 document.body.appendChild(renderer.domElement);
 
 function render() {
-  mapGroup.rotateY(0.001);
   requestAnimationFrame(render);
   renderer.render(scene, camera);
 }
