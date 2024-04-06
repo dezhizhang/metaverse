@@ -1,12 +1,13 @@
 /*
- * :file description:
- * :name: /threejs/src/index.js
+ * :file description: 
+ * :name: /threejs/project/世界地图飞机占图可视化.js
  * :author: 张德志
  * :copyright: (c) 2024, Tungee
- * :date created: 2024-03-13 22:44:48
+ * :date created: 2024-04-06 16:01:43
  * :last editor: 张德志
- * :date last edited: 2024-04-06 15:59:45
+ * :date last edited: 2024-04-06 16:01:45
  */
+
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { lon2xyz } from './math';
