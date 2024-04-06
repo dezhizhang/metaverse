@@ -1,3 +1,12 @@
+/*
+ * :file description: 
+ * :name: /threejs/examples/光柱效果.js
+ * :author: 张德志
+ * :copyright: (c) 2024, Tungee
+ * :date created: 2024-04-06 20:17:35
+ * :last editor: 张德志
+ * :date last edited: 2024-04-06 20:17:36
+ */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
@@ -43,8 +52,3 @@ function render() {
 }
 
 render();
-
-//https://tugua.oss-cn-hangzhou.aliyuncs.com/model/shanghai.glb
-
-
-
