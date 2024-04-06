@@ -27,7 +27,7 @@ mapGroup.add(meshGroup);
 const mapHeight = 0.8;
 lineGroup.position.z = mapHeight + mapHeight * 0.1;
 
-loader.load('https://tugua.oss-cn-hangzhou.aliyuncs.com/model/china.json',function(data) {
+loader.load(' /china.json',function(data) {
   data.features.forEach(function(area) {
     //"Polygon"：省份area有一个封闭轮廓
     if(area.geometry.type === 'Polygon') {

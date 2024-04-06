@@ -41,7 +41,7 @@ const mapGroup = new THREE.Group();
 
 lineGroup.position.z = 2.1;
 
-loader.load('https://tugua.oss-cn-hangzhou.aliyuncs.com/model/gdp.json',({arr}) => {
+loader.load(' /gdp.json',({arr}) => {
   const gdpObj = {};
   const color1 = new THREE.Color(0xffffff);
   const color2 = new THREE.Color(0xff0000);
@@ -52,7 +52,7 @@ loader.load('https://tugua.oss-cn-hangzhou.aliyuncs.com/model/gdp.json',({arr}) 
     gdpObj[obj.name] = gdp;
   });
 
-  loader.load('https://tugua.oss-cn-hangzhou.aliyuncs.com/model/china.json', (data) => {
+  loader.load(' /china.json', (data) => {
   data.features.forEach(function (area) {
     if (area.geometry.type === 'Polygon') {
       area.geometry.coordinates = [area.geometry.coordinates]

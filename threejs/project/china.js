@@ -32,7 +32,7 @@ scene.add(axesHelper);
 
 
 const loader = new THREE.FileLoader();
-loader.load('https://tugua.oss-cn-hangzhou.aliyuncs.com/model/china.json', (data) => {
+loader.load(' /china.json', (data) => {
   const jsonData = JSON.parse(data);
   operactionData(jsonData);
 });

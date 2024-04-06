@@ -105,7 +105,7 @@ const model = new THREE.Group();
 const loader = new THREE.FileLoader();
 loader.setResponseType('json');
 loader.load(
-  'https://tugua.oss-cn-hangzhou.aliyuncs.com/model/shanghai.json',
+  ' /shanghai.json',
   function (data) {
     let buildGroup = new THREE.Group();
     data.features.forEach((build) => {
@@ -123,7 +123,7 @@ loader.load(
 
 // 黄浦江
 loader.load(
-  'https://tugua.oss-cn-hangzhou.aliyuncs.com/model/huangpu-river.json',
+  ' /huangpu-river.json',
   function (data) {
     let buildGroup = new THREE.Group();
     data.features.forEach((build) => {

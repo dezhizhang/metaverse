@@ -1,11 +1,11 @@
 /*
  * :file description: 
- * :name: /threejs/examples/渲染世界轮扩.js
+ * :name: /threejs/examples/47渲染世界轮扩.js
  * :author: 张德志
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-01-09 06:08:22
  * :last editor: 张德志
- * :date last edited: 2023-01-09 06:09:12
+ * :date last edited: 2024-04-06 16:10:01
  */
  /*
  * :file description:
@@ -26,7 +26,7 @@ loader.setResponseType('json');
 const mapGroup = new THREE.Group();
 scene.add(mapGroup);
 loader.load(
-  'https://tugua.oss-cn-hangzhou.aliyuncs.com/model/world.json',
+  '/world.json',
   function (data) {
     data.features.forEach(function (area) {
       if (area.geometry.type === 'Polygon') {

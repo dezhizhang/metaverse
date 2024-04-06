@@ -46,7 +46,7 @@ const pointGroup = new THREE.Group();
 const R = 120;
 
 
-loader.load('https://tugua.oss-cn-hangzhou.aliyuncs.com/model/world.json',(data) => {
+loader.load(' /world.json',(data) => {
   data.features.forEach(function(country) {
     if(country.geometry.type === 'Polygon') {
       country.geometry.coordinates = [country.geometry.coordinates];
@@ -105,7 +105,7 @@ function spriteMesh(R) {
   return sprite;
 }
 
-loader.load('https://tugua.oss-cn-hangzhou.aliyuncs.com/model/airports.json',function(data) {
+loader.load(' /airports.json',function(data) {
   
   const verticesArr = [];
   for(let i=0;i < data.length;i++) {

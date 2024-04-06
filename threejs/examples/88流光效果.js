@@ -35,7 +35,7 @@ scene.add(model);
 const mesh2 = mesh.clone();
 const texLoa = new THREE.TextureLoader();
 const texture = texLoa.load(
-  'https://tugua.oss-cn-hangzhou.aliyuncs.com/model/%E8%B7%AF%E9%9D%A2%E6%B5%81%E5%85%89.png',
+  ' /%E8%B7%AF%E9%9D%A2%E6%B5%81%E5%85%89.png',
 );
 
 // 设置阵列模式为 RepeatWrapping
@@ -60,7 +60,7 @@ var mesh3 = mesh2.clone();
 mesh3.material = mesh2.material.clone();
 mesh3.position.y = -W / 4;
 var texture2 = texLoa.load(
-  'https://tugua.oss-cn-hangzhou.aliyuncs.com/model/%E8%B7%AF%E9%9D%A2%E6%B5%81%E5%85%89.png',
+  ' /%E8%B7%AF%E9%9D%A2%E6%B5%81%E5%85%89.png',
 );
 // 设置阵列模式为 RepeatWrapping
 texture2.wrapS = THREE.RepeatWrapping;

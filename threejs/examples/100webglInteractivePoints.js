@@ -67,7 +67,7 @@ function init() {
     uniforms: {
       color: { value: new THREE.Color(0xffffff) },
       pointTexture: {
-        value: new THREE.TextureLoader().load("https://tugua.oss-cn-hangzhou.aliyuncs.com/model/pictures/disc.png"),
+        value: new THREE.TextureLoader().load(" /pictures/disc.png"),
       },
       alphaTest: { value: 0.9 },
     },

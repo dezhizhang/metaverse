@@ -53,7 +53,7 @@ geometry.attributes.position = new THREE.BufferAttribute(new Float32Array(posArr
 geometry.attributes.uv = new THREE.BufferAttribute(new Float32Array(uvArr),2);
 geometry.computeVertexNormals();
 
-const texture = new THREE.TextureLoader().load('https://tugua.oss-cn-hangzhou.aliyuncs.com/model/flow.png');
+const texture = new THREE.TextureLoader().load(' /flow.png');
 texture.wrapS = THREE.RepeatWrapping;
 texture.wrapT = THREE.RepeatWrapping;
 

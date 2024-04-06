@@ -40,7 +40,7 @@ loader.setResponseType('json');
 
 const mapGroup = new THREE.Group();
 
-loader.load('https://tugua.oss-cn-hangzhou.aliyuncs.com/model/world.json',(data) => {
+loader.load(' /world.json',(data) => {
   data.features.forEach(function(country) {
     if(country.geometry.type === 'Polygon') {
       const pointArr = [];

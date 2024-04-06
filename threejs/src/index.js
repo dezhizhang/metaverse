@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-03-13 22:44:48
  * :last editor: 张德志
- * :date last edited: 2024-04-06 15:59:45
+ * :date last edited: 2024-04-06 16:14:31
  */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -45,7 +45,7 @@ const pointGroup = new THREE.Group();
 const R = 120;
 
 
-loader.load('https://tugua.oss-cn-hangzhou.aliyuncs.com/model/world.json',(data) => {
+loader.load(' /world.json',(data) => {
   data.features.forEach(function(country) {
     if(country.geometry.type === 'Polygon') {
       country.geometry.coordinates = [country.geometry.coordinates];
@@ -105,15 +105,12 @@ function spriteMesh(R) {
 }
 
 loader.load('https://tugua.oss-cn-hangzhou.aliyuncs.com/model/airports.json',function(data) {
-  
   const verticesArr = [];
   for(let i=0;i < data.length;i++) {
-    const log = data[i].longitude_deg;
-    const lat = data[i].latitude_deg;
+    const {longitude_deg,latitude_deg} = data[i] || {};
 
-    const coord = lon2xyz(R * 1.001,log,lat);
+    const coord = lon2xyz(R * 1.001,longitude_deg,latitude_deg);
     verticesArr.push(coord.x,coord.y,coord.z);
-    
   }
 
   const geometry = new THREE.BufferGeometry();
@@ -122,14 +119,14 @@ loader.load('https://tugua.oss-cn-hangzhou.aliyuncs.com/model/airports.json',fun
 
   const material = new THREE.PointsMaterial({
     color:0xffff00,
-    size:1.0
+    size:1.0,
   });
 
   const points = new THREE.Points(geometry,material);
   pointGroup.add(points);
   mapGroup.add(pointGroup);
+});
 
-})
 
 
 const axesHelper = new THREE.AxesHelper(200);

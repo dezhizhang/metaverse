@@ -25,7 +25,7 @@ const model = new THREE.Group();
 const geometry = new THREE.PlaneGeometry(100,100);
 const material = new THREE.MeshLambertMaterial({
   color:0x00ffff,
-  map:new THREE.TextureLoader().load('https://tugua.oss-cn-hangzhou.aliyuncs.com/model/%E6%89%AB%E6%8F%8F%E9%9B%B7%E8%BE%BE.png'),
+  map:new THREE.TextureLoader().load(' /%E6%89%AB%E6%8F%8F%E9%9B%B7%E8%BE%BE.png'),
   side:THREE.DoubleSide,
   transparent: true,
   depthTest:false
@@ -34,7 +34,7 @@ const material = new THREE.MeshLambertMaterial({
 const mesh = new THREE.Mesh(geometry,material);
 const material2 = new THREE.MeshLambertMaterial({
   color:0x00cccc,
-  map:new THREE.TextureLoader().load('https://tugua.oss-cn-hangzhou.aliyuncs.com/model/%E9%9B%B7%E8%BE%BE%E5%88%BB%E5%BA%A6.png'),
+  map:new THREE.TextureLoader().load(' /%E9%9B%B7%E8%BE%BE%E5%88%BB%E5%BA%A6.png'),
   transparent:true,
   depthTest:false
 });

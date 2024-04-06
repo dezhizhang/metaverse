@@ -30,7 +30,7 @@ function init() {
 
   const geometry = new THREE.BufferGeometry();
   const vertices = [];
-  const sprite = new THREE.TextureLoader().load('https://tugua.oss-cn-hangzhou.aliyuncs.com/model/pictures/disc.png')
+  const sprite = new THREE.TextureLoader().load(' /pictures/disc.png')
   sprite.colorSpace = THREE.SRGBColorSpace;
 
   for(let i=0;i < 1000;i++) {

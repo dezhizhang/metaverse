@@ -42,7 +42,7 @@ const mapGroup = new THREE.Group();
 
 lineGroup.position.z = 2.1;
 
-loader.load('https://tugua.oss-cn-hangzhou.aliyuncs.com/model/china.json', (data) => {
+loader.load(' /china.json', (data) => {
   data.features.forEach(function (area) {
     console.log('area',area);
     if (area.geometry.type === 'Polygon') {

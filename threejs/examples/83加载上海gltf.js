@@ -26,7 +26,7 @@ const model = new THREE.Group();
 
 //创建一个GLTF加载器
 const loader = new GLTFLoader();
-loader.load('https://tugua.oss-cn-hangzhou.aliyuncs.com/model/shanghai.glb',function(gltf) {
+loader.load(' /shanghai.glb',function(gltf) {
   const floor = gltf.scene.getObjectByName('地面');
   floor.material = new THREE.MeshLambertMaterial({
     color: 0x444433,

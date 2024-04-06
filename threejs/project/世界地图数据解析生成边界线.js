@@ -44,7 +44,7 @@ const meshGroup = new THREE.Group();
 
 const R = 120;
 
-loader.load('https://tugua.oss-cn-hangzhou.aliyuncs.com/model/world.json', (data) => {
+loader.load(' /world.json', (data) => {
   data.features.forEach(function (country) {
     if (country.geometry.type === 'Polygon') {
       country.geometry.coordinates = [country.geometry.coordinates];

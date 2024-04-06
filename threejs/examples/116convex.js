@@ -52,7 +52,7 @@ function init() {
   // textures
   const loader = new THREE.TextureLoader();
   const texture = loader.load(
-    "https://tugua.oss-cn-hangzhou.aliyuncs.com/model/pictures/disc.png"
+    " /pictures/disc.png"
   );
   texture.colorSpace = THREE.SRGBColorSpace;
 

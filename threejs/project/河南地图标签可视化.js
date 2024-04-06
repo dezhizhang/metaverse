@@ -35,7 +35,7 @@ const lineGroup = new THREE.Group();
 const tagGroup = new THREE.Group();
 const mapGroup = new THREE.Group();
 
-loader.load('https://tugua.oss-cn-hangzhou.aliyuncs.com/model/henan-gdp.json', ({ arr }) => {
+loader.load(' /henan-gdp.json', ({ arr }) => {
   const gdpObj = {};
   const color1 = new THREE.Color(0xffffff);
   const color2 = new THREE.Color(0xff8888);
@@ -47,7 +47,7 @@ loader.load('https://tugua.oss-cn-hangzhou.aliyuncs.com/model/henan-gdp.json', (
     gdpObj[obj.name] = gdp;
   });
 
-  loader.load('https://tugua.oss-cn-hangzhou.aliyuncs.com/model/henan.json', (data) => {
+  loader.load(' /henan.json', (data) => {
     data.features.forEach((area) => {
       if (area.geometry.type === 'Polygon') {
         area.geometry.coordinates = [area.geometry.coordinates];

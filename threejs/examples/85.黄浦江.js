@@ -37,7 +37,7 @@ const model = new THREE.Group();
 const loader = new THREE.FileLoader();
 loader.setResponseType('json');
 
-loader.load('https://tugua.oss-cn-hangzhou.aliyuncs.com/model/huangpu-river.json',function(data) {
+loader.load(' /huangpu-river.json',function(data) {
   const buildGroup = new THREE.Group();
   data.features.forEach(build => {
     buildGroup.add(ShapeMesh(build.geometry.coordinates));

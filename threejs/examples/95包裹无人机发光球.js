@@ -74,7 +74,7 @@ const flyGroup = new THREE.Group();
 const mixer = null;
 const loader = new GLTFLoader();
 
-loader.load('https://tugua.oss-cn-hangzhou.aliyuncs.com/model/fly.glb',function(gltf) {
+loader.load(' /fly.glb',function(gltf) {
   const fly = gltf.scene;
   flyGroup.add(fly);
   fly.traverse(function(child) {

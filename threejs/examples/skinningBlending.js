@@ -56,7 +56,7 @@ function init() {
   scene.add(mesh);
 
   const loader = new GLTFLoader();
-  loader.load('https://tugua.oss-cn-hangzhou.aliyuncs.com/model/china.glb', function (gltf) {
+  loader.load(' /china.glb', function (gltf) {
     model = gltf.scene;
     console.log('model',model);
 

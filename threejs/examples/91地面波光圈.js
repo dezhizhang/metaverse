@@ -27,7 +27,7 @@ const geometry = new THREE.PlaneGeometry(30,30);
 const textureLoader = new THREE.TextureLoader();
 const material = new THREE.MeshBasicMaterial({
   color:0x22ffcc,
-  map:textureLoader.load('https://tugua.oss-cn-hangzhou.aliyuncs.com/model/marked-aperture.png'),
+  map:textureLoader.load(' /marked-aperture.png'),
   transparent:true
 });
 const mesh = new THREE.Mesh(geometry,material);

@@ -8,7 +8,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 //创建场景对象Scene
 const scene = new THREE.Scene();
 const loader = new GLTFLoader();
-loader.load('https://tugua.oss-cn-hangzhou.aliyuncs.com/model/%E4%B8%8A%E6%B5%B7%E5%A4%96%E6%BB%A9.glb',function(gltf) {
+loader.load(' /%E4%B8%8A%E6%B5%B7%E5%A4%96%E6%BB%A9.glb',function(gltf) {
   scene.add(gltf.scene);
 
   const box3 = new THREE.Box3();

@@ -20,7 +20,7 @@ mapGroup.add(meshGroup);
 lineGroup.position.z += 0.1;
 
 // 加载地图
-loader.load('https://tugua.oss-cn-hangzhou.aliyuncs.com/model/china.json',function(data) {
+loader.load(' /china.json',function(data) {
   data.features.forEach(function(area) {
     if(area.geometry.type === 'Polygon') {
       area.geometry.coordinates = [area.geometry.coordinates];
@@ -35,7 +35,7 @@ const cirGroup = new THREE.Group();
 cirGroup.position.z = 0.2;
 scene.add(cirGroup);
 
-loader.load('https://tugua.oss-cn-hangzhou.aliyuncs.com/model/data.json',function(data) {
+loader.load(' /data.json',function(data) {
   const color1 = new THREE.Color(0x00ffcc);
   const color2 = new THREE.Color(0xff6666);
 
