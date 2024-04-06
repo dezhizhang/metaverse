@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-03-13 22:44:48
  * :last editor: 张德志
- * :date last edited: 2024-04-06 08:50:18
+ * :date last edited: 2024-04-06 09:19:21
  */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -16,34 +16,38 @@ const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerH
 camera.position.set(200, 200, 200);
 camera.lookAt(scene.position);
 
-const textureLoader = new THREE.TextureLoader();
-
-
-const geometry = new THREE.SphereGeometry(100,50);
-
+const geometry = new THREE.BoxGeometry(40, 100, 40);
 const material = new THREE.MeshLambertMaterial({
-  map:textureLoader.load('/earth.png')
+  color: 0x00ffff,
 });
 
-const mesh = new THREE.Mesh(geometry,material);
-scene.add(mesh);
-
 material.onBeforeCompile = (shader) => {
+  shader.vertexShader = shader.vertexShader.replace(
+    `void main() {`,
+    `varying vec3 vPosition;
+    void main() {
+      vPosition = vec3(modelMatrix * vec4(position,1.0));`,
+  );
+
+  shader.fragmentShader = shader.fragmentShader.replace(
+    `void main() {`,
+    `varying vec3 vPosition;
+    void main() {`,
+  );
   shader.fragmentShader = shader.fragmentShader.replace(
     `#include <dithering_fragment>`,
-    `#include <dithering_fragment>
-      float R = gl_FragColor.r;
-      float G = gl_FragColor.g;
-      float B = gl_FragColor.b;
-      float gray = R*0.3+G*0.59+B*0.11;
-      gl_FragColor = vec4(gray,gray,gray,1.0);
     `
-  )
-}
+    #include <dithering_fragment>
+    if(vPosition.y > 20.0 && vPosition.y < 21.0) {
+      gl_FragColor = vec4(0.0,1.0,0.0,1.0);
+    }
+    `,
+  );
+};
 
-
-
-
+const mesh = new THREE.Mesh(geometry, material);
+mesh.position.y = 50;
+scene.add(mesh);
 
 const axesHelper = new THREE.AxesHelper(100);
 scene.add(axesHelper);
@@ -51,7 +55,9 @@ scene.add(axesHelper);
 const ambientLight = new THREE.AmbientLight(0xffffff, 1);
 scene.add(ambientLight);
 
-const renderer = new THREE.WebGLRenderer();
+const renderer = new THREE.WebGLRenderer({
+  antialias: true,
+});
 
 renderer.setSize(window.innerWidth, window.innerHeight);
 
