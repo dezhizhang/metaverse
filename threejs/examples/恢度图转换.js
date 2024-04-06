@@ -1,11 +1,11 @@
 /*
- * :file description:
- * :name: /threejs/src/index.js
+ * :file description: 
+ * :name: /threejs/examples/恢度图转换.js
  * :author: 张德志
  * :copyright: (c) 2024, Tungee
- * :date created: 2024-03-13 22:44:48
+ * :date created: 2024-04-06 08:52:33
  * :last editor: 张德志
- * :date last edited: 2024-04-06 08:50:18
+ * :date last edited: 2024-04-06 08:52:34
  */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -40,10 +40,6 @@ material.onBeforeCompile = (shader) => {
     `
   )
 }
-
-
-
-
 
 const axesHelper = new THREE.AxesHelper(100);
 scene.add(axesHelper);
