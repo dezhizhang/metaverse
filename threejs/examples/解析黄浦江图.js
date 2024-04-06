@@ -1,11 +1,11 @@
 /*
- * :file description: 
+ * :file description:
  * :name: /threejs/examples/解析黄浦江图.js
  * :author: 张德志
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-04-06 22:12:21
  * :last editor: 张德志
- * :date last edited: 2024-04-06 22:12:22
+ * :date last edited: 2024-04-06 22:20:54
  */
 
 import * as THREE from 'three';
@@ -17,8 +17,8 @@ const scene = new THREE.Scene();
 //创建相机
 const camera = new THREE.PerspectiveCamera(30, window.innerWidth / window.innerHeight, 0.001, 5000);
 
-const x = 121.49131393432617
-const y = 31.232206344604492
+const x = 121.49131393432617;
+const y = 31.232206344604492;
 
 // 设置相机位置
 camera.position.set(x + 0.02, y + 0.02, 0.02);
@@ -26,6 +26,8 @@ camera.lookAt(x, x, 0);
 
 const ambientLight = new THREE.AmbientLight(0xffffff, 1);
 scene.add(ambientLight);
+
+
 
 const loader = new THREE.FileLoader();
 loader.setResponseType('json');
@@ -35,7 +37,6 @@ loader.load('https://tugua.oss-cn-hangzhou.aliyuncs.com/model/huangpu-river.json
     riverGroup.add(shapeMesh(river.geometry.coordinates));
   });
   centerAll(riverGroup);
-
   scene.add(riverGroup);
 });
 
@@ -78,7 +79,7 @@ const axesHelper = new THREE.AxesHelper(100);
 scene.add(axesHelper);
 
 const control = new OrbitControls(camera, renderer.domElement);
-control.target.set(x,y,0);
+control.target.set(x, y, 0);
 control.update();
 
 function render() {
