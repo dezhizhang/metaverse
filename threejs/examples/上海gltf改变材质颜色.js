@@ -1,3 +1,12 @@
+/*
+ * :file description: 
+ * :name: /threejs/examples/上海gltf改变材质颜色.js
+ * :author: 张德志
+ * :copyright: (c) 2024, Tungee
+ * :date created: 2024-04-06 21:06:29
+ * :last editor: 张德志
+ * :date last edited: 2024-04-06 21:06:30
+ */
 
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -51,11 +60,8 @@ gltfLoader.load('https://tugua.oss-cn-hangzhou.aliyuncs.com/model/shanghai.glb',
       })
     }
   });
-
-
   scene.add(gltf.scene);
 })
-
 
 const renderer = new THREE.WebGLRenderer({
   antialias:true

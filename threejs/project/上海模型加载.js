@@ -1,3 +1,12 @@
+/*
+ * :file description: 
+ * :name: /threejs/project/上海模型加载.js
+ * :author: 张德志
+ * :copyright: (c) 2024, Tungee
+ * :date created: 2024-04-06 20:41:46
+ * :last editor: 张德志
+ * :date last edited: 2024-04-06 20:41:46
+ */
 
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -33,26 +42,6 @@ dracoLoader.setDecoderPath('/draco/');
 gltfLoader.setDRACOLoader(dracoLoader);
 
 gltfLoader.load('https://tugua.oss-cn-hangzhou.aliyuncs.com/model/shanghai.glb',(gltf) => {
-  const floor = gltf.scene.getObjectByName('地面');
-  floor.material = new THREE.MeshLambertMaterial({
-    color:0x444433
-  });
-
-  const river = gltf.scene.getObjectByName('河面');
-  river.material = new THREE.MeshLambertMaterial({
-    color:0x336633
-  });
-
-  const building = gltf.scene.getObjectByName('楼房');
-  building.traverse((obj) => {
-    if(obj.type === 'Mesh') {
-      obj.material = new THREE.MeshLambertMaterial({
-        color:0x00ff00
-      })
-    }
-  });
-
-
   scene.add(gltf.scene);
 })
 
@@ -67,11 +56,6 @@ const  control = new OrbitControls(camera,renderer.domElement);
 
 const axesHelper = new THREE.AxesHelper(100);
 scene.add(axesHelper);
-
-window.addEventListener('resize',() => {
-  camera.aspect = window.innerWidth / window.innerHeight;
-
-})
 
 
 document.body.appendChild(renderer.domElement);
