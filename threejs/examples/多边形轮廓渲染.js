@@ -1,3 +1,12 @@
+/*
+ * :file description: 
+ * :name: /threejs/examples/多边形轮廓渲染.js
+ * :author: 张德志
+ * :copyright: (c) 2024, Tungee
+ * :date created: 2024-04-07 20:33:12
+ * :last editor: 张德志
+ * :date last edited: 2024-04-07 20:33:19
+ */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
@@ -7,9 +16,6 @@ import polygonData from './polygonData';
 const scene = new THREE.Scene();
 
 //创建相机
-// const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-// camera.position.set(200, 200, 200);
-// camera.lookAt(scene.position);
 const width = window.innerWidth;
 const height = window.innerHeight;
 

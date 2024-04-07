@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2023-03-13 05:58:33
  * :last editor: 张德志
- * :date last edited: 2024-02-27 22:16:20
+ * :date last edited: 2024-04-07 20:05:53
  */
 
 import * as THREE from 'three';
@@ -31,7 +31,6 @@ const material = new THREE.MeshBasicMaterial({
 });
 const floor = new THREE.Mesh(geometry,material);
 scene.add(floor);
-
 
 // 将几何体添加到场景中
 scene.add(cube);
