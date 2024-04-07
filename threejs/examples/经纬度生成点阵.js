@@ -1,3 +1,12 @@
+/*
+ * :file description: 
+ * :name: /threejs/examples/经纬度生成点阵.js
+ * :author: 张德志
+ * :copyright: (c) 2024, Tungee
+ * :date created: 2024-04-07 21:45:07
+ * :last editor: 张德志
+ * :date last edited: 2024-04-07 21:45:08
+ */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
