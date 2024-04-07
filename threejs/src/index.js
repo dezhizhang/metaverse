@@ -5,14 +5,14 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2023-03-13 05:58:33
  * :last editor: 张德志
- * :date last edited: 2024-04-07 15:23:35
+ * :date last edited: 2024-04-07 17:30:30
  */
 
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-import {CSS2DRenderer,CSS2DObject } from 'three/examples/jsm/renderers/CSS2DRenderer';
+import {CSS3DRenderer,CSS3DObject } from 'three/examples/jsm/renderers/CSS3DRenderer';
 
 //创建场影
 const scene = new THREE.Scene();
@@ -43,39 +43,49 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.append(renderer.domElement);
 
 
-const dracoLoader = new DRACOLoader();
-const gltfLoader = new GLTFLoader();
-dracoLoader.setDecoderPath('/draco/');
-gltfLoader.setDRACOLoader(dracoLoader);
-
 
 const div = document.createElement('div');
-div.innerHTML = '设置A';
-div.style.padding = '10px';
-div.style.fontSize = '14px';
-div.style.background = '#ccc';
+div.innerHTML = '设置';
+div.style.padding = '4px';
+div.style.background = '#00ff00';
 div.style.color = '#fff';
+div.style.zIndex = 99;
+div.style.fontSize = '14px';
 div.style.borderRadius = '4px';
+div.style.border = '1px solid #ccc';
+
+document.body.appendChild(div);
 
 
-const css2DRenderer = new CSS2DRenderer();
-css2DRenderer.setSize(window.innerWidth,window.innerHeight);
-css2DRenderer.domElement.style.position = 'absolute';
-css2DRenderer.domElement.style.left = '0px';
-css2DRenderer.domElement.style.top = '0px';
-css2DRenderer.domElement.style.pointerEvents ='none';
-document.body.appendChild(css2DRenderer.domElement);
- 
+const css3DRenderer = new CSS3DRenderer();
+css3DRenderer.setSize(window.innerWidth,window.innerHeight);
+css3DRenderer.domElement.style.position ='absolute';
+css3DRenderer.domElement.style.left = '0px';
+css3DRenderer.domElement.style.top = '0px';
+css3DRenderer.domElement.style.pointerEvents = 'none';
+document.body.appendChild(css3DRenderer.domElement);
 
-gltfLoader.load('/工厂.glb',(gltf) => {
-  const obj = gltf.scene.getObjectByName('设备A');
-  const tag = new CSS2DObject(div);
-  obj.add(tag);
 
-  obj.add(new THREE.AxesHelper(30));
-
-  scene.add(gltf.scene);
+const geometry = new THREE.ConeGeometry(25,80);
+geometry.translate(0,40,0);
+const material = new THREE.MeshLambertMaterial({
+  color:0x00ffff
 });
+const mesh = new THREE.Mesh(geometry,material);
+mesh.position.set(50,0,50);
+scene.add(mesh);
+
+const axesHelper = new THREE.AxesHelper(100);
+scene.add(axesHelper);
+
+const tag = new CSS3DObject(div);
+tag.position.y += 80;
+tag.scale.set(0.5,0.5,0.5);
+mesh.add(tag);
+
+
+
+
 
 window.addEventListener('resize',() => {
   camera.aspect = window.innerWidth / window.innerHeight;
@@ -83,6 +93,7 @@ window.addEventListener('resize',() => {
 
   renderer.setSize(window.innerWidth,window.innerHeight);
   renderer.setPixelRatio(window.devicePixelRatio);
+  css3DRenderer.setSize(window.innerWidth,window.innerHeight);
 });
 
 
@@ -91,7 +102,7 @@ const controls = new OrbitControls(camera, renderer.domElement);
 function render() {
   requestAnimationFrame(render);
   renderer.render(scene, camera);
-  css2DRenderer.render(scene,camera);
+  css3DRenderer.render(scene,camera);
 
 }
 
