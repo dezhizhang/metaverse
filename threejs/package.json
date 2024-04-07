@@ -17,6 +17,7 @@
     "cannon-es": "0.20.0",
     "d3": "^7.9.0",
     "dat.gui": "0.7.9",
+    "delaunator": "^5.0.1",
     "file-loader": "^6.2.0",
     "gsap": "^3.11.3",
     "html-webpack-plugin": "^5.5.0",
