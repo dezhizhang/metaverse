@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-03-24 20:16:05
  * :last editor: 张德志
- * :date last edited: 2024-04-08 22:23:24
+ * :date last edited: 2024-04-08 22:39:13
  */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
@@ -91,6 +91,8 @@ gltfLoader.setDRACOLoader(dracoLoader);
 
 const labelGroup = new THREE.Group();
 
+const granaryArr = [];
+
 gltfLoader.load(`${baseUrl}/model/factory.glb`, (gltf) => {
   console.log(gltf.scene);
 
@@ -108,6 +110,7 @@ gltfLoader.load(`${baseUrl}/model/factory.glb`, (gltf) => {
   const group = gltf.scene.getObjectByName('粮仓');
   group.traverse(function (obj) {
     if (obj.type === 'Mesh') {
+      granaryArr.push(obj);
       const label = createTag(obj.name);
       const position = new THREE.Vector3();
       obj.getWorldPosition(position);
@@ -128,6 +131,26 @@ gltfLoader.load(`${baseUrl}/model/factory.glb`, (gltf) => {
   scene.add(labelGroup);
   scene.add(gltf.scene);
 });
+
+window.addEventListener('click',(event) => {
+  const sx = event.clientX;
+  const sy = event.clientY;
+
+  const x = (sx / window.innerWidth) * 2 - 1;
+  const y = -(sy / window.innerHeight) * 2 + 1;
+
+  const raycaster = new THREE.Raycaster();
+  raycaster.setFromCamera(new THREE.Vector2(x,y),camera);
+
+  const intersects = raycaster.intersectObjects(granaryArr);
+  console.log(intersects)
+  if(intersects.length) {
+    intersects[0].object.material.transparent = true;
+    intersects[0].object.material.opacity = 0.6;
+  }
+  
+})
+
 
 function render() {
   requestAnimationFrame(render);
