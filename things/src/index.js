@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-03-24 20:16:05
  * :last editor: 张德志
- * :date last edited: 2024-04-08 20:27:44
+ * :date last edited: 2024-04-08 20:58:49
  */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
@@ -63,6 +63,16 @@ dracoLoader.setDecoderPath('/draco/');
 gltfLoader.setDRACOLoader(dracoLoader);
 
 gltfLoader.load(`${baseUrl}/model/factory.glb`, (gltf) => {
+  gltf.scene.traverse(function(object) {
+    if(object.type === 'Mesh') {
+      object.material = new THREE.MeshLambertMaterial({
+        map:object.material.map,
+        color:object.material.color,
+        // side:THREE.DoubleSide,
+        depthTest:true
+      })
+    }
+  })
   scene.add(gltf.scene);
 });
 
