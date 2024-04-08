@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-03-24 20:16:05
  * :last editor: 张德志
- * :date last edited: 2024-04-08 20:58:49
+ * :date last edited: 2024-04-08 21:17:59
  */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
@@ -14,6 +14,8 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { baseUrl } from '../config';
 
 const scene = new THREE.Scene();
+scene.fog = new THREE.Fog(0x005577, -100,1000);
+// scene.fog = new THREE.Fog(0x005577,-100,1000);
 
 const width = window.innerWidth;
 const height = window.innerHeight;
@@ -28,8 +30,8 @@ const renderer = new THREE.WebGLRenderer({
   antialias: true,
 });
 renderer.setSize(width, height);
+renderer.setClearColor(0x005577,1);
 renderer.setPixelRatio(window.devicePixelRatio);
-// renderer.outputEncoding = THREE.en;
 document.body.appendChild(renderer.domElement);
 
 // controls
