@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2023-03-13 05:58:33
  * :last editor: 张德志
- * :date last edited: 2024-04-09 07:08:58
+ * :date last edited: 2024-04-09 07:26:48
  */
 
 import * as THREE from 'three';
@@ -31,29 +31,40 @@ const ambientLight = new THREE.AmbientLight(0xffffff, 1);
 scene.add(ambientLight);
 
 const pointLight = new THREE.PointLight(0xffffff);
-pointLight.position.set(150, 150, 150);
+pointLight.position.set(150,150,150);
 scene.add(pointLight);
 
-const cubeTextureLoader = new THREE.CubeTextureLoader();
-cubeTextureLoader.setPath('/environ/');
 
-const cubeTexture = cubeTextureLoader.load([
-  'px.jpg',
-  'nx.jpg',
-  'py.jpg',
-  'ny.jpg',
-  'pz.jpg',
-  'nz.jpg',
-]);
+const width = 32;
+const height = 32;
 
-const geometry = new THREE.BoxGeometry(100, 100, 100);
+const size = width * height;
+const data = new Uint8Array(size * 4);
+
+for(let i=0;i < size * 4;i += 4) {
+  data[i] = 255 * Math.random();
+  data[i + 1] = 255 * Math.random();
+  data[i + 2] = 255 * Math.random();
+  data[i + 3] = 1.0;
+}
+
+console.log('data',data);
+
+const texture = new THREE.DataTexture(data,width,height,THREE.RGBAFormat);
+texture.needsUpdate = true;
+
+const geometry = new THREE.PlaneGeometry(width,height);
 const material = new THREE.MeshPhongMaterial({
-  envMap: cubeTexture,
-  reflectivity: 1,
+  map:texture
 });
 
-const cube = new THREE.Mesh(geometry, material);
-scene.add(cube);
+const mesh = new THREE.Mesh(geometry,material);
+scene.add(mesh);
+
+
+
+
+
 
 function render() {
   requestAnimationFrame(render);
