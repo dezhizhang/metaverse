@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-03-24 20:16:05
  * :last editor: 张德志
- * :date last edited: 2024-04-08 22:39:13
+ * :date last edited: 2024-04-08 22:51:30
  */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
@@ -132,23 +132,26 @@ gltfLoader.load(`${baseUrl}/model/factory.glb`, (gltf) => {
   scene.add(gltf.scene);
 });
 
+let changeMesh = null;
+
 window.addEventListener('click',(event) => {
+  if(changeMesh) {
+    changeMesh.material.color.set(0xffffff);
+  }
   const sx = event.clientX;
   const sy = event.clientY;
 
   const x = (sx / window.innerWidth) * 2 - 1;
   const y = -(sy / window.innerHeight) * 2 + 1;
-
+  
   const raycaster = new THREE.Raycaster();
   raycaster.setFromCamera(new THREE.Vector2(x,y),camera);
 
   const intersects = raycaster.intersectObjects(granaryArr);
-  console.log(intersects)
-  if(intersects.length) {
-    intersects[0].object.material.transparent = true;
-    intersects[0].object.material.opacity = 0.6;
+  if(intersects.length > 0) {
+    changeMesh = intersects[0].object;
+    changeMesh.material.color.set(0x00ffff)
   }
-  
 })
 
 

@@ -24,7 +24,11 @@ renderer.setClearColor(0x005577,1);
 ### Raycaster
 ```js
 
+
 window.addEventListener('click',(event) => {
+  if(changeMesh) {
+    changeMesh.material.color.set(0xffffff);
+  }
   const sx = event.clientX;
   const sy = event.clientY;
 
@@ -36,9 +40,9 @@ window.addEventListener('click',(event) => {
 
   const intersects = raycaster.intersectObjects(granaryArr);
   console.log(intersects)
-  if(intersects.length) {
-    intersects[0].object.material.transparent = true;
-    intersects[0].object.material.opacity = 0.6;
+  if(intersects.length > 0) {
+    changeMesh = intersects[0].object;
+    changeMesh.material.color.set(0x00ffff);
   }
   
 })
