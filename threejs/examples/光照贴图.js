@@ -1,11 +1,11 @@
 /*
- * :file description:
- * :name: /threejs/src/index.js
+ * :file description: 
+ * :name: /threejs/examples/光照贴图.js
  * :author: 张德志
  * :copyright: (c) 2024, Tungee
- * :date created: 2023-03-13 05:58:33
+ * :date created: 2024-04-09 06:29:33
  * :last editor: 张德志
- * :date last edited: 2024-04-09 06:36:41
+ * :date last edited: 2024-04-09 06:29:34
  */
 
 import * as THREE from 'three';
@@ -39,23 +39,20 @@ const cube = new THREE.Mesh(geometry, material);
 cube.castShadow = true;
 scene.add(cube);
 
-
 const textureLoader = new THREE.TextureLoader();
 const lightMap = textureLoader.load('/shadow.png');
 
-const planeGeometry = new THREE.PlaneGeometry(300,200);
+const planeGeometry = new THREE.PlaneGeometry(300, 200);
 const planeMaterial = new THREE.MeshLambertMaterial({
-  color:0x999999,
-  lightMap:lightMap,
-  lightMapIntensity:0.5,
+  color: 0x999999,
+  lightMap,
+  lightMapIntensity: 0.5,
 });
-
-const plane = new THREE.Mesh(planeGeometry,planeMaterial);
+const plane = new THREE.Mesh(planeGeometry, planeMaterial);
 plane.rotateX(-Math.PI / 2);
 plane.position.y = -50;
+plane.receiveShadow = true;
 scene.add(plane);
-
-
 
 function render() {
   requestAnimationFrame(render);
