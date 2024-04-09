@@ -20,6 +20,7 @@
     "delaunator": "^5.0.1",
     "file-loader": "^6.2.0",
     "gsap": "^3.11.3",
+    "heatmap.js": "^2.0.5",
     "html-webpack-plugin": "^5.5.0",
     "install": "^0.13.0",
     "parcel-bundler": "^1.12.5",
