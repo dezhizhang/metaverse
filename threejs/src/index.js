@@ -46,23 +46,22 @@ mesh2.name = 'Sphere';
 group.add(mesh2);
 scene.add(group);
 
+
 const times = [0,10];
 const values = [0,0,0,150,0,0];
 
 const posTrack = new THREE.KeyframeTrack('Box.position',times,values);
-const colorTrack = new THREE.KeyframeTrack('Box.material.color',[10,20],[1,0,0,0,0,1]);
 const scaleTrack = new THREE.KeyframeTrack('Sphere.scale',[0,20],[1,1,1,3,3,3]);
 
 const duration = 20;
-const clip = new THREE.AnimationClip('default',duration,[posTrack,colorTrack,scaleTrack]);
+const clip = new THREE.AnimationClip('default',duration,[posTrack,scaleTrack]);
 
 const mixer = new THREE.AnimationMixer(group);
 const AnimationAction = mixer.clipAction(clip);
+
 AnimationAction.timeScale = 20;
-
-console.log('AnimationAction',AnimationAction);
-
 AnimationAction.play();
+
 
 
 const axesHelper = new THREE.AxesHelper(100);
