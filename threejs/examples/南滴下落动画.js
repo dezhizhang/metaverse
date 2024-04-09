@@ -1,3 +1,12 @@
+/*
+ * :file description: 
+ * :name: /threejs/examples/南滴下落动画.js
+ * :author: 张德志
+ * :copyright: (c) 2024, Tungee
+ * :date created: 2024-04-09 21:38:46
+ * :last editor: 张德志
+ * :date last edited: 2024-04-09 21:38:55
+ */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
