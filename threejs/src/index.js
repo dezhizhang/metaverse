@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-04-10 22:54:35
  * :last editor: 张德志
- * :date last edited: 2024-04-10 23:13:40
+ * :date last edited: 2024-04-11 06:35:28
  */
 
 import * as THREE from 'three';
@@ -21,17 +21,11 @@ const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerH
 camera.position.set(200, 200, 200);
 camera.lookAt(scene.position);
 
-const objLoader = new OBJLoader();
-const mtlLoader = new MTLLoader();
 
-mtlLoader.load('/box.mtl', function (materials) {
-  objLoader.setMaterials(materials);
-  objLoader.load('/box.obj', function (mesh) {
-    mesh.scale.set(10, 10, 10);
-    mesh.position.set(0,0,0);
-    scene.add(mesh);
-  });
-});
+window.addEventListener('keydown',(event) => {
+  console.log(event.key);
+  
+})
 
 const ambientLight = new THREE.AmbientLight(0xffffff, 1);
 scene.add(ambientLight);
