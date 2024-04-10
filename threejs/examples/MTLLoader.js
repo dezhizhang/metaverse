@@ -1,11 +1,11 @@
 /*
- * :file description:
- * :name: /threejs/examples/OBJLoader.js
+ * :file description: 
+ * :name: /threejs/examples/MTLLoader.js
  * :author: 张德志
  * :copyright: (c) 2024, Tungee
- * :date created: 2024-04-10 22:54:35
+ * :date created: 2024-04-10 23:15:19
  * :last editor: 张德志
- * :date last edited: 2024-04-10 23:12:42
+ * :date last edited: 2024-04-10 23:15:20
  */
 
 import * as THREE from 'three';
@@ -18,7 +18,7 @@ const scene = new THREE.Scene();
 //创建相机
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 // 设置相机位置
-camera.position.set(600, 600, 600);
+camera.position.set(200, 200, 200);
 camera.lookAt(scene.position);
 
 const objLoader = new OBJLoader();
@@ -28,6 +28,7 @@ mtlLoader.load('/box.mtl', function (materials) {
   objLoader.setMaterials(materials);
   objLoader.load('/box.obj', function (mesh) {
     mesh.scale.set(10, 10, 10);
+    mesh.position.set(0,0,0);
     scene.add(mesh);
   });
 });

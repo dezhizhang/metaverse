@@ -3,33 +3,35 @@
  * :name: /threejs/src/index.js
  * :author: 张德志
  * :copyright: (c) 2024, Tungee
- * :date created: 2024-04-07 13:40:22
+ * :date created: 2024-04-10 22:54:35
  * :last editor: 张德志
- * :date last edited: 2024-04-10 22:55:00
+ * :date last edited: 2024-04-10 23:13:40
  */
 
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader.js';
+import { MTLLoader } from 'three/examples/jsm/loaders/MTLLoader.js';
 
 //创建场影
 const scene = new THREE.Scene();
 //创建相机
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 // 设置相机位置
-camera.position.set(600, 600, 600);
+camera.position.set(200, 200, 200);
 camera.lookAt(scene.position);
 
 const objLoader = new OBJLoader();
-objLoader.load('/box.obj',function(mesh) {
+const mtlLoader = new MTLLoader();
 
-  mesh.children[0].scale.set(20,20,20);
-  mesh.children[0].geometry.center();
-  mesh.children[0].material.color.set(0x0000ff);
-
-  scene.add(mesh);
+mtlLoader.load('/box.mtl', function (materials) {
+  objLoader.setMaterials(materials);
+  objLoader.load('/box.obj', function (mesh) {
+    mesh.scale.set(10, 10, 10);
+    mesh.position.set(0,0,0);
+    scene.add(mesh);
+  });
 });
-
 
 const ambientLight = new THREE.AmbientLight(0xffffff, 1);
 scene.add(ambientLight);
