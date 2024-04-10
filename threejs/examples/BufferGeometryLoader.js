@@ -1,11 +1,11 @@
 /*
  * :file description: 
- * :name: /threejs/src/index.js
+ * :name: /threejs/examples/BufferGeometryLoader.js
  * :author: 张德志
  * :copyright: (c) 2024, Tungee
- * :date created: 2024-04-07 13:40:22
+ * :date created: 2024-04-10 22:00:37
  * :last editor: 张德志
- * :date last edited: 2024-04-10 22:00:43
+ * :date last edited: 2024-04-10 22:00:39
  */
 
 import * as THREE from 'three';
