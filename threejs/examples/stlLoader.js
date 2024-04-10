@@ -1,11 +1,11 @@
 /*
- * :file description:
- * :name: /threejs/src/index.js
+ * :file description: 
+ * :name: /threejs/examples/stlLoader.js
  * :author: 张德志
  * :copyright: (c) 2024, Tungee
- * :date created: 2024-04-07 13:40:22
+ * :date created: 2024-04-10 22:34:37
  * :last editor: 张德志
- * :date last edited: 2024-04-10 22:34:44
+ * :date last edited: 2024-04-10 22:34:38
  */
 
 import * as THREE from 'three';

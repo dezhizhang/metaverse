@@ -1,11 +1,11 @@
 /*
- * :file description: 
+ * :file description:
  * :name: /threejs/examples/BufferGeometryLoader.js
  * :author: 张德志
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-04-10 22:00:37
  * :last editor: 张德志
- * :date last edited: 2024-04-10 22:00:39
+ * :date last edited: 2024-04-10 22:07:26
  */
 
 import * as THREE from 'three';
@@ -30,10 +30,8 @@ loader.load('/bufferGeometry.json',function(geometry) {
 });
 
 
-
-const ambientLight = new THREE.AmbientLight(0xffffff,1);
+const ambientLight = new THREE.AmbientLight(0xffffff, 1);
 scene.add(ambientLight);
-
 
 const axesHelper = new THREE.AxesHelper(100);
 scene.add(axesHelper);
