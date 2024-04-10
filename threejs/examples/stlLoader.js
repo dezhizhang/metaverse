@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-04-10 22:34:37
  * :last editor: 张德志
- * :date last edited: 2024-04-10 22:34:38
+ * :date last edited: 2024-04-10 22:38:21
  */
 
 import * as THREE from 'three';
@@ -25,6 +25,7 @@ stlLoader.load('/立方体.STL',function(geometry) {
   const material = new THREE.MeshLambertMaterial({
     color:0x0000ff
   });
+  geometry.center();
   const mesh = new THREE.Mesh(geometry,material);
   scene.add(mesh);
 })

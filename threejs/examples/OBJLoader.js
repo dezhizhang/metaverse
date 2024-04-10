@@ -1,11 +1,11 @@
 /*
- * :file description:
- * :name: /threejs/src/index.js
+ * :file description: 
+ * :name: /threejs/examples/OBJLoader.js
  * :author: 张德志
  * :copyright: (c) 2024, Tungee
- * :date created: 2024-04-07 13:40:22
+ * :date created: 2024-04-10 22:54:35
  * :last editor: 张德志
- * :date last edited: 2024-04-10 22:55:00
+ * :date last edited: 2024-04-10 22:54:36
  */
 
 import * as THREE from 'three';
@@ -22,11 +22,10 @@ camera.lookAt(scene.position);
 
 const objLoader = new OBJLoader();
 objLoader.load('/box.obj',function(mesh) {
-
+  
   mesh.children[0].scale.set(20,20,20);
   mesh.children[0].geometry.center();
   mesh.children[0].material.color.set(0x0000ff);
-
   scene.add(mesh);
 });
 
