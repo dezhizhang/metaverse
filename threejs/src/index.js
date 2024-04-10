@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-04-10 22:54:35
  * :last editor: 张德志
- * :date last edited: 2024-04-11 06:35:28
+ * :date last edited: 2024-04-11 07:20:17
  */
 
 import * as THREE from 'three';
@@ -21,11 +21,23 @@ const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerH
 camera.position.set(200, 200, 200);
 camera.lookAt(scene.position);
 
+const keyStatus = {
+  W: false,
+  A: false,
+  S: false,
+  D: false,
+};
 
-window.addEventListener('keydown',(event) => {
-  console.log(event.key);
-  
+window.addEventListener('keydown', (event) => {
+  const uppperkey = event.key.toLocaleUpperCase();
+  keyStatus[uppperkey] = !keyStatus[uppperkey];
+});
+
+window.addEventListener('keyup',(event) => {
+  const uppperkey = event.key.toLocaleUpperCase();
+  keyStatus[uppperkey] = !keyStatus[uppperkey];
 })
+
 
 const ambientLight = new THREE.AmbientLight(0xffffff, 1);
 scene.add(ambientLight);
@@ -52,6 +64,9 @@ window.addEventListener('resize', () => {
 const clock = new THREE.Clock();
 
 function render() {
+  if(keyStatus.W) {
+    console.log('w');
+  }
   requestAnimationFrame(render);
   renderer.render(scene, camera);
 }
