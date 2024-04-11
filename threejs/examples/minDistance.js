@@ -1,13 +1,12 @@
 /*
- * :file description:
- * :name: /threejs/src/index.js
+ * :file description: 
+ * :name: /threejs/examples/minDistance.js
  * :author: 张德志
  * :copyright: (c) 2024, Tungee
- * :date created: 2024-04-10 22:54:35
+ * :date created: 2024-04-12 06:42:29
  * :last editor: 张德志
- * :date last edited: 2024-04-12 06:42:15
+ * :date last edited: 2024-04-12 06:42:30
  */
-
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
