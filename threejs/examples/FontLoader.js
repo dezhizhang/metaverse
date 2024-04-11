@@ -1,13 +1,12 @@
 /*
  * :file description: 
- * :name: /threejs/src/index.js
+ * :name: /threejs/examples/FontLoader.js
  * :author: 张德志
  * :copyright: (c) 2024, Tungee
- * :date created: 2024-04-12 07:02:27
+ * :date created: 2024-04-12 07:28:23
  * :last editor: 张德志
- * :date last edited: 2024-04-12 07:26:58
+ * :date last edited: 2024-04-12 07:28:24
  */
-
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';

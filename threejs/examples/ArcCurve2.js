@@ -47,6 +47,7 @@ const material = new THREE.LineBasicMaterial({
 });
 const line = new THREE.Line(geometry,material);
 line.rotateX(-Math.PI / 2);
+line.position.y = -85;
 scene.add(line);
 
 
