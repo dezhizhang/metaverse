@@ -5,14 +5,13 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-04-12 07:28:23
  * :last editor: 张德志
- * :date last edited: 2024-04-12 07:28:24
+ * :date last edited: 2024-04-12 07:30:05
  */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader';
-
 
 
 //创建场影
@@ -83,9 +82,7 @@ loader.load('https://threejs.org/examples/fonts/helvetiker_bold.typeface.json',(
 
   scene.add(text);
   
-})
-
-
+});
 
 
 const directionLight = new THREE.DirectionalLight(0xffffff,0.8);
