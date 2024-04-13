@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-04-12 07:02:27
  * :last editor: 张德志
- * :date last edited: 2024-04-13 15:13:17
+ * :date last edited: 2024-04-13 16:04:36
  */
 
 import * as THREE from 'three';
@@ -13,6 +13,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader';
+import { CSS2DObject, CSS2DRenderer } from 'three/examples/jsm/renderers/CSS2DRenderer';
 
 let rotate = {
   bool: true,
@@ -91,6 +92,13 @@ gltfLoader.load('/phone.glb', (gltf) => {
 
   waveAnimation();
 
+  // 渲染标签
+  const div = document.getElementById('camera');
+  div.style.visibility = 'visible';
+  const label = new CSS2DObject(div);
+  label.position.copy(sprite.position);
+  scene.add(label);
+
 
   scene.add(gltf.scene);
 });
@@ -153,6 +161,21 @@ const controls = new OrbitControls(camera, renderer.domElement);
 
 
 
+// 渲染标签
+const labelRenderer =  new CSS2DRenderer();
+labelRenderer.setSize(window.innerWidth,window.innerHeight);
+labelRenderer.domElement.style.position = 'absolute';
+labelRenderer.domElement.style.top = '0px';
+labelRenderer.domElement.style.left = '252px';
+labelRenderer.domElement.style.pointerEvents = 'none';
+
+document.body.appendChild(labelRenderer.domElement);
+
+
+
+
+
+
 
 window.addEventListener('resize', () => {
   camera.aspect = window.innerWidth / window.innerHeight;
@@ -203,6 +226,7 @@ function render() {
   }
   requestAnimationFrame(render);
   renderer.render(scene, camera);
+  labelRenderer.render(scene,camera);
 }
 
 render();
