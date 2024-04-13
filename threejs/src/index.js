@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2023-03-13 05:58:33
  * :last editor: 张德志
- * :date last edited: 2024-04-13 20:01:05
+ * :date last edited: 2024-04-13 20:11:47
  */
 
 import * as THREE from 'three';
@@ -40,7 +40,13 @@ dracoLoader.setDecoderPath('/draco/');
 gltfLoader.load('/轿车.glb', (gltf) => {
   gltf.scene.traverse(function(object) {
     if(object.type === 'Mesh') {
-      object.material.envMap = envMapTexture;
+      object.material = new THREE.MeshStandardMaterial({
+        color:object.material.color,
+        metalness:1.0,
+        roughness:0.4,
+        envMap:envMapTexture
+      })
+      // object.material.envMap = envMapTexture;
     }
   })
   scene.add(gltf.scene);
@@ -48,6 +54,18 @@ gltfLoader.load('/轿车.glb', (gltf) => {
 
 //light
 const ambientLight = new THREE.AmbientLight(0xffffff, 1);
+
+const directionalLight = new THREE.DirectionalLight(0xffffff,1);
+directionalLight.position.set(-437, 443, 278)
+scene.add(directionalLight);
+
+
+const directionalLight2 = new THREE.DirectionalLight(0xffffff,1);
+directionalLight2.position.set(437,-443,-278);
+scene.add(directionalLight2);
+
+
+
 scene.add(ambientLight);
 
 window.addEventListener('resize', () => {
