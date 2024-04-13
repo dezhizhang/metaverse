@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-04-13 20:50:00
  * :last editor: 张德志
- * :date last edited: 2024-04-13 21:36:41
+ * :date last edited: 2024-04-13 22:22:25
  */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -59,7 +59,10 @@ gltfLoader.load('/轿车.glb', (gltf) => {
     
       object.material.envMap = envMapTexture;
     }
-  })
+  });
+  gltf.scene.getObjectByName('左前门').rotateY(-Math.PI / 3);
+  gltf.scene.getObjectByName('右后门').rotateY(Math.PI / 3);
+  
   scene.add(gltf.scene);
 });
 
