@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-04-12 07:02:27
  * :last editor: 张德志
- * :date last edited: 2024-04-13 16:39:08
+ * :date last edited: 2024-04-13 17:01:30
  */
 
 import * as THREE from 'three';
@@ -169,7 +169,7 @@ labelRenderer.setSize(window.innerWidth,window.innerHeight);
 labelRenderer.domElement.style.position = 'absolute';
 labelRenderer.domElement.style.top = '0px';
 labelRenderer.domElement.style.left = '255px';
-labelRenderer.domElement.style.pointerEvents = 'none';
+// labelRenderer.domElement.style.pointerEvents = 'none';
 
 document.body.appendChild(labelRenderer.domElement);
 
@@ -184,10 +184,18 @@ window.addEventListener('click',(event) => {
   raycaster.setFromCamera(new THREE.Vector2(x,y),camera);
   const intersects = raycaster.intersectObjects([sprite]);
   if(intersects.length > 0) {
+    labelRenderer.domElement.style.pointerEvents = 'block';
     div.style.visibility = 'visible';
     //window.location.href = 'https://www.xiaozhi.shop'
   }
 });
+
+
+const close = document.getElementById('close');
+close.addEventListener('click',() => {
+  labelRenderer.domElement.style.pointerEvents = 'none';
+  div.style.visibility = 'hidden';
+})
 
 
 
@@ -197,6 +205,7 @@ window.addEventListener('resize', () => {
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
   renderer.setSize(window.innerWidth, window.innerHeight);
+  labelRenderer.setSize(window.innerWidth,window.innerHeight);
   renderer.setPixelRatio(window.devicePixelRatio);
 });
 
