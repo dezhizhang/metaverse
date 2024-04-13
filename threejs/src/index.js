@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-04-12 07:02:27
  * :last editor: 张德志
- * :date last edited: 2024-04-13 14:35:16
+ * :date last edited: 2024-04-13 14:45:00
  */
 
 import * as THREE from 'three';
@@ -55,6 +55,7 @@ gltfLoader.load('/phone.glb', (gltf) => {
 
     transparent: true,
   });
+  mesh.renderOrder = 0;
 
   const mesh2 = gltf.scene.getObjectByName('后置摄像头位置');
 
@@ -70,7 +71,7 @@ gltfLoader.load('/phone.glb', (gltf) => {
   sprite.position.copy(position);
   sprite.position.x -= 6;
   sprite.position.z -= 3;
-
+  sprite.renderOrder = 1;
   scene.add(sprite);
 
 
