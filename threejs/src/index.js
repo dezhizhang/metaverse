@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-04-12 07:02:27
  * :last editor: 张德志
- * :date last edited: 2024-04-13 14:45:00
+ * :date last edited: 2024-04-13 14:55:07
  */
 
 import * as THREE from 'three';
@@ -73,6 +73,24 @@ gltfLoader.load('/phone.glb', (gltf) => {
   sprite.position.z -= 3;
   sprite.renderOrder = 1;
   scene.add(sprite);
+
+  let s = 0.0;
+  function waveAnimation() {
+    s += 0.01;
+    if(s < 0.5) {
+      sprite.scale.x = 6 * (1 + s);
+      sprite.scale.y = 6 * (1 + s);
+    }else if(s >=0.5 && s <1.0) {
+      sprite.scale.x = 6 * (2 -s);
+      sprite.scale.y = 6 * (2 -s);
+    }else {
+      s = 0.0;
+    }
+    requestAnimationFrame(waveAnimation);
+  }
+
+  waveAnimation();
+  
 
 
   scene.add(gltf.scene);
