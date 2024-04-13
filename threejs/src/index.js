@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-04-13 20:50:00
  * :last editor: 张德志
- * :date last edited: 2024-04-13 22:46:15
+ * :date last edited: 2024-04-13 22:55:59
  */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -148,13 +148,22 @@ window.addEventListener('resize', () => {
   renderer.setPixelRatio(window.devicePixelRatio);
 });
 
+// 添加场音
+const listener = new THREE.AudioListener();
+const openSound = new THREE.Audio(listener);
+const cloneSound = new THREE.Audio(listener);
+
+const audioLoader = new THREE.AudioLoader();
+audioLoader.load('/碰撞声.wav',function(buffer) {
+  openSound.setBuffer(buffer);
+  openSound.setVolume(0.4);
+})
+
+
 
 window.addEventListener('click',(event) => {
   const sx = event.clientX;
   const sy = event.clientY;
-
-
-  
   const x = (sx / window.innerWidth) * 2 - 1;
   const y = -(sy / window.innerHeight) * 2 + 1;
 
@@ -163,12 +172,13 @@ window.addEventListener('click',(event) => {
   const intersects = raycaster.intersectObjects(tagList);
 
   if(intersects.length > 0) {
+    openSound.play();
+    
     console.log(intersects);
 
   }
+});
 
-
-})
 
 // 初始化渲染器
 const renderer = new THREE.WebGLRenderer();
