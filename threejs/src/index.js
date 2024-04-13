@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2023-03-13 05:58:33
  * :last editor: 张德志
- * :date last edited: 2024-04-13 17:35:24
+ * :date last edited: 2024-04-13 20:01:05
  */
 
 import * as THREE from 'three';
@@ -25,8 +25,24 @@ scene.add(camera);
 
 const dracoLoader = new DRACOLoader();
 const gltfLoader = new GLTFLoader();
+
+const cubeTextureLoader = new THREE.CubeTextureLoader().setPath('/environ/');
+const envMapTexture = cubeTextureLoader.load([
+  'px.jpg',
+  'nx.jpg',
+  'py.jpg',
+  'ny.jpg',
+  'pz.jpg',
+  'nz.jpg',
+]);
+
 dracoLoader.setDecoderPath('/draco/');
 gltfLoader.load('/轿车.glb', (gltf) => {
+  gltf.scene.traverse(function(object) {
+    if(object.type === 'Mesh') {
+      object.material.envMap = envMapTexture;
+    }
+  })
   scene.add(gltf.scene);
 });
 
@@ -42,8 +58,8 @@ window.addEventListener('resize', () => {
 });
 
 // 初始化渲染器
-const renderer = new THREE.WebGL1Renderer();
-
+const renderer = new THREE.WebGLRenderer();
+renderer.output;
 // 设置渲染器大小
 renderer.setSize(window.innerWidth, window.innerHeight);
 
@@ -52,8 +68,6 @@ document.body.append(renderer.domElement);
 const controls = new OrbitControls(camera, renderer.domElement);
 
 function render() {
-  console.log(camera.position);
-
   requestAnimationFrame(render);
   renderer.render(scene, camera);
 }
