@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-04-12 07:02:27
  * :last editor: 张德志
- * :date last edited: 2024-04-13 11:41:59
+ * :date last edited: 2024-04-13 14:35:16
  */
 
 import * as THREE from 'three';
@@ -38,7 +38,9 @@ gltfLoader.setDRACOLoader(dracoLoader);
 
 const model = new THREE.Group();
 
-gltfLoader.load('/手机.gltf', (gltf) => {
+gltfLoader.load('/phone.glb', (gltf) => {
+
+
   const mesh = gltf.scene.getObjectByName('手机');
   phoneMesh = mesh;
 
@@ -53,6 +55,24 @@ gltfLoader.load('/手机.gltf', (gltf) => {
 
     transparent: true,
   });
+
+  const mesh2 = gltf.scene.getObjectByName('后置摄像头位置');
+
+  const spriteMaterial = new THREE.SpriteMaterial({
+    map:textureLoader.load('/光点.png'),
+    transparent:true
+  });
+  const sprite = new THREE.Sprite(spriteMaterial);
+  sprite.scale.set(6,6,1);
+
+  const position = new THREE.Vector3();
+  mesh2.getWorldPosition(position);
+  sprite.position.copy(position);
+  sprite.position.x -= 6;
+  sprite.position.z -= 3;
+
+  scene.add(sprite);
+
 
   scene.add(gltf.scene);
 });
@@ -113,6 +133,9 @@ const controls = new OrbitControls(camera, renderer.domElement);
 // controls.minDistance = 200;
 // controls.maxDistance = 2000;
 
+
+
+
 window.addEventListener('resize', () => {
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
@@ -150,7 +173,13 @@ map4.addEventListener('click', () => {
   phoneMesh.material.map = mapTexture4;
 });
 
+const clock = new THREE.Clock();
+
 function render() {
+
+  const t = clock.getDelta();
+  
+
   if (rotate.bool) {
     model.rotateY(0.01);
   }
