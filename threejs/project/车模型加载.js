@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-04-13 20:50:00
  * :last editor: 张德志
- * :date last edited: 2024-04-13 20:50:02
+ * :date last edited: 2024-04-13 21:35:04
  */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -106,7 +106,7 @@ window.addEventListener('resize', () => {
 
 // 初始化渲染器
 const renderer = new THREE.WebGLRenderer();
-// renderer.setClearColor(0xffffff);
+renderer.setClearColor(0xcccccc,1);
 // 设置渲染器大小
 renderer.setSize(window.innerWidth, window.innerHeight);
 

@@ -1,13 +1,12 @@
 /*
- * :file description:
+ * :file description: 
  * :name: /threejs/src/index.js
  * :author: 张德志
  * :copyright: (c) 2024, Tungee
- * :date created: 2023-03-13 05:58:33
+ * :date created: 2024-04-13 20:50:00
  * :last editor: 张德志
- * :date last edited: 2024-04-13 20:42:53
+ * :date last edited: 2024-04-13 21:36:41
  */
-
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
@@ -15,13 +14,15 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 
 //创建场影
 const scene = new THREE.Scene();
+scene.fog = new THREE.Fog(0xcccccc,500,1200);
 
 //创建相机
 const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 1000);
 
 // 设置相机位置
 camera.position.set(-437, 443, 278);
-scene.add(camera);
+camera.lookAt(scene.position);
+
 
 const dracoLoader = new DRACOLoader();
 const gltfLoader = new GLTFLoader();
@@ -107,7 +108,7 @@ window.addEventListener('resize', () => {
 
 // 初始化渲染器
 const renderer = new THREE.WebGLRenderer();
-// renderer.setClearColor(0xffffff);
+renderer.setClearColor(0xcccccc,1);
 // 设置渲染器大小
 renderer.setSize(window.innerWidth, window.innerHeight);
 
