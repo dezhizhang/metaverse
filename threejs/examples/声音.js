@@ -1,11 +1,20 @@
 /*
+ * :file description: 
+ * :name: /threejs/examples/声音.js
+ * :author: 张德志
+ * :copyright: (c) 2024, Tungee
+ * :date created: 2024-04-13 23:07:25
+ * :last editor: 张德志
+ * :date last edited: 2024-04-13 23:07:26
+ */
+/*
  * :file description:
  * :name: /threejs/src/index.js
  * :author: 张德志
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-04-13 20:50:00
  * :last editor: 张德志
- * :date last edited: 2024-04-13 23:11:43
+ * :date last edited: 2024-04-13 23:06:07
  */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -148,14 +157,14 @@ window.addEventListener('resize', () => {
   renderer.setPixelRatio(window.devicePixelRatio);
 });
 
-
+// 添加场音
 const listener = new THREE.AudioListener();
 const openSound = new THREE.Audio(listener);
 
 const audioLoader = new THREE.AudioLoader();
 audioLoader.load('/碰撞声.wav',function(buffer) {
   openSound.setBuffer(buffer);
-})
+});
 
 
 window.addEventListener('click',(event) => {
