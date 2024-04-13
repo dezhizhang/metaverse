@@ -1,12 +1,13 @@
 /*
- * :file description: 
+ * :file description:
  * :name: /threejs/project/手机展示加载.js
  * :author: 张德志
  * :copyright: (c) 2024, Tungee
- * :date created: 2024-04-13 11:45:49
+ * :date created: 2024-04-12 07:02:27
  * :last editor: 张德志
- * :date last edited: 2024-04-13 11:45:49
+ * :date last edited: 2024-04-13 15:13:17
  */
+
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
@@ -37,7 +38,9 @@ gltfLoader.setDRACOLoader(dracoLoader);
 
 const model = new THREE.Group();
 
-gltfLoader.load('/手机.gltf', (gltf) => {
+gltfLoader.load('/phone.glb', (gltf) => {
+
+
   const mesh = gltf.scene.getObjectByName('手机');
   phoneMesh = mesh;
 
@@ -52,6 +55,42 @@ gltfLoader.load('/手机.gltf', (gltf) => {
 
     transparent: true,
   });
+  mesh.renderOrder = 0;
+
+  const mesh2 = gltf.scene.getObjectByName('后置摄像头位置');
+
+  const spriteMaterial = new THREE.SpriteMaterial({
+    map:textureLoader.load('/光点.png'),
+    transparent:true
+  });
+  const sprite = new THREE.Sprite(spriteMaterial);
+  sprite.scale.set(6,6,1);
+
+  const position = new THREE.Vector3();
+  mesh2.getWorldPosition(position);
+  sprite.position.copy(position);
+  sprite.position.x -= 6;
+  sprite.position.z -= 3;
+  sprite.renderOrder = 1;
+  scene.add(sprite);
+
+  let s = 0.0;
+  function waveAnimation() {
+    s += 0.01;
+    if(s < 0.5) {
+      sprite.scale.x = 6 * (1 + s);
+      sprite.scale.y = 6 * (1 + s);
+    }else if(s >=0.5 && s < 1.0) {
+      sprite.scale.x = 6 * (2 -s);
+      sprite.scale.y = 6 * (2 -s);
+    }else {
+      s = 0.0;
+    }
+    requestAnimationFrame(waveAnimation);
+  }
+
+  waveAnimation();
+
 
   scene.add(gltf.scene);
 });
@@ -112,6 +151,9 @@ const controls = new OrbitControls(camera, renderer.domElement);
 // controls.minDistance = 200;
 // controls.maxDistance = 2000;
 
+
+
+
 window.addEventListener('resize', () => {
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
@@ -149,7 +191,13 @@ map4.addEventListener('click', () => {
   phoneMesh.material.map = mapTexture4;
 });
 
+const clock = new THREE.Clock();
+
 function render() {
+
+  const t = clock.getDelta();
+  
+
   if (rotate.bool) {
     model.rotateY(0.01);
   }

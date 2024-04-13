@@ -1,11 +1,11 @@
 /*
- * :file description:
- * :name: /threejs/src/index.js
+ * :file description: 
+ * :name: /threejs/examples/立方体标注.js
  * :author: 张德志
  * :copyright: (c) 2024, Tungee
- * :date created: 2023-03-13 05:58:33
+ * :date created: 2024-04-13 15:26:56
  * :last editor: 张德志
- * :date last edited: 2024-04-13 15:25:26
+ * :date last edited: 2024-04-13 15:27:02
  */
 
 import * as THREE from 'three';
@@ -44,9 +44,6 @@ label.position.x += 5;
 scene.add(label);
 
 
-
-
-
 const labelRenderer = new CSS2DRenderer();
 labelRenderer.setSize(window.innerWidth,window.innerHeight);
 labelRenderer.domElement.style.position = 'absolute';
@@ -57,10 +54,6 @@ document.body.appendChild(labelRenderer.domElement);
 
 const axesHelper = new THREE.AxesHelper(100);
 scene.add(axesHelper);
-
-
-
-
 
 
 // 初始化渲染器
