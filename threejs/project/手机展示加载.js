@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-04-12 07:02:27
  * :last editor: 张德志
- * :date last edited: 2024-04-13 16:04:36
+ * :date last edited: 2024-04-13 16:39:08
  */
 
 import * as THREE from 'three';
@@ -20,6 +20,7 @@ let rotate = {
 };
 
 let phoneMesh = null;
+let sprite = null;
 
 //创建场影
 const scene = new THREE.Scene();
@@ -38,6 +39,10 @@ dracoLoader.setDecoderPath('/draco/');
 gltfLoader.setDRACOLoader(dracoLoader);
 
 const model = new THREE.Group();
+
+  // 渲染标签
+  const div = document.getElementById('camera');
+  // div.style.visibility = 'visible';
 
 gltfLoader.load('/phone.glb', (gltf) => {
 
@@ -64,7 +69,7 @@ gltfLoader.load('/phone.glb', (gltf) => {
     map:textureLoader.load('/光点.png'),
     transparent:true
   });
-  const sprite = new THREE.Sprite(spriteMaterial);
+  sprite = new THREE.Sprite(spriteMaterial);
   sprite.scale.set(6,6,1);
 
   const position = new THREE.Vector3();
@@ -92,9 +97,7 @@ gltfLoader.load('/phone.glb', (gltf) => {
 
   waveAnimation();
 
-  // 渲染标签
-  const div = document.getElementById('camera');
-  div.style.visibility = 'visible';
+
   const label = new CSS2DObject(div);
   label.position.copy(sprite.position);
   scene.add(label);
@@ -161,17 +164,30 @@ const controls = new OrbitControls(camera, renderer.domElement);
 
 
 
-// 渲染标签
-const labelRenderer =  new CSS2DRenderer();
+const labelRenderer = new CSS2DRenderer();
 labelRenderer.setSize(window.innerWidth,window.innerHeight);
 labelRenderer.domElement.style.position = 'absolute';
 labelRenderer.domElement.style.top = '0px';
-labelRenderer.domElement.style.left = '252px';
+labelRenderer.domElement.style.left = '255px';
 labelRenderer.domElement.style.pointerEvents = 'none';
 
 document.body.appendChild(labelRenderer.domElement);
 
+window.addEventListener('click',(event) => {
+  const sx = event.clientX;
+  const sy = event.clientY;
 
+  const x = (sx / window.innerWidth) * 2 - 1;
+  const y = -(sy / window.innerHeight) * 2 + 1;
+
+  const raycaster = new THREE.Raycaster();
+  raycaster.setFromCamera(new THREE.Vector2(x,y),camera);
+  const intersects = raycaster.intersectObjects([sprite]);
+  if(intersects.length > 0) {
+    div.style.visibility = 'visible';
+    //window.location.href = 'https://www.xiaozhi.shop'
+  }
+});
 
 
 
