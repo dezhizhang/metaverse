@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2023-03-13 05:58:33
  * :last editor: 张德志
- * :date last edited: 2024-04-15 06:14:27
+ * :date last edited: 2024-04-15 06:22:48
  */
 
 import * as THREE from 'three';
@@ -72,13 +72,26 @@ window.addEventListener('keyup', (event) => {
   keyStates[key] = !keyStates[key];
 });
 
+window.addEventListener('resize',() => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth,window.innerHeight);
+  renderer.setPixelRatio(window.devicePixelRatio);
+  
+})
+
 const clock = new THREE.Clock();
 const v = new THREE.Vector3(0,0,3);
+const a = 12;
 
 function render() {
 
   const deltaTime = clock.getDelta();
   if(keyStates.W) {
+
+    const front = new THREE.Vector3(0,0,1);
+    v.add( front.multiplyScalar(a * deltaTime));
+
     const deltaPosition = v.clone().multiplyScalar(deltaTime);
     player.position.add(deltaPosition);
   }
