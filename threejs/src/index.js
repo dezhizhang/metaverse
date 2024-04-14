@@ -5,113 +5,86 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2023-03-13 05:58:33
  * :last editor: 张德志
- * :date last edited: 2024-04-14 15:44:09
+ * :date last edited: 2024-04-15 06:14:27
  */
 
-const canvas = document.createElement('canvas');
-canvas.width = 500;
-canvas.height = 500;
-// canvas.background = 'rgba(0,0,0,1)';
+import * as THREE from 'three';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 
-document.body.appendChild(canvas);
+const scene = new THREE.Scene();
 
-async function render() {
-  const adapter = await navigator.gpu.requestAdapter();
+const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 10000);
+camera.position.set(10, 10, 10);
+camera.lookAt(scene.position);
 
-  const device = await adapter.requestDevice();
-  const format = navigator.gpu.getPreferredCanvasFormat();
+const renderer = new THREE.WebGLRenderer();
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setPixelRatio(window.devicePixelRatio);
+document.body.appendChild(renderer.domElement);
 
-  const ctx = canvas.getContext('webgpu');
-  ctx.configure({
-    device,
-    format,
-  });
 
-  // 创建顶点缓冲区数据
-  const vertexArray = new Float32Array([
-    0.0, 0.0, 0.0,
-    1.0, 0.0, 0.0, 
-    0.0, 1.0, 0.0
-  ]);
+const ambientLight = new THREE.AmbientLight(0xffffff,1);
+scene.add(ambientLight);
 
-  const vertexBuffer = device.createBuffer({
-    size: vertexArray.byteLength,
-    usage: GPUBufferUsage.VERTEX | GPUBufferUsage.COPY_DST,
-  });
 
-  const vertex = /*wgsl*/ `
-   @vertex
-   fn main(@location(0) pos:vec3<f32>) ->@builtin(position) vec4<f32> {
-      var pos2 = vec4<f32>(pos,1.0);
-      pos2.x -= 0.2;
-      return pos2;
-   }
-  `;
+let player = null;
 
-  const fragment = /*wgsl*/ `
-  @fragment
-  fn main() ->@location(0) vec4<f32> {
-    return vec4<f32>(1.0,0.0,0.0,1.0);
+const dracoLoader = new DRACOLoader();
+const gltfLoader = new GLTFLoader();
+dracoLoader.setDecoderPath('/draco/');
+gltfLoader.setDRACOLoader(dracoLoader);
+
+gltfLoader.load('/person.glb',(gltf) => {
+  player = gltf.scene;
+  scene.add(gltf.scene);
+});
+
+
+
+
+
+const controls = new OrbitControls(camera,renderer.domElement);
+
+
+const axesHelper = new THREE.AxesHelper(100);
+scene.add(axesHelper);
+
+
+
+// 键盘事件
+const keyStates = {
+  W: false,
+  A: false,
+  S: false,
+  D: false,
+};
+
+window.addEventListener('keydown', (event) => {
+  const key = event.key.toUpperCase();
+  console.log('ke', key);
+  keyStates[key] = !keyStates[key];
+});
+
+window.addEventListener('keyup', (event) => {
+  const key = event.key.toUpperCase();
+  keyStates[key] = !keyStates[key];
+});
+
+const clock = new THREE.Clock();
+const v = new THREE.Vector3(0,0,3);
+
+function render() {
+
+  const deltaTime = clock.getDelta();
+  if(keyStates.W) {
+    const deltaPosition = v.clone().multiplyScalar(deltaTime);
+    player.position.add(deltaPosition);
   }
-  `;
 
-  //
-  device.queue.writeBuffer(vertexBuffer, 0, vertexArray);
-
-  const pipeline = device.createRenderPipeline({
-    layout: 'auto',
-    vertex: {
-      module: device.createShaderModule({ code: vertex }),
-      entryPoint: 'main',
-      buffers: [
-        {
-          arrayStride: 3 * 4,
-          attributes: [
-            {
-              shaderLocation: 0,
-              format: 'float32x3',
-              offset: 0,
-            },
-          ],
-        },
-      ],
-    },
-    fragment: {
-      module: device.createShaderModule({ code: fragment }),
-      entryPoint: 'main',
-      targets: [
-        {
-          format,
-        },
-      ],
-    },
-    primitive: {
-      topology: 'triangle-list',
-    },
-  });
-
-  const commandEncoder = device.createCommandEncoder();
-  const renderPass = commandEncoder.beginRenderPass({
-    colorAttachments: [
-      {
-        view: ctx.getCurrentTexture().createView(),
-        storeOp: 'store',
-        loadOp: 'clear',
-        clearValue: { r: 0.5, g: 0.5, b: 0.5, a: 1.0 },
-      },
-    ],
-  });
-
-  renderPass.setPipeline(pipeline);
-  renderPass.setVertexBuffer(0,vertexBuffer);
-
-  renderPass.draw(3);
-  renderPass.end();
-
-  const commandBuffer = commandEncoder.finish();
-
-  device.queue.submit([commandBuffer])
-  
+  requestAnimationFrame(render);
+  renderer.render(scene, camera);
 }
 
 render();
