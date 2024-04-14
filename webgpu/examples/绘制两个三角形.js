@@ -1,11 +1,11 @@
 /*
- * :file description:
- * :name: /webgpu/src/main.ts
+ * :file description: 
+ * :name: /webgpu/examples/绘制两个三角形.js
  * :author: 张德志
  * :copyright: (c) 2024, Tungee
- * :date created: 2024-04-14 15:44:37
+ * :date created: 2024-04-14 16:52:31
  * :last editor: 张德志
- * :date last edited: 2024-04-14 16:51:22
+ * :date last edited: 2024-04-14 16:53:02
  */
 
 const canvas = document.createElement('canvas');
@@ -15,7 +15,7 @@ canvas.height = 500;
 document.body.appendChild(canvas);
 
 async function render() {
-  const adapter: any = await navigator.gpu.requestAdapter();
+  const adapter = await navigator.gpu.requestAdapter();
   const device = await adapter.requestDevice();
   const format = await navigator.gpu.getPreferredCanvasFormat();
 
