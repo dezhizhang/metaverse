@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2023-03-13 05:58:33
  * :last editor: 张德志
- * :date last edited: 2024-04-14 14:43:01
+ * :date last edited: 2024-04-14 15:09:49
  */
 
 const canvas = document.createElement('canvas');
@@ -44,12 +44,21 @@ async function render() {
    }
   `;
 
+  const fragment = /*wgsl*/ `
+  @fragment
+  fn main() ->@location(0) vec4<f32> {
+    return vec4<f32>(1.0,0.0,0.0,1.0);
+  }
+  `;
+
   //
   device.queue.writeBuffer(vertexBuffer, 0, vertexArray);
 
   const pipeline = device.createRenderPipeline({
     layout: 'auto',
     vertex: {
+      module: device.createShaderModule({ code: vertex }),
+      entryPoint: 'main',
       buffers: [
         {
           arrayStride: 3 * 4,
@@ -63,9 +72,21 @@ async function render() {
         },
       ],
     },
+    fragment:{
+      module: device.createShaderModule({ code: fragment }),
+      entryPoint: 'main',
+      targets:[
+        {
+          format,
+        }
+      ]
+    },
+    primitive: {
+      topology: 'triangle-list',
+    },
   });
 
-  console.log('vertexBuffer', vertexBuffer);
+  console.log('pipeline', pipeline);
 }
 
 render();
