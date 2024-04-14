@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2023-03-13 05:58:33
  * :last editor: 张德志
- * :date last edited: 2024-04-15 06:40:43
+ * :date last edited: 2024-04-15 07:04:51
  */
 
 import * as THREE from 'three';
@@ -16,8 +16,8 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 const scene = new THREE.Scene();
 
 const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 10000);
-camera.position.set(10, 10, 10);
-camera.lookAt(scene.position);
+camera.position.set(0, 1.6, -5.6);
+camera.lookAt(0,1.6,0);
 
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
@@ -28,6 +28,7 @@ const ambientLight = new THREE.AmbientLight(0xffffff, 1);
 scene.add(ambientLight);
 
 let player = null;
+let mixer = null;
 
 const dracoLoader = new DRACOLoader();
 const gltfLoader = new GLTFLoader();
@@ -37,9 +38,15 @@ gltfLoader.setDRACOLoader(dracoLoader);
 gltfLoader.load('/person.glb', (gltf) => {
   player = gltf.scene;
   scene.add(gltf.scene);
+  mixer = new THREE.AnimationMixer(gltf.scene);
+  console.log(gltf);
+
+  const clipAction = mixer.clipAction(gltf.animations[10]);
+  clipAction.play();
+
 });
 
-const controls = new OrbitControls(camera, renderer.domElement);
+// const controls = new OrbitControls(camera, renderer.domElement);
 
 const axesHelper = new THREE.AxesHelper(100);
 scene.add(axesHelper);
@@ -98,8 +105,11 @@ function render() {
   // v = v + v * damping;
   v.addScaledVector(v, damping);
   const deltaPosition = v.clone().multiplyScalar(deltaTime);
-  if(player) {
+  if(player && mixer) {
     player.position.add(deltaPosition);
+    mixer.update(deltaTime);
+    player.add(camera);
+    
   }
 
   requestAnimationFrame(render);
