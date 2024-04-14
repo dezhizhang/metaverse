@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2023-03-13 05:58:33
  * :last editor: 张德志
- * :date last edited: 2024-04-15 06:22:48
+ * :date last edited: 2024-04-15 06:40:43
  */
 
 import * as THREE from 'three';
@@ -24,10 +24,8 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setPixelRatio(window.devicePixelRatio);
 document.body.appendChild(renderer.domElement);
 
-
-const ambientLight = new THREE.AmbientLight(0xffffff,1);
+const ambientLight = new THREE.AmbientLight(0xffffff, 1);
 scene.add(ambientLight);
-
 
 let player = null;
 
@@ -36,22 +34,15 @@ const gltfLoader = new GLTFLoader();
 dracoLoader.setDecoderPath('/draco/');
 gltfLoader.setDRACOLoader(dracoLoader);
 
-gltfLoader.load('/person.glb',(gltf) => {
+gltfLoader.load('/person.glb', (gltf) => {
   player = gltf.scene;
   scene.add(gltf.scene);
 });
 
-
-
-
-
-const controls = new OrbitControls(camera,renderer.domElement);
-
+const controls = new OrbitControls(camera, renderer.domElement);
 
 const axesHelper = new THREE.AxesHelper(100);
 scene.add(axesHelper);
-
-
 
 // 键盘事件
 const keyStates = {
@@ -64,35 +55,50 @@ const keyStates = {
 window.addEventListener('keydown', (event) => {
   const key = event.key.toUpperCase();
   console.log('ke', key);
-  keyStates[key] = !keyStates[key];
+  keyStates[key] = true
 });
 
 window.addEventListener('keyup', (event) => {
   const key = event.key.toUpperCase();
-  keyStates[key] = !keyStates[key];
+  keyStates[key] = false
 });
 
-window.addEventListener('resize',() => {
+window.addEventListener('resize', () => {
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
-  renderer.setSize(window.innerWidth,window.innerHeight);
+  renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setPixelRatio(window.devicePixelRatio);
-  
-})
+});
 
 const clock = new THREE.Clock();
-const v = new THREE.Vector3(0,0,3);
+const v = new THREE.Vector3(0, 0, 0);
 const a = 12;
+const damping = -0.04;
 
 function render() {
-
   const deltaTime = clock.getDelta();
-  if(keyStates.W) {
+  // 向前运动
+  if (keyStates.W) {
+    const front = new THREE.Vector3(0, 0, 1);
+    v.add(front.multiplyScalar(a * deltaTime));
 
-    const front = new THREE.Vector3(0,0,1);
-    v.add( front.multiplyScalar(a * deltaTime));
+    if (v.length() < 5) {
+      v.add(front.multiplyScalar(a * deltaTime));
+    }
+    // 向后运动
+  }else if(keyStates.S) {
+    const front = new THREE.Vector3(0, 0, -1);
+    v.add(front.multiplyScalar(a * deltaTime));
 
-    const deltaPosition = v.clone().multiplyScalar(deltaTime);
+    if (v.length() < 5) {
+      v.add(front.multiplyScalar(a * deltaTime));
+    }
+  }
+
+  // v = v + v * damping;
+  v.addScaledVector(v, damping);
+  const deltaPosition = v.clone().multiplyScalar(deltaTime);
+  if(player) {
     player.position.add(deltaPosition);
   }
 
