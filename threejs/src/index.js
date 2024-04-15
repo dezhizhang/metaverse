@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2023-03-13 05:58:33
  * :last editor: 张德志
- * :date last edited: 2024-04-16 05:26:48
+ * :date last edited: 2024-04-16 05:33:03
  */
 
 import * as THREE from 'three';
@@ -68,6 +68,25 @@ window.addEventListener('keyup', (event) => {
   const key = event.key.toUpperCase();
   keyStates[key] = false;
 });
+
+
+let leftButtonBool = false;
+window.addEventListener('mousedown',(event) => {
+  leftButtonBool = true;
+});
+
+window.addEventListener('mouseup',() => {
+  leftButtonBool = false
+});
+
+
+window.addEventListener('mousemove',(event) => {
+  if(leftButtonBool) {
+    player.rotation.y -= event.movementY / window.innerWidth;
+    player.rotation.x -= event.movementY / window.innerWidth;
+    
+  }
+})
 
 window.addEventListener('resize', () => {
   camera.aspect = window.innerWidth / window.innerHeight;
