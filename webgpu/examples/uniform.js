@@ -1,12 +1,13 @@
 /*
- * :file description:
- * :name: /webgpu/src/main.ts
+ * :file description: 
+ * :name: /webgpu/examples/uniform.js
  * :author: 张德志
  * :copyright: (c) 2024, Tungee
- * :date created: 2024-04-14 15:44:37
+ * :date created: 2024-04-16 07:54:52
  * :last editor: 张德志
- * :date last edited: 2024-04-16 07:51:30
+ * :date last edited: 2024-04-16 07:54:58
  */
+
 
 const canvas = document.createElement('canvas');
 canvas.width = 500;
