@@ -1,12 +1,13 @@
 /*
  * :file description: 
- * :name: /threejs/src/index.js
+ * :name: /threejs/examples/棱锥效果.js
  * :author: 张德志
  * :copyright: (c) 2024, Tungee
- * :date created: 2024-04-07 14:25:08
+ * :date created: 2024-04-17 06:42:13
  * :last editor: 张德志
- * :date last edited: 2024-04-17 06:40:55
+ * :date last edited: 2024-04-17 06:42:15
  */
+
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
