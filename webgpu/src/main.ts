@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-04-14 15:44:37
  * :last editor: 张德志
- * :date last edited: 2024-04-16 07:51:30
+ * :date last edited: 2024-04-16 08:03:55
  */
 
 const canvas = document.createElement('canvas');
@@ -43,10 +43,9 @@ async function render() {
   });
 
   const vertex = /*wgsl*/ `
-  @group(0) @binding(0) var <uniform>s :mat4x4<f32>;
+  @group(0) @binding(0) var <uniform> s:mat4x4<f32>;
   @vertex
   fn main(@location(0) position:vec3<f32>) ->@builtin(position) vec4<f32> {
-
     return vec4(position,1.0) * s;
   }
   `;
@@ -115,7 +114,7 @@ async function render() {
   });
   renderPass.setPipeline(pipeline);
   renderPass.setVertexBuffer(0, vertexBuffer);
-  renderPass.setBindGroup(0,bindGroup);
+  renderPass.setBindGroup(0, bindGroup);
 
   renderPass.draw(3);
   renderPass.end();
