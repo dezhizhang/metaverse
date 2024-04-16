@@ -1,12 +1,13 @@
 /*
  * :file description: 
- * :name: /threejs/src/index.js
+ * :name: /threejs/examples/CylinderGeometry1.js
  * :author: 张德志
  * :copyright: (c) 2024, Tungee
- * :date created: 2024-04-07 14:25:08
+ * :date created: 2024-04-17 06:57:28
  * :last editor: 张德志
- * :date last edited: 2024-04-17 06:57:41
+ * :date last edited: 2024-04-17 06:57:29
  */
+
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
