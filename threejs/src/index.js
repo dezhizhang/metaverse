@@ -5,10 +5,11 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-04-07 14:25:08
  * :last editor: 张德志
- * :date last edited: 2024-04-17 08:49:44
+ * :date last edited: 2024-04-18 05:32:01
  */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer';
 
 //创建场影
 const scene = new THREE.Scene();
@@ -20,37 +21,20 @@ camera.position.set(200, 200, 200);
 const ambientLight = new THREE.AmbientLight(0xffffff, 1.0);
 scene.add(ambientLight);
 
-const geometry = new THREE.PlaneGeometry(100,100);
-geometry.translate(-100 / 2,0,0);
-const material = new THREE.MeshLambertMaterial({
-  map:new THREE.TextureLoader().load('/信号波.png'),
-  color:0x00ffff,
-  transparent:true,
-  side:THREE.DoubleSide
+
+const geometry = new THREE.SphereGeometry(60,30,30);
+const material = new THREE.MeshBasicMaterial({
+  map:new THREE.TextureLoader().load('/earth.png')
 });
 
-const plane = new THREE.Mesh(geometry,material);
-scene.add(plane);
-
-let S = 300;
-let s = 1.0;
+const mesh = new THREE.Mesh(geometry,material);
+scene.add(mesh);
 
 
-function animation() {
-  s += 5;
-  plane.scale.set(s,s,s);
-  if(s < S *0.2) {
-    plane.material.opacity = (s - 1) / (s * 0.2 -1);
-  }else if(s > S * 0.2 && s <=S) {
-    plane.material.opacity = 1 - (s - S * 0.2) / (S - S * 0.2);
-  }else {
-    s = 1.0;
-  }
 
-  requestAnimationFrame(animation);
-}
 
-animation();
+
+
 
 
 
@@ -60,7 +44,7 @@ const gridHelper = new THREE.GridHelper(500, 15, 0x003333, 0x003333);
 scene.add(gridHelper);
 
 // 初始化渲染器
-const renderer = new THREE.WebGL1Renderer();
+const renderer = new THREE.WebGLRenderer();
 
 // 设置渲染器大小
 renderer.setSize(window.innerWidth, window.innerHeight);
@@ -73,9 +57,12 @@ const axesHelper = new THREE.AxesHelper(100);
 scene.add(axesHelper);
 
 function render() {
-  // mesh.rotateZ(0.02);
-  requestAnimationFrame(render);
+  //renderer.clearColor(0xff0000,1);
   renderer.render(scene, camera);
+
+
+  requestAnimationFrame(render);
+  
 }
 
 render();
