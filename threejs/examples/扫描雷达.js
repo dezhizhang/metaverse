@@ -1,11 +1,11 @@
 /*
- * :file description:
- * :name: /threejs/src/index.js
+ * :file description: 
+ * :name: /threejs/examples/扫描雷达.js
  * :author: 张德志
  * :copyright: (c) 2024, Tungee
- * :date created: 2024-04-07 14:25:08
+ * :date created: 2024-04-17 08:27:44
  * :last editor: 张德志
- * :date last edited: 2024-04-17 08:35:54
+ * :date last edited: 2024-04-17 08:27:53
  */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -20,17 +20,17 @@ camera.position.set(200, 200, 200);
 const ambientLight = new THREE.AmbientLight(0xffffff, 1.0);
 scene.add(ambientLight);
 
-const geometry = new THREE.PlaneGeometry(100,100);
+const geometry = new THREE.PlaneGeometry(100, 100);
 const material = new THREE.MeshLambertMaterial({
-  color:0x00ffff,
-  side:THREE.DoubleSide,
-  transparent:true,
-  map:new THREE.TextureLoader().load('/扫描雷达.png'),
-  depthTest:false
+  color: 0x00ffff,
+  side: THREE.DoubleSide,
+  transparent: true,
+  map: new THREE.TextureLoader().load('/扫描雷达.png'),
+  depthTest: false,
 });
-
-const mesh = new THREE.Mesh(geometry,material);
+const mesh = new THREE.Mesh(geometry, material);
 scene.add(mesh);
+
 
 const material2 = new THREE.MeshLambertMaterial({
   color:0x00cccc,
@@ -44,8 +44,6 @@ const mesh2 = new THREE.Mesh(geometry,material2);
 mesh2.rotateX(-Math.PI / 2);
 mesh2.add(mesh);
 scene.add(mesh2);
-
-
 
 
 const gridHelper = new THREE.GridHelper(500, 15, 0x003333, 0x003333);
