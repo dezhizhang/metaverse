@@ -87,3 +87,33 @@ viewer.camera.setView({
 });
 
 ```
+### flyTo 相机飞向某个地方
+```ts
+viewer.camera.flyTo({
+  // 指定相机位置
+  destination: position,
+  orientation: {
+    heading: Cesium.Math.toRadians(90),
+    pitch: Cesium.Math.toRadians(-90),
+    roll: 0,
+  },
+});
+```
+
+### 交互相机
+```ts
+document.addEventListener('keydown', (ev) => {
+  const height = viewer.camera.positionCartographic.height;
+  const moveRate = height / 100;
+  console.log('ev',ev)
+  if (ev.key === 'w') {
+    viewer.camera.moveForward(moveRate);
+  } else if (ev.key == 's') {
+    viewer.camera.moveBackward(moveRate);
+  } else if (ev.key == 'a') {
+    viewer.camera.moveLeft(moveRate);
+  } else if (ev.key == 'd') {
+    viewer.camera.moveRight(moveRate);
+  }
+});
+```

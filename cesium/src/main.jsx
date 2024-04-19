@@ -5,7 +5,7 @@
  * :copyright: (c) 2022, Tungee
  * :date created: 2022-08-27 16:29:41
  * :last editor: 张德志
- * :date last edited: 2024-04-20 07:07:46
+ * :date last edited: 2024-04-20 07:25:07
  */
 import * as Cesium from 'cesium';
 
@@ -46,7 +46,6 @@ const viewer = new Cesium.Viewer('root', {
     },
   }),
 
-
   // imageryProvider: new Cesium.WebMapTileServiceImageryProvider({
   //   url: "https://webrd01.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=8&x={x}&y={y}&z={z}",
   //     layer: "tdtBasicLayer",
@@ -62,14 +61,29 @@ const viewer = new Cesium.Viewer('root', {
 
 const position = Cesium.Cartesian3.fromDegrees(116.38, 39.9, 100);
 
-viewer.camera.setView({
+viewer.camera.flyTo({
   // 指定相机位置
   destination: position,
   orientation: {
-    heading: Cesium.Math.toRadians(90),
-    pitch: Cesium.Math.toRadians(-90),
+    heading: Cesium.Math.toRadians(0),
+    pitch: Cesium.Math.toRadians(-20),
     roll: 0,
   },
+});
+
+document.addEventListener('keydown', (ev) => {
+  const height = viewer.camera.positionCartographic.height;
+  const moveRate = height / 100;
+  console.log('ev',ev)
+  if (ev.key === 'w') {
+    viewer.camera.moveForward(moveRate);
+  } else if (ev.key == 's') {
+    viewer.camera.moveBackward(moveRate);
+  } else if (ev.key == 'a') {
+    viewer.camera.moveLeft(moveRate);
+  } else if (ev.key == 'd') {
+    viewer.camera.moveRight(moveRate);
+  }
 });
 
 Cesium.Camera.DEFAULT_VIEW_RECTANGLE = Cesium.Rectangle.fromDegrees(89.5, 20.4, 110.4, 61.2);
