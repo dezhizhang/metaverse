@@ -1,11 +1,11 @@
 /*
- * :file description: 
+ * :file description:
  * :name: /cesium/src/main.jsx
  * :author: 张德志
  * :copyright: (c) 2022, Tungee
  * :date created: 2022-08-27 16:29:41
  * :last editor: 张德志
- * :date last edited: 2024-04-20 05:57:46
+ * :date last edited: 2024-04-20 07:07:46
  */
 import * as Cesium from 'cesium';
 
@@ -45,7 +45,33 @@ const viewer = new Cesium.Viewer('root', {
       negativeZ: '/texture/sky/nz.jpg',
     },
   }),
+
+
+  // imageryProvider: new Cesium.WebMapTileServiceImageryProvider({
+  //   url: "https://webrd01.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=8&x={x}&y={y}&z={z}",
+  //     layer: "tdtBasicLayer",
+  //     style: "default",
+  //     format: "image/jpeg",
+  //     tileMatrixSetID: "GoogleMapsCompatible",
+  // }),
+  terrainProvider: Cesium.createWorldTerrain({
+    requestVertexNormals: true,
+    requestWaterMask: true,
+  }),
+});
+
+const position = Cesium.Cartesian3.fromDegrees(116.38, 39.9, 100);
+
+viewer.camera.setView({
+  // 指定相机位置
+  destination: position,
+  orientation: {
+    heading: Cesium.Math.toRadians(90),
+    pitch: Cesium.Math.toRadians(-90),
+    roll: 0,
+  },
 });
 
 Cesium.Camera.DEFAULT_VIEW_RECTANGLE = Cesium.Rectangle.fromDegrees(89.5, 20.4, 110.4, 61.2);
 
+tungee1024Z;

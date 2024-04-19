@@ -73,3 +73,17 @@ Cesium.Camera.DEFAULT_VIEW_RECTANGLE = Cesium.Rectangle.fromDegrees(
 )
 
 ```
+
+### 相机的设置
+```ts
+viewer.camera.setView({
+  // 指定相机位置
+  destination: position,
+  orientation: {
+    heading: Cesium.Math.toRadians(90),
+    pitch: Cesium.Math.toRadians(-90),
+    roll: 0,
+  },
+});
+
+```
