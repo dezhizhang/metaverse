@@ -5,7 +5,7 @@
  * :copyright: (c) 2022, Tungee
  * :date created: 2022-08-27 16:29:41
  * :last editor: 张德志
- * :date last edited: 2024-04-20 22:34:00
+ * :date last edited: 2024-04-20 22:51:06
  */
 import * as Cesium from 'cesium';
 
@@ -74,15 +74,15 @@ const osmBuildings = viewer.scene.primitives.add(new Cesium.createOsmBuildings()
 
 
 const airplane = viewer.entities.add({
-  name:'Airplane',
-  position:Cesium.Cartesian3.fromDegrees(
-    113.3191, 23.109, 1500
-  ),
-  model:{
-    uri:'/public/Air.glb',
-    minimumPixelSize:128,
-  }
-}) 
+  name: 'Airplane',
+  position: Cesium.Cartesian3.fromDegrees(113.3191, 23.109, 1500),
+  model: {
+    uri: '/public/Air.glb',
+    minimumPixelSize: 128,
+    silhouetteSize: 1,
+    silhouetteColor: Cesium.Color.WHITE,
+  },
+});
 
 // const label = viewer.entities.add({
 //   position: Cesium.Cartesian3.fromDegrees(113.3191, 23.109, 700),
