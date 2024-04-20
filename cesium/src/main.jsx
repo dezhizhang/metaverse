@@ -5,7 +5,7 @@
  * :copyright: (c) 2022, Tungee
  * :date created: 2022-08-27 16:29:41
  * :last editor: 张德志
- * :date last edited: 2024-04-20 07:25:07
+ * :date last edited: 2024-04-20 21:51:03
  */
 import * as Cesium from 'cesium';
 
@@ -59,33 +59,23 @@ const viewer = new Cesium.Viewer('root', {
   }),
 });
 
-const position = Cesium.Cartesian3.fromDegrees(116.38, 39.9, 100);
+const position = Cesium.Cartesian3.fromDegrees(113.3191, 23.109, 1000);
 
 viewer.camera.flyTo({
-  // 指定相机位置
   destination: position,
   orientation: {
     heading: Cesium.Math.toRadians(0),
-    pitch: Cesium.Math.toRadians(-20),
+    pitch: Cesium.Math.toRadians(-90),
     roll: 0,
   },
 });
 
-document.addEventListener('keydown', (ev) => {
-  const height = viewer.camera.positionCartographic.height;
-  const moveRate = height / 100;
-  console.log('ev',ev)
-  if (ev.key === 'w') {
-    viewer.camera.moveForward(moveRate);
-  } else if (ev.key == 's') {
-    viewer.camera.moveBackward(moveRate);
-  } else if (ev.key == 'a') {
-    viewer.camera.moveLeft(moveRate);
-  } else if (ev.key == 'd') {
-    viewer.camera.moveRight(moveRate);
-  }
+const point = viewer.entities.add({
+  position:  Cesium.Cartesian3.fromDegrees(113.3191, 23.109, 20),
+  point: {
+    pixelSize:10,
+    color:Cesium.Color.RED,
+    outlineColor:Cesium.Color.WHEAT,
+    outlineWidth:4,
+  },
 });
-
-Cesium.Camera.DEFAULT_VIEW_RECTANGLE = Cesium.Rectangle.fromDegrees(89.5, 20.4, 110.4, 61.2);
-
-tungee1024Z;

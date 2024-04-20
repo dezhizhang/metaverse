@@ -117,3 +117,16 @@ document.addEventListener('keydown', (ev) => {
   }
 });
 ```
+### 添加点
+```ts
+const point = viewer.entities.add({
+  position:  Cesium.Cartesian3.fromDegrees(113.3191, 23.109, 20),
+  point: {
+    pixelSize:10,
+    color:Cesium.Color.RED,
+    outlineColor:Cesium.Color.WHEAT,
+    outlineWidth:4,
+  },
+});
+
+```
