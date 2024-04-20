@@ -139,18 +139,20 @@ const osmBuildings = viewer.scene.primitives.add(
 ```
 ### 添加标签
 ```ts
+
 const label = viewer.entities.add({
-  position:Cesium.Cartesian3.fromDegrees(113.3191, 23.109,700),
-  label:{
-    text:'广州塔',
-    font:'24px 微软雅黑',
-    fillColor:Cesium.Color.WHEAT,
-    outlineColor:Cesium.Color.BLACK,
-    outlineWidth:2,
-    style:Cesium.LabelStyle.FILL_AND_OUTLINE,
-    pixelOffset: new Cesium.Cartesian2(0,-24),
-    horizontalOrigin:Cesium.HorizontalOrigin.LEFT,
-  }
-})
+  position: Cesium.Cartesian3.fromDegrees(113.3191, 23.109, 700),
+  label: {
+    text: '广州塔',
+    font: '24px 微软雅黑',
+    fillColor: Cesium.Color.WHEAT,
+    outlineColor: Cesium.Color.BLACK,
+    outlineWidth: 2,
+    style: Cesium.LabelStyle.FILL_AND_OUTLINE,
+    pixelOffset: new Cesium.Cartesian2(0, -24),
+    horizontalOrigin: Cesium.HorizontalOrigin.LEFT,
+    verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
+  },
+});
 
 ```
