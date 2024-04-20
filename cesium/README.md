@@ -156,3 +156,17 @@ const label = viewer.entities.add({
 });
 
 ```
+### 添加模型
+```ts
+const airplane = viewer.entities.add({
+  name:'Airplane',
+  position:Cesium.Cartesian3.fromDegrees(
+    113.3191, 23.109, 1500
+  ),
+  model:{
+    uri:'/public/Air.glb',
+    minimumPixelSize:128,
+  }
+}) 
+
+```
