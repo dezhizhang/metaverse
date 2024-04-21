@@ -195,3 +195,16 @@ const primitive = new Cesium.Primitive({
 
 viewer.scene.primitives.add(primitive);
 ```
+### 添加鼠标点击事件
+
+```ts
+const handler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
+handler.setInputAction(function(movement) {
+  console.log(movement);
+  const pickedObject = viewer.scene.pick(movement.position);
+  if(Cesium.defined(pickedObject)) {
+    console.log(pickedObject.id);
+  }
+},Cesium.ScreenSpaceEventType.LEFT_CLICK)
+
+```

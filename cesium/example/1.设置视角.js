@@ -1,11 +1,20 @@
 /*
+ * :file description: 
+ * :name: /cesium/example/1.设置视角tsx
+ * :author: 张德志
+ * :copyright: (c) 2022, Tungee
+ * :date created: 2022-09-10 21:33:14
+ * :last editor: 张德志
+ * :date last edited: 2024-04-21 10:05:09
+ */
+/*
  * :file description:
  * :name: /cesium/src/main.jsx
  * :author: 张德志
  * :copyright: (c) 2022, Tungee
  * :date created: 2022-08-27 16:29:41
  * :last editor: 张德志
- * :date last edited: 2024-04-21 10:13:36
+ * :date last edited: 2024-04-21 10:03:39
  */
 import * as Cesium from 'cesium';
 
@@ -107,15 +116,6 @@ const primitive = new Cesium.Primitive({
 });
 
 viewer.scene.primitives.add(primitive);
-
-const handler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
-handler.setInputAction(function(movement) {
-  console.log(movement);
-  const pickedObject = viewer.scene.pick(movement.position);
-  if(Cesium.defined(pickedObject)) {
-    console.log(pickedObject.id);
-  }
-},Cesium.ScreenSpaceEventType.LEFT_CLICK)
 
 
 
