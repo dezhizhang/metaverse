@@ -5,7 +5,7 @@
  * :copyright: (c) 2022, Tungee
  * :date created: 2022-08-27 16:29:41
  * :last editor: 张德志
- * :date last edited: 2024-04-20 22:51:06
+ * :date last edited: 2024-04-21 09:53:45
  */
 import * as Cesium from 'cesium';
 
@@ -72,7 +72,6 @@ viewer.camera.flyTo({
 
 const osmBuildings = viewer.scene.primitives.add(new Cesium.createOsmBuildings());
 
-
 const airplane = viewer.entities.add({
   name: 'Airplane',
   position: Cesium.Cartesian3.fromDegrees(113.3191, 23.109, 1500),
@@ -83,6 +82,42 @@ const airplane = viewer.entities.add({
     silhouetteColor: Cesium.Color.WHITE,
   },
 });
+
+const rectGeometry = new Cesium.RectangleGeometry({
+  rectangle: Cesium.Rectangle.fromDegrees(115, 20, 135, 30),
+  height: 0,
+  extrudedHeight:10,
+  vertexFormat: Cesium.PerInstanceColorAppearance.VERTEX_FORMAT,
+});
+
+const instance = new Cesium.GeometryInstance({
+  geometry: rectGeometry,
+  attributes: {
+    color: Cesium.ColorGeometryInstanceAttribute.fromColor(Cesium.Color.RED.withAlpha(0.5)),
+  },
+});
+
+const primitive = new Cesium.Primitive({
+  geometryInstances:instance,
+  appearance:new Cesium.PerInstanceColorAppearance({
+    flat:true
+  })
+});
+
+viewer.scene.primitives.add(primitive);
+
+
+// const rectangle = viewer.entities.add({
+//   rectangle:{
+//     coordinates:Cesium.Rectangle.fromDegrees(
+//       90,
+//       20,
+//       110,
+//       30,
+//     ),
+//     material:Cesium.Color.RED.withAlpha(0.5),
+//   }
+// })
 
 // const label = viewer.entities.add({
 //   position: Cesium.Cartesian3.fromDegrees(113.3191, 23.109, 700),

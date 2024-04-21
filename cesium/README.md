@@ -170,3 +170,28 @@ const airplane = viewer.entities.add({
 }) 
 
 ```
+### 自定义几何体
+```ts
+const rectGeometry = new Cesium.RectangleGeometry({
+  rectangle: Cesium.Rectangle.fromDegrees(115, 20, 135, 30),
+  height: 0,
+  extrudedHeight:10,
+  vertexFormat: Cesium.PerInstanceColorAppearance.VERTEX_FORMAT,
+});
+
+const instance = new Cesium.GeometryInstance({
+  geometry: rectGeometry,
+  attributes: {
+    color: Cesium.ColorGeometryInstanceAttribute.fromColor(Cesium.Color.RED.withAlpha(0.5)),
+  },
+});
+
+const primitive = new Cesium.Primitive({
+  geometryInstances:instance,
+  appearance:new Cesium.PerInstanceColorAppearance({
+    flat:true
+  })
+});
+
+viewer.scene.primitives.add(primitive);
+```
