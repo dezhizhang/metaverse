@@ -1,13 +1,12 @@
 /*
- * :file description:
- * :name: /threejs/src/index.js
+ * :file description: 
+ * :name: /threejs/examples/粒子系统.js
  * :author: 张德志
  * :copyright: (c) 2024, Tungee
- * :date created: 2024-04-07 14:25:08
+ * :date created: 2024-04-22 05:49:00
  * :last editor: 张德志
- * :date last edited: 2024-04-22 05:46:44
+ * :date last edited: 2024-04-22 05:49:02
  */
-
 import dat from 'dat.gui';
 import * as THREE from 'three';
 import { BatchedParticleRenderer, ParticleSystem,IntervalValue,RandomColor,ConstantValue,RenderMode } from 'three.quarks';
