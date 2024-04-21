@@ -211,9 +211,28 @@ handler.setInputAction(function(movement) {
 
 ### 加载geojson数据
 ```ts
-const dataJson = Cesium.GeoJsonDataSource.load('https://geo.datav.aliyun.com/areas_v3/bound/100000_full.json');
-console.log(dataJson);
+const url = 'https://geo.datav.aliyun.com/areas_v3/bound/100000_full.json'
+
+const dataJson = await Cesium.GeoJsonDataSource.load(url,{
+  stroke:Cesium.Color.RED,
+  fill:Cesium.Color.SKYBLUE.withAlpha(0.5),
+  strokeWidth:4,
+});
+
 
 viewer.dataSources.add(dataJson);
+
+
+const entities = dataJson.entities.values;
+
+entities.forEach((entity) => {
+  entity.polygon.material = new Cesium.ColorMaterialProperty(
+    Cesium.Color.fromRandom({
+      alpha:0.9,
+    }),
+    entity.polygon.extrudedHeight = 200000
+  )
+});
+
 
 ```

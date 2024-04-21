@@ -5,7 +5,7 @@
  * :copyright: (c) 2022, Tungee
  * :date created: 2022-08-27 16:29:41
  * :last editor: 张德志
- * :date last edited: 2024-04-21 10:49:20
+ * :date last edited: 2024-04-21 11:13:30
  */
 import * as Cesium from 'cesium';
 
@@ -59,10 +59,29 @@ const viewer = new Cesium.Viewer('root', {
   // }),
 });
 
-const dataJson = Cesium.GeoJsonDataSource.load('https://geo.datav.aliyun.com/areas_v3/bound/100000_full.json');
-console.log(dataJson);
+const url = 'https://geo.datav.aliyun.com/areas_v3/bound/100000_full.json'
+
+const dataJson = await Cesium.GeoJsonDataSource.load(url,{
+  stroke:Cesium.Color.RED,
+  fill:Cesium.Color.SKYBLUE.withAlpha(0.5),
+  strokeWidth:4,
+});
+
 
 viewer.dataSources.add(dataJson);
+
+
+const entities = dataJson.entities.values;
+
+entities.forEach((entity) => {
+  entity.polygon.material = new Cesium.ColorMaterialProperty(
+    Cesium.Color.fromRandom({
+      alpha:0.9,
+    }),
+    entity.polygon.extrudedHeight = 200000
+  )
+});
+
 
 
 
