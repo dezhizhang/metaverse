@@ -5,9 +5,10 @@
  * :copyright: (c) 2022, Tungee
  * :date created: 2022-08-27 16:29:41
  * :last editor: 张德志
- * :date last edited: 2024-04-21 11:13:30
+ * :date last edited: 2024-04-21 15:20:04
  */
 import * as Cesium from 'cesium';
+import planeJson from './plane.json';
 
 // const atLayer = new Cesium.UrlTemplateImageryProvider({
 //     url: "https://webst02.is.autonavi.com/appmaptile?style=6&x={x}&y={y}&z={z}",
@@ -20,7 +21,7 @@ Cesium.Ion.defaultAccessToken =
 // An example of using a b3dm tileset to classify another b3dm tileset.
 const viewer = new Cesium.Viewer('root', {
   // 是否显示信息窗口
-  // infoBox: false,
+  infoBox: false,
   // // 是否显示查询按钮
   // geocoder: false,
   // // 不显示home按钮
@@ -35,56 +36,72 @@ const viewer = new Cesium.Viewer('root', {
   // animation: false,
   // 是否显示全屏按钮
   // timeline: false,
-  skyBox: new Cesium.SkyBox({
-    sources: {
-      positiveX: '/texture/sky/px.jpg',
-      negativeX: '/texture/sky/nx.jpg',
-      positiveY: '/texture/sky/ny.jpg',
-      negativeY: '/texture/sky/py.jpg',
-      positiveZ: '/texture/sky/pz.jpg',
-      negativeZ: '/texture/sky/nz.jpg',
-    },
+  terrainProvider: Cesium.createWorldTerrain({
+    requestVertexNormals: true,
+    requestWaterMask: true,
   }),
-
-  // imageryProvider: new Cesium.WebMapTileServiceImageryProvider({
-  //   url: "https://webrd01.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=8&x={x}&y={y}&z={z}",
-  //     layer: "tdtBasicLayer",
-  //     style: "default",
-  //     format: "image/jpeg",
-  //     tileMatrixSetID: "GoogleMapsCompatible",
-  // }),
-  // terrainProvider: Cesium.createWorldTerrain({
-  //   requestVertexNormals: true,
-  //   requestWaterMask: true,
-  // }),
+  shouldAnimate: true,
 });
 
-const url = 'https://geo.datav.aliyun.com/areas_v3/bound/100000_full.json'
+const positionProperty = new Cesium.SampledPositionProperty();
 
-const dataJson = await Cesium.GeoJsonDataSource.load(url,{
-  stroke:Cesium.Color.RED,
-  fill:Cesium.Color.SKYBLUE.withAlpha(0.5),
-  strokeWidth:4,
-});
+// 时间间隔
+const timeStepInSeconds = 30;
 
+// 整个飞行时间
+const totalSecond = (planeJson.length - 1) * timeStepInSeconds;
 
-viewer.dataSources.add(dataJson);
+const time = new Date();
 
+// 起点时间
+const startJulianData = Cesium.JulianDate.fromDate(time);
+// 终点时间
+const endJullianData = Cesium.JulianDate.fromDate(
+  startJulianData,
+  totalSecond,
+  new Cesium.JulianDate(),
+);
 
-const entities = dataJson.entities.values;
+viewer.clock.startTime = startJulianData.clone();
+viewer.clock.startTime = endJullianData.clone();
+viewer.clock.currentTime = startJulianData.clone();
 
-entities.forEach((entity) => {
-  entity.polygon.material = new Cesium.ColorMaterialProperty(
-    Cesium.Color.fromRandom({
-      alpha:0.9,
+viewer.timeline.zoomTo(startJulianData, endJullianData);
+
+planeJson.forEach((data, index) => {
+  const time = Cesium.JulianDate.addSeconds(
+    startJulianData,
+    index * timeStepInSeconds,
+    new Cesium.JulianDate(),
+  );
+
+  const position = Cesium.Cartesian3.fromDegrees(data.longitude, data.latitude, data.height);
+
+  positionProperty.addSample(time, position);
+
+  viewer.entities.add({
+    position,
+    point: {
+      pixelSize: 10,
+      color: Cesium.Color.RED,
+      outlineColor: Cesium.Color.WHITE,
+      outlineWidth: 2,
+    },
+  });
+
+  const planeEntity = viewer.entities.add({
+    name: '飞机',
+    position: positionProperty,
+    orientation: new Cesium.VelocityOrientationProperty(positionProperty),
+    model: {
+      uri: '/public/Air.glb',
+      minimumPixelSize: 128,
+      maximumScale: 20000,
+    },
+    path: new Cesium.PathGraphics({
+      width: 5,
     }),
-    entity.polygon.extrudedHeight = 200000
-  )
+  });
 });
 
-
-
-
-
-// const osmBuildings = viewer.scene.primitives.add(new Cesium.createOsmBuildings());
-
+const osmBuildings = viewer.scene.primitives.add(new Cesium.createOsmBuildings());
