@@ -5,7 +5,7 @@
  * :copyright: (c) 2022, Tungee
  * :date created: 2022-08-27 16:29:41
  * :last editor: 张德志
- * :date last edited: 2024-04-21 16:36:18
+ * :date last edited: 2024-04-21 17:18:08
  */
 import * as Cesium from 'cesium';
 import CesiumNavigation from 'cesium-navigation-es6';
@@ -55,6 +55,37 @@ const viewer = new Cesium.Viewer('root', {
   shouldAnimate: true,
 });
 
+viewer.cesiumWidget.creditContainer.style.display = "none";
+
+viewer.scene.globe.enableLighting = true;
+// 取消天空盒显示
+viewer.scene.skyBox.show = false;
+// 设置背景为黑色
+viewer.scene.backgroundColor = Cesium.Color.BLACK;
+// 设置抗锯齿
+viewer.scene.postProcessStages.fxaa.enabled = true;
+
+// 广州塔------------------------------------
+var postion = Cesium.Cartesian3.fromDegrees(
+  // 经度
+  113.3301,
+  // 纬度
+  23.0991,
+  // 高度
+  1500
+);
+viewer.camera.flyTo({
+  destination: postion,
+  orientation: {
+    heading: Cesium.Math.toRadians(-45),
+    pitch: Cesium.Math.toRadians(-30),
+    roll: 0,
+  },
+  duration: 2,
+});
+// 广州塔------------------------------------
+
+
 const osmBuildings = viewer.scene.primitives.add(new Cesium.createOsmBuildings());
 
 // 根据鼠标位置生成经纬度
@@ -68,7 +99,7 @@ handler.setInputAction((movement) => {
 
     const heightString = cartographic.height;
 
-    console.log({ longitudeString, latitudeString, heightString });
+    // console.log({ longitudeString, latitudeString, heightString });
 
     document.getElementById(
       'mouse-position',
@@ -87,3 +118,34 @@ const navigation = new CesiumNavigation(viewer, {
   // 是否启用图例
   enableDistanceLegend: false,
 });
+
+// 修改地图颜色--------------------------------
+const baseLayer = viewer.imageryLayers.get(0);
+baseLayer.invertColor = true;
+baseLayer.filterRGB = [0, 50, 100]; //[255,255,255] = > [0,50,100]
+
+const baseFragmentShader = viewer.scene.globe._surfaceShaderSet.baseFragmentShaderSource.sources;
+// 循环修改着色器
+for (let i = 0; i < baseFragmentShader.length; i++) {
+  // console.log(baseFragmentShader[i]);
+  const strS = 'color = czm_saturation(color, textureSaturation);\n#endif\n';
+  let strT = 'color = czm_saturation(color, textureSaturation);\n#endif\n';
+  if (baseLayer.invertColor) {
+    strT += `
+        color.r = 1.0 - color.r;
+        color.g = 1.0 - color.g;
+        color.b = 1.0 - color.b;
+      `;
+  }
+  if (baseLayer.filterRGB) {
+    strT += `
+        color.r = color.r*${baseLayer.filterRGB[0]}.0/255.0;
+        color.g = color.g*${baseLayer.filterRGB[1]}.0/255.0;
+        color.b = color.b*${baseLayer.filterRGB[2]}.0/255.0;
+      `;
+  }
+
+  baseFragmentShader[i] = baseFragmentShader[i].replace(strS, strT);
+}
+// 修改地图颜色--------------------------------
+
