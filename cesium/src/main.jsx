@@ -5,9 +5,10 @@
  * :copyright: (c) 2022, Tungee
  * :date created: 2022-08-27 16:29:41
  * :last editor: 张德志
- * :date last edited: 2024-04-21 16:26:08
+ * :date last edited: 2024-04-21 16:36:18
  */
 import * as Cesium from 'cesium';
+import CesiumNavigation from 'cesium-navigation-es6';
 
 // const atLayer = new Cesium.UrlTemplateImageryProvider({
 //     url: "https://webst02.is.autonavi.com/appmaptile?style=6&x={x}&y={y}&z={z}",
@@ -50,7 +51,7 @@ const viewer = new Cesium.Viewer('root', {
     requestVertexNormals: true,
     requestWaterMask: true,
   }),
-  fullscreenButton:false,
+  fullscreenButton: false,
   shouldAnimate: true,
 });
 
@@ -64,11 +65,25 @@ handler.setInputAction((movement) => {
     const cartographic = Cesium.Cartographic.fromCartesian(cartesian);
     const longitudeString = Cesium.Math.toDegrees(cartographic.longitude);
     const latitudeString = Cesium.Math.toDegrees(cartographic.latitude);
-    
+
     const heightString = cartographic.height;
 
-    console.log({longitudeString,latitudeString,heightString})
+    console.log({ longitudeString, latitudeString, heightString });
 
-    document.getElementById('mouse-position').innerHTML = `经度：${longitudeString} 纬度：${latitudeString} 高度：${heightString}`
+    document.getElementById(
+      'mouse-position',
+    ).innerHTML = `经度：${longitudeString} 纬度：${latitudeString} 高度：${heightString}`;
   }
 }, Cesium.ScreenSpaceEventType.MOUSE_MOVE);
+
+// 初始化导航罗盘
+const navigation = new CesiumNavigation(viewer, {
+  // 是否启用罗盘
+  enableCompass: true,
+  // 是否启用缩放
+  enableZoomControls: true,
+  // 是否启用指南针外环
+  enableCompassOuterRing: true,
+  // 是否启用图例
+  enableDistanceLegend: false,
+});

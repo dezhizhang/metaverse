@@ -319,4 +319,27 @@ tileset.readyPromise.then(function(tileset) {
 viewer.scene.primitives.add(tileset);
 
 ```
+### CesiumNavigation的使用
+
+```bash
+npm install cesium-navigation-es6 --save
+```
+
+```ts
+import CesiumNavigation from 'cesium-navigation-es6';
+
+// 初始化导航罗盘
+const navigation = new CesiumNavigation(viewer, {
+  // 是否启用罗盘
+  enableCompass: true,
+  // 是否启用缩放
+  enableZoomControls: true,
+  // 是否启用指南针外环
+  enableCompassOuterRing: true,
+  // 是否启用图例
+  enableDistanceLegend: false,
+});
+
+```
+
 
