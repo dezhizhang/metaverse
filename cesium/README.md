@@ -301,4 +301,22 @@ planeJson.forEach((data, index) => {
 
 const osmBuildings = viewer.scene.primitives.add(new Cesium.createOsmBuildings());
 ```
+### 添加Cesium3DTileset
+
+```ts
+const osmBuildings = viewer.scene.primitives.add(
+  new Cesium.createOsmBuildings()
+);
+
+const tileset = new Cesium.Cesium3DTileset({
+  url:'/public/tileset.json'
+});
+
+tileset.readyPromise.then(function(tileset) {
+  viewer.zoomTo(tileset)
+})
+
+viewer.scene.primitives.add(tileset);
+
+```
 

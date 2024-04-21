@@ -5,7 +5,7 @@
  * :copyright: (c) 2022, Tungee
  * :date created: 2022-08-27 16:29:41
  * :last editor: 张德志
- * :date last edited: 2024-04-21 15:20:04
+ * :date last edited: 2024-04-21 15:40:54
  */
 import * as Cesium from 'cesium';
 import planeJson from './plane.json';
@@ -43,65 +43,18 @@ const viewer = new Cesium.Viewer('root', {
   shouldAnimate: true,
 });
 
-const positionProperty = new Cesium.SampledPositionProperty();
 
-// 时间间隔
-const timeStepInSeconds = 30;
-
-// 整个飞行时间
-const totalSecond = (planeJson.length - 1) * timeStepInSeconds;
-
-const time = new Date();
-
-// 起点时间
-const startJulianData = Cesium.JulianDate.fromDate(time);
-// 终点时间
-const endJullianData = Cesium.JulianDate.fromDate(
-  startJulianData,
-  totalSecond,
-  new Cesium.JulianDate(),
+const osmBuildings = viewer.scene.primitives.add(
+  new Cesium.createOsmBuildings()
 );
 
-viewer.clock.startTime = startJulianData.clone();
-viewer.clock.startTime = endJullianData.clone();
-viewer.clock.currentTime = startJulianData.clone();
-
-viewer.timeline.zoomTo(startJulianData, endJullianData);
-
-planeJson.forEach((data, index) => {
-  const time = Cesium.JulianDate.addSeconds(
-    startJulianData,
-    index * timeStepInSeconds,
-    new Cesium.JulianDate(),
-  );
-
-  const position = Cesium.Cartesian3.fromDegrees(data.longitude, data.latitude, data.height);
-
-  positionProperty.addSample(time, position);
-
-  viewer.entities.add({
-    position,
-    point: {
-      pixelSize: 10,
-      color: Cesium.Color.RED,
-      outlineColor: Cesium.Color.WHITE,
-      outlineWidth: 2,
-    },
-  });
-
-  const planeEntity = viewer.entities.add({
-    name: '飞机',
-    position: positionProperty,
-    orientation: new Cesium.VelocityOrientationProperty(positionProperty),
-    model: {
-      uri: '/public/Air.glb',
-      minimumPixelSize: 128,
-      maximumScale: 20000,
-    },
-    path: new Cesium.PathGraphics({
-      width: 5,
-    }),
-  });
+const tileset = new Cesium.Cesium3DTileset({
+  url:'/public/tileset.json'
 });
 
-const osmBuildings = viewer.scene.primitives.add(new Cesium.createOsmBuildings());
+tileset.readyPromise.then(function(tileset) {
+  viewer.zoomTo(tileset)
+})
+
+viewer.scene.primitives.add(tileset);
+
