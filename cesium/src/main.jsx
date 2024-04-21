@@ -5,7 +5,7 @@
  * :copyright: (c) 2022, Tungee
  * :date created: 2022-08-27 16:29:41
  * :last editor: 张德志
- * :date last edited: 2024-04-21 17:45:45
+ * :date last edited: 2024-04-21 19:37:53
  */
 import * as Cesium from 'cesium';
 import CesiumNavigation from 'cesium-navigation-es6';
@@ -55,7 +55,7 @@ const viewer = new Cesium.Viewer('root', {
   shouldAnimate: true,
 });
 
-viewer.cesiumWidget.creditContainer.style.display = "none";
+viewer.cesiumWidget.creditContainer.style.display = 'none';
 
 viewer.scene.globe.enableLighting = true;
 // 取消天空盒显示
@@ -72,7 +72,7 @@ var postion = Cesium.Cartesian3.fromDegrees(
   // 纬度
   23.0991,
   // 高度
-  1500
+  1500,
 );
 viewer.camera.flyTo({
   destination: postion,
@@ -84,8 +84,6 @@ viewer.camera.flyTo({
   duration: 2,
 });
 // 广州塔------------------------------------
-
-
 
 // 根据鼠标位置生成经纬度
 const handler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
@@ -148,7 +146,6 @@ for (let i = 0; i < baseFragmentShader.length; i++) {
 }
 // 修改地图颜色--------------------------------
 
-
 // 添加建筑物颜色----------------------------------
 const tiles3d = new Cesium.createOsmBuildings();
 const osmBuildings = viewer.scene.primitives.add(tiles3d);
@@ -166,8 +163,7 @@ tiles3d.tileVisible.addEventListener(function (tile) {
     const model = cesium3DTileCon.getFeature(i).content._model;
 
     // 修改模型的片元着色器
-    const fragmentShaderSource =
-      (model._rendererResources.sourceShaders[1] = `
+    const fragmentShaderSource = (model._rendererResources.sourceShaders[1] = `
             varying vec3 v_positionEC;
 
             void main()
@@ -203,3 +199,27 @@ tiles3d.tileVisible.addEventListener(function (tile) {
 });
 
 //添加建筑物颜色-------------------------------------------
+
+// 添加模型----------------------------------------------
+const model = viewer.scene.primitives.add(
+  new Cesium.Model.fromGltf({
+    url: '/public/model/pyramid.glb',
+    show: true,
+    scale: 200,
+    minimumPixelSize: 12,
+    maximumScale: 20000,
+    allowPicking: false,
+    debugWireframe: false,
+    debugShowBoundingVolume: false,
+    color: Cesium.Color.YELLOW.withAlpha(0.5),
+    colorBlendMode: Cesium.ColorBlendMode.MIX,
+    // 设置模型矩阵
+    modelMatrix: Cesium.Transforms.headingPitchRollToFixedFrame(
+      Cesium.Cartesian3.fromDegrees(113.3301, 23.0991, 800),
+      new Cesium.HeadingPitchRange(0,0,0),
+    ),
+  }),
+);
+
+console.log(model)
+// 添加模型----------------------------------------------
