@@ -208,3 +208,12 @@ handler.setInputAction(function(movement) {
 },Cesium.ScreenSpaceEventType.LEFT_CLICK)
 
 ```
+
+### 加载geojson数据
+```ts
+const dataJson = Cesium.GeoJsonDataSource.load('https://geo.datav.aliyun.com/areas_v3/bound/100000_full.json');
+console.log(dataJson);
+
+viewer.dataSources.add(dataJson);
+
+```

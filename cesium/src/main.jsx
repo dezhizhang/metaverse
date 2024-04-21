@@ -5,7 +5,7 @@
  * :copyright: (c) 2022, Tungee
  * :date created: 2022-08-27 16:29:41
  * :last editor: 张德志
- * :date last edited: 2024-04-21 10:13:36
+ * :date last edited: 2024-04-21 10:49:20
  */
 import * as Cesium from 'cesium';
 
@@ -59,73 +59,13 @@ const viewer = new Cesium.Viewer('root', {
   // }),
 });
 
-const position = Cesium.Cartesian3.fromDegrees(113.3191, 23.109, 1000);
+const dataJson = Cesium.GeoJsonDataSource.load('https://geo.datav.aliyun.com/areas_v3/bound/100000_full.json');
+console.log(dataJson);
 
-viewer.camera.flyTo({
-  destination: position,
-  orientation: {
-    heading: Cesium.Math.toRadians(0),
-    pitch: Cesium.Math.toRadians(-90),
-    roll: 0,
-  },
-});
-
-const osmBuildings = viewer.scene.primitives.add(new Cesium.createOsmBuildings());
-
-const airplane = viewer.entities.add({
-  name: 'Airplane',
-  position: Cesium.Cartesian3.fromDegrees(113.3191, 23.109, 1500),
-  model: {
-    uri: '/public/Air.glb',
-    minimumPixelSize: 128,
-    silhouetteSize: 1,
-    silhouetteColor: Cesium.Color.WHITE,
-  },
-});
-
-const rectGeometry = new Cesium.RectangleGeometry({
-  rectangle:Cesium.Rectangle.fromDegrees(115, 20, 135, 30),
-  height:10,
-  extrudedHeight:10,
-  vertexFormat:Cesium.PerInstanceColorAppearance.VERTEX_FORMAT,
-});
-
-const instance = new Cesium.GeometryInstance({
-  geometry:rectGeometry,
-  attributes:{
-    color:Cesium.ColorGeometryInstanceAttribute.fromColor(
-      Cesium.Color.RED.withAlpha(0.5)
-    )
-  }
-});
-
-const primitive = new Cesium.Primitive({
-  geometryInstances:instance,
-  appearance:Cesium.PerInstanceColorAppearance({
-    flat:true
-  })
-});
-
-viewer.scene.primitives.add(primitive);
-
-const handler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
-handler.setInputAction(function(movement) {
-  console.log(movement);
-  const pickedObject = viewer.scene.pick(movement.position);
-  if(Cesium.defined(pickedObject)) {
-    console.log(pickedObject.id);
-  }
-},Cesium.ScreenSpaceEventType.LEFT_CLICK)
+viewer.dataSources.add(dataJson);
 
 
 
 
-const point = viewer.entities.add({
-  position: Cesium.Cartesian3.fromDegrees(113.3191, 23.109, 20),
-  point: {
-    pixelSize: 10,
-    color: Cesium.Color.RED,
-    outlineColor: Cesium.Color.WHEAT,
-    outlineWidth: 4,
-  },
-});
+// const osmBuildings = viewer.scene.primitives.add(new Cesium.createOsmBuildings());
+
