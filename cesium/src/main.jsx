@@ -5,7 +5,7 @@
  * :copyright: (c) 2022, Tungee
  * :date created: 2022-08-27 16:29:41
  * :last editor: 张德志
- * :date last edited: 2024-04-21 20:06:05
+ * :date last edited: 2024-04-21 20:24:41
  */
 import * as Cesium from 'cesium';
 import modifyMap from './modifyMap';
@@ -13,6 +13,10 @@ import modifyBuild from './modifyBuild';
 import LightCone from './lightCone';
 import RectFlyLight from './rectFlyLight'
 import RoadLightLine from './RoadLightLine';
+import RadarLight from './RadarLight';
+import LightSpread from './LightSpread';
+import LightWall from './LightWall';
+import ParticleLight from './ParticleLight';
 import CesiumNavigation from 'cesium-navigation-es6';
 
 // const atLayer = new Cesium.UrlTemplateImageryProvider({
@@ -136,5 +140,15 @@ new LightCone(viewer);
 new RectFlyLight(viewer);
 
 new RoadLightLine(viewer);
+
+new RadarLight(viewer);
+
+new LightSpread(viewer);
+
+new LightWall(viewer);
+
+new ParticleLight(viewer);
+
+
 
 

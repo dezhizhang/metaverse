@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-04-21 20:05:23
  * :last editor: 张德志
- * :date last edited: 2024-04-21 20:07:00
+ * :date last edited: 2024-04-21 20:13:46
  */
 import * as Cesium from "cesium";
 import PolylineTrailMaterialProperty from "./material/PolylineTrailMaterialProperty";
