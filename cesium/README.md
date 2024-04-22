@@ -391,3 +391,49 @@ function loadGaodeMap(){
 }
 
 ```
+### 设置相机
+```ts
+viewer.camera.setView({
+  destination:Cesium.Cartesian3.fromDegrees(
+    116.397428, 39.90923, 100
+  ),
+  orientation:{
+    heading:Cesium.Math.toRadians(0),
+    pitch:Cesium.Math.toRadians(-90),
+    roll:0 
+  }
+})
+
+```
+
+### 加载天地图
+```ts
+
+function loadTdtMap(){
+  //天地图token
+  var tk = "d53ca517a1b035796b7b6cc4f527f845";
+  //天地图影像
+  var imgUrl = "http://t0.tianditu.com/img_w/wmts?service=wmts&request=GetTile&version=1.0.0&LAYER=img&tileMatrixSet=w&TileMatrix={TileMatrix}&TileRow={TileRow}&TileCol={TileCol}&style=default&format=tiles&tk="+tk;
+
+  //中文标注
+  var ciaUrl = "http://t0.tianditu.com/cia_w/wmts?service=wmts&request=GetTile&version=1.0.0&LAYER=cia&tileMatrixSet=w&TileMatrix={TileMatrix}&TileRow={TileRow}&TileCol={TileCol}&style=default.jpg&tk="+tk;
+  //调用影响中文注记服务
+  let imgLayer = new Cesium.WebMapTileServiceImageryProvider({
+    url: imgUrl,
+    layer: "imgLayer",
+    minimumLevel: 0,
+    maximumLevel: 18,
+  });
+  
+  viewer.imageryLayers.addImageryProvider(imgLayer);
+  
+  //中文注记服务
+  let annoLayer = new Cesium.WebMapTileServiceImageryProvider({ 
+    url: ciaUrl,
+    layer: "annoLayer",
+    minimumLevel: 0,
+    maximumLevel: 18,
+  });
+  viewer.imageryLayers.addImageryProvider(annoLayer);
+}
+```

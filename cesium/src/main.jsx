@@ -5,7 +5,7 @@
  * :copyright: (c) 2022, Tungee
  * :date created: 2022-08-27 16:29:41
  * :last editor: 张德志
- * :date last edited: 2024-04-22 21:23:31
+ * :date last edited: 2024-04-22 21:34:19
  */
 import * as Cesium from 'cesium';
 
@@ -46,37 +46,44 @@ const viewer = new Cesium.Viewer('root', {
   }),
 });
 
-//  设置相机位置
 viewer.camera.setView({
-  destination: Cesium.Cartesian3.fromDegrees(116.397428, 39.90923, 100),
-  orientation: {
-    heading: Cesium.Math.toRadians(0),
-    pitch: Cesium.Math.toRadians(-90),
-    roll: 0,
-  },
-});
+  destination:Cesium.Cartesian3.fromDegrees(
+    116.397428, 39.90923, 100
+  ),
+  orientation:{
+    heading:Cesium.Math.toRadians(0),
+    pitch:Cesium.Math.toRadians(-90),
+    roll:0 
+  }
+})
 
-function loadGaodeMap(){
-  // 添加高德影像图
-  let imgLayer = new Cesium.UrlTemplateImageryProvider({
-     url: "https://webst02.is.autonavi.com/appmaptile?style=6&x={x}&y={y}&z={z}",
-     layer: "imgLayer",
-     minimumLevel: 3,
-     maximumLevel: 18
+
+function loadTdtMap(){
+  //天地图token
+  var tk = "d53ca517a1b035796b7b6cc4f527f845";
+  //天地图影像
+  var imgUrl = "http://t0.tianditu.com/img_w/wmts?service=wmts&request=GetTile&version=1.0.0&LAYER=img&tileMatrixSet=w&TileMatrix={TileMatrix}&TileRow={TileRow}&TileCol={TileCol}&style=default&format=tiles&tk="+tk;
+
+  //中文标注
+  var ciaUrl = "http://t0.tianditu.com/cia_w/wmts?service=wmts&request=GetTile&version=1.0.0&LAYER=cia&tileMatrixSet=w&TileMatrix={TileMatrix}&TileRow={TileRow}&TileCol={TileCol}&style=default.jpg&tk="+tk;
+  //调用影响中文注记服务
+  let imgLayer = new Cesium.WebMapTileServiceImageryProvider({
+    url: imgUrl,
+    layer: "imgLayer",
+    minimumLevel: 0,
+    maximumLevel: 18,
   });
+  
   viewer.imageryLayers.addImageryProvider(imgLayer);
   
-  
-  // 影像注记
-  let annoLayer = new Cesium.UrlTemplateImageryProvider({
-    url: "http://webst02.is.autonavi.com/appmaptile?x={x}&y={y}&z={z}&lang=zh_cn&size=1&scale=1&style=8",
+  //中文注记服务
+  let annoLayer = new Cesium.WebMapTileServiceImageryProvider({ 
+    url: ciaUrl,
     layer: "annoLayer",
-    style: "default",
-    //format: "image/jpeg",
-    //tileMatrixSetID: "GoogleMapsCompatible"
+    minimumLevel: 0,
+    maximumLevel: 18,
   });
   viewer.imageryLayers.addImageryProvider(annoLayer);
 }
 
-
-loadGaodeMap();
+loadTdtMap();
