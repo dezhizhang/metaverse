@@ -5,7 +5,7 @@
  * :copyright: (c) 2022, Tungee
  * :date created: 2022-08-27 16:29:41
  * :last editor: 张德志
- * :date last edited: 2024-04-22 20:41:32
+ * :date last edited: 2024-04-22 21:23:31
  */
 import * as Cesium from 'cesium';
 
@@ -46,6 +46,37 @@ const viewer = new Cesium.Viewer('root', {
   }),
 });
 
+//  设置相机位置
+viewer.camera.setView({
+  destination: Cesium.Cartesian3.fromDegrees(116.397428, 39.90923, 100),
+  orientation: {
+    heading: Cesium.Math.toRadians(0),
+    pitch: Cesium.Math.toRadians(-90),
+    roll: 0,
+  },
+});
 
-viewer.cesiumWidget.creditContainer.style.display = 'none';
+function loadGaodeMap(){
+  // 添加高德影像图
+  let imgLayer = new Cesium.UrlTemplateImageryProvider({
+     url: "https://webst02.is.autonavi.com/appmaptile?style=6&x={x}&y={y}&z={z}",
+     layer: "imgLayer",
+     minimumLevel: 3,
+     maximumLevel: 18
+  });
+  viewer.imageryLayers.addImageryProvider(imgLayer);
+  
+  
+  // 影像注记
+  let annoLayer = new Cesium.UrlTemplateImageryProvider({
+    url: "http://webst02.is.autonavi.com/appmaptile?x={x}&y={y}&z={z}&lang=zh_cn&size=1&scale=1&style=8",
+    layer: "annoLayer",
+    style: "default",
+    //format: "image/jpeg",
+    //tileMatrixSetID: "GoogleMapsCompatible"
+  });
+  viewer.imageryLayers.addImageryProvider(annoLayer);
+}
 
+
+loadGaodeMap();

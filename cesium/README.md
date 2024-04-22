@@ -341,5 +341,53 @@ const navigation = new CesiumNavigation(viewer, {
 });
 
 ```
+### 坐标转换
+```ts
+// 角度与孤度的转换
+const radians = Cesium.Math.toRadians(90);
+console.log(radians);
+
+// 孤度转角度
+const degrees = Cesium.Math.toDegrees(Math.PI * 2);
+console.log(degrees);
+
+// 将经纬度转换成卡尔坐标
+const cartesian3 = Cesium.Cartesian3.fromDegrees(
+  // 经度
+  89.5, 
+  // 纬度
+  20.4,
+  // 高度
+  100,
+);
 
 
+const cartographic = Cesium.Cartographic.fromCartesian(cartesian3);
+
+console.log('cartographic',cartographic);
+```
+### 加载高德地图数据
+```ts
+function loadGaodeMap(){
+  // 添加高德影像图
+  let imgLayer = new Cesium.UrlTemplateImageryProvider({
+     url: "https://webst02.is.autonavi.com/appmaptile?style=6&x={x}&y={y}&z={z}",
+     layer: "imgLayer",
+     minimumLevel: 3,
+     maximumLevel: 18
+  });
+  viewer.imageryLayers.addImageryProvider(imgLayer);
+  
+  
+  // 影像注记
+  let annoLayer = new Cesium.UrlTemplateImageryProvider({
+    url: "http://webst02.is.autonavi.com/appmaptile?x={x}&y={y}&z={z}&lang=zh_cn&size=1&scale=1&style=8",
+    layer: "annoLayer",
+    style: "default",
+    //format: "image/jpeg",
+    //tileMatrixSetID: "GoogleMapsCompatible"
+  });
+  viewer.imageryLayers.addImageryProvider(annoLayer);
+}
+
+```
