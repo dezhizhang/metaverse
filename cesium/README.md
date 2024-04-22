@@ -466,3 +466,39 @@ const rectangle = viewer.entities.add({
 });
 
 ```
+
+
+### 自定义几何体
+```ts
+const rectGeometry = new Cesium.RectangleGeometry({
+  rectangle:Cesium.Rectangle.fromDegrees(
+    115,
+    20,
+    135,
+    30
+  ),
+  height:20000,
+  vertexFormat:Cesium.PerInstanceColorAppearance.VERTEX_FORMAT
+});
+
+// 创建几何体实例
+const instance = new Cesium.GeometryInstance({
+  geometry:rectGeometry,
+  attributes:{
+    color:Cesium.ColorGeometryInstanceAttribute.fromColor(
+      Cesium.Color.RED.withAlpha(0.5)
+    )
+  }
+});
+
+// 图元
+const primitives = new Cesium.Primitive({
+  geometryInstances:instance,
+  appearance:new Cesium.PerInstanceColorAppearance({
+    flat:true
+  })
+});
+
+viewer.scene.primitives.add(primitives);
+
+```

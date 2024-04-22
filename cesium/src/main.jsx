@@ -5,7 +5,7 @@
  * :copyright: (c) 2022, Tungee
  * :date created: 2022-08-27 16:29:41
  * :last editor: 张德志
- * :date last edited: 2024-04-23 06:47:42
+ * :date last edited: 2024-04-23 07:02:43
  */
 import * as Cesium from 'cesium';
 
@@ -146,9 +146,46 @@ handler.setInputAction((movement) => {
 }, Cesium.ScreenSpaceEventType.MOUSE_MOVE);
 
 // 创建几何体
-const rectangle = viewer.entities.add({
-  rectangle: {
-    coordinates: Cesium.Rectangle.fromDegrees(90, 20, 110, 30),
-    material: Cesium.Color.RED.withAlpha(0.5),
-  },
+// const rectangle = viewer.entities.add({
+//   rectangle: {
+//     coordinates: Cesium.Rectangle.fromDegrees(90, 20, 110, 30),
+//     material: Cesium.Color.RED.withAlpha(0.5),
+//   },
+// });
+
+
+const rectGeometry = new Cesium.RectangleGeometry({
+  rectangle:Cesium.Rectangle.fromDegrees(
+    115,
+    20,
+    135,
+    30
+  ),
+  height:20000,
+  vertexFormat:Cesium.PerInstanceColorAppearance.VERTEX_FORMAT
 });
+
+// 创建几何体实例
+const instance = new Cesium.GeometryInstance({
+  geometry:rectGeometry,
+  attributes:{
+    color:Cesium.ColorGeometryInstanceAttribute.fromColor(
+      Cesium.Color.RED.withAlpha(0.5)
+    )
+  }
+});
+
+// 图元
+const primitives = new Cesium.Primitive({
+  geometryInstances:instance,
+  appearance:new Cesium.PerInstanceColorAppearance({
+    flat:true
+  })
+});
+
+viewer.scene.primitives.add(primitives);
+
+
+
+
+
