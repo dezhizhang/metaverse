@@ -455,3 +455,14 @@ const label = viewer.entities.add({
 });
 
 ```
+### 创建几何体
+```ts
+// 创建几何体
+const rectangle = viewer.entities.add({
+  rectangle: {
+    coordinates: Cesium.Rectangle.fromDegrees(90, 20, 110, 30),
+    material: Cesium.Color.RED.withAlpha(0.5),
+  },
+});
+
+```

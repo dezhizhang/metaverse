@@ -5,7 +5,7 @@
  * :copyright: (c) 2022, Tungee
  * :date created: 2022-08-27 16:29:41
  * :last editor: 张德志
- * :date last edited: 2024-04-22 22:55:55
+ * :date last edited: 2024-04-23 06:47:42
  */
 import * as Cesium from 'cesium';
 
@@ -145,21 +145,10 @@ handler.setInputAction((movement) => {
   }
 }, Cesium.ScreenSpaceEventType.MOUSE_MOVE);
 
-// document.addEventListener('keydown',(e) => {
-//   const height = viewer.camera.positionCartographic.height;
-//   const moveRate = height / 100;
-//   if(e.key === 'w') {
-//     viewer.camera.moveForward(moveRate);
-
-//   }
-// })
-
-document.addEventListener('keydown', (e) => {
-  const height = viewer.camera.positionCartographic.height;
-  const moveRate = height / 100;
-  if (e.key == 'w') {
-    viewer.camera.moveForward(moveRate);
-  }
+// 创建几何体
+const rectangle = viewer.entities.add({
+  rectangle: {
+    coordinates: Cesium.Rectangle.fromDegrees(90, 20, 110, 30),
+    material: Cesium.Color.RED.withAlpha(0.5),
+  },
 });
-
-console.log(viewer.camera);
