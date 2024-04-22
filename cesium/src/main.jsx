@@ -5,7 +5,7 @@
  * :copyright: (c) 2022, Tungee
  * :date created: 2022-08-27 16:29:41
  * :last editor: 张德志
- * :date last edited: 2024-04-22 21:34:19
+ * :date last edited: 2024-04-22 22:55:55
  */
 import * as Cesium from 'cesium';
 
@@ -32,7 +32,6 @@ Cesium.Camera.DEFAULT_VIEW_RECTANGLE = Cesium.Rectangle.fromDegrees(
 const viewer = new Cesium.Viewer('root', {
   // 是否显示信息窗口
   infoBox: false,
-
   // 自定义地形
   skyBox: new Cesium.SkyBox({
     sources: {
@@ -46,44 +45,121 @@ const viewer = new Cesium.Viewer('root', {
   }),
 });
 
-viewer.camera.setView({
-  destination:Cesium.Cartesian3.fromDegrees(
-    116.397428, 39.90923, 100
-  ),
-  orientation:{
-    heading:Cesium.Math.toRadians(0),
-    pitch:Cesium.Math.toRadians(-90),
-    roll:0 
-  }
-})
+const position = Cesium.Cartesian3.fromDegrees(
+  // 经度
+  113.3191,
+  23.109,
+  // 高度
+  1000,
+);
 
+viewer.camera.flyTo({
+  destination: position,
+  orientation: {
+    heading: Cesium.Math.toRadians(20),
+    pitch: Cesium.Math.toRadians(-20),
+    roll: 0,
+  },
+});
 
-function loadTdtMap(){
-  //天地图token
-  var tk = "d53ca517a1b035796b7b6cc4f527f845";
-  //天地图影像
-  var imgUrl = "http://t0.tianditu.com/img_w/wmts?service=wmts&request=GetTile&version=1.0.0&LAYER=img&tileMatrixSet=w&TileMatrix={TileMatrix}&TileRow={TileRow}&TileCol={TileCol}&style=default&format=tiles&tk="+tk;
+const point = viewer.entities.add({
+  position: Cesium.Cartesian3.fromDegrees(113.3191, 23.109, 610),
+  billboard: {
+    image: '/vite.svg',
+    width: 30,
+    height: 30,
+  },
+});
 
-  //中文标注
-  var ciaUrl = "http://t0.tianditu.com/cia_w/wmts?service=wmts&request=GetTile&version=1.0.0&LAYER=cia&tileMatrixSet=w&TileMatrix={TileMatrix}&TileRow={TileRow}&TileCol={TileCol}&style=default.jpg&tk="+tk;
-  //调用影响中文注记服务
-  let imgLayer = new Cesium.WebMapTileServiceImageryProvider({
-    url: imgUrl,
-    layer: "imgLayer",
-    minimumLevel: 0,
+// const label = viewer.entities.add({
+//   position: Cesium.Cartesian3.fromDegrees(113.3191, 23.109, 610),
+//   label: {
+//     text: '广州塔',
+//     font: '24px sans-serif',
+//     fillColor: Cesium.Color.WHITE,
+//     outlineWidth: Cesium.Color.BLACK,
+//     outlineWidth: 4,
+//     style: Cesium.LabelStyle.FILL_AND_OUTLINE,
+//     pixelOffset: new Cesium.Cartesian2(0, -24),
+//     horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
+//     verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
+//   },
+// });
+
+const label = viewer.entities.add({
+  position: Cesium.Cartesian3.fromDegrees(113.3191, 23.109, 610),
+  label: {
+    text: '广州塔',
+    font: '24px sans-serif',
+    fillColor: Cesium.Color.WHITE,
+    outlineWidth: Cesium.Color.BLACK,
+    outlineWidth: 4,
+    style: Cesium.LabelStyle.FILL_AND_OUTLINE,
+    pixelOffset: new Cesium.Cartesian2(0, -24),
+    horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
+    verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
+  },
+});
+
+const osmBuildingsTileset = Cesium.createOsmBuildings();
+viewer.scene.primitives.add(osmBuildingsTileset);
+
+function loadGaodeMap() {
+  // 添加高德影像图
+  let imgLayer = new Cesium.UrlTemplateImageryProvider({
+    url: 'https://webst02.is.autonavi.com/appmaptile?style=6&x={x}&y={y}&z={z}',
+    layer: 'imgLayer',
+    minimumLevel: 3,
     maximumLevel: 18,
   });
-  
   viewer.imageryLayers.addImageryProvider(imgLayer);
-  
-  //中文注记服务
-  let annoLayer = new Cesium.WebMapTileServiceImageryProvider({ 
-    url: ciaUrl,
-    layer: "annoLayer",
-    minimumLevel: 0,
-    maximumLevel: 18,
+
+  // 影像注记
+  let annoLayer = new Cesium.UrlTemplateImageryProvider({
+    url: 'http://webst02.is.autonavi.com/appmaptile?x={x}&y={y}&z={z}&lang=zh_cn&size=1&scale=1&style=8',
+    layer: 'annoLayer',
+    style: 'default',
+    //format: "image/jpeg",
+    //tileMatrixSetID: "GoogleMapsCompatible"
   });
   viewer.imageryLayers.addImageryProvider(annoLayer);
 }
 
-loadTdtMap();
+loadGaodeMap();
+
+const handler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
+handler.setInputAction((movement) => {
+  const cartesian = viewer.camera.pickEllipsoid(movement.endPosition, viewer.scene.globe.ellipsoid);
+  if (cartesian) {
+    const cartographic = Cesium.Cartographic.fromCartesian(cartesian);
+    const longitudeString = Cesium.Math.toDegrees(cartographic.longitude);
+    const latitudeString = Cesium.Math.toDegrees(cartographic.latitude);
+
+    const heightString = cartographic.height;
+
+    console.log({ longitudeString, latitudeString, heightString });
+
+    document.getElementById(
+      'mouse-position',
+    ).innerHTML = `经度：${longitudeString} 纬度：${latitudeString} 高度：${heightString}`;
+  }
+}, Cesium.ScreenSpaceEventType.MOUSE_MOVE);
+
+// document.addEventListener('keydown',(e) => {
+//   const height = viewer.camera.positionCartographic.height;
+//   const moveRate = height / 100;
+//   if(e.key === 'w') {
+//     viewer.camera.moveForward(moveRate);
+
+//   }
+// })
+
+document.addEventListener('keydown', (e) => {
+  const height = viewer.camera.positionCartographic.height;
+  const moveRate = height / 100;
+  if (e.key == 'w') {
+    viewer.camera.moveForward(moveRate);
+  }
+});
+
+console.log(viewer.camera);

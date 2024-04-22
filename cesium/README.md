@@ -437,3 +437,21 @@ function loadTdtMap(){
   viewer.imageryLayers.addImageryProvider(annoLayer);
 }
 ```
+### 添加标签
+```ts
+const label = viewer.entities.add({
+  position: Cesium.Cartesian3.fromDegrees(113.3191, 23.109, 610),
+  label: {
+    text: '广州塔',
+    font: '24px sans-serif',
+    fillColor: Cesium.Color.WHITE,
+    outlineWidth: Cesium.Color.BLACK,
+    outlineWidth: 4,
+    style: Cesium.LabelStyle.FILL_AND_OUTLINE,
+    pixelOffset: new Cesium.Cartesian2(0, -24),
+    horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
+    verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
+  },
+});
+
+```
