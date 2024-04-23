@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-04-22 20:18:01
  * :last editor: 张德志
- * :date last edited: 2024-04-23 22:57:05
+ * :date last edited: 2024-04-23 23:06:06
  */
 /*
  * :file description:
@@ -83,17 +83,15 @@ const viewer = new Cesium.Viewer('root', {
   shouldAnimate: true,
 });
 
-const material = new Cesium.PolylineDashMaterialProperty({
-  dashLength: 16,
-  color: Cesium.Color.RED,
-});
+
+const material = new Cesium.PolylineArrowMaterialProperty(Cesium.Color.RED);
 
 const redLine = viewer.entities.add({
-  polyline: {
-    positions: Cesium.Cartesian3.fromDegreesArray([-75, 35, -125, 35]),
-    width: 5,
+  polyline:{
+    positions:Cesium.Cartesian3.fromDegreesArray([
+      -75,35,-125,35
+    ]),
+    width:5,
     material,
-  },
+  }
 });
-
-viewer.camera.setView(viewer.entities);
