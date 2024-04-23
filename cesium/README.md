@@ -502,3 +502,9 @@ const primitives = new Cesium.Primitive({
 viewer.scene.primitives.add(primitives);
 
 ```
+### cesium添加材质
+```ts
+const material =new Cesium.ColorMaterialProperty(
+  new Cesium.Color(1.0,1.0,1.0,1.0)
+)
+```

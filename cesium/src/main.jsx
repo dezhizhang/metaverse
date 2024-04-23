@@ -1,13 +1,32 @@
 /*
+ * :file description: 
+ * :name: /cesium/src/main.jsx
+ * :author: 张德志
+ * :copyright: (c) 2024, Tungee
+ * :date created: 2024-04-22 20:18:01
+ * :last editor: 张德志
+ * :date last edited: 2024-04-23 22:32:04
+ */
+/*
  * :file description:
  * :name: /cesium/src/main.jsx
  * :author: 张德志
  * :copyright: (c) 2022, Tungee
  * :date created: 2022-08-27 16:29:41
  * :last editor: 张德志
- * :date last edited: 2024-04-23 07:02:43
+ * :date last edited: 2024-04-22 17:20:19
  */
 import * as Cesium from 'cesium';
+import modifyMap from './modifyMap';
+import modifyBuild from './modifyBuild';
+import LightCone from './lightCone';
+import RectFlyLight from './rectFlyLight'
+import RoadLightLine from './RoadLightLine';
+import RadarLight from './RadarLight';
+import LightSpread from './LightSpread';
+import LightWall from './LightWall';
+import ParticleLight from './ParticleLight';
+import CesiumNavigation from 'cesium-navigation-es6';
 
 // const atLayer = new Cesium.UrlTemplateImageryProvider({
 //     url: "https://webst02.is.autonavi.com/appmaptile?style=6&x={x}&y={y}&z={z}",
@@ -32,7 +51,18 @@ Cesium.Camera.DEFAULT_VIEW_RECTANGLE = Cesium.Rectangle.fromDegrees(
 const viewer = new Cesium.Viewer('root', {
   // 是否显示信息窗口
   infoBox: false,
-  // 自定义地形
+  // 是否显示查询按钮
+  geocoder: false,
+  // 不显示home按钮
+  homeButton: false,
+  // 控制查看器显示模式
+  sceneModePicker: false,
+  // 是否显示图层按钮
+  baseLayerPicker: false,
+  // 是否显不帮助
+  navigationHelpButton: false,
+  // 是否显示动画
+  animation: false,
   skyBox: new Cesium.SkyBox({
     sources: {
       positiveX: '/texture/sky/px.jpg',
@@ -43,127 +73,32 @@ const viewer = new Cesium.Viewer('root', {
       negativeZ: '/texture/sky/nz.jpg',
     },
   }),
+  // 是否显示全屏按钮
+  timeline: false,
+  terrainProvider: Cesium.createWorldTerrain({
+    requestVertexNormals: true,
+    requestWaterMask: true,
+  }),
+  fullscreenButton: false,
+  shouldAnimate: true,
 });
 
-const position = Cesium.Cartesian3.fromDegrees(
-  // 经度
-  113.3191,
-  23.109,
-  // 高度
-  1000,
-);
+const material =new Cesium.ColorMaterialProperty(
+  new Cesium.Color(1.0,1.0,1.0,1.0)
+)
 
-viewer.camera.flyTo({
-  destination: position,
-  orientation: {
-    heading: Cesium.Math.toRadians(20),
-    pitch: Cesium.Math.toRadians(-20),
-    roll: 0,
-  },
-});
 
-const point = viewer.entities.add({
-  position: Cesium.Cartesian3.fromDegrees(113.3191, 23.109, 610),
-  billboard: {
-    image: '/vite.svg',
-    width: 30,
-    height: 30,
-  },
-});
-
-// const label = viewer.entities.add({
-//   position: Cesium.Cartesian3.fromDegrees(113.3191, 23.109, 610),
-//   label: {
-//     text: '广州塔',
-//     font: '24px sans-serif',
-//     fillColor: Cesium.Color.WHITE,
-//     outlineWidth: Cesium.Color.BLACK,
-//     outlineWidth: 4,
-//     style: Cesium.LabelStyle.FILL_AND_OUTLINE,
-//     pixelOffset: new Cesium.Cartesian2(0, -24),
-//     horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
-//     verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
-//   },
+// const rectGeometry = new Cesium.RectangleGeometry({
+//   rectangle:Cesium.Rectangle.fromDegrees(
+//     115,
+//     20,
+//     135,
+//     30
+//   ),
+//   extrudedHeight:2000000,
+//   material,
+//   vertexFormat:Cesium.PerInstanceColorAppearance.VERTEX_FORMAT
 // });
-
-const label = viewer.entities.add({
-  position: Cesium.Cartesian3.fromDegrees(113.3191, 23.109, 610),
-  label: {
-    text: '广州塔',
-    font: '24px sans-serif',
-    fillColor: Cesium.Color.WHITE,
-    outlineWidth: Cesium.Color.BLACK,
-    outlineWidth: 4,
-    style: Cesium.LabelStyle.FILL_AND_OUTLINE,
-    pixelOffset: new Cesium.Cartesian2(0, -24),
-    horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
-    verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
-  },
-});
-
-const osmBuildingsTileset = Cesium.createOsmBuildings();
-viewer.scene.primitives.add(osmBuildingsTileset);
-
-function loadGaodeMap() {
-  // 添加高德影像图
-  let imgLayer = new Cesium.UrlTemplateImageryProvider({
-    url: 'https://webst02.is.autonavi.com/appmaptile?style=6&x={x}&y={y}&z={z}',
-    layer: 'imgLayer',
-    minimumLevel: 3,
-    maximumLevel: 18,
-  });
-  viewer.imageryLayers.addImageryProvider(imgLayer);
-
-  // 影像注记
-  let annoLayer = new Cesium.UrlTemplateImageryProvider({
-    url: 'http://webst02.is.autonavi.com/appmaptile?x={x}&y={y}&z={z}&lang=zh_cn&size=1&scale=1&style=8',
-    layer: 'annoLayer',
-    style: 'default',
-    //format: "image/jpeg",
-    //tileMatrixSetID: "GoogleMapsCompatible"
-  });
-  viewer.imageryLayers.addImageryProvider(annoLayer);
-}
-
-loadGaodeMap();
-
-const handler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
-handler.setInputAction((movement) => {
-  const cartesian = viewer.camera.pickEllipsoid(movement.endPosition, viewer.scene.globe.ellipsoid);
-  if (cartesian) {
-    const cartographic = Cesium.Cartographic.fromCartesian(cartesian);
-    const longitudeString = Cesium.Math.toDegrees(cartographic.longitude);
-    const latitudeString = Cesium.Math.toDegrees(cartographic.latitude);
-
-    const heightString = cartographic.height;
-
-    console.log({ longitudeString, latitudeString, heightString });
-
-    document.getElementById(
-      'mouse-position',
-    ).innerHTML = `经度：${longitudeString} 纬度：${latitudeString} 高度：${heightString}`;
-  }
-}, Cesium.ScreenSpaceEventType.MOUSE_MOVE);
-
-// 创建几何体
-// const rectangle = viewer.entities.add({
-//   rectangle: {
-//     coordinates: Cesium.Rectangle.fromDegrees(90, 20, 110, 30),
-//     material: Cesium.Color.RED.withAlpha(0.5),
-//   },
-// });
-
-
-const rectGeometry = new Cesium.RectangleGeometry({
-  rectangle:Cesium.Rectangle.fromDegrees(
-    115,
-    20,
-    135,
-    30
-  ),
-  height:20000,
-  vertexFormat:Cesium.PerInstanceColorAppearance.VERTEX_FORMAT
-});
 
 // 创建几何体实例
 const instance = new Cesium.GeometryInstance({
@@ -184,8 +119,5 @@ const primitives = new Cesium.Primitive({
 });
 
 viewer.scene.primitives.add(primitives);
-
-
-
 
 
