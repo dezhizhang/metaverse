@@ -538,3 +538,22 @@ const redLine = viewer.entities.add({
   }
 });
 ```
+
+### 发光材质
+```ts
+const material = new Cesium.PolylineGlowMaterialProperty({
+  glowPower:0.1,
+  taperPower:0.7,
+  color:Cesium.Color.RED
+});
+
+const redLine = viewer.entities.add({
+  polyline:{
+    positions:Cesium.Cartesian3.fromDegreesArray([
+      -75,35,-125,35,
+    ]),
+    material,
+    width:20,
+  }
+})
+```

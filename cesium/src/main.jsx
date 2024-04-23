@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-04-22 20:18:01
  * :last editor: 张德志
- * :date last edited: 2024-04-23 23:06:06
+ * :date last edited: 2024-04-23 23:14:53
  */
 /*
  * :file description:
@@ -84,14 +84,19 @@ const viewer = new Cesium.Viewer('root', {
 });
 
 
-const material = new Cesium.PolylineArrowMaterialProperty(Cesium.Color.RED);
+
+const material = new Cesium.PolylineGlowMaterialProperty({
+  glowPower:0.1,
+  taperPower:0.7,
+  color:Cesium.Color.RED
+});
 
 const redLine = viewer.entities.add({
   polyline:{
     positions:Cesium.Cartesian3.fromDegreesArray([
-      -75,35,-125,35
+      -75,35,-125,35,
     ]),
-    width:5,
     material,
+    width:20,
   }
-});
+})
