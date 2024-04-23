@@ -557,3 +557,44 @@ const redLine = viewer.entities.add({
   }
 })
 ```
+
+### 图片材质
+```ts
+const material = new Cesium.Material.fromType('Image',{
+  image:'/public/LaunchPad.png',
+  repeat:new Cesium.Cartesian3(1.0,1.0)
+});
+
+const appearance = new Cesium.MaterialAppearance({
+  material
+});
+
+const rectGeometry = new Cesium.RectangleGeometry({
+  rectangle:Cesium.Rectangle.fromDegrees(
+    115,
+    20,
+    135,
+    30
+  ),
+  height:20000,
+  vertexFormat:Cesium.EllipsoidSurfaceAppearance.VERTEX_FORMAT
+});
+
+// 创建几何体实例
+const instance = new Cesium.GeometryInstance({
+  geometry:rectGeometry,
+  attributes:{
+    color:Cesium.ColorGeometryInstanceAttribute.fromColor(
+      Cesium.Color.RED.withAlpha(0.5)
+    )
+  }
+});
+
+// 图元
+const primitives = new Cesium.Primitive({
+  geometryInstances:instance,
+  appearance,
+});
+
+viewer.scene.primitives.add(primitives);
+```

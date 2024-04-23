@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-04-22 20:18:01
  * :last editor: 张德志
- * :date last edited: 2024-04-23 23:14:53
+ * :date last edited: 2024-04-24 07:10:22
  */
 /*
  * :file description:
@@ -27,6 +27,7 @@ import LightSpread from './LightSpread';
 import LightWall from './LightWall';
 import ParticleLight from './ParticleLight';
 import CesiumNavigation from 'cesium-navigation-es6';
+import { renderToPipeableStream } from 'react-dom/server';
 
 // const atLayer = new Cesium.UrlTemplateImageryProvider({
 //     url: "https://webst02.is.autonavi.com/appmaptile?style=6&x={x}&y={y}&z={z}",
@@ -85,18 +86,42 @@ const viewer = new Cesium.Viewer('root', {
 
 
 
-const material = new Cesium.PolylineGlowMaterialProperty({
-  glowPower:0.1,
-  taperPower:0.7,
-  color:Cesium.Color.RED
+
+const material = new Cesium.Material.fromType('Image',{
+  image:'/public/LaunchPad.png',
+  repeat:new Cesium.Cartesian3(1.0,1.0)
 });
 
-const redLine = viewer.entities.add({
-  polyline:{
-    positions:Cesium.Cartesian3.fromDegreesArray([
-      -75,35,-125,35,
-    ]),
-    material,
-    width:20,
+const appearance = new Cesium.MaterialAppearance({
+  material
+});
+
+const rectGeometry = new Cesium.RectangleGeometry({
+  rectangle:Cesium.Rectangle.fromDegrees(
+    115,
+    20,
+    135,
+    30
+  ),
+  height:20000,
+  vertexFormat:Cesium.EllipsoidSurfaceAppearance.VERTEX_FORMAT
+});
+
+// 创建几何体实例
+const instance = new Cesium.GeometryInstance({
+  geometry:rectGeometry,
+  attributes:{
+    color:Cesium.ColorGeometryInstanceAttribute.fromColor(
+      Cesium.Color.RED.withAlpha(0.5)
+    )
   }
-})
+});
+
+// 图元
+const primitives = new Cesium.Primitive({
+  geometryInstances:instance,
+  appearance,
+});
+
+viewer.scene.primitives.add(primitives);
+// viewer.zoomTo(primitives);
