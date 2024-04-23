@@ -508,3 +508,18 @@ const material =new Cesium.ColorMaterialProperty(
   new Cesium.Color(1.0,1.0,1.0,1.0)
 )
 ```
+### 设置线和线的颜色
+```ts
+const material = new Cesium.PolylineDashMaterialProperty({
+  dashLength: 16,
+  color: Cesium.Color.RED,
+});
+
+const redLine = viewer.entities.add({
+  polyline: {
+    positions: Cesium.Cartesian3.fromDegreesArray([-75, 35, -125, 35]),
+    width: 5,
+    material,
+  },
+});
+```

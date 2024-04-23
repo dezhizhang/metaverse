@@ -1,11 +1,11 @@
 /*
- * :file description: 
+ * :file description:
  * :name: /cesium/src/main.jsx
  * :author: 张德志
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-04-22 20:18:01
  * :last editor: 张德志
- * :date last edited: 2024-04-23 22:32:04
+ * :date last edited: 2024-04-23 22:57:05
  */
 /*
  * :file description:
@@ -20,7 +20,7 @@ import * as Cesium from 'cesium';
 import modifyMap from './modifyMap';
 import modifyBuild from './modifyBuild';
 import LightCone from './lightCone';
-import RectFlyLight from './rectFlyLight'
+import RectFlyLight from './rectFlyLight';
 import RoadLightLine from './RoadLightLine';
 import RadarLight from './RadarLight';
 import LightSpread from './LightSpread';
@@ -83,41 +83,17 @@ const viewer = new Cesium.Viewer('root', {
   shouldAnimate: true,
 });
 
-const material =new Cesium.ColorMaterialProperty(
-  new Cesium.Color(1.0,1.0,1.0,1.0)
-)
-
-
-// const rectGeometry = new Cesium.RectangleGeometry({
-//   rectangle:Cesium.Rectangle.fromDegrees(
-//     115,
-//     20,
-//     135,
-//     30
-//   ),
-//   extrudedHeight:2000000,
-//   material,
-//   vertexFormat:Cesium.PerInstanceColorAppearance.VERTEX_FORMAT
-// });
-
-// 创建几何体实例
-const instance = new Cesium.GeometryInstance({
-  geometry:rectGeometry,
-  attributes:{
-    color:Cesium.ColorGeometryInstanceAttribute.fromColor(
-      Cesium.Color.RED.withAlpha(0.5)
-    )
-  }
+const material = new Cesium.PolylineDashMaterialProperty({
+  dashLength: 16,
+  color: Cesium.Color.RED,
 });
 
-// 图元
-const primitives = new Cesium.Primitive({
-  geometryInstances:instance,
-  appearance:new Cesium.PerInstanceColorAppearance({
-    flat:true
-  })
+const redLine = viewer.entities.add({
+  polyline: {
+    positions: Cesium.Cartesian3.fromDegreesArray([-75, 35, -125, 35]),
+    width: 5,
+    material,
+  },
 });
 
-viewer.scene.primitives.add(primitives);
-
-
+viewer.camera.setView(viewer.entities);
