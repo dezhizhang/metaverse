@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-04-22 20:18:01
  * :last editor: 张德志
- * :date last edited: 2024-04-24 07:10:22
+ * :date last edited: 2024-04-24 07:31:11
  */
 /*
  * :file description:
@@ -85,41 +85,33 @@ const viewer = new Cesium.Viewer('root', {
 });
 
 
-
-
-const material = new Cesium.Material.fromType('Image',{
+const material = new Cesium.Material.fromType('DiffuseMap',{
   image:'/public/LaunchPad.png',
-  repeat:new Cesium.Cartesian3(1.0,1.0)
+  repeat: new Cesium.Cartesian3(1.0,1.0)
 });
 
 const appearance = new Cesium.MaterialAppearance({
   material
 });
 
+
 const rectGeometry = new Cesium.RectangleGeometry({
-  rectangle:Cesium.Rectangle.fromDegrees(
-    115,
-    20,
-    135,
-    30
-  ),
-  height:20000,
-  vertexFormat:Cesium.EllipsoidSurfaceAppearance.VERTEX_FORMAT
+  rectangle: Cesium.Rectangle.fromDegrees(115, 20, 135, 30),
+  height: 20000,
+  vertexFormat: Cesium.EllipsoidSurfaceAppearance.VERTEX_FORMAT,
 });
 
 // 创建几何体实例
 const instance = new Cesium.GeometryInstance({
-  geometry:rectGeometry,
-  attributes:{
-    color:Cesium.ColorGeometryInstanceAttribute.fromColor(
-      Cesium.Color.RED.withAlpha(0.5)
-    )
-  }
+  geometry: rectGeometry,
+  attributes: {
+    color: Cesium.ColorGeometryInstanceAttribute.fromColor(Cesium.Color.RED.withAlpha(0.5)),
+  },
 });
 
 // 图元
 const primitives = new Cesium.Primitive({
-  geometryInstances:instance,
+  geometryInstances: instance,
   appearance,
 });
 
