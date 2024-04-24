@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-04-22 20:18:01
  * :last editor: 张德志
- * :date last edited: 2024-04-25 05:24:24
+ * :date last edited: 2024-04-25 05:42:33
  */
 /*
  * :file description:
@@ -84,7 +84,34 @@ const viewer = new Cesium.Viewer('root', {
   shouldAnimate: true,
 });
 
-const jsonData = await Cesium.GeoJsonDataSource.load('https://geo.datav.aliyun.com/areas_v3/bound/100000_full.json');
+
+const url = 'https://geo.datav.aliyun.com/areas_v3/bound/100000_full.json';
+
+const jsonData = await Cesium.GeoJsonDataSource.load(url, {
+  stroke: Cesium.Color.RED,
+  fill: Cesium.Color.BLUE,
+  strokeWidth: 4,
+});
+
+
+
+const entities = jsonData.entities.values;
+
+entities.forEach((entity) => {
+  entity.polygon.material = new Cesium.ColorMaterialProperty(
+    Cesium.Color.fromRandom({
+      alpha:0.9
+    })
+  ),
+  entity.polygon.outline = false;
+  entity.polygon.extrudedHeight = 100000;
+})
+
+
+
+
 viewer.dataSources.add(jsonData);
+
+
 
 

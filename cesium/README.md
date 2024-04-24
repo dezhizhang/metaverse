@@ -631,7 +631,38 @@ const material = new Cesium.Material({
 ```
 ### 加载geoJson数据
 ```ts
-const jsonData = await Cesium.GeoJsonDataSource.load('https://geo.datav.aliyun.com/areas_v3/bound/100000_full.json');
+const jsonData = await Cesium.GeoJsonDataSource.load('https://geo.datav.aliyun.com/areas_v3/bound/100000_full.json',{
+  stroke:Cesium.Color.RED,
+  fill:Cesium.Color.BLUE,
+  strokeWidth:2,
+});
 viewer.dataSources.add(jsonData);
+
+```
+
+### 修改geoJson样式
+```ts
+
+const url = 'https://geo.datav.aliyun.com/areas_v3/bound/100000_full.json';
+
+const jsonData = await Cesium.GeoJsonDataSource.load(url, {
+  stroke: Cesium.Color.RED,
+  fill: Cesium.Color.BLUE,
+  strokeWidth: 4,
+});
+
+
+
+const entities = jsonData.entities.values;
+
+entities.forEach((entity) => {
+  entity.polygon.material = new Cesium.ColorMaterialProperty(
+    Cesium.Color.fromRandom({
+      alpha:0.9
+    })
+  ),
+  entity.polygon.outline = false;
+  entity.polygon.extrudedHeight = 100000;
+})
 
 ```
