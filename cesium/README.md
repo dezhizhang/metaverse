@@ -598,3 +598,16 @@ const primitives = new Cesium.Primitive({
 
 viewer.scene.primitives.add(primitives);
 ```
+
+### fabric
+```ts
+const material = new Cesium.Material({
+  fabric:{
+    type:'Color',
+    uniforms:{
+      color:new Cesium.Color(1.0,0.0,0.0,1.0)
+    }
+  }
+})
+
+```
