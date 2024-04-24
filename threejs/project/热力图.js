@@ -1,11 +1,11 @@
 /*
- * :file description:
- * :name: /threejs/src/index.js
+ * :file description: 
+ * :name: /threejs/project/热力图.js
  * :author: 张德志
  * :copyright: (c) 2024, Tungee
- * :date created: 2024-04-07 14:25:08
+ * :date created: 2024-04-24 09:41:51
  * :last editor: 张德志
- * :date last edited: 2024-04-24 09:36:08
+ * :date last edited: 2024-04-24 09:41:52
  */
 
 import dat from 'dat.gui';
