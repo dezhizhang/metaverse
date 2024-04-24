@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-04-22 20:18:01
  * :last editor: 张德志
- * :date last edited: 2024-04-25 04:38:46
+ * :date last edited: 2024-04-25 05:11:23
  */
 /*
  * :file description:
@@ -84,25 +84,29 @@ const viewer = new Cesium.Viewer('root', {
   shouldAnimate: true,
 });
 
-
-// const material = new Cesium.Material.fromType('DiffuseMap',{
-//   image:'/public/LaunchPad.png',
-//   repeat: new Cesium.Cartesian3(1.0,1.0)
-// });
-
 const material = new Cesium.Material({
-  fabric:{
-    type:'Color',
-    uniforms:{
-      color:new Cesium.Color(1.0,0.0,0.0,1.0)
-    }
-  }
-})
-
-const appearance = new Cesium.MaterialAppearance({
-  material
+  fabric: {
+    uniforms: {
+      // color:new Cesium.Color(1.0,0.0,0.0,1.0)
+    },
+    source: `
+    czm_material czm_getMaterial(czm_materialInput materialInput)
+      {
+        czm_material material = czm_getDefaultMaterial(materialInput);
+        material.diffuse = vec3(materialInput.st,0.0); 
+        // float strength = mod(materialInput.s * 10.0,1.0);
+        // material.diffuse = vec3(strength,0.0,0.0); 
+        return material;
+      }
+    `,
+  },
 });
 
+console.log('material', material.shaderSource);
+
+const appearance = new Cesium.MaterialAppearance({
+  material,
+});
 
 const rectGeometry = new Cesium.RectangleGeometry({
   rectangle: Cesium.Rectangle.fromDegrees(115, 20, 135, 30),

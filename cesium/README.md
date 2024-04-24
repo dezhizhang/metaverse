@@ -611,3 +611,21 @@ const material = new Cesium.Material({
 })
 
 ```
+### 自定义cesium差色器
+```ts
+const material = new Cesium.Material({
+  fabric:{
+    uniforms:{
+      // color:new Cesium.Color(1.0,0.0,0.0,1.0)
+    },
+    source:`
+    czm_material czm_getMaterial(czm_materialInput materialInput)
+      {
+        czm_material material = czm_getDefaultMaterial(materialInput);
+        material.diffuse = vec3(1.0,0.0,0.0); 
+        return material;
+      }
+    `
+  }
+});
+```
