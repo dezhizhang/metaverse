@@ -629,3 +629,9 @@ const material = new Cesium.Material({
   }
 });
 ```
+### 加载geoJson数据
+```ts
+const jsonData = await Cesium.GeoJsonDataSource.load('https://geo.datav.aliyun.com/areas_v3/bound/100000_full.json');
+viewer.dataSources.add(jsonData);
+
+```

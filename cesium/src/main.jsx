@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-04-22 20:18:01
  * :last editor: 张德志
- * :date last edited: 2024-04-25 05:11:23
+ * :date last edited: 2024-04-25 05:24:24
  */
 /*
  * :file description:
@@ -84,49 +84,7 @@ const viewer = new Cesium.Viewer('root', {
   shouldAnimate: true,
 });
 
-const material = new Cesium.Material({
-  fabric: {
-    uniforms: {
-      // color:new Cesium.Color(1.0,0.0,0.0,1.0)
-    },
-    source: `
-    czm_material czm_getMaterial(czm_materialInput materialInput)
-      {
-        czm_material material = czm_getDefaultMaterial(materialInput);
-        material.diffuse = vec3(materialInput.st,0.0); 
-        // float strength = mod(materialInput.s * 10.0,1.0);
-        // material.diffuse = vec3(strength,0.0,0.0); 
-        return material;
-      }
-    `,
-  },
-});
+const jsonData = await Cesium.GeoJsonDataSource.load('https://geo.datav.aliyun.com/areas_v3/bound/100000_full.json');
+viewer.dataSources.add(jsonData);
 
-console.log('material', material.shaderSource);
 
-const appearance = new Cesium.MaterialAppearance({
-  material,
-});
-
-const rectGeometry = new Cesium.RectangleGeometry({
-  rectangle: Cesium.Rectangle.fromDegrees(115, 20, 135, 30),
-  height: 20000,
-  vertexFormat: Cesium.EllipsoidSurfaceAppearance.VERTEX_FORMAT,
-});
-
-// 创建几何体实例
-const instance = new Cesium.GeometryInstance({
-  geometry: rectGeometry,
-  attributes: {
-    color: Cesium.ColorGeometryInstanceAttribute.fromColor(Cesium.Color.RED.withAlpha(0.5)),
-  },
-});
-
-// 图元
-const primitives = new Cesium.Primitive({
-  geometryInstances: instance,
-  appearance,
-});
-
-viewer.scene.primitives.add(primitives);
-// viewer.zoomTo(primitives);
