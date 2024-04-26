@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-03-13 22:44:48
  * :last editor: 张德志
- * :date last edited: 2024-04-26 16:45:50
+ * :date last edited: 2024-04-26 16:57:42
  */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -26,16 +26,15 @@ renderer.setPixelRatio(window.devicePixelRatio);
 
 document.body.appendChild(renderer.domElement);
 
+
 const objLoader = new OBJLoader();
 const mtlLoader = new MTLLoader();
 
-mtlLoader.load('/cube/box.mtl',function(material) {
+mtlLoader.load('/multiple-models/model1.mtl',function(material) {
   objLoader.setMaterials(material);
-  objLoader.load('/cube/box.obj',function(obj) {
-    obj.children[0].scale.set(10,10,10);
+  objLoader.load('/multiple-models/model1.obj',function(obj) {
     obj.children[0].geometry.center();
-    // obj.children[0].material.color = new THREE.Color(0x00ffff);
-    scene.add(obj);  
+    scene.add(obj);
   })
 })
 
