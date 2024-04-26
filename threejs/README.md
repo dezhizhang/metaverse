@@ -581,6 +581,21 @@ mtlLoader.load('/cube/box.mtl',function(material) {
   })
 })
 ```
+### OBJLoader和MTLLoader的加载多模型
+```js
+const objLoader = new OBJLoader();
+const mtlLoader = new MTLLoader();
+
+mtlLoader.load('/multiple-models/model1.mtl',function(material) {
+  objLoader.setMaterials(material);
+  objLoader.load('/multiple-models/model1.obj',function(obj) {
+    obj.children[0].geometry.center();
+    scene.add(obj);
+  })
+})
+
+```
+
 
 
 
