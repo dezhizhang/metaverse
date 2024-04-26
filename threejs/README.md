@@ -565,6 +565,23 @@ const curveObject = new THREE.Line(geometry,material);
 scene.add(curveObject);
 
 ```
+### OBJLoader和MTLLoader的加载
+```js
+
+const objLoader = new OBJLoader();
+const mtlLoader = new MTLLoader();
+
+mtlLoader.load('/cube/box.mtl',function(material) {
+  objLoader.setMaterials(material);
+  objLoader.load('/cube/box.obj',function(obj) {
+    obj.children[0].scale.set(10,10,10);
+    obj.children[0].geometry.center();
+    // obj.children[0].material.color = new THREE.Color(0x00ffff);
+    scene.add(obj);  
+  })
+})
+```
+
 
 
 
