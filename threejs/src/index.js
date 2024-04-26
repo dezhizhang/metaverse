@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-03-13 22:44:48
  * :last editor: 张德志
- * :date last edited: 2024-04-26 17:18:45
+ * :date last edited: 2024-04-26 17:29:39
  */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -34,16 +34,13 @@ let mixer;
 
 const fbxLoader = new FBXLoader();
 fbxLoader.load('/sambaDancing.fbx',(obj) => {
-
-  console.log(obj);
   obj.scale.set(0.5,0.5,0.5);
-  // 解析动画
+
   mixer = new THREE.AnimationMixer(obj);
-  const animations = mixer.clipAction(obj.animations[0]);
-  animations.play();
+  const animation = mixer.clipAction(obj.animations[0]);
+  animation.play();
 
   scene.add(obj);
-
 })
 
 
