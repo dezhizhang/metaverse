@@ -596,6 +596,25 @@ mtlLoader.load('/multiple-models/model1.mtl',function(material) {
 
 ```
 
+### FBXLoader加载并解析动画
+```js
+let mixer;
+
+const fbxLoader = new FBXLoader();
+fbxLoader.load('/sambaDancing.fbx',(obj) => {
+
+  console.log(obj);
+  obj.scale.set(0.5,0.5,0.5);
+  // 解析动画
+  mixer = new THREE.AnimationMixer(obj);
+  const animations = mixer.clipAction(obj.animations[0]);
+  animations.play();
+
+  scene.add(obj);
+
+})
+```
+
 
 
 
