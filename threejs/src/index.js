@@ -5,11 +5,11 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-03-13 22:44:48
  * :last editor: 张德志
- * :date last edited: 2024-04-26 17:29:39
+ * :date last edited: 2024-04-26 17:43:06
  */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js';
+import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader.js';
 
 const scene = new THREE.Scene();
 
@@ -30,30 +30,23 @@ const controls = new OrbitControls(camera,renderer.domElement);
 scene.add(new THREE.AxesHelper(100));
 scene.add(new THREE.AmbientLight(0xffffff,1));
 
-let mixer;
 
-const fbxLoader = new FBXLoader();
-fbxLoader.load('/sambaDancing.fbx',(obj) => {
-  obj.scale.set(0.5,0.5,0.5);
 
-  mixer = new THREE.AnimationMixer(obj);
-  const animation = mixer.clipAction(obj.animations[0]);
-  animation.play();
+const objLoader = new OBJLoader();
+const textureLoader = new THREE.TextureLoader();
 
+objLoader.load('/bracelet.obj',function(obj) {
+  const material = new THREE.MeshBasicMaterial({
+    map:textureLoader.load('/texture2.png')
+  })
+  obj.children[0].material = material;
   scene.add(obj);
 })
 
 
-
-const clock = new THREE.Clock();
-
 function render() {
   requestAnimationFrame(render);
   renderer.render(scene,camera);
-
-  if(mixer) {
-    mixer.update(clock.getDelta());
-  }
 }
 
 render();

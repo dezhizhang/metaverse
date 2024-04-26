@@ -614,6 +614,20 @@ fbxLoader.load('/sambaDancing.fbx',(obj) => {
 
 })
 ```
+### OBJLoader加载并添加贴图
+
+```js
+const objLoader = new OBJLoader();
+const textureLoader = new THREE.TextureLoader();
+
+objLoader.load('/bracelet.obj',function(obj) {
+  const material = new THREE.MeshBasicMaterial({
+    map:textureLoader.load('/texture1.png')
+  })
+  obj.children[0].material = material;
+  scene.add(obj);
+})
+```
 
 
 
