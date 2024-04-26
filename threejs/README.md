@@ -628,6 +628,36 @@ objLoader.load('/bracelet.obj',function(obj) {
   scene.add(obj);
 })
 ```
+### 添加环境贴图，高光贴图等
+```js
+const textureLoader = new THREE.TextureLoader();
+const colorTexture = textureLoader.load('/heart/color.png');
+const normalTexture = textureLoader.load('/heart/normal.png');
+const specularTexture = textureLoader.load('/heart/specular.png');
+
+const textureCube = new THREE.CubeTextureLoader()
+  .setPath('/environment/')
+  .load(['px.jpg', 'nx.jpg', 'py.jpg', 'ny.jpg', 'pz.jpg', 'nz.jpg']);
+
+const objLoader = new OBJLoader();
+objLoader.load('/heart/model.obj', (obj) => {
+  const mesh = obj.children[0];
+  mesh.scale.set(5, 5, 5);
+
+  const material = new THREE.MeshPhongMaterial({
+    map: colorTexture,
+    normalMap: normalTexture,
+    specularMap: specularTexture,
+    envMap: textureCube,
+    shininess: 100,
+    normalScale: new THREE.Vector2(1, 1),
+  });
+  mesh.material = material;
+
+  scene.add(obj);
+});
+
+```
 
 
 

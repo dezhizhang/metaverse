@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-04-26 17:43:22
  * :last editor: 张德志
- * :date last edited: 2024-04-26 17:43:23
+ * :date last edited: 2024-04-26 17:48:01
  */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -32,15 +32,26 @@ scene.add(new THREE.AmbientLight(0xffffff,1));
 
 
 
+// const objLoader = new OBJLoader();
+// const textureLoader = new THREE.TextureLoader();
+
+// objLoader.load('/bracelet.obj',function(obj) {
+//   const material = new THREE.MeshBasicMaterial({
+//     map:textureLoader.load('/texture3.png')
+//   })
+//   obj.children[0].material = material;
+//   scene.add(obj);
+// })
+
 const objLoader = new OBJLoader();
 const textureLoader = new THREE.TextureLoader();
 
 objLoader.load('/bracelet.obj',function(obj) {
-  const material = new THREE.MeshBasicMaterial({
-    map:textureLoader.load('/texture2.png')
-  })
-  obj.children[0].material = material;
-  scene.add(obj);
+    const material = new THREE.MeshBasicMaterial({
+        map:textureLoader.load('/texture1.png')
+    });
+    obj.children[0].material = material;
+    scene.add(obj);
 })
 
 
