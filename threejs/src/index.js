@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-03-13 22:44:48
  * :last editor: 张德志
- * :date last edited: 2024-04-27 19:44:18
+ * :date last edited: 2024-04-27 19:55:08
  */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -32,7 +32,7 @@ scene.add(new THREE.AmbientLight(0xffffff));
 
 const geometry = new THREE.BoxGeometry(60,100,60);
 const material = new THREE.MeshLambertMaterial({
-  color:0x009999,
+  color:0x009999
 });
 const mesh = new THREE.Mesh(geometry,material);
 scene.add(mesh);
@@ -44,11 +44,30 @@ const spriteMaterial = new THREE.SpriteMaterial({
   map:texture
 });
 
-const sprite = new THREE.Sprite(spriteMaterial);
+const sprite = new THREE.SpriteMaterial(spriteMaterial);
 sprite.scale.set(40,40,1);
 sprite.position.copy(mesh.position);
-sprite.position.y += 80;
-scene.add(sprite);
+
+
+// const geometry = new THREE.BoxGeometry(60,100,60);
+// const material = new THREE.MeshLambertMaterial({
+//   color:0x009999,
+// });
+// const mesh = new THREE.Mesh(geometry,material);
+// scene.add(mesh);
+
+// const textureLoader = new THREE.TextureLoader();
+// const texture = textureLoader.load('/红豆.png');
+
+// const spriteMaterial = new THREE.SpriteMaterial({
+//   map:texture
+// });
+
+// const sprite = new THREE.Sprite(spriteMaterial);
+// sprite.scale.set(40,40,1);
+// sprite.position.copy(mesh.position);
+// sprite.position.y += 80;
+// scene.add(sprite);
 
 
 function render() {
