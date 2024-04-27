@@ -238,3 +238,17 @@ window.addEventListener('keydown',(ev) => {
   console.log(ev);   
 })
 ```
+### uniform传值
+```js
+const fragShaderSource = `
+    precision mediump float;
+    uniform vec3 u_color;
+    void main() {
+        gl_FragColor = vec4(u_color,1);
+    }
+`;
+
+const u_color = gl.getUniformLocation(program,'u_color');
+gl.uniform3f(u_color,0.0,1.0,0.0);
+
+```

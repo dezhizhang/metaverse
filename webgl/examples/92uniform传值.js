@@ -1,5 +1,14 @@
 /*
  * :file description: 
+ * :name: /webgl/examples/92uniform传值.js
+ * :author: 张德志
+ * :copyright: (c) 2024, Tungee
+ * :date created: 2024-04-28 06:27:48
+ * :last editor: 张德志
+ * :date last edited: 2024-04-28 06:28:03
+ */
+/*
+ * :file description: 
  * :name: /webgl/src/index.js
  * :author: 张德志
  * :copyright: (c) 2024, Tungee
