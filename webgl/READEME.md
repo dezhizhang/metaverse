@@ -286,3 +286,28 @@ const a_Position =  gl.getAttribLocation(program,'a_Position');
 gl.vertexAttribPointer(a_Position,2,gl.FLOAT,false,0,0);
 gl.enableVertexAttribArray(a_Position);
 ```
+### 渐变三角形
+```js
+const dataVertices = new Float32Array([
+    // x,y,r,g,b
+    -0.5,0.0,1.0,0.0,0.0,
+    0.5,0.0,0.0,1.0,0.0,
+    0.0,0.5,0.0,0.0,1.0,
+]);
+
+const FSIZE = dataVertices.BYTES_PER_ELEMENT;
+
+const buffer = gl.createBuffer();
+gl.bindBuffer(gl.ARRAY_BUFFER,buffer);
+
+gl.bufferData(gl.ARRAY_BUFFER,dataVertices,gl.STATIC_DRAW);
+
+const a_Position =  gl.getAttribLocation(program,'a_Position');
+gl.vertexAttribPointer(a_Position,2,gl.FLOAT,false,5 * FSIZE,0);
+gl.enableVertexAttribArray(a_Position);
+
+const a_Color = gl.getAttribLocation(program,'a_color');
+gl.vertexAttribPointer(a_Color,3,gl.FLOAT,false,5 * FSIZE,2 * FSIZE);
+gl.enableVertexAttribArray(a_Color);
+
+```
