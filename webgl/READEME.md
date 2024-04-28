@@ -311,3 +311,40 @@ gl.vertexAttribPointer(a_Color,3,gl.FLOAT,false,5 * FSIZE,2 * FSIZE);
 gl.enableVertexAttribArray(a_Color);
 
 ```
+
+### webgl中添加动画
+```ts 
+const vertexShaderSource = `
+    precision mediump float;
+    attribute vec2 a_position;
+    uniform vec4 u_translate;
+
+    void main() {
+        gl_Position = vec4(a_position,0.0,1.0) + u_translate;
+        gl_PointSize = 10.0;
+    }
+`;
+
+
+let tx = 0;
+let ty = 0;
+
+const u_translate = gl.getUniformLocation(program,'u_translate');
+
+ 
+
+function animation() {
+    requestAnimationFrame(animation);
+    tx += 0.001;
+    ty += 0.001;
+    gl.uniform4f(u_translate,tx,ty,0,0);
+
+    gl.clearColor(0,0,0,1);
+    gl.clear(gl.COLOR_BUFFER_BIT);
+
+    gl.drawArrays(gl.TRIANGLES,0,3);
+
+}
+```
+
+
