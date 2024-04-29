@@ -1,11 +1,11 @@
 /*
  * :file description: 
- * :name: /webgl/src/index.js
+ * :name: /webgl/examples/96glMatrix平移.js
  * :author: 张德志
- * :copyright: (c) 2023, Tungee
- * :date created: 2023-03-13 05:58:33
+ * :copyright: (c) 2024, Tungee
+ * :date created: 2024-04-30 06:39:10
  * :last editor: 张德志
- * :date last edited: 2024-04-30 06:38:32
+ * :date last edited: 2024-04-30 06:39:24
  */
 import { mat4 } from 'gl-matrix';
 
