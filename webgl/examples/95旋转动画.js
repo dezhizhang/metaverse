@@ -1,12 +1,13 @@
 /*
- * :file description:
- * :name: /webgl/src/index.js
+ * :file description: 
+ * :name: /webgl/examples/旋转动画.js
  * :author: 张德志
- * :copyright: (c) 2022, Tungee
- * :date created: 2022-07-10 11:12:55
+ * :copyright: (c) 2024, Tungee
+ * :date created: 2024-04-30 06:06:38
  * :last editor: 张德志
- * :date last edited: 2024-04-30 06:05:47
+ * :date last edited: 2024-04-30 06:06:40
  */
+
 
 const canvas = document.createElement('canvas');
 canvas.width = window.innerWidth;
