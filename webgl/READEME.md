@@ -419,3 +419,41 @@ gl.vertexAttribPointer(aColor,3,gl.FLOAT,false,6 * FSIZE,FSIZE * 3);
 gl.enableVertexAttribArray(aColor);
 ```
 
+### uv颜色渐变
+```js
+const vertexShaderSource = `
+    attribute vec3 a_position;
+    attribute vec2 a_uv;
+    varying vec2 v_uv;
+    void main() {
+        v_uv = a_uv;
+        gl_Position = vec4(a_position,1.0);
+        gl_PointSize = 10.0;
+    }
+`;
+
+const fragShaderSource = `
+    precision mediump float;
+    varying vec2 v_uv;
+    void main() {
+        gl_FragColor = vec4(v_uv,0.0,1.0);
+    }
+`;
+
+const uvs = new Float32Array([
+    0.0,0.0,
+    1.0,0.0,
+    1.0,1.0,
+    0.0,1.0,
+]);
+
+const uvBuffer = gl.createBuffer();
+gl.bindBuffer(gl.ARRAY_BUFFER,uvBuffer);
+gl.bufferData(gl.ARRAY_BUFFER,uvs,gl.STATIC_DRAW);
+
+const aUv = gl.getAttribLocation(program,'a_uv');
+gl.vertexAttribPointer(aUv,2,gl.FLOAT,false,FSIZE * 2,0);
+gl.enableVertexAttribArray(aUv);
+
+```
+
