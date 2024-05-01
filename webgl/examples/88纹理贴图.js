@@ -2,124 +2,123 @@
  * :file description:
  * :name: /webgl/examples/88纹理贴图.js
  * :author: 张德志
- * :copyright: (c) 2023, Tungee
+ * :copyright: (c) 2024, Tungee
  * :date created: 2023-03-13 05:58:33
  * :last editor: 张德志
- * :date last edited: 2023-06-18 16:29:04
+ * :date last edited: 2024-05-01 17:18:00
  */
-import cat from "./cat.png";
+import { initShader } from '../lib/common';
 
+let canvas = document.createElement('canvas');
 
-const canvas = document.createElement("canvas");
+// 获取webgl绘图上下文
+const gl = canvas.getContext('webgl');
 
 canvas.width = 500;
 canvas.height = 500;
+gl.viewport(0, 0, canvas.width, canvas.height);
 
-const gl = canvas.getContext("webgl");
+const vertex = `
+			attribute vec4 aPosition;
+      attribute vec2 aTextCoord;
+      varying  vec2 vTextCoord;
+			void main() {
+				gl_Position =  aPosition;
+        vTextCoord = aTextCoord;
+			}
+		`;
+const fragment = `
+			precision highp float;
 
-const VERTEX_SHADER = `
-    precision mediump float;
-    attribute vec3 a_position;
-    attribute vec2 a_uv;
-    varying vec2 v_uv;
-    void main() {
-        v_uv = a_uv;
-        gl_Position = vec4(a_position,1.0);
-        gl_PointSize = 10.0;
-    }
-`;
+      uniform sampler2D uSample1;
+      uniform sampler2D uSample2;
+      varying  vec2 vTextCoord;
+			void main(){
+        vec4 imgColor1 = texture2D(uSample1, vTextCoord);
+        vec4 imgColor2 = texture2D(uSample2, vTextCoord);
+				gl_FragColor = imgColor1 * imgColor2;
+			}
+		`;
 
-const FRAG_SHADER = `
-    precision mediump float;
-    varying vec2 v_uv;
-    uniform sampler2D u_sampler;
-    void main() {
-        vec4 color = texture2D(u_sampler,v_uv);
-        gl_FragColor = color;
-    }
-`;
-
-const vertex = gl.createShader(gl.VERTEX_SHADER);
-const frag = gl.createShader(gl.FRAGMENT_SHADER);
-
-gl.shaderSource(vertex, VERTEX_SHADER);
-gl.shaderSource(frag, FRAG_SHADER);
-
-// 编译
-gl.compileShader(vertex);
-gl.compileShader(frag);
-
-// 创建几何体
-const program = gl.createProgram();
-gl.attachShader(program, vertex);
-gl.attachShader(program, frag);
-
-gl.linkProgram(program);
-gl.useProgram(program);
-
-const dataVertices = new Float32Array([
-    -0.5, -0.5, 0.0, 0.5, -0.5, 0.0, 0.5, 0.5, 0.0, -0.5, 0.5, 0.0,
+// 创建program
+const program = initShader(gl, vertex, fragment);
+// 获取attribute变量的数据存储位置
+const aPosition = gl.getAttribLocation(program, 'aPosition');
+const aTextCoord = gl.getAttribLocation(program, 'aTextCoord');
+const uSample1 = gl.getUniformLocation(program, 'uSample1');
+const uSample2 = gl.getUniformLocation(program, 'uSample2');
+// 创建缓冲区对象
+const buffer = gl.createBuffer();
+// 绑定缓冲区对象
+gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+// 传入的数据
+const vertices = new Float32Array([
+  -0.5,
+  0.5,
+  0.0,
+  1.0, // 齐次坐标x, 齐次坐标y, uv坐标u, uv坐标v
+  -0.5,
+  -0.5,
+  0.0,
+  0.0,
+  0.5,
+  0.5,
+  1.0,
+  1.0,
+  0.5,
+  -0.5,
+  1.0,
+  0.0,
 ]);
 
-const uvs = new Float32Array([0.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 1.0]);
+const BYTES = vertices.BYTES_PER_ELEMENT;
 
-const FSIZE = dataVertices.BYTES_PER_ELEMENT;
+// 开辟空间并写入数据
+gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW);
 
-const buffer = gl.createBuffer();
-gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-gl.bufferData(gl.ARRAY_BUFFER, dataVertices, gl.STATIC_DRAW);
-const aPosition = gl.getAttribLocation(program, "a_position");
-gl.vertexAttribPointer(aPosition, 3, gl.FLOAT, false, 3 * FSIZE, 0);
+// 缓冲区对象分配给attribute变量
+gl.vertexAttribPointer(aPosition, 2, gl.FLOAT, false, BYTES * 4, 0);
+// 开启attribue缓冲区变量
 gl.enableVertexAttribArray(aPosition);
 
-const uvsBuffer = gl.createBuffer();
-gl.bindBuffer(gl.ARRAY_BUFFER, uvsBuffer);
-gl.bufferData(gl.ARRAY_BUFFER, uvs, gl.STATIC_DRAW);
-const aUv = gl.getAttribLocation(program, "a_uv");
-gl.vertexAttribPointer(aUv, 2, gl.FLOAT, false, 2 * FSIZE, 0);
-gl.enableVertexAttribArray(aUv);
+gl.vertexAttribPointer(aTextCoord, 2, gl.FLOAT, false, BYTES * 4, BYTES * 2);
+gl.enableVertexAttribArray(aTextCoord);
 
-initTexture();
+function addImage(url, textureIndex, location) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => {
+      //onload()页面加载（文本和图片）完毕的时候
+      const texture = gl.createTexture(); // 创建纹理对象
 
-function initTexture() {
-    let texture = gl.createTexture();
-    let u_sampler = gl.getUniformLocation(program, "u_sampler");
+      gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1); // 反转Y轴
+      gl.activeTexture(gl[`TEXTURE${textureIndex}`]); // 激活纹理单元
+      gl.bindTexture(gl.TEXTURE_2D, texture); // 绑定纹理对象
 
+      gl.texParameterf(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR); // 放大处理方式
+      gl.texParameterf(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR); // 缩小处理方式
+      gl.texParameterf(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE); // 水平平铺方式
+      gl.texParameterf(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE); // 竖直平铺方式
 
-    let image = new Image();
-    image.src = cat;
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, img); // 配置纹理图像
 
-    image.onload = function () {
-        gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL,true);
-        
-        gl.activeTexture(gl.TEXTURE0);
+      gl.uniform1i(location, textureIndex); // 纹理单元传递给着色器
 
-        gl.bindTexture(gl.TEXTURE_2D, texture);
-
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-        
-        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
-
-        gl.uniform1i(u_sampler, 0);
-        draw();
-
+      resolve(img);
     };
+    img.onerror = () => {
+      const err = new Error(`图片加载失败${url}`);
+      reject(err);
+    };
+    img.src = url;
+  });
 }
 
+Promise.all([addImage('/cat.png', 0, uSample1)]).then(() => {
+  gl.clearColor(0, 0, 0, 1.0);
+  gl.clear(gl.COLOR_BUFFER_BIT);
 
+  gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+});
 
-function draw() {
-    gl.clearColor(0.0, 0.0, 0.0, 1.0);
-    gl.clear(gl.COLOR_BUFFER_BIT);
-
-    gl.drawArrays(gl.TRIANGLE_FAN, 0, 4);
-
-    document.body.appendChild(canvas);
-
-}
-
-draw();
-
-
-
-
+document.body.appendChild(canvas);
