@@ -10,7 +10,7 @@ const gl = canvas.getContext('webgl');
 const VERTEX_SHADER = `
     attribute vec3 a_Position;
     void main() {
-        gl_Position = vec4(a_Position,1.0);
+        gl_Position = viewMatrix * projectionMatrix * modelMatrix * vec4(a_Position,1.0);
     }
 `;
 
@@ -22,47 +22,11 @@ const FRAG_SHADER = `
 
 
 
-
-// 定义立方体的顶点数据
-var vertices = new Float32Array([
-    // 正面
-    -0.5, -0.5,  0.5,
-     0.5, -0.5,  0.5,
-     0.5,  0.5,  0.5,
-    -0.5,  0.5,  0.5,
-    // 背面
-    -0.5, -0.5, -0.5,
-    -0.5,  0.5, -0.5,
-     0.5,  0.5, -0.5,
-     0.5, -0.5, -0.5,
-    // 左面
-    -0.5, -0.5, -0.5,
-    -0.5,  0.5, -0.5,
-    -0.5,  0.5,  0.5,
-    -0.5, -0.5,  0.5,
-    // 右面
-     0.5, -0.5, -0.5,
-     0.5, -0.5,  0.5,
-     0.5,  0.5,  0.5,
-     0.5,  0.5, -0.5,
-    // 上面
-    -0.5,  0.5,  0.5,
-     0.5,  0.5,  0.5,
-     0.5,  0.5, -0.5,
-    -0.5,  0.5, -0.5,
-    // 下面
-    -0.5, -0.5, -0.5,
-    -0.5, -0.5,  0.5,
-     0.5, -0.5, -0.5,
-     0.5, -0.5,  0.5,
-]);
-
 const vertex = gl.createShader(gl.VERTEX_SHADER);
 const frag = gl.createShader(gl.FRAGMENT_SHADER);
 
 gl.shaderSource(vertex,VERTEX_SHADER);
 gl.shaderSource(frag,FRAG_SHADER);
-
 
 gl.compileShader(vertex);
 gl.compileShader(frag);
@@ -73,6 +37,7 @@ gl.attachShader(program,frag);
 
 gl.linkProgram(program);
 gl.useProgram(program);
+
  
 // 创建缓冲区
 var vertexBuffer = gl.createBuffer();
