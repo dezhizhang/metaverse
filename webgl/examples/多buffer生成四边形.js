@@ -1,12 +1,13 @@
 /*
  * :file description: 
- * :name: /webgl/src/index.js
+ * :name: /webgl/examples/多buffer生成四边形.js
  * :author: 张德志
- * :copyright: (c) 2023, Tungee
- * :date created: 2023-03-13 05:58:33
+ * :copyright: (c) 2024, Tungee
+ * :date created: 2024-05-01 15:09:36
  * :last editor: 张德志
- * :date last edited: 2024-05-01 15:06:45
+ * :date last edited: 2024-05-01 15:09:37
  */
+
 import { mat4 } from 'gl-matrix';
 
 const canvas = document.createElement('canvas');
