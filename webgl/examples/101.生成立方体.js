@@ -1,3 +1,12 @@
+/*
+ * :file description: 
+ * :name: /webgl/examples/101.生成立方体.js
+ * :author: 张德志
+ * :copyright: (c) 2024, Tungee
+ * :date created: 2024-05-01 20:12:57
+ * :last editor: 张德志
+ * :date last edited: 2024-05-01 20:13:06
+ */
 
 const canvas = document.createElement('canvas');
 canvas.width = 400;
@@ -19,8 +28,6 @@ const FRAG_SHADER = `
         gl_FragColor = vec4(1.0,0.0,0.0,1.0);
     }
 `;
-
-
 
 
 // 定义立方体的顶点数据
