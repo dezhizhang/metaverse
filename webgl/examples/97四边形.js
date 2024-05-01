@@ -1,14 +1,12 @@
 /*
  * :file description: 
- * :name: /webgl/src/index.js
+ * :name: /webgl/examples/97四边形.js
  * :author: 张德志
- * :copyright: (c) 2023, Tungee
- * :date created: 2023-03-13 05:58:33
+ * :copyright: (c) 2024, Tungee
+ * :date created: 2024-05-01 14:51:15
  * :last editor: 张德志
- * :date last edited: 2024-05-01 14:50:54
+ * :date last edited: 2024-05-01 14:51:34
  */
-import { mat4 } from 'gl-matrix';
-
 const canvas = document.createElement('canvas');
 canvas.width = 500;
 canvas.height = 500;
@@ -70,5 +68,3 @@ gl.clear(gl.COLOR_BUFFER_BIT);
 gl.drawArrays(gl.TRIANGLE_FAN,0,4);
 
 document.body.appendChild(canvas);
-
-
