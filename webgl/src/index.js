@@ -5,7 +5,7 @@
  * :copyright: (c) 2023, Tungee
  * :date created: 2023-03-13 05:58:33
  * :last editor: 张德志
- * :date last edited: 2024-04-30 06:38:32
+ * :date last edited: 2024-05-01 14:40:16
  */
 import { mat4 } from 'gl-matrix';
 
@@ -13,15 +13,12 @@ const canvas = document.createElement('canvas');
 canvas.width = 500;
 canvas.height = 500;
 
-document.body.appendChild(canvas);
-
 const gl = canvas.getContext('webgl');
 
 const vertexShaderSource = `
-    attribute vec2 a_position;
-    uniform mat4 u_matrix;
+    attribute vec3 a_position;
     void main() {
-        gl_Position = u_matrix * vec4(a_position,0.0,1.0);
+        gl_Position = vec4(a_position,1.0);
     }
 `;
 
@@ -29,7 +26,7 @@ const fragShaderSource = `
     void main() {
         gl_FragColor = vec4(1.0,0.0,0.0,1.0);
     }
-`
+`;
 
 const vertex = gl.createShader(gl.VERTEX_SHADER);
 const frag = gl.createShader(gl.FRAGMENT_SHADER);
@@ -37,7 +34,6 @@ const frag = gl.createShader(gl.FRAGMENT_SHADER);
 gl.shaderSource(vertex,vertexShaderSource);
 gl.shaderSource(frag,fragShaderSource);
 
-// 编译
 gl.compileShader(vertex);
 gl.compileShader(frag);
 
@@ -48,31 +44,30 @@ gl.attachShader(program,frag);
 gl.linkProgram(program);
 gl.useProgram(program);
 
+
 const dataVertices = new Float32Array([
-    0.0,0.0,
-    0.3,0.3,
-    0.6,0.0, 
+    -0.5,0.5,0.0,
+    -0.5,-0.5,0.0,
+    0.5,-0.5,0.0,
+    0.5,0.5,0.0,
 ]);
 
-const matrix = mat4.create();
-mat4.fromTranslation(matrix,[-0.5,-0.5,0.0]);
+
+const FSIZE = dataVertices.BYTES_PER_ELEMENT;
 
 const buffer = gl.createBuffer();
 gl.bindBuffer(gl.ARRAY_BUFFER,buffer);
-gl.bufferData(gl.ARRAY_BUFFER,dataVertices,gl.STREAM_DRAW);
+gl.bufferData(gl.ARRAY_BUFFER,dataVertices,gl.STATIC_DRAW);
 
-const aPosition = gl.getUniformLocation(program,'a_position');
-gl.vertexAttribPointer(aPosition,2,gl.FLOAT,false,0,0);
+const aPosition = gl.getAttribLocation(program,'a_position');
+gl.vertexAttribPointer(aPosition,3,gl.FLOAT,false,3 * FSIZE,0);
 gl.enableVertexAttribArray(aPosition);
 
 
-const uMatrix = gl.getUniformLocation(program,'u_matrix');
-gl.uniformMatrix4fv(uMatrix,false,matrix);
-
-gl.clearColor(0,0,0,1.0);
+gl.clearColor(0,0,0,1);
 gl.clear(gl.COLOR_BUFFER_BIT);
+gl.drawArrays(gl.TRIANGLE_FAN,0,4);
 
+document.body.appendChild(canvas);
 
-
-gl.drawArrays(gl.TRIANGLES,0,3);
 
