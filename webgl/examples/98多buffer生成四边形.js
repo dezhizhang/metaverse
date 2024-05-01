@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-05-01 15:09:36
  * :last editor: 张德志
- * :date last edited: 2024-05-01 15:09:37
+ * :date last edited: 2024-05-01 15:15:23
  */
 
 import { mat4 } from 'gl-matrix';
@@ -70,9 +70,7 @@ const aPosition = gl.getAttribLocation(program,'a_position');
 gl.vertexAttribPointer(aPosition,3,gl.FLOAT,false,3 * FSIZE,0);
 gl.enableVertexAttribArray(aPosition);
 
-
-
-const colors = new Float32Array([
+const colorVertices = new Float32Array([
     1.0,0.0,0.0,
     0.0,1.0,0.0,
     0.0,0.0,1.0,
@@ -81,11 +79,13 @@ const colors = new Float32Array([
 
 const colorsBuffer = gl.createBuffer();
 gl.bindBuffer(gl.ARRAY_BUFFER,colorsBuffer);
-gl.bufferData(gl.ARRAY_BUFFER,colors,gl.STATIC_DRAW);
+gl.bufferData(gl.ARRAY_BUFFER,colorVertices,gl.STATIC_DRAW);
 
 const aColor = gl.getAttribLocation(program,'a_color');
 gl.vertexAttribPointer(aColor,3,gl.FLOAT,false,3 * FSIZE,0);
 gl.enableVertexAttribArray(aColor);
+
+
 
 
 gl.clearColor(0,0,0,1);

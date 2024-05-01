@@ -394,4 +394,28 @@ function tick() {
 tick();
 ```
 
+### 颜色和顶点生成渐变四边形
+```js
+const dataVertices = new Float32Array([
+    -0.5,0.5,0.0,  1.0,0.0,0.0,
+    -0.5,-0.5,0.0, 0.0,1.0,0.0,
+    0.5,-0.5,0.0,  0.0,0.0,1.0,
+    0.5,0.5,0.0, 1.0,1.0,1.0
+]);
+
+const FSIZE = dataVertices.BYTES_PER_ELEMENT;
+
+const buffer = gl.createBuffer();
+gl.bindBuffer(gl.ARRAY_BUFFER,buffer);
+gl.bufferData(gl.ARRAY_BUFFER,dataVertices,gl.STATIC_DRAW);
+
+const aPosition = gl.getAttribLocation(program,'a_position');
+gl.vertexAttribPointer(aPosition,3,gl.FLOAT,false,6 * FSIZE,0);
+gl.enableVertexAttribArray(aPosition);
+
+
+const aColor = gl.getAttribLocation(program,'a_color');
+gl.vertexAttribPointer(aColor,3,gl.FLOAT,false,6 * FSIZE,FSIZE * 3);
+gl.enableVertexAttribArray(aColor);
+```
 

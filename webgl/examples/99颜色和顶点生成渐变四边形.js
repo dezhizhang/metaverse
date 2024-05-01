@@ -1,14 +1,12 @@
 /*
  * :file description: 
- * :name: /webgl/src/index.js
+ * :name: /webgl/examples/99颜色和顶点生成渐变四边形.js
  * :author: 张德志
- * :copyright: (c) 2023, Tungee
- * :date created: 2023-03-13 05:58:33
+ * :copyright: (c) 2024, Tungee
+ * :date created: 2024-05-01 14:51:15
  * :last editor: 张德志
- * :date last edited: 2024-05-01 15:20:21
+ * :date last edited: 2024-05-01 15:23:09
  */
-import { mat4 } from 'gl-matrix';
-
 const canvas = document.createElement('canvas');
 canvas.width = 500;
 canvas.height = 500;
@@ -17,20 +15,14 @@ const gl = canvas.getContext('webgl');
 
 const vertexShaderSource = `
     attribute vec3 a_position;
-    attribute vec3 a_color;
-    varying vec3 v_color;
     void main() {
-        v_color = a_color;
         gl_Position = vec4(a_position,1.0);
-        gl_PointSize = 10.0;
     }
 `;
 
 const fragShaderSource = `
-    precision mediump float;
-    varying vec3 v_color;
     void main() {
-        gl_FragColor = vec4(v_color,1.0);
+        gl_FragColor = vec4(1.0,0.0,0.0,1.0);
     }
 `;
 
@@ -53,10 +45,10 @@ gl.useProgram(program);
 
 
 const dataVertices = new Float32Array([
-    -0.5,0.5,0.0,  1.0,0.0,0.0,
-    -0.5,-0.5,0.0, 0.0,1.0,0.0,
-    0.5,-0.5,0.0,  0.0,0.0,1.0,
-    0.5,0.5,0.0, 1.0,1.0,1.0
+    -0.5,0.5,0.0,
+    -0.5,-0.5,0.0,
+    0.5,-0.5,0.0,
+    0.5,0.5,0.0,
 ]);
 
 const FSIZE = dataVertices.BYTES_PER_ELEMENT;
@@ -66,22 +58,13 @@ gl.bindBuffer(gl.ARRAY_BUFFER,buffer);
 gl.bufferData(gl.ARRAY_BUFFER,dataVertices,gl.STATIC_DRAW);
 
 const aPosition = gl.getAttribLocation(program,'a_position');
-gl.vertexAttribPointer(aPosition,3,gl.FLOAT,false,6 * FSIZE,0);
+gl.vertexAttribPointer(aPosition,3,gl.FLOAT,false,3 * FSIZE,0);
 gl.enableVertexAttribArray(aPosition);
 
-
-
-
-const aColor = gl.getAttribLocation(program,'a_color');
-gl.vertexAttribPointer(aColor,3,gl.FLOAT,false,6 * FSIZE,FSIZE * 3);
-gl.enableVertexAttribArray(aColor);
 
 
 gl.clearColor(0,0,0,1);
 gl.clear(gl.COLOR_BUFFER_BIT);
 gl.drawArrays(gl.TRIANGLE_FAN,0,4);
-gl.drawArrays(gl.POINTS,0,4);
 
 document.body.appendChild(canvas);
-
-
