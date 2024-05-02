@@ -1,4 +1,4 @@
-# webgl
+# webgl https://www.bilibili.com/video/BV1zz4y1776c?p=10&spm_id_from=pageDriver&vd_source=10257e657caa8b54111087a9329462e8
 ### 第一个webgl程序
 ```js 
 // 创建canvas
@@ -456,4 +456,22 @@ gl.vertexAttribPointer(aUv,2,gl.FLOAT,false,FSIZE * 2,0);
 gl.enableVertexAttribArray(aUv);
 
 ```
+### canvas坐标转极坐标
+```js
+window.addEventListener('click',(event) => {
+
+    const sx = event.clientX;
+    const sy = event.clientY;
+    //屏幕坐标转WebGL标准设备坐标
+    const x = (sx / width) * 2 - 1;
+    const y = -(sy / height) * 2 + 1;
+    const vertextData = new Float32Array([x,y]);
+
+    const aPosition = gl.getAttribLocation(program,'a_position');
+    gl.vertexAttrib2fv(aPosition,vertextData);
+    draw();
+})
+
+```
+
 
