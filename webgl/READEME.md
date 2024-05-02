@@ -473,5 +473,45 @@ window.addEventListener('click',(event) => {
 })
 
 ```
+### 缓冲区绘制多个点
 
+```js
+
+const arr = [];
+
+window.addEventListener('click', (event) => {
+  const sx = event.clientX;
+  const sy = event.clientY;
+
+  //屏幕坐标转WebGL标准设备坐标
+  const x = (sx / width) * 2 - 1;
+  const y = -(sy / height) * 2 + 1;
+
+  arr.push(x, y);
+
+  const dataVertices = new Float32Array(arr);
+  const FSIZE = dataVertices.BYTES_PER_ELEMENT;
+
+  console.log(dataVertices);
+  
+
+  const buffer = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+
+  gl.bufferData(gl.ARRAY_BUFFER, dataVertices, gl.STATIC_DRAW);
+  const a_position = gl.getUniformLocation(program,'a_position');
+
+  gl.vertexAttribPointer(a_position, 2, gl.FLOAT, false, FSIZE * 2, 0);
+  gl.enableVertexAttribArray(a_position);
+  draw();
+});
+
+function draw() {
+  gl.clearColor(0, 0, 0, 1);
+  gl.clear(gl.COLOR_BUFFER_BIT);
+
+  // 渲染立方体
+  gl.drawArrays(gl.POINTS, 0, arr.length / 2 || 1);
+}
+```
 
