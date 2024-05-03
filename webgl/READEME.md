@@ -514,4 +514,27 @@ function draw() {
   gl.drawArrays(gl.POINTS, 0, arr.length / 2 || 1);
 }
 ```
+### 点击生成随机大小的点
+```js
+window.addEventListener('click', (event) => {
+  const sx = event.clientX;
+  const sy = event.clientY;
+
+  const x = (sx / width)* 2 - 1;
+  const y = -(sy / height) * 2 + 1;
+
+  const aPosition = gl.getAttribLocation(program, 'a_position');
+
+  gl.vertexAttrib2fv(aPosition,new Float32Array([x,y]));
+  
+
+  const a_pointSize = gl.getAttribLocation(program, 'a_pointSize');
+  gl.vertexAttrib1f(a_pointSize, Math.random() * 100);
+  gl.clearColor(0, 0, 0, 1);
+  gl.clear(gl.COLOR_BUFFER_BIT);
+
+  // 渲染立方体
+  gl.drawArrays(gl.POINTS, 0, 1);
+});
+```
 

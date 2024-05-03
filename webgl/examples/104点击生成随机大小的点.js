@@ -1,11 +1,11 @@
 /*
  * :file description:
- * :name: /webgl/src/index.js
+ * :name: /webgl/examples/104点击生成随机大小的点.js
  * :author: 张德志
  * :copyright: (c) 2024, Tungee
  * :date created: 2023-03-13 05:58:33
  * :last editor: 张德志
- * :date last edited: 2024-05-03 11:17:32
+ * :date last edited: 2024-05-03 11:20:02
  */
 
 const width = 400;
