@@ -1,4 +1,4 @@
-# webgl https://www.bilibili.com/video/BV1zz4y1776c?p=12&spm_id_from=pageDriver&vd_source=10257e657caa8b54111087a9329462e8
+
 ### 第一个webgl程序
 ```js 
 // 创建canvas
@@ -628,5 +628,47 @@ const aPosition = gl.getUniformLocation(program,'a_position');
 gl.vertexAttribPointer(aPosition,2,gl.FLOAT,false,0,0);
 gl.enableVertexAttribArray(aPosition);
 ```
+
+### 异步绘制图元
+```js
+const vertexShaderSource = `
+    attribute vec2 a_position;
+    void main() {
+        gl_Position = vec4(a_position,0.0,1.0);
+        gl_PointSize = 10.0;
+    }
+`
+const dataVertices = [
+    0,0.2,
+];
+
+const buffer = gl.createBuffer();
+gl.bindBuffer(gl.ARRAY_BUFFER,buffer);
+gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(dataVertices),gl.STATIC_DRAW);
+
+const aPosition = gl.getUniformLocation(program,'a_position');
+gl.vertexAttribPointer(aPosition,2,gl.FLOAT,false,0,0);
+gl.enableVertexAttribArray(aPosition);
+
+
+setTimeout(() => {
+    dataVertices.push(-0.2,-0.1);
+    gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(dataVertices),gl.STATIC_DRAW);
+    gl.clear(gl.COLOR_BUFFER_BIT);
+    gl.drawArrays(gl.POINTS, 0, dataVertices.length / 2);
+},1000);
+
+setTimeout(() => {
+    gl.clear(gl.COLOR_BUFFER_BIT);
+    gl.drawArrays(gl.POINTS, 0, dataVertices.length / 2);
+    gl.drawArrays(gl.LINES,0,dataVertices.length / 2);
+},2000)
+
+```
+
+
+[github](https://github.com/dezhizhang/metaverse/tree/main/webgl)   
+[blog](https://doc.xiaozhi.shop/frontend/webgl)     
+[网站](https://www.xiaozhi.shop/)     
 
 
