@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2023-03-13 05:58:33
  * :last editor: 张德志
- * :date last edited: 2024-05-03 11:17:32
+ * :date last edited: 2024-05-03 14:46:43
  */
 
 const width = 400;
@@ -26,11 +26,15 @@ const vertexShaderSource = `
     }
 `;
 
+
 const fragShaderSource = `
+    precision mediump float;
+    uniform vec3 u_color;
     void main() {
-        gl_FragColor = vec4(0.0,1.0,0.0,1.0);
+        gl_FragColor = vec4(u_color,1.0);
     }
-`;
+`
+
 const vertex = gl.createShader(gl.VERTEX_SHADER);
 const frag = gl.createShader(gl.FRAGMENT_SHADER);
 
@@ -47,31 +51,37 @@ gl.attachShader(program, frag);
 gl.linkProgram(program);
 gl.useProgram(program);
 
-window.addEventListener('click', (event) => {
-  const sx = event.clientX;
-  const sy = event.clientY;
 
-  const x = (sx / width)* 2 - 1;
-  const y = -(sy / height) * 2 + 1;
+window.addEventListener('click',(event) => {
+    const sx = event.clientX;
+    const sy = event.clientY;
 
-  const aPosition = gl.getAttribLocation(program, 'a_position');
+    const x = (sx / width) * 2 - 1;
+    const y = -(sy / width) * 2 + 1;
 
-  gl.vertexAttrib2fv(aPosition,new Float32Array([x,y]));
-  
+    const aPosition = gl.getAttribLocation(program,'a_position');
+    gl.vertexAttrib2fv(aPosition,new Float32Array([x,y]));
 
-  const a_pointSize = gl.getAttribLocation(program, 'a_pointSize');
-  gl.vertexAttrib1f(a_pointSize, Math.random() * 100);
+    const aPointSize = gl.getAttribLocation(program,'a_pointSize');
+    gl.vertexAttrib1f(aPointSize,Math.random() * 100);
+
+    // 生成随机颜色
+    const uColor = gl.getUniformLocation(program,'u_color');
+    gl.uniform3f(uColor,Math.random(),Math.random(),Math.random());
+
+    draw();
+    
+})
+
+
+
+function draw() {
   gl.clearColor(0, 0, 0, 1);
   gl.clear(gl.COLOR_BUFFER_BIT);
 
-  // 渲染立方体
   gl.drawArrays(gl.POINTS, 0, 1);
-});
+}
 
-gl.clearColor(0, 0, 0, 1);
-gl.clear(gl.COLOR_BUFFER_BIT);
-
-// 渲染立方体
-gl.drawArrays(gl.POINTS, 0, 1);
+draw();
 
 document.body.appendChild(canvas);

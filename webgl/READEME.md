@@ -537,4 +537,37 @@ window.addEventListener('click', (event) => {
   gl.drawArrays(gl.POINTS, 0, 1);
 });
 ```
+### 鼠标点击生成随机颜色
+```js
+const fragShaderSource = `
+    precision mediump float;
+    uniform vec3 u_color;
+    void main() {
+        gl_FragColor = vec4(u_color,1.0);
+    }
+`
+
+window.addEventListener('click',(event) => {
+    const sx = event.clientX;
+    const sy = event.clientY;
+
+    const x = (sx / width) * 2 - 1;
+    const y = -(sy / width) * 2 + 1;
+
+    const aPosition = gl.getAttribLocation(program,'a_position');
+    gl.vertexAttrib2fv(aPosition,new Float32Array([x,y]));
+
+    const aPointSize = gl.getAttribLocation(program,'a_pointSize');
+    gl.vertexAttrib1f(aPointSize,Math.random() * 100);
+
+    // 生成随机颜色
+    const uColor = gl.getUniformLocation(program,'u_color');
+    gl.uniform3f(uColor,Math.random(),Math.random(),Math.random());
+
+    draw();
+    
+})
+
+```
+
 

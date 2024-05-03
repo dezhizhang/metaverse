@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2023-03-13 05:58:33
  * :last editor: 张德志
- * :date last edited: 2024-05-03 11:20:02
+ * :date last edited: 2024-05-03 11:27:29
  */
 
 const width = 400;
@@ -64,7 +64,7 @@ window.addEventListener('click', (event) => {
   gl.clearColor(0, 0, 0, 1);
   gl.clear(gl.COLOR_BUFFER_BIT);
 
-  // 渲染立方体
+  
   gl.drawArrays(gl.POINTS, 0, 1);
 });
 
