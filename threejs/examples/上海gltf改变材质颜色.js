@@ -41,7 +41,7 @@ const gltfLoader = new GLTFLoader();
 dracoLoader.setDecoderPath('/draco/');
 gltfLoader.setDRACOLoader(dracoLoader);
 
-gltfLoader.load('https://tugua.oss-cn-hangzhou.aliyuncs.com/model/shanghai.glb',(gltf) => {
+gltfLoader.load('/model/shanghai.glb',(gltf) => {
   const floor = gltf.scene.getObjectByName('地面');
   floor.material = new THREE.MeshLambertMaterial({
     color:0x444433

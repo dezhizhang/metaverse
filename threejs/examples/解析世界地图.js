@@ -29,7 +29,7 @@ scene.add(ambientLight);
 const loader = new THREE.FileLoader();
 loader.setResponseType('json');
 
-loader.load('https://tugua.oss-cn-hangzhou.aliyuncs.com/world.json', function (data) {
+loader.load('/world.json', function (data) {
   data.features.forEach(function (area) {
 
     if (area.geometry.type === 'Polygon') {

@@ -44,7 +44,7 @@ const pointGroup = new THREE.Group();
 
 const R = 120;
 
-loader.load('https://tugua.oss-cn-hangzhou.aliyuncs.com/model/world.json', (data) => {
+loader.load('/model/world.json', (data) => {
   data.features.forEach(function (country) {
     if (country.geometry.type === 'Polygon') {
       country.geometry.coordinates = [country.geometry.coordinates];
@@ -61,7 +61,7 @@ loader.load('https://tugua.oss-cn-hangzhou.aliyuncs.com/model/world.json', (data
   mapGroup.add(lineGroup);
 });
 
-loader.load('https://tugua.oss-cn-hangzhou.aliyuncs.com/model/airports.json',(data) => {
+loader.load('/model/airports.json',(data) => {
   data.geometries.forEach(function(obj) {
     const lon = obj.coordinates[0];
     const lat = obj.coordinates[1];

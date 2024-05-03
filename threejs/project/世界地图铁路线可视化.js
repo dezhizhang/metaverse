@@ -119,7 +119,7 @@ function spriteMesh(R) {
 
 
 
-loader.load('https://tugua.oss-cn-hangzhou.aliyuncs.com/model/%E9%93%81%E8%B7%AF%E7%BA%BF.json',function(data) {
+loader.load('/model/%E9%93%81%E8%B7%AF%E7%BA%BF.json',function(data) {
   data.features.forEach((obj) => {
     if(obj.geometry.type === 'LineString') {
       obj.geometry.coordinates = [obj.geometry.coordinates];

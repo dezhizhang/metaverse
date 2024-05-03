@@ -15,7 +15,7 @@ const scene = new THREE.Scene();
 const geometry = new THREE.PlaneBufferGeometry(60,60);
 const textureLoader = new THREE.TextureLoader();
 const material = new THREE.MeshBasicMaterial({
-  map:textureLoader.load('https://tugua.oss-cn-hangzhou.aliyuncs.com/%E8%B4%B4%E5%9B%BE.png'),
+  map:textureLoader.load('/%E8%B4%B4%E5%9B%BE.png'),
   transparent:true,
   side:THREE.DoubleSide
 });

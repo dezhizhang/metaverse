@@ -41,7 +41,7 @@ const gltfLoader = new GLTFLoader();
 dracoLoader.setDecoderPath('/draco/');
 gltfLoader.setDRACOLoader(dracoLoader);
 
-gltfLoader.load('https://tugua.oss-cn-hangzhou.aliyuncs.com/model/shanghai.glb',(gltf) => {
+gltfLoader.load('/model/shanghai.glb',(gltf) => {
   scene.add(gltf.scene);
 })
 

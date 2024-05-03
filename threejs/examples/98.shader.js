@@ -48,7 +48,7 @@ function init() {
       {
         textureWidth:512,
         textureHeight:512,
-        waterNormals: new THREE.TextureLoader().load('https://tugua.oss-cn-hangzhou.aliyuncs.com/waternormals.jpeg', function (texture) {
+        waterNormals: new THREE.TextureLoader().load('/waternormals.jpeg', function (texture) {
 
         texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
 
