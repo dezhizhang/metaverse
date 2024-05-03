@@ -605,5 +605,28 @@ window.addEventListener('click', (event) => {
 });
 
 ```
+### 缓冲区绘制图元
+```js
+const vertexShaderSource = `
+    attribute vec2 a_position;
+    void main() {
+        gl_Position = vec4(a_position,0.0,1.0);
+        gl_PointSize = 10.0;
+    }
+`;
+
+const dataVertices = new Float32Array([
+    0.0,0.0,
+    0.3,0.3,
+    0.6,0.0, 
+]);
+const buffer = gl.createBuffer();
+gl.bindBuffer(gl.ARRAY_BUFFER,buffer);
+gl.bufferData(gl.ARRAY_BUFFER,dataVertices,gl.STATIC_DRAW);
+
+const aPosition = gl.getUniformLocation(program,'a_position');
+gl.vertexAttribPointer(aPosition,2,gl.FLOAT,false,0,0);
+gl.enableVertexAttribArray(aPosition);
+```
 
 
