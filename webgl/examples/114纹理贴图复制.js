@@ -1,12 +1,13 @@
 /*
- * :file description:
- * :name: /webgl/src/index.js
+ * :file description: 
+ * :name: /webgl/examples/114纹理贴图复制.js
  * :author: 张德志
  * :copyright: (c) 2024, Tungee
- * :date created: 2024-04-29 05:25:20
+ * :date created: 2024-05-04 20:43:16
  * :last editor: 张德志
- * :date last edited: 2024-05-04 20:42:39
+ * :date last edited: 2024-05-04 20:43:32
  */
+
 // const canvas = document.getElementById('canvas');
 const canvas = document.createElement('canvas');
 canvas.width = window.innerWidth;

@@ -851,29 +851,76 @@ const fragShaderSource = `
 
 const image = new Image();
 image.src = '/cat.png';
-image.onload = function () {
-
+image.onload = function() {
   const u_sampler = gl.getUniformLocation(program,'u_sampler');
-   //onload()页面加载（文本和图片）完毕的时候
-   const texture = gl.createTexture(); // 创建纹理对象
+  const texture = gl.createTexture();
+ // 反转Y轴
+ gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL,1);
+ // 激活纹理单元
+ gl.activeTexture(gl.TEXTURE0);
+ // 绑定纹理对像
+ gl.bindTexture(gl.TEXTURE_2D,texture);
+ gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, image); // 配置纹理图像
 
-   gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1); // 反转Y轴
-   gl.activeTexture(gl.TEXTURE0); // 激活纹理单元
-   gl.bindTexture(gl.TEXTURE_2D, texture); // 绑定纹理对象
+ // 不加这四行不显示
+ gl.texParameterf(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);
+ gl.texParameterf(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR);
+ gl.texParameterf(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+ gl.texParameterf(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE); // 竖直平铺方式
 
-   gl.texParameterf(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR); // 放大处理方式
-   gl.texParameterf(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR); // 缩小处理方式
-   gl.texParameterf(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE); // 水平平铺方式
-   gl.texParameterf(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE); // 竖直平铺方式
 
-   gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, image); // 配置纹理图像
+ gl.uniform1i(u_sampler, 0); // 纹理单元传递给着色器
+ draw();
 
-   gl.uniform1i(u_sampler, 0); // 纹理单元传递给着色器
+}
 
-  draw();
-
-};
 ```
+### 纹理贴图复制
+```js
+const vertexShaderSource = `
+  precision mediump float;
+  attribute vec2 a_position;
+  attribute vec2 a_pin;
+  
+  varying vec2 v_pin;
+  void main() {
+    v_pin = a_pin;
+    gl_Position = vec4(a_position,0.0,1.0);
+    gl_PointSize = 10.0;
+  }
+`;
+
+const fragShaderSource = `
+  precision mediump float;
+  uniform sampler2D u_sampler;
+  varying vec2 v_pin;
+  void main() {
+    // gl_FragColor = vec4(1.0,0.0,0.0,1.0);
+    gl_FragColor = texture2D(u_sampler,v_pin);
+  }
+`;
+
+image.onload = function () {
+  const texture = gl.createTexture();
+  gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1);
+  // 激活纹理单元
+  gl.activeTexture(gl.TEXTURE0);
+  // 绑定纹理对像
+  gl.bindTexture(gl.TEXTURE_2D, texture);
+  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, image);
+
+  gl.texParameterf(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+  gl.texParameterf(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+  gl.texParameterf(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT); // 纹理复制 256
+  gl.texParameterf(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT); // 纹理复制 256
+  gl.uniform1i(u_sampler, 0); // 纹理单元传递给着色器
+  draw();
+};
+
+
+```
+
+
 
 
 [github](https://github.com/dezhizhang/metaverse/tree/main/webgl)   
