@@ -665,6 +665,20 @@ setTimeout(() => {
 },2000)
 
 ```
+### 矩阵平移变换
+```js
+const vertexShaderSource = `
+    attribute vec2 a_position;
+    uniform vec4 u_translation;
+    void main() {
+        gl_Position = vec4(a_position,0.0,1.0) + u_translation;
+        gl_PointSize = 10.0;
+    }
+`;
+
+const u_translation = gl.getUniformLocation(program,'u_translation');
+gl.uniform4f(u_translation,0.0,0.8,0.0,0)
+```
 
 
 [github](https://github.com/dezhizhang/metaverse/tree/main/webgl)   
