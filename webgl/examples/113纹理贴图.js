@@ -1,13 +1,12 @@
 /*
- * :file description:
- * :name: /webgl/src/index.js
+ * :file description: 
+ * :name: /webgl/examples/113纹理贴图.js
  * :author: 张德志
  * :copyright: (c) 2024, Tungee
- * :date created: 2024-04-29 05:25:20
+ * :date created: 2024-05-04 20:07:33
  * :last editor: 张德志
- * :date last edited: 2024-05-04 20:06:30
+ * :date last edited: 2024-05-04 20:07:39
  */
-// const canvas = document.getElementById('canvas');
 const canvas = document.createElement('canvas');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;

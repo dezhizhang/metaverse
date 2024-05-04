@@ -822,6 +822,59 @@ gl.vertexAttribPointer(a_Color,3,gl.FLOAT,false,5 * FSIZE,2 * FSIZE);
 gl.enableVertexAttribArray(a_Color);
 
 ```
+### 纹理贴图
+```js
+const vertexShaderSource = `
+  precision mediump float;
+  attribute vec2 a_position;
+  attribute vec2 a_pin;
+  
+  varying vec2 v_pin;
+  void main() {
+    v_pin = a_pin;
+    gl_Position = vec4(a_position,0.0,1.0);
+    gl_PointSize = 10.0;
+  }
+`;
+
+const fragShaderSource = `
+  precision mediump float;
+  uniform sampler2D u_sampler;
+  varying vec2 v_pin;
+  void main() {
+    // gl_FragColor = vec4(1.0,0.0,0.0,1.0);
+    gl_FragColor = texture2D(u_sampler,v_pin);
+  }
+`;
+
+// 纹理贴图
+
+const image = new Image();
+image.src = '/cat.png';
+image.onload = function () {
+
+  const u_sampler = gl.getUniformLocation(program,'u_sampler');
+   //onload()页面加载（文本和图片）完毕的时候
+   const texture = gl.createTexture(); // 创建纹理对象
+
+   gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1); // 反转Y轴
+   gl.activeTexture(gl.TEXTURE0); // 激活纹理单元
+   gl.bindTexture(gl.TEXTURE_2D, texture); // 绑定纹理对象
+
+   gl.texParameterf(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR); // 放大处理方式
+   gl.texParameterf(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR); // 缩小处理方式
+   gl.texParameterf(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE); // 水平平铺方式
+   gl.texParameterf(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE); // 竖直平铺方式
+
+   gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, image); // 配置纹理图像
+
+   gl.uniform1i(u_sampler, 0); // 纹理单元传递给着色器
+
+  draw();
+
+};
+```
+
 
 [github](https://github.com/dezhizhang/metaverse/tree/main/webgl)   
 [blog](https://doc.xiaozhi.shop/frontend/webgl)     
