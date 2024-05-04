@@ -710,6 +710,21 @@ function tick() {
 tick();
 
 ```
+### 缩放矩阵变换
+```js
+const vertexShaderSource = `
+    attribute vec3 a_position;
+    uniform float u_scale;
+    void main() {
+        gl_Position = vec4(vec3(a_position) * u_scale,1.0);
+        gl_PointSize = 10.0;
+    }
+`
+const u_scale = gl.getUniformLocation(program,'u_scale');
+gl.uniform1f(u_scale,0.5);
+```
+
+
 
 
 [github](https://github.com/dezhizhang/metaverse/tree/main/webgl)   
