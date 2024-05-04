@@ -679,6 +679,37 @@ const vertexShaderSource = `
 const u_translation = gl.getUniformLocation(program,'u_translation');
 gl.uniform4f(u_translation,0.0,0.8,0.0,0)
 ```
+### 矩阵旋转变换
+```js
+const vertexShaderSource = `
+    attribute vec2 a_position;
+    uniform float u_sinB;
+    uniform float u_cosB;
+    void main() {
+        float x = a_position.x * u_cosB - a_position.y * u_sinB;
+        float y = a_position.y * u_cosB + a_position.x * u_sinB;
+        gl_Position = vec4(x,y,0.0,1.0);
+        gl_PointSize = 10.0;
+    }
+`;
+
+const u_sinB = gl.getUniformLocation(program, 'u_sinB');
+const u_cosB = gl.getUniformLocation(program, 'u_cosB');
+
+let angle = 10;
+
+function tick() {
+  angle += 0.01;
+  requestAnimationFrame(tick);
+  gl.uniform1f(u_sinB, Math.sin(angle));
+  gl.uniform1f(u_cosB, Math.cos(angle));
+  draw();
+  
+}
+
+tick();
+
+```
 
 
 [github](https://github.com/dezhizhang/metaverse/tree/main/webgl)   
