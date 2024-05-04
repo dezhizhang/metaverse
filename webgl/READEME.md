@@ -723,9 +723,105 @@ const vertexShaderSource = `
 const u_scale = gl.getUniformLocation(program,'u_scale');
 gl.uniform1f(u_scale,0.5);
 ```
+### 多点异色
+```js
+const vertexShaderSource = `
+  attribute vec3 a_position;
+  attribute vec3 a_color;
+  varying vec3 v_color;
+  void main() {
+    v_color = a_color;
+    gl_Position = vec4(a_position,1.0);
+    gl_PointSize = 10.0;
+  }
+`;
+
+const fragShaderSource = `
+  precision mediump float;
+  varying vec3 v_color;
+  void main() {
+    gl_FragColor = vec4(v_color,1.0);
+  }
+`;
+
+const dataVertices = [
+    0, 0.2,1.0,
+    -0.5, -0.5,1.0,
+    0.5, -0.5,1.0
+];
+
+const buffer = gl.createBuffer();
+gl.bindBuffer(gl.ARRAY_BUFFER,buffer);
+gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(dataVertices),gl.STATIC_DRAW);
+
+const a_position = gl.getAttribLocation(program,'a_position');
+gl.vertexAttribPointer(a_position,3,gl.FLOAT,false,0,0);
+gl.enableVertexAttribArray(a_position);
 
 
 
+const dataColors = [
+  1.0,0.0,0.0,
+  0.0,1.0,0.0,
+  0.0,0.0,1.0
+];
+
+const colorBuffer = gl.createBuffer();
+gl.bindBuffer(gl.ARRAY_BUFFER,colorBuffer);
+gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(dataColors),gl.STATIC_DRAW);
+
+const a_color = gl.getAttribLocation(program,'a_color');
+gl.vertexAttribPointer(a_color,3,gl.FLOAT,false,0,0);
+gl.enableVertexAttribArray(a_color);
+
+```
+
+### attrib数据合并
+```js
+const vertexShaderSource = `
+    precision mediump float;
+    attribute vec2 a_Position;
+    attribute vec3 a_color;
+    varying vec3 v_color;
+    void main() {
+        v_color = a_color;
+        gl_Position = vec4(a_Position,0.0,1.0);
+        gl_PointSize = 10.0;
+    }
+
+`;
+
+const fragShaderSource = `  
+    precision mediump float;
+    varying vec3 v_color;
+    void main() {
+        gl_FragColor = vec4(v_color,1.0);
+    }
+`;
+
+const dataVertices = new Float32Array([
+    // x,y,r,g,b
+    -0.5,0.0,1.0,0.0,0.0,
+    0.5,0.0,0.0,1.0,0.0,
+    0.0,0.5,0.0,0.0,1.0,
+]);
+
+const FSIZE = dataVertices.BYTES_PER_ELEMENT;
+
+const buffer = gl.createBuffer();
+gl.bindBuffer(gl.ARRAY_BUFFER,buffer);
+
+gl.bufferData(gl.ARRAY_BUFFER,dataVertices,gl.STATIC_DRAW);
+
+const a_Position =  gl.getAttribLocation(program,'a_Position');
+gl.vertexAttribPointer(a_Position,2,gl.FLOAT,false,5 * FSIZE,0);
+gl.enableVertexAttribArray(a_Position);
+
+const a_Color = gl.getAttribLocation(program,'a_color');
+gl.vertexAttribPointer(a_Color,3,gl.FLOAT,false,5 * FSIZE,2 * FSIZE);
+gl.enableVertexAttribArray(a_Color);
+
+```
 
 [github](https://github.com/dezhizhang/metaverse/tree/main/webgl)   
 [blog](https://doc.xiaozhi.shop/frontend/webgl)     
