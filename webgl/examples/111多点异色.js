@@ -1,12 +1,13 @@
 /*
  * :file description: 
- * :name: /webgl/examples/110缩放矩阵变换.js
+ * :name: /webgl/examples/111多点异色.js
  * :author: 张德志
  * :copyright: (c) 2024, Tungee
- * :date created: 2024-05-04 14:56:26
+ * :date created: 2024-05-04 16:23:35
  * :last editor: 张德志
- * :date last edited: 2024-05-04 15:18:02
+ * :date last edited: 2024-05-04 16:23:50
  */
+
 const width = 400;
 const height = 400;
 
@@ -18,9 +19,11 @@ const gl = canvas.getContext('webgl');
 
 const vertexShaderSource = `
     attribute vec3 a_position;
-    uniform float u_scale;
+    attribute vec3 a_color;
+    varying vec3 v_color;
     void main() {
-        gl_Position = vec4(vec3(a_position) * u_scale,1.0);
+        v_color = a_color;
+        gl_Position = vec4(a_position,1.0);
         gl_PointSize = 10.0;
     }
 `
@@ -28,8 +31,9 @@ const vertexShaderSource = `
 
 const fragShaderSource = `
     precision mediump float;
+    varying vec3 v_color;
     void main() {
-      gl_FragColor = vec4(1.0,0.0,0.0,1.0);
+      gl_FragColor = vec4(v_color,1.0);
     }
 `;
 
@@ -63,8 +67,22 @@ const a_position = gl.getAttribLocation(program,'a_position');
 gl.vertexAttribPointer(a_position,3,gl.FLOAT,false,0,0);
 gl.enableVertexAttribArray(a_position);
 
-const u_scale = gl.getUniformLocation(program,'u_scale');
-gl.uniform1f(u_scale,0.5);
+
+
+const dataColors = [
+  1.0,0.0,0.0,
+  0.0,1.0,0.0,
+  0.0,0.0,1.0
+];
+
+const colorBuffer = gl.createBuffer();
+gl.bindBuffer(gl.ARRAY_BUFFER,colorBuffer);
+gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(dataColors),gl.STATIC_DRAW);
+
+const a_color = gl.getAttribLocation(program,'a_color');
+gl.vertexAttribPointer(a_color,3,gl.FLOAT,false,0,0);
+gl.enableVertexAttribArray(a_color);
+
 
 
 function draw() {
