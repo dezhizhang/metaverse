@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-04-29 05:25:20
  * :last editor: 张德志
- * :date last edited: 2024-05-04 20:42:39
+ * :date last edited: 2024-05-04 20:59:54
  */
 // const canvas = document.getElementById('canvas');
 const canvas = document.createElement('canvas');
@@ -102,5 +102,13 @@ function draw() {
 }
 
 draw();
+
+function imagePromise(img) {
+  return new Promise((resolve) => {
+    img.onload = function() {
+      resolve(img);
+    }
+  })
+}
 
 document.body.appendChild(canvas);

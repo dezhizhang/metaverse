@@ -920,7 +920,7 @@ image.onload = function () {
 
 ```
 
-
+https://www.bilibili.com/video/BV1zz4y1776c?p=51&vd_source=10257e657caa8b54111087a9329462e8
 
 
 [github](https://github.com/dezhizhang/metaverse/tree/main/webgl)   
