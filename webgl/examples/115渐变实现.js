@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-04-29 05:25:20
  * :last editor: 张德志
- * :date last edited: 2024-05-06 05:49:59
+ * :date last edited: 2024-05-06 06:00:11
  */
 // const canvas = document.getElementById('canvas');
 const canvas = document.createElement('canvas');
@@ -68,10 +68,6 @@ const u_width = gl.getUniformLocation(program,'u_width');
 const u_height = gl.getUniformLocation(program,'u_height');
 gl.uniform1f(u_width,400);
 gl.uniform1f(u_height,400);
-
-
-
-
 
 
 

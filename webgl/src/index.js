@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-04-29 05:25:20
  * :last editor: 张德志
- * :date last edited: 2024-05-06 05:48:27
+ * :date last edited: 2024-05-06 06:07:05
  */
 // const canvas = document.getElementById('canvas');
 const canvas = document.createElement('canvas');
@@ -24,14 +24,22 @@ const vertexShaderSource = `
 
 const fragShaderSource = `
   precision mediump float;
-  uniform float u_width;
-  uniform float u_height;
+
+  struct Light {
+    vec4 color;
+    vec3 pos;
+  };
+
   void main() {
- 
-    gl_FragColor = vec4(gl_FragCoord.x /u_width,gl_FragCoord.y / u_height,0.0,1.0);
-  
+    // 结构体实例化
+    Light l1 = Light(
+      vec4(0.0,1.0,0.0,1.0),
+      vec3(1,2,3)
+    );
+    gl_FragColor = l1.color;
+    // gl_FragColor = vec4(gl_FragCoord.x / u_width,gl_FragCoord.y / u_height,0.8,1.0);
   }
-`;
+`
 
 const vertexShader = gl.createShader(gl.VERTEX_SHADER);
 const fragShader = gl.createShader(gl.FRAGMENT_SHADER);
@@ -50,10 +58,10 @@ gl.linkProgram(program);
 gl.useProgram(program);
 
 const dataVertices = new Float32Array([
-  -1.0,1.0,
-  -1.0,-1.0,
-  1.0,1.0,
-  1.0,-1.0 
+  -0.5,0.5,
+  -0.5,-0.5,
+  0.5,0.5,
+  0.5,-0.5 
 ]);
 const buffer = gl.createBuffer();
 gl.bindBuffer(gl.ARRAY_BUFFER,buffer);
@@ -62,14 +70,6 @@ gl.bufferData(gl.ARRAY_BUFFER,dataVertices,gl.STATIC_DRAW);
 const a_position = gl.getAttribLocation(program,'a_position');
 gl.vertexAttribPointer(a_position,2,gl.FLOAT,false,0,0);
 gl.enableVertexAttribArray(a_position);
-
-
-const u_width = gl.getUniformLocation(program,'u_width');
-const u_height = gl.getUniformLocation(program,'u_height');
-gl.uniform1f(u_width,400);
-gl.uniform1f(u_height,400);
-
-
 
 
 

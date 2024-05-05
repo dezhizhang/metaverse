@@ -994,6 +994,27 @@ const fragShaderSource = `
 `;
 
 ```
+### 结构体struct
+```js
+const fragShaderSource = `
+  precision mediump float;
+
+  struct Light {
+    vec4 color;
+    vec3 pos;
+  };
+
+  void main() {
+    // 结构体实例化
+    Light l1 = Light(
+      vec4(0.0,1.0,0.0,1.0),
+      vec3(1,2,3)
+    );
+    gl_FragColor = l1.color;
+    // gl_FragColor = vec4(gl_FragCoord.x / u_width,gl_FragCoord.y / u_height,0.8,1.0);
+  }
+`
+```
 
 ### 渐变实现
 ```js
