@@ -947,6 +947,27 @@ const fragShaderSource = `
 `;
 
 ```
+### 矩阵的赋值与获取
+```js
+const fragShaderSource = `
+  precision mediump float;
+
+  void main() {
+    vec4 v4_1= vec4(1,5,9,13);
+    vec4 v4_2 = vec4(2,6,10,14);
+    vec4 v4_3 = vec4(3,7,11,15);
+    vec4 v4_4 = vec4(4,8,12,16);
+    mat4 m = mat4(
+      v4_1,
+      v4_2,
+      v4_3,
+      v4_4
+    );
+    gl_FragColor = vec4(1.0,0.0,0.0,1.0);
+  
+  }
+`;
+```
 
 <!-- https://www.bilibili.com/video/BV1zz4y1776c?p=51&vd_source=10257e657caa8b54111087a9329462e8 -->
 
