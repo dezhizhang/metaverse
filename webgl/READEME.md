@@ -968,6 +968,70 @@ const fragShaderSource = `
   }
 `;
 ```
+### 向量与矩阵运算
+```js
+const fragShaderSource = `
+  precision mediump float;
+
+  void main() {
+    vec4 v4_1= vec4(1,5,9,13);
+    vec4 v4_2 = vec4(2,6,10,14);
+    vec4 v4_3 = vec4(3,7,11,15);
+    vec4 v4_4 = vec4(4,8,12,16);
+    mat4 m = mat4(
+      v4_1,
+      v4_2,
+      v4_3,
+      v4_4
+    );
+
+    vec4 p = vec4(1,2,3,4);
+    vec4 v = m * p;
+
+    gl_FragColor = v / 255.0;
+  
+  }
+`;
+
+```
+
+### 渐变实现
+```js
+const fragShaderSource = `
+  precision mediump float;
+  uniform float u_width;
+  uniform float u_height;
+  void main() {
+ 
+    gl_FragColor = vec4(gl_FragCoord.x /u_width,gl_FragCoord.y / u_height,0.0,1.0);
+  
+  }
+`;
+
+const dataVertices = new Float32Array([
+  -1.0,1.0,
+  -1.0,-1.0,
+  1.0,1.0,
+  1.0,-1.0 
+]);
+const buffer = gl.createBuffer();
+gl.bindBuffer(gl.ARRAY_BUFFER,buffer);
+gl.bufferData(gl.ARRAY_BUFFER,dataVertices,gl.STATIC_DRAW);
+
+const a_position = gl.getAttribLocation(program,'a_position');
+gl.vertexAttribPointer(a_position,2,gl.FLOAT,false,0,0);
+gl.enableVertexAttribArray(a_position);
+
+
+const u_width = gl.getUniformLocation(program,'u_width');
+const u_height = gl.getUniformLocation(program,'u_height');
+gl.uniform1f(u_width,400);
+gl.uniform1f(u_height,400);
+
+
+
+```
+
 
 <!-- https://www.bilibili.com/video/BV1zz4y1776c?p=51&vd_source=10257e657caa8b54111087a9329462e8 -->
 
