@@ -1015,6 +1015,20 @@ const fragShaderSource = `
   }
 `
 ```
+### 数组 vec4 vs[2]
+```js
+const fragShaderSource = `
+  precision mediump float;
+
+  vec4 vs[2];
+
+  void main() {
+    vs[0] = vec4(0.0,0.0,1.0,1.0);
+    vs[1] = vec4(1.0,0.0,0.0,1.0);
+    gl_FragColor = vs[1];
+  }
+`
+```
 
 ### 渐变实现
 ```js

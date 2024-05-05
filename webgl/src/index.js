@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-04-29 05:25:20
  * :last editor: 张德志
- * :date last edited: 2024-05-06 06:07:05
+ * :date last edited: 2024-05-06 06:23:55
  */
 // const canvas = document.getElementById('canvas');
 const canvas = document.createElement('canvas');
@@ -22,22 +22,48 @@ const vertexShaderSource = `
   }
 `;
 
+// const fragShaderSource = `
+//   precision mediump float;
+
+//   struct Light {
+//     vec4 color;
+//     vec3 pos;
+//   };
+//   void main() {
+//     Light l1 = Light(
+//       vec4(0.0,1.0,0.0,1.0),
+//       vec3(1,2,3)
+//     );
+//     gl_FragColor = l1.color;
+//   }
+// `
+
+
+// // const fragShaderSource = `
+// //   precision mediump float;
+   
+// //   struct Light {
+// //     vec4 color;
+// //     vec3 pos;
+// //   };
+// //   void main() {
+// //     Light l = Light(
+// //       vec4(0.0,1.0,0.0,1.0),
+// //       vec3(1,2,3)
+// //     );
+// //     gl_FragColor = l.color;
+// //   }
+// // `
+
 const fragShaderSource = `
   precision mediump float;
 
-  struct Light {
-    vec4 color;
-    vec3 pos;
-  };
+  vec4 vs[2];
 
   void main() {
-    // 结构体实例化
-    Light l1 = Light(
-      vec4(0.0,1.0,0.0,1.0),
-      vec3(1,2,3)
-    );
-    gl_FragColor = l1.color;
-    // gl_FragColor = vec4(gl_FragCoord.x / u_width,gl_FragCoord.y / u_height,0.8,1.0);
+    vs[0] = vec4(0.0,0.0,1.0,1.0);
+    vs[1] = vec4(1.0,0.0,0.0,1.0);
+    gl_FragColor = vs[1];
   }
 `
 
