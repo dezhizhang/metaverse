@@ -919,6 +919,21 @@ image.onload = function () {
 
 
 ```
+### 获取向量数据
+```js
+// 获取像素
+const pixel = new Uint8Array(4);
+gl.readPixels(
+  canvas.width / 2, 
+  canvas.height / 2,
+  1,
+  1,
+  gl.RGBA,
+  gl.UNSIGNED_BYTE,
+  pixel
+);
+
+```
 
 https://www.bilibili.com/video/BV1zz4y1776c?p=51&vd_source=10257e657caa8b54111087a9329462e8
 
