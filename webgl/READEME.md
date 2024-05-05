@@ -934,8 +934,21 @@ gl.readPixels(
 );
 
 ```
+### 向量值获取
+```js
+const fragShaderSource = `
+  precision mediump float;
 
-https://www.bilibili.com/video/BV1zz4y1776c?p=51&vd_source=10257e657caa8b54111087a9329462e8
+  void main() {
+    vec4 p = vec4(0.0,1.0,0.0,1.0);
+    gl_FragColor = vec4(p.xyz,1.0);
+  
+  }
+`;
+
+```
+
+<!-- https://www.bilibili.com/video/BV1zz4y1776c?p=51&vd_source=10257e657caa8b54111087a9329462e8 -->
 
 
 [github](https://github.com/dezhizhang/metaverse/tree/main/webgl)   

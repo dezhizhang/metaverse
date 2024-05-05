@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-04-29 05:25:20
  * :last editor: 张德志
- * :date last edited: 2024-05-05 23:08:15
+ * :date last edited: 2024-05-06 05:06:55
  */
 // const canvas = document.getElementById('canvas');
 const canvas = document.createElement('canvas');
@@ -23,27 +23,11 @@ const vertexShaderSource = `
 
 const fragShaderSource = `
   precision mediump float;
-  mat4 m = mat4(
-    255.0,0.0,0.0,255.0,
-    255.0, 255.0,0.0, 255.0,
-    0.0, 255.0,0.0, 255.0,
-    0.0,0.0, 255.0, 255.0,
-  );
+
   void main() {
-     gl_FragColor = vec4(1.0,0.0,0.0,1.0);
-    float dist = distance(gl_PointCoord,vec2(0.5,0.5));
-    if(dist >=0.0 && dist <0.125) {
-      gl_FragColor = m[0] / 255.0;
-    }else if(dist >=0.125 && dist < 0.25) {
-      gl_FragColor = m[1] / 255.0;
-    }else if(dist >=0.25 && dist < 0.375) {
-      gl_FragColor = m[2] / 255.0;
-    }else if(dist >=0.325 && dist < 0.5) {
-      gl_FragColor = m[3] / 255.0;
-    }else {
-      discard;
-    }
-   
+    vec4 p = vec4(0.0,1.0,0.0,1.0);
+    gl_FragColor = vec4(p.xyz,1.0);
+  
   }
 `;
 
