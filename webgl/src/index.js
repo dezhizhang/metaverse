@@ -5,31 +5,45 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-04-29 05:25:20
  * :last editor: 张德志
- * :date last edited: 2024-05-05 22:48:51
+ * :date last edited: 2024-05-05 23:08:15
  */
 // const canvas = document.getElementById('canvas');
 const canvas = document.createElement('canvas');
-canvas.width = 400;
-canvas.height = 400;
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
 
 const gl = canvas.getContext('webgl');
 
 const vertexShaderSource = `
-  precision mediump float;
-  attribute vec2 a_position;
-
   void main() {
-    gl_Position = vec4(a_position,0.0,1.0);
-    gl_PointSize = 10.0;
+    gl_Position = vec4(0.0,0.0,0.0,1.0);
+    gl_PointSize = 512.0;
   }
 `;
 
 const fragShaderSource = `
   precision mediump float;
-  vec4 v = vec4(1,2,3,4) + vec4(5,6,7,8);
+  mat4 m = mat4(
+    255.0,0.0,0.0,255.0,
+    255.0, 255.0,0.0, 255.0,
+    0.0, 255.0,0.0, 255.0,
+    0.0,0.0, 255.0, 255.0,
+  );
   void main() {
-    // gl_FragColor = vec4(1.0,0.0,0.0,1.0);
-    gl_FragColor = v / 255.0;
+     gl_FragColor = vec4(1.0,0.0,0.0,1.0);
+    float dist = distance(gl_PointCoord,vec2(0.5,0.5));
+    if(dist >=0.0 && dist <0.125) {
+      gl_FragColor = m[0] / 255.0;
+    }else if(dist >=0.125 && dist < 0.25) {
+      gl_FragColor = m[1] / 255.0;
+    }else if(dist >=0.25 && dist < 0.375) {
+      gl_FragColor = m[2] / 255.0;
+    }else if(dist >=0.325 && dist < 0.5) {
+      gl_FragColor = m[3] / 255.0;
+    }else {
+      discard;
+    }
+   
   }
 `;
 
@@ -49,45 +63,10 @@ gl.attachShader(program, fragShader);
 gl.linkProgram(program);
 gl.useProgram(program);
 
-const dataVertices = new Float32Array([
-  // x,y,uv
-  -0.5, 0.5, 0.0, 2.0, -0.5, -0.5, 0.0, 0.0, 0.5, 0.5, 2.0, 2.0, 0.5, -0.5, 2.0, 0.0,
-]);
 
-const FSIZE = dataVertices.BYTES_PER_ELEMENT;
+gl.clearColor(0, 0, 0, 1);
+gl.clear(gl.COLOR_BUFFER_BIT);
 
-const buffer = gl.createBuffer();
-gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-
-gl.bufferData(gl.ARRAY_BUFFER, dataVertices, gl.STATIC_DRAW);
-
-const a_position = gl.getAttribLocation(program, 'a_position');
-gl.vertexAttribPointer(a_position, 2, gl.FLOAT, false, 4 * FSIZE, 0);
-gl.enableVertexAttribArray(a_position);
-
-// 获取像素
-const pixel = new Uint8Array(4);
-gl.readPixels(
-  canvas.width / 2, 
-  canvas.height / 2,
-  1,
-  1,
-  gl.RGBA,
-  gl.UNSIGNED_BYTE,
-  pixel
-);
-
-
-console.log(pixel);
-
-
-function draw() {
-  gl.clearColor(0, 0, 0, 1);
-  gl.clear(gl.COLOR_BUFFER_BIT);
-
-  gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
-}
-
-draw();
+gl.drawArrays(gl.POINTS, 0, 1);
 
 document.body.appendChild(canvas);
