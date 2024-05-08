@@ -1063,9 +1063,43 @@ const u_height = gl.getUniformLocation(program,'u_height');
 gl.uniform1f(u_width,400);
 gl.uniform1f(u_height,400);
 
-
-
 ```
+### 杂色
+```js
+const fragShaderSource = `
+  precision mediump float;
+
+  float rand(vec2 fragCoord) {
+    vec2 a = vec2(0.1234,0.5678);
+    float n = dot(fragCoord,a);
+    return fract(sin(n) * 10000.0);
+  }
+
+  void main() {
+    float f = rand(gl_FragCoord.xy);
+    gl_FragColor = vec4(f,f,f,1);
+  
+  }
+`;
+```
+### 肌理
+```js
+const fragShaderSource = `
+  precision mediump float;
+  uniform float u_canvasSize;
+
+  float rand(vec2 fragCoord) {
+    vec2 v = fragCoord - u_canvasSize / 2.0;
+    return fract(atan(v.x,v.y) * 500.0);
+  }
+  void main() {
+    float f = rand(gl_FragCoord.xy);
+    gl_FragColor = vec4(f,f,f,1);
+  
+  }
+`;
+```
+
 
 
 <!-- https://www.bilibili.com/video/BV1zz4y1776c?p=51&vd_source=10257e657caa8b54111087a9329462e8 -->

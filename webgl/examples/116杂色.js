@@ -1,11 +1,20 @@
 /*
+ * :file description: 
+ * :name: /webgl/examples/1116杂色.js
+ * :author: 张德志
+ * :copyright: (c) 2024, Tungee
+ * :date created: 2024-05-09 05:45:44
+ * :last editor: 张德志
+ * :date last edited: 2024-05-09 05:45:45
+ */
+/*
  * :file description:
  * :name: /webgl/src/index.js
  * :author: 张德志
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-04-29 05:25:20
  * :last editor: 张德志
- * :date last edited: 2024-05-09 05:54:38
+ * :date last edited: 2024-05-09 05:43:25
  */
 // const canvas = document.getElementById('canvas');
 const canvas = document.createElement('canvas');
@@ -22,31 +31,15 @@ const vertexShaderSource = `
   }
 `;
 
-// const fragShaderSource = `
-//   precision mediump float;
-
-//   float rand(vec2 fragCoord) {
-//     vec2 a = vec2(0.1234,0.5678);
-//     float n = dot(fragCoord,a);
-//     return fract(sin(n) * 10000.0);
-//   }
-
-//   void main() {
-//     float f = rand(gl_FragCoord.xy);
-//     gl_FragColor = vec4(f,f,f,1);
-  
-//   }
-// `;
-
-
 const fragShaderSource = `
   precision mediump float;
-  uniform float u_canvasSize;
 
   float rand(vec2 fragCoord) {
-    vec2 v = fragCoord - u_canvasSize / 2.0;
-    return fract(atan(v.x,v.y) * 500.0);
+    vec2 a = vec2(0.1234,0.5678);
+    float n = dot(fragCoord,a);
+    return fract(sin(n) * 10000.0);
   }
+
   void main() {
     float f = rand(gl_FragCoord.xy);
     gl_FragColor = vec4(f,f,f,1);
@@ -83,10 +76,6 @@ gl.bufferData(gl.ARRAY_BUFFER,dataVertices,gl.STATIC_DRAW);
 const a_position = gl.getAttribLocation(program,'a_position');
 gl.vertexAttribPointer(a_position,2,gl.FLOAT,false,0,0);
 gl.enableVertexAttribArray(a_position);
-
-
-const u_canvasSize = gl.getUniformLocation(program,'u_canvasSize');
-gl.uniform1f(u_canvasSize,400.0)
 
 
 
