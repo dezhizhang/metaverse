@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-04-29 05:25:20
  * :last editor: 张德志
- * :date last edited: 2024-05-06 06:00:11
+ * :date last edited: 2024-05-09 05:42:44
  */
 // const canvas = document.getElementById('canvas');
 const canvas = document.createElement('canvas');
@@ -26,9 +26,16 @@ const fragShaderSource = `
   precision mediump float;
   uniform float u_width;
   uniform float u_height;
+
+  float rand(vec2 fragCoord) {
+    vec2 a = vec2(0.1234,0.5678);
+    float n = dot(fragCoord,a);
+    return fract(sin(n) * 10000.0);
+  }
+
   void main() {
- 
-    gl_FragColor = vec4(gl_FragCoord.x /u_width,gl_FragCoord.y / u_height,0.0,1.0);
+    float f = rand(gl_FragCoord.xy);
+    gl_FragColor = vec4(f,f,f,1);
   
   }
 `;
@@ -64,10 +71,6 @@ gl.vertexAttribPointer(a_position,2,gl.FLOAT,false,0,0);
 gl.enableVertexAttribArray(a_position);
 
 
-const u_width = gl.getUniformLocation(program,'u_width');
-const u_height = gl.getUniformLocation(program,'u_height');
-gl.uniform1f(u_width,400);
-gl.uniform1f(u_height,400);
 
 
 

@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-04-29 05:25:20
  * :last editor: 张德志
- * :date last edited: 2024-05-06 06:23:55
+ * :date last edited: 2024-05-09 05:43:25
  */
 // const canvas = document.getElementById('canvas');
 const canvas = document.createElement('canvas');
@@ -22,50 +22,21 @@ const vertexShaderSource = `
   }
 `;
 
-// const fragShaderSource = `
-//   precision mediump float;
-
-//   struct Light {
-//     vec4 color;
-//     vec3 pos;
-//   };
-//   void main() {
-//     Light l1 = Light(
-//       vec4(0.0,1.0,0.0,1.0),
-//       vec3(1,2,3)
-//     );
-//     gl_FragColor = l1.color;
-//   }
-// `
-
-
-// // const fragShaderSource = `
-// //   precision mediump float;
-   
-// //   struct Light {
-// //     vec4 color;
-// //     vec3 pos;
-// //   };
-// //   void main() {
-// //     Light l = Light(
-// //       vec4(0.0,1.0,0.0,1.0),
-// //       vec3(1,2,3)
-// //     );
-// //     gl_FragColor = l.color;
-// //   }
-// // `
-
 const fragShaderSource = `
   precision mediump float;
 
-  vec4 vs[2];
+  float rand(vec2 fragCoord) {
+    vec2 a = vec2(0.1234,0.5678);
+    float n = dot(fragCoord,a);
+    return fract(sin(n) * 10000.0);
+  }
 
   void main() {
-    vs[0] = vec4(0.0,0.0,1.0,1.0);
-    vs[1] = vec4(1.0,0.0,0.0,1.0);
-    gl_FragColor = vs[1];
+    float f = rand(gl_FragCoord.xy);
+    gl_FragColor = vec4(f,f,f,1);
+  
   }
-`
+`;
 
 const vertexShader = gl.createShader(gl.VERTEX_SHADER);
 const fragShader = gl.createShader(gl.FRAGMENT_SHADER);
@@ -84,10 +55,10 @@ gl.linkProgram(program);
 gl.useProgram(program);
 
 const dataVertices = new Float32Array([
-  -0.5,0.5,
-  -0.5,-0.5,
-  0.5,0.5,
-  0.5,-0.5 
+  -1.0,1.0,
+  -1.0,-1.0,
+  1.0,1.0,
+  1.0,-1.0 
 ]);
 const buffer = gl.createBuffer();
 gl.bindBuffer(gl.ARRAY_BUFFER,buffer);

@@ -1019,8 +1019,8 @@ const fragShaderSource = `
 ```js
 const fragShaderSource = `
   precision mediump float;
-
-  vec4 vs[2];
+  const int size = 2;
+  vec4 vs[size];
 
   void main() {
     vs[0] = vec4(0.0,0.0,1.0,1.0);
