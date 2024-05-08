@@ -1100,6 +1100,46 @@ const fragShaderSource = `
 `;
 ```
 
+### 极坐标
+```js
+const fragShaderSource = `
+  precision mediump float;
+
+  vec2 center = vec2(200.0,200.0);
+
+  float rand(vec2 fragCoord) {
+    vec2 a = vec2(0.1234,0.5678);
+    float n = dot(fragCoord,a);
+    return fract(sin(n) * 10000.0);
+  }
+
+  void main() {
+    vec2 p = gl_FragCoord.xy - center;
+    float ang = atan(p.y,p.x);
+    float x = ang * 32.0;
+    vec2 v = vec2(int(x),0);
+    float f = rand(v);
+    gl_FragColor = vec4(f,f,f,1);
+  }
+`
+```
+
+### 投影矩阵
+```js
+const vertexShaderSource = `
+  attribute vec2 a_position;
+  uniform mat4 u_projectionMatrix;
+  void main() {
+    gl_Position = u_projectionMatrix * vec4(a_position,0.0,1.0);
+    gl_PointSize = 10.0;
+  }
+`;
+
+const u_projectionMatrix = gl.getUniformLocation(program,'u_projectionMatrix');
+gl.uniformMatrix4fv(u_projectionMatrix,false,tMatrix);
+
+```
+
 
 
 <!-- https://www.bilibili.com/video/BV1zz4y1776c?p=51&vd_source=10257e657caa8b54111087a9329462e8 -->

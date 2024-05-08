@@ -5,8 +5,11 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-04-29 05:25:20
  * :last editor: 张德志
- * :date last edited: 2024-05-09 05:54:38
+ * :date last edited: 2024-05-09 06:56:41
  */
+
+import { glMatrix, mat4 } from 'gl-matrix';
+
 // const canvas = document.getElementById('canvas');
 const canvas = document.createElement('canvas');
 canvas.width = 400;
@@ -16,43 +19,19 @@ const gl = canvas.getContext('webgl');
 
 const vertexShaderSource = `
   attribute vec2 a_position;
+  uniform mat4 u_projectionMatrix;
   void main() {
-    gl_Position = vec4(a_position,0.0,1.0);
+    gl_Position = u_projectionMatrix * vec4(a_position,0.0,1.0);
     gl_PointSize = 10.0;
   }
 `;
 
-// const fragShaderSource = `
-//   precision mediump float;
-
-//   float rand(vec2 fragCoord) {
-//     vec2 a = vec2(0.1234,0.5678);
-//     float n = dot(fragCoord,a);
-//     return fract(sin(n) * 10000.0);
-//   }
-
-//   void main() {
-//     float f = rand(gl_FragCoord.xy);
-//     gl_FragColor = vec4(f,f,f,1);
-  
-//   }
-// `;
-
-
 const fragShaderSource = `
   precision mediump float;
-  uniform float u_canvasSize;
-
-  float rand(vec2 fragCoord) {
-    vec2 v = fragCoord - u_canvasSize / 2.0;
-    return fract(atan(v.x,v.y) * 500.0);
-  }
   void main() {
-    float f = rand(gl_FragCoord.xy);
-    gl_FragColor = vec4(f,f,f,1);
-  
+    gl_FragColor = vec4(1.0,0.0,0.0,1.0);
   }
-`;
+`
 
 const vertexShader = gl.createShader(gl.VERTEX_SHADER);
 const fragShader = gl.createShader(gl.FRAGMENT_SHADER);
@@ -71,10 +50,9 @@ gl.linkProgram(program);
 gl.useProgram(program);
 
 const dataVertices = new Float32Array([
-  -1.0,1.0,
-  -1.0,-1.0,
-  1.0,1.0,
-  1.0,-1.0 
+  -0.5,0.5,
+  -0.5,-0.6,
+  0.5,0.5,
 ]);
 const buffer = gl.createBuffer();
 gl.bindBuffer(gl.ARRAY_BUFFER,buffer);
@@ -84,9 +62,10 @@ const a_position = gl.getAttribLocation(program,'a_position');
 gl.vertexAttribPointer(a_position,2,gl.FLOAT,false,0,0);
 gl.enableVertexAttribArray(a_position);
 
+const tMatrix = mat4.create();
 
-const u_canvasSize = gl.getUniformLocation(program,'u_canvasSize');
-gl.uniform1f(u_canvasSize,400.0)
+const u_projectionMatrix = gl.getUniformLocation(program,'u_projectionMatrix');
+gl.uniformMatrix4fv(u_projectionMatrix,false,tMatrix);
 
 
 
@@ -97,6 +76,6 @@ gl.uniform1f(u_canvasSize,400.0)
 gl.clearColor(0, 0, 0, 1);
 gl.clear(gl.COLOR_BUFFER_BIT);
 
-gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+gl.drawArrays(gl.TRIANGLE_STRIP, 0, 3);
 
 document.body.appendChild(canvas);
