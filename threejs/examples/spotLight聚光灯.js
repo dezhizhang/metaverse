@@ -1,11 +1,11 @@
 /*
- * :file description:
- * :name: /threejs/src/index.js
+ * :file description: 
+ * :name: /threejs/examples/spotLight聚光灯.js
  * :author: 张德志
  * :copyright: (c) 2024, Tungee
- * :date created: 2023-03-13 05:58:33
+ * :date created: 2024-05-12 21:55:05
  * :last editor: 张德志
- * :date last edited: 2024-05-12 21:52:48
+ * :date last edited: 2024-05-12 22:03:23
  */
 import dat from 'dat.gui';
 import * as THREE from 'three';
@@ -61,14 +61,6 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 
 
 const controls = new OrbitControls(camera,renderer.domElement);
-
-
-
-
-
-
-
-
 
 
 
