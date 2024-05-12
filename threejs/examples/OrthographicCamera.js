@@ -1,13 +1,12 @@
 /*
- * :file description:
- * :name: /threejs/src/index.js
+ * :file description: 
+ * :name: /threejs/examples/OrthographicCamera.js
  * :author: 张德志
  * :copyright: (c) 2024, Tungee
- * :date created: 2023-03-13 05:58:33
+ * :date created: 2024-05-12 14:34:56
  * :last editor: 张德志
- * :date last edited: 2024-05-12 14:30:49
+ * :date last edited: 2024-05-12 14:34:57
  */
-
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
