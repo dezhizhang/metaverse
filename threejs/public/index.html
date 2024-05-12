@@ -5,7 +5,7 @@
  * :copyright: (c) 2022, Tungee
  * :date created: 2022-07-12 07:39:26
  * :last editor: 张德志
- * :date last edited: 2024-04-26 16:33:39
+ * :date last edited: 2024-05-12 17:22:11
 -->
 <!DOCTYPE html>
 <html lang="en">
@@ -76,9 +76,28 @@
       padding: 8px 12px;
     }
 
-    /* canvas{
-      background: #000;
-    } */
+
+    .pos {
+      position: absolute;
+      left: 50%;
+      transform: translate(0, -50%);
+      bottom: 100px;
+      display: flex;
+    }
+
+    .bu {
+      cursor: pointer;
+      background: rgba(255, 255, 255, 0.1);
+      width: 60px;
+      height: 60px;
+      line-height: 60px;
+      text-align: center;
+      color: #fff;
+      display: inline-block;
+      border-radius: 30px;
+    }
+
+    
 
   </style>
 </head>
@@ -115,6 +134,13 @@
   </div> -->
   <!-- <div id="heatmap"  style="width:800px; height: 800px;"></div>
   <div id="greymap" style="width:800px; height: 800px;"></div> -->
+
+  <div class="pos">
+    <span id="x" class="bu">x</span>
+    <span id="y" class="bu" style="margin-left: 10px;">y</span>
+    <span id="z" class="bu" style="margin-left: 10px;">z</span>
+  </div>
+
   <script async src="https://unpkg.com/es-module-shims@1.8.0/dist/es-module-shims.js"></script>
 </body>
 
