@@ -5,11 +5,12 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2023-03-13 05:58:33
  * :last editor: 张德志
- * :date last edited: 2024-05-12 22:34:08
+ * :date last edited: 2024-05-14 05:02:31
  */
 import dat from 'dat.gui';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 //创建场影
 const scene = new THREE.Scene();
 
@@ -23,20 +24,9 @@ scene.add(axesHelper);
 
 const directionalLight = new THREE.DirectionalLight(0xffffff,1);
 directionalLight.position.set(100,60,50);
-
-directionalLight.castShadow = true;
-directionalLight.shadow.camera.left = -50;
-directionalLight.shadow.camera.right = 50;
-directionalLight.shadow.camera.top = 200;
-directionalLight.shadow.camera.bottom = -100;
-directionalLight.shadow.camera.near = 0.5;
-directionalLight.shadow.camera.far = 600;
 scene.add(directionalLight);
 
 scene.add(new THREE.CameraHelper(directionalLight.shadow.camera));
-
-
-
 
 scene.add(new THREE.DirectionalLightHelper(directionalLight));
 
@@ -45,31 +35,38 @@ const ambient = new THREE.AmbientLight(0xffffff, 0.4);
 scene.add(ambient);
 
 
-// 长方体网格模型
-const geometry = new THREE.BoxGeometry(50, 100, 50);
-const material = new THREE.MeshLambertMaterial({
-    color: 0x00ffff,
-});
-const mesh = new THREE.Mesh(geometry, material);
-mesh.position.y = 50;
-mesh.castShadow = true;
-
-
-const planeGeometry = new THREE.PlaneGeometry(400,250);
-const planeMaterial = new THREE.MeshLambertMaterial({
-    color: 0x999999,
-});
-// 矩形平面网格模型
-const planeMesh = new THREE.Mesh(planeGeometry, planeMaterial);
-planeMesh.rotateX(-Math.PI/2);
-// 接收阴影
-planeMesh.receiveShadow = true;
+const gui = new dat.GUI();
 
 
 
+const textureCube = new THREE.CubeTextureLoader()
+    .setPath('/environ/')
+    .load(['px.jpg', 'nx.jpg', 'py.jpg', 'ny.jpg', 'pz.jpg', 'nz.jpg']);
+textureCube.encoding = THREE.SRGBColorSpace;//和renderer.outputEncoding一致
 
-scene.add(mesh,planeMesh);
+const gltfLoader = new GLTFLoader();
+gltfLoader.load('/工厂.glb',function(gltf) {
+  gltf.scene.traverse(function(obj) {
+    if(obj.isMesh) {
+      obj.material.envMap = textureCube;
+      obj.material.envMapIntensity = 1.0;
+    }
+  });
 
+  const obj = {
+    envMapIntensity:1.0,
+  }
+
+  gui.add(obj,'envMapIntensity',0,10).onChange((value) => {
+    gltf.scene.traverse(function(obj) {
+      if(obj.isMesh) {
+        obj.material.envMapIntensity = value;
+      }
+    })
+  })
+
+  scene.add(gltf.scene);
+})
 
 
 
