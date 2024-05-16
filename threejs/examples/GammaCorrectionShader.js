@@ -1,11 +1,11 @@
 /*
- * :file description:
- * :name: /threejs/src/index.js
+ * :file description: 
+ * :name: /threejs/examples/GammaCorrectionShader.js
  * :author: 张德志
  * :copyright: (c) 2024, Tungee
- * :date created: 2023-03-13 05:58:33
+ * :date created: 2024-05-17 06:13:08
  * :last editor: 张德志
- * :date last edited: 2024-05-17 06:12:53
+ * :date last edited: 2024-05-17 06:13:09
  */
 import dat from 'dat.gui';
 import * as THREE from 'three';
