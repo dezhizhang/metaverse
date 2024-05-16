@@ -5,12 +5,14 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2023-03-13 05:58:33
  * :last editor: 张德志
- * :date last edited: 2024-05-16 23:12:21
+ * :date last edited: 2024-05-16 23:24:49
  */
 import dat from 'dat.gui';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-
+import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
+import { OutlinePass } from 'three/examples/jsm/postprocessing/OutlinePass.js';
 
 //创建场影
 const scene = new THREE.Scene();
@@ -52,8 +54,6 @@ mesh3.position.x = 100;
 // 三个网格模型用于高亮发光描边测试
 scene.add(mesh,mesh2,mesh3);
 
-
-
 // 初始化渲染器
 const renderer = new THREE.WebGLRenderer({
   antialias: true,
@@ -61,6 +61,28 @@ const renderer = new THREE.WebGLRenderer({
 renderer.shadowMap.enabled = true;
 // 设置渲染器大小
 renderer.setSize(window.innerWidth, window.innerHeight);
+
+
+
+// 后处理
+const composer = new EffectComposer(renderer);
+
+const renderPass = new RenderPass(scene,camera);
+composer.addPass(renderPass);
+
+const v2 = new THREE.Vector2(window.innerWidth,window.innerHeight);
+
+const outlinePass = new OutlinePass(v2,scene,camera);
+
+outlinePass.selectedObjects = [mesh];
+
+composer.addPass(outlinePass);
+
+
+
+
+
+
 
 
 const controls = new OrbitControls(camera,renderer.domElement);
@@ -80,7 +102,8 @@ document.body.append(renderer.domElement);
 
 function render() {
   requestAnimationFrame(render);
-  renderer.render(scene, camera);
+  composer.render();
+  // renderer.render(scene, camera);
 }
 
 render();
