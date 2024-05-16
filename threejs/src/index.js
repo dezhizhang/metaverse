@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2023-03-13 05:58:33
  * :last editor: 张德志
- * :date last edited: 2024-05-17 05:07:43
+ * :date last edited: 2024-05-17 05:19:38
  */
 import dat from 'dat.gui';
 import * as THREE from 'three';
@@ -13,6 +13,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
 import { OutlinePass } from 'three/examples/jsm/postprocessing/OutlinePass.js';
+import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';
 
 //创建场影
 const scene = new THREE.Scene();
@@ -65,7 +66,6 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 
 
 // 后处理
-
 const composer = new EffectComposer(renderer);
 const renderPass = new RenderPass(scene,camera);
 composer.addPass(renderPass);
@@ -73,15 +73,13 @@ composer.addPass(renderPass);
 
 const v2 = new THREE.Vector2(window.innerWidth,window.innerHeight);
 
-const outlinePass = new OutlinePass(v2,scene,camera);
-outlinePass.visibleEdgeColor.set(0x00ff00);
-outlinePass.edgeStrength = 6;
-outlinePass.edgeThickness = 4;
-outlinePass.pulsePeriod = 2;
+const bloomPass = new UnrealBloomPass(v2,scene,camera);
+bloomPass.strength = 2;
 
-outlinePass.selectedObjects = [mesh];
+composer.addPass(bloomPass);
 
-composer.addPass(outlinePass);
+
+
 
 
 
