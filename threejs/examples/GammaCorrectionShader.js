@@ -1,11 +1,11 @@
 /*
- * :file description: 
+ * :file description:
  * :name: /threejs/examples/GammaCorrectionShader.js
  * :author: 张德志
  * :copyright: (c) 2024, Tungee
- * :date created: 2024-05-17 06:13:08
+ * :date created: 2023-03-13 05:58:33
  * :last editor: 张德志
- * :date last edited: 2024-05-17 06:13:09
+ * :date last edited: 2024-05-17 06:27:52
  */
 import dat from 'dat.gui';
 import * as THREE from 'three';
@@ -62,42 +62,32 @@ gltfLoader.load('/工厂.glb',(gltf) => {
 });
 
 
-
-
-
-
-// 后处理
-
 const composer = new EffectComposer(renderer);
 const renderPass = new RenderPass(scene,camera);
 composer.addPass(renderPass);
 
-const v2 = new THREE.Vector3(window.innerWidth,window.innerHeight);
+const v2 = new THREE.Vector2(window.innerWidth,window.innerHeight);
 const outlinePass = new OutlinePass(v2,scene,camera);
 outlinePass.edgeThickness = 4;
 outlinePass.edgeStrength = 6;
 
 const xDom = document.getElementById('x');
 xDom.addEventListener('click',() => {
-  const A = model.getObjectByName('大货车2');
-  outlinePass.selectedObjects = [A];
+  const car = model.getObjectByName('大货车2');
+  outlinePass.selectedObjects = [car];
 });
 
 const yDom = document.getElementById('y');
 yDom.addEventListener('click',() => {
-  const A = model.getObjectByName('大货车1');
-  outlinePass.selectedObjects = [A];
+  const car = model.getObjectByName('大货车1');
+  outlinePass.selectedObjects = [car];
 });
-
 
 outlinePass.visibleEdgeColor.set(0x0000ff);
 composer.addPass(outlinePass);
 
 const shaderPass = new ShaderPass(GammaCorrectionShader);
 composer.addPass(shaderPass);
-
-
-
 
 
 const controls = new OrbitControls(camera,renderer.domElement);
