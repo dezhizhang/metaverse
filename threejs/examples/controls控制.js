@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-05-12 21:09:52
  * :last editor: 张德志
- * :date last edited: 2024-05-12 21:09:59
+ * :date last edited: 2024-05-16 23:06:42
  */
 
 import dat from 'dat.gui';
@@ -31,24 +31,20 @@ scene.add(directionalLight);
 const ambient = new THREE.AmbientLight(0xffffff,1);
 scene.add(ambient);
 
-
-const gltfLoader = new GLTFLoader();
-gltfLoader.load('/工厂.glb',(gltf) => {
-  scene.add(gltf.scene);
+const geometry = new THREE.BoxGeometry(50, 50, 50);
+const material = new THREE.MeshLambertMaterial({
+    color: 0x009999,
 });
+const mesh = new THREE.Mesh(geometry, material);
+
+const mesh2 = mesh.clone();
+mesh2.position.y = 100;
+const mesh3 = mesh.clone();
+mesh3.position.x = 100;
 
 
-// 初始化渲染器
-const renderer = new THREE.WebGLRenderer({
-  antialias: true,
-});
-// 设置渲染器大小
-renderer.setSize(window.innerWidth, window.innerHeight);
-
-const controls = new OrbitControls(camera, renderer.domElement);
-controls.minPolarAngle = 0;
-controls.maxPolarAngle = Math.PI / 2;
-controls.update();
+// 三个网格模型用于高亮发光描边测试
+scene.add(mesh,mesh2,mesh3);
 
 
 

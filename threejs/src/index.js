@@ -5,12 +5,13 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2023-03-13 05:58:33
  * :last editor: 张德志
- * :date last edited: 2024-05-14 05:44:17
+ * :date last edited: 2024-05-16 23:12:21
  */
 import dat from 'dat.gui';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+
+
 //创建场影
 const scene = new THREE.Scene();
 
@@ -36,57 +37,20 @@ scene.add(directionalLightHelper);
 const ambient = new THREE.AmbientLight(0xffffff, 0.4);
 scene.add(ambient);
 
-const gui = new dat.GUI();
-
-gui.domElement.style.position = 'absolute';
-gui.domElement.style.right = '0px';
-gui.domElement.style.top = '20px';
-
-
-gui.add(directionalLight.position,'x',-300,300).onChange((value) => {
-  directionalLightHelper.update();
+const geometry = new THREE.BoxGeometry(50, 50, 50);
+const material = new THREE.MeshLambertMaterial({
+    color: 0x009999,
 });
+const mesh = new THREE.Mesh(geometry, material);
 
-gui.add(directionalLight.position,'y',-300,300).onChange(() => {
-  directionalLightHelper.update();
-  
-});
-
-gui.add(directionalLight.position,'z',-300,300).onChange(() => {
-  directionalLightHelper.update();
-});
+const mesh2 = mesh.clone();
+mesh2.position.y = 100;
+const mesh3 = mesh.clone();
+mesh3.position.x = 100;
 
 
-
-
-const textureCube = new THREE.CubeTextureLoader()
-    .setPath('/environ/')
-    .load(['px.jpg', 'nx.jpg', 'py.jpg', 'ny.jpg', 'pz.jpg', 'nz.jpg']);
-textureCube.encoding = THREE.SRGBColorSpace;//和renderer.outputEncoding一致
-
-const gltfLoader = new GLTFLoader();
-gltfLoader.load('/工厂.glb',function(gltf) {
-  gltf.scene.traverse(function(obj) {
-    if(obj.isMesh) {
-      obj.material.envMap = textureCube;
-      obj.material.envMapIntensity = 1.0;
-    }
-  });
-
-  const obj = {
-    envMapIntensity:1.0,
-  }
-
-  gui.add(obj,'envMapIntensity',0,10).onChange((value) => {
-    gltf.scene.traverse(function(obj) {
-      if(obj.isMesh) {
-        obj.material.envMapIntensity = value;
-      }
-    })
-  })
-
-  scene.add(gltf.scene);
-})
+// 三个网格模型用于高亮发光描边测试
+scene.add(mesh,mesh2,mesh3);
 
 
 

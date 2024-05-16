@@ -1,11 +1,11 @@
 /*
- * :file description: 
+ * :file description:
  * :name: /threejs/examples/gui设置光源位置.js
  * :author: 张德志
  * :copyright: (c) 2024, Tungee
- * :date created: 2024-05-14 05:46:20
+ * :date created: 2023-03-13 05:58:33
  * :last editor: 张德志
- * :date last edited: 2024-05-14 05:46:28
+ * :date last edited: 2024-05-14 06:01:55
  */
 import dat from 'dat.gui';
 import * as THREE from 'three';
@@ -49,20 +49,14 @@ gui.add(directionalLight.position,'x',-300,300).onChange((value) => {
 
 gui.add(directionalLight.position,'y',-300,300).onChange(() => {
   directionalLightHelper.update();
-  
 });
 
 gui.add(directionalLight.position,'z',-300,300).onChange(() => {
   directionalLightHelper.update();
 });
 
-
-
-
-const textureCube = new THREE.CubeTextureLoader()
-    .setPath('/environ/')
-    .load(['px.jpg', 'nx.jpg', 'py.jpg', 'ny.jpg', 'pz.jpg', 'nz.jpg']);
-textureCube.encoding = THREE.SRGBColorSpace;//和renderer.outputEncoding一致
+const textureCube = new THREE.CubeTextureLoader();
+textureCube.setPath('/environ/').load(['px.jpg', 'nx.jpg', 'py.jpg', 'ny.jpg', 'pz.jpg', 'nz.jpg']);
 
 const gltfLoader = new GLTFLoader();
 gltfLoader.load('/工厂.glb',function(gltf) {
@@ -72,21 +66,9 @@ gltfLoader.load('/工厂.glb',function(gltf) {
       obj.material.envMapIntensity = 1.0;
     }
   });
-
-  const obj = {
-    envMapIntensity:1.0,
-  }
-
-  gui.add(obj,'envMapIntensity',0,10).onChange((value) => {
-    gltf.scene.traverse(function(obj) {
-      if(obj.isMesh) {
-        obj.material.envMapIntensity = value;
-      }
-    })
-  })
-
   scene.add(gltf.scene);
 })
+
 
 
 
