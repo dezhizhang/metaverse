@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2023-03-13 05:58:33
  * :last editor: 张德志
- * :date last edited: 2024-05-17 06:48:45
+ * :date last edited: 2024-05-17 06:50:31
  */
 import dat from 'dat.gui';
 import * as THREE from 'three';
@@ -84,6 +84,11 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 // const result = ray.intersectTriangle(p1,p2,p3,false,point);
 
 // console.log({result,point});
+
+
+const p1 = new THREE.Vector3(100,25,0);
+const p2 = new THREE.Vector3(100,-25.25);
+
 
 
 
