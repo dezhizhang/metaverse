@@ -1,11 +1,11 @@
 /*
- * :file description:
- * :name: /threejs/src/index.js
+ * :file description: 
+ * :name: /threejs/examples/关键帧动画.js
  * :author: 张德志
  * :copyright: (c) 2024, Tungee
- * :date created: 2023-03-13 05:58:33
+ * :date created: 2024-05-17 22:09:00
  * :last editor: 张德志
- * :date last edited: 2024-05-17 22:37:24
+ * :date last edited: 2024-05-17 22:34:39
  */
 import dat from 'dat.gui';
 import * as THREE from 'three';
@@ -59,35 +59,19 @@ scene.add(mesh);
 
 
 const times = [0,3,6];
-
-const values = [0,0,0,100,0,0,0,0,100];
+const values = [0,0,0,100,0,0,0,0,200];
 
 const posKF = new THREE.KeyframeTrack('Box.position',times,values);
 
-const colorKF = new THREE.KeyframeTrack('Box.material.color',[2,5],[1,0,0,0,0,1]);
+const colorKF = new THREE.KeyframeTrack('Box.material.color',[2,5],[1,0,0,0,0,0,1]);
 
-const clip = new THREE.AnimationClip('test',6,[posKF,colorKF]);
+const clip = new THREE.AnimationAction('test',6,[posKF,colorKF]);
 
 const mixer = new THREE.AnimationMixer(mesh);
 
 const clipAction = mixer.clipAction(clip);
-clipAction.loop = THREE.LoopOnce;
-clipAction.clampWhenFinished = true;
 
-
-const xDom = document.getElementById('x');
-xDom.addEventListener('click',() => {
-  if(!clipAction.paused) clipAction.paused = true;
-  if(clipAction.paused) clipAction.paused = false;
-  clipAction.play();
-});
-
-const yDom = document.getElementById('y');
-yDom.addEventListener('click',() => {
-  clipAction.paused = true;
-})
-
-
+clipAction.play();
 
 
 
