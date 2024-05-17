@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2023-03-13 05:58:33
  * :last editor: 张德志
- * :date last edited: 2024-05-17 22:37:24
+ * :date last edited: 2024-05-17 23:01:30
  */
 import dat from 'dat.gui';
 import * as THREE from 'three';
@@ -71,6 +71,7 @@ const clip = new THREE.AnimationClip('test',6,[posKF,colorKF]);
 const mixer = new THREE.AnimationMixer(mesh);
 
 const clipAction = mixer.clipAction(clip);
+
 clipAction.loop = THREE.LoopOnce;
 clipAction.clampWhenFinished = true;
 
@@ -79,15 +80,28 @@ const xDom = document.getElementById('x');
 xDom.addEventListener('click',() => {
   if(!clipAction.paused) clipAction.paused = true;
   if(clipAction.paused) clipAction.paused = false;
+
   clipAction.play();
 });
+
 
 const yDom = document.getElementById('y');
 yDom.addEventListener('click',() => {
   clipAction.paused = true;
-})
+});
 
 
+const gui = new dat.GUI();
+gui.domElement.position = 'absolute';
+gui.domElement.style.top = '20px';
+gui.domElement.style.right = '20px';
+
+document.body.appendChild(gui.domElement);
+
+
+gui.add(clipAction,'timeScale').onChange((value) => {
+  clipAction.timeScale = value;
+});
 
 
 

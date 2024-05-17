@@ -658,6 +658,40 @@ objLoader.load('/heart/model.obj', (obj) => {
 });
 
 ```
+###  关键帧动画交互
+```js
+const times = [0,3,6];
+
+const values = [0,0,0,100,0,0,0,0,100];
+
+const posKF = new THREE.KeyframeTrack('Box.position',times,values);
+
+const colorKF = new THREE.KeyframeTrack('Box.material.color',[2,5],[1,0,0,0,0,1]);
+
+const clip = new THREE.AnimationClip('test',6,[posKF,colorKF]);
+
+const mixer = new THREE.AnimationMixer(mesh);
+
+const clipAction = mixer.clipAction(clip);
+
+clipAction.loop = THREE.LoopOnce;
+clipAction.clampWhenFinished = true;
+
+const xDom = document.getElementById('x');
+xDom.addEventListener('click',() => {
+  if(!clipAction.paused) clipAction.paused = true;
+  if(clipAction.paused) clipAction.paused = false;
+
+  clipAction.play();
+});
+
+
+const yDom = document.getElementById('y');
+yDom.addEventListener('click',() => {
+  clipAction.paused = true;
+})
+
+```
 
 
 
