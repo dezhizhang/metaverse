@@ -1,11 +1,11 @@
 /*
- * :file description:
- * :name: /threejs/src/index.js
+ * :file description: 
+ * :name: /threejs/examples/关键动画.js
  * :author: 张德志
  * :copyright: (c) 2024, Tungee
- * :date created: 2023-03-13 05:58:33
+ * :date created: 2024-05-17 22:09:00
  * :last editor: 张德志
- * :date last edited: 2024-05-17 22:14:09
+ * :date last edited: 2024-05-17 22:13:46
  */
 import dat from 'dat.gui';
 import * as THREE from 'three';
@@ -57,21 +57,22 @@ const mesh = new THREE.Mesh(geometry,material);
 mesh.name = 'Box';
 scene.add(mesh);
 
-// const times = [0, 3, 6];
 
-// const values = [0, 0, 0, 100, 0, 0, 0, 0, 100];
+const times = [0,3,6];
+const values = [0,0,0,100,0,0,0,0,200];
 
-// const posKF = new THREE.KeyframeTrack('Box.position',times,values);
+const posKF = new THREE.KeyframeTrack('Box.position',times,values);
 
-// const colorKF = new THREE.KeyframeTrack('Box.material.color',[2,5],[1, 0, 0, 0, 0, 1]);
+const colorKF = new THREE.KeyframeTrack('Box.material.color',[2,5],[1,0,0,0,0,0,1]);
 
-// const clip = new THREE.AnimationClip('test',6,[posKF,colorKF]);
+const clip = new THREE.AnimationAction('test',6,[posKF,colorKF]);
 
-// const mixer = new THREE.AnimationMixer(mesh);
+const mixer = new THREE.AnimationMixer(mesh);
 
-// const clipAction = mixer.clipAction(clip);
+const clipAction = mixer.clipAction(clip);
 
-// clipAction.play();
+clipAction.play();
+
 
 
 
