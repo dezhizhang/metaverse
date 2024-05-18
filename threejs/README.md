@@ -692,6 +692,28 @@ yDom.addEventListener('click',() => {
 })
 
 ```
+### 动画加载
+```js
+const gltfLoader = new GLTFLoader();
+gltfLoader.load('/机械装配动画.glb',(gltf) => {
+  gltf.scene.traverse(function(obj) {
+    if(obj.isMesh) {
+      obj.material.metalness = 1.0;
+      obj.material.roughness = 0.35;
+      obj.material.envMap = textureCube;
+      obj.material.envMapIntensity = 0.5;
+    }
+  });
+
+  scene.add(gltf.scene);
+
+  mixer = new THREE.AnimationMixer(gltf.scene);
+  const clipAction = mixer.clipAction(gltf.animations[0]);
+  clipAction.play();
+
+})
+```
+
 
 
 

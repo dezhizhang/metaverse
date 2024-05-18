@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2023-03-13 05:58:33
  * :last editor: 张德志
- * :date last edited: 2024-05-18 21:51:49
+ * :date last edited: 2024-05-18 22:00:24
  */
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
@@ -50,7 +50,7 @@ let mixer = null;
 
 const gltfLoader = new GLTFLoader();
 gltfLoader.load('/机械装配动画.glb',(gltf) => {
-  gltf.scene.traverse(function(obj){
+  gltf.scene.traverse(function(obj) {
     if(obj.isMesh) {
       obj.material.metalness = 1.0;
       obj.material.roughness = 0.35;
@@ -58,6 +58,7 @@ gltfLoader.load('/机械装配动画.glb',(gltf) => {
       obj.material.envMapIntensity = 0.5;
     }
   });
+
   scene.add(gltf.scene);
 
   mixer = new THREE.AnimationMixer(gltf.scene);
