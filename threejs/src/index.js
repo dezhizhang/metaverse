@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2023-03-13 05:58:33
  * :last editor: 张德志
- * :date last edited: 2024-05-18 21:11:06
+ * :date last edited: 2024-05-18 21:51:49
  */
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
@@ -37,16 +37,34 @@ renderer.shadowMap.enabled = true;
 // 设置渲染器大小
 renderer.setSize(window.innerWidth, window.innerHeight);
 
+
+
+const textureCube = new THREE.CubeTextureLoader()
+.setPath('/environment/')
+.load(['px.jpg','nx.jpg','py.jpg','ny.jpg','pz.jpg','nz.jpg']);
+
+
+
 let mixer = null;
 
+
 const gltfLoader = new GLTFLoader();
-gltfLoader.load('/工厂.glb',(gltf) => {
-  console.log(gltf);
+gltfLoader.load('/机械装配动画.glb',(gltf) => {
+  gltf.scene.traverse(function(obj){
+    if(obj.isMesh) {
+      obj.material.metalness = 1.0;
+      obj.material.roughness = 0.35;
+      obj.material.envMap = textureCube;
+      obj.material.envMapIntensity = 0.5;
+    }
+  });
+  scene.add(gltf.scene);
+
   mixer = new THREE.AnimationMixer(gltf.scene);
   const clipAction = mixer.clipAction(gltf.animations[0]);
   clipAction.play();
-  scene.add(gltf.scene);
-});
+
+})
 
 
 const controls = new OrbitControls(camera, renderer.domElement);
