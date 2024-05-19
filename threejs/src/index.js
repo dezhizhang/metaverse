@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-03-13 22:44:48
  * :last editor: 张德志
- * :date last edited: 2024-05-19 20:45:03
+ * :date last edited: 2024-05-19 20:54:09
  */
 
 import * as THREE from 'three';
@@ -52,6 +52,16 @@ const gridHelper = new THREE.GridHelper(30,25,0x004444,0x004444);
 scene.add(gridHelper);
 
 
+document.addEventListener('resize',() => {
+  renderer.setSize(window.innerWidth,window.innerHeight);
+  renderer.setPixelRatio(window.devicePixelRatio);
+
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+});
+
+
+
 
 //gltf
 const gltfLoader = new GLTFLoader();
@@ -69,9 +79,20 @@ const v3 = new THREE.Vector3(0,0,3);
 
 const clock = new THREE.Clock();
 
+const a = 12;
+const vMax = 5; // 最大速度
+
+
+
 function render() {
   const deltaTime = clock.getDelta();
+  // z方向运动
   if(keyStates.W) {
+    const front = new THREE.Vector3(0,0,1);
+
+    if(v3.length() < vMax) {
+      v3.add(front.multiplyScalar(a * deltaTime));
+    }
     const deltaPos = v3.clone().multiplyScalar(deltaTime);
     player.position.add(deltaPos);
   }
