@@ -1,16 +1,16 @@
 /*
  * :file description: 
- * :name: /threejs/src/index.js
+ * :name: /threejs/examples/骨骼动画.js
  * :author: 张德志
  * :copyright: (c) 2024, Tungee
- * :date created: 2024-03-13 22:44:48
+ * :date created: 2024-05-19 14:25:36
  * :last editor: 张德志
- * :date last edited: 2024-05-19 15:48:43
+ * :date last edited: 2024-05-19 14:25:36
  */
 import * as dat from 'dat.gui';
 import * as THREE from 'three';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-import { CSS2DRenderer, CSS2DObject } from 'three/examples/jsm/renderers/CSS2DRenderer.js';
 
 //骨骼动画
 //创建场影
@@ -38,40 +38,23 @@ renderer.shadowMap.enabled = true;
 // 设置渲染器大小
 renderer.setSize(window.innerWidth, window.innerHeight);
 
-const geometry = new THREE.BoxGeometry(40, 40, 40);
-const material = new THREE.MeshBasicMaterial({
-  color: 0x00ffff,
+const gltfLoader = new GLTFLoader();
+gltfLoader.load('/骨骼动画.glb', (gltf) => {
+  scene.add(gltf.scene);
+  const helper = new THREE.SkeletonHelper(gltf.scene);
+
+  const bone1 = gltf.scene.getObjectByName('Bone1');
+
+  const gui = new dat.GUI();
+  gui.domElement.style.position = 'absolute';
+  gui.domElement.style.top = '0px';
+  gui.domElement.style.right = '0px';
+  gui.add(bone1.rotation, 'x', 0, Math.PI / 6).name('关节点1');
+
+  document.body.appendChild(gui.domElement);
+
+  scene.add(helper);
 });
-
-const mesh = new THREE.Mesh(geometry, material);
-scene.add(mesh);
-
-
-const tag = document.createElement('div');
-tag.style.background = '#ccc';
-tag.style.color = '#fff';
-tag.style.position = 'absolute';
-tag.style.borderRadius = '4px';
-tag.style.padding = '4px';
-tag.innerHTML = '标签';
-
-const objMesh = new CSS2DObject(tag);
-scene.add(objMesh);
-
-const css2dRenderer = new CSS2DRenderer();
-css2dRenderer.domElement.style.position = 'absolute';
-css2dRenderer.domElement.style.left = '0px';
-css2dRenderer.domElement.style.top = '0px';
-css2dRenderer.domElement.style.pointerEvents = 'none';
-css2dRenderer.setSize(window.innerWidth,window.innerHeight);
-
-document.body.appendChild(css2dRenderer.domElement);
-
-
-
-
-
-
 
 const controls = new OrbitControls(camera, renderer.domElement);
 
@@ -80,7 +63,6 @@ window.addEventListener('resize', () => {
   const height = window.innerHeight;
 
   renderer.setSize(width, height);
-  css2dRenderer.setSize(width,height);
   camera.aspect = width / height;
   camera.updateProjectionMatrix();
 });
@@ -94,8 +76,6 @@ function render() {
   requestAnimationFrame(render);
   // composer.render();
   renderer.render(scene, camera);
-  css2dRenderer.render(scene,camera);
-
 }
 
 render();
