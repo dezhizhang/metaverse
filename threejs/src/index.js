@@ -5,138 +5,211 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-05-22 22:36:48
  * :last editor: 张德志
- * :date last edited: 2024-05-23 07:22:20
+ * :date last edited: 2024-05-24 16:42:46
  */
-
 import * as THREE from 'three';
-import data from './polygonData';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
-//创建场影
+import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+import { ShaderPass } from 'three/addons/postprocessing/ShaderPass.js';
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
+
+const BLOOM_SCENE = 1;
+
+const bloomLayer = new THREE.Layers();
+bloomLayer.set(BLOOM_SCENE);
+
+const params = {
+  threshold: 0,
+  strength: 0.1,
+  radius: 0.5,
+  exposure: 0,
+};
+
+const darkMaterial = new THREE.MeshBasicMaterial({ color: 'black' });
+const materials = {};
+
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setPixelRatio(window.devicePixelRatio);
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.toneMapping = THREE.ReinhardToneMapping;
+document.body.appendChild(renderer.domElement);
+
 const scene = new THREE.Scene();
 
-//创建相机
-const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-
-// 设置相机位置
-camera.position.set(103, 45, 200);
-camera.lookAt(103, 45, 0);
-
-const pointArr = [];
-
-data.forEach((elem) => {
-  pointArr.push(elem[0], elem[1], 0);
-});
-scene.add(polygon(pointArr));
-scene.add(pointPolygon(data));
-
-function polygon(pointArr) {
-  const group = new THREE.Group();
-
-  const geometry = new THREE.BufferGeometry();
-  const vertices = new Float32Array(pointArr);
-
-  const attribute = new THREE.BufferAttribute(vertices, 3);
-  geometry.attributes.position = attribute;
-
-  const material = new THREE.MeshBasicMaterial({
-    color: 0x006666,
-  });
-  const line = new THREE.LineLoop(geometry, material);
-
-  const pointMaterial = new THREE.PointsMaterial({
-    color: 0xffffff,
-    size: 0.3,
-  });
-
-  const points = new THREE.Points(geometry, pointMaterial);
-
-  group.add(line, points);
-
-  return group;
-}
-
-
-function pointPolygon(polygon) {
-  const lonArr = [];
-  const latArr = [];
-
-  polygon.forEach((elem) => {
-    lonArr.push(elem[0]);
-    latArr.push(elem[1]);
-  });
-
-  const [lonMin,lonMax] = minMax(lonArr);
-  const [latMin,latMax] = minMax(latArr);
-
-
-  const step = 1;
-  const row = Math.ceil((lonMax - lonMin) / step);
-  const column = Math.ceil((latMax - latMin) / step);
-
-
-
-  const rectPontsArr = [];
-  for(let i=0;i < row + 1;i++) {
-    for(let j=0;j < column + 1;j++) {
-      rectPontsArr.push([lonMin + i * step,latMax + j * step]);
-    }
-  }
-
-  const pointArr = [];
-  rectPontsArr.forEach((elem) => {
-    pointArr.push(elem[0],elem[1],0);
-  });
-
-  const geometry = new THREE.BufferGeometry();
-  const attributes = new Float32Array(pointArr);
-  geometry.attributes.position = new THREE.BufferAttribute(attributes,3)
-
-
-  const material = new THREE.PointsMaterial({
-    color:0xff0000,
-    size:0.1
-  });
-
-  const points = new THREE.Points(geometry,material);
-  return points;
-
-
-
-}
-
-
-
-function minMax(arr) {
-  arr.sort(compareNum);
-  return [Math.floor(arr[0]), Math.ceil(arr[arr.length - 1])];
-}
-
-function compareNum(num1, num2) {
-  if (num1 < num2) {
-    return -1;
-  } else if (num1 > num2) {
-    return 1;
-  } else {
-    return 0;
-  }
-}
-
-// 初始化渲染器
-const renderer = new THREE.WebGLRenderer();
-
-// 设置渲染器大小
-renderer.setSize(window.innerWidth, window.innerHeight);
+const camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 1, 200);
+camera.position.set(0, 0, 20);
+camera.lookAt(0, 0, 0);
 
 const controls = new OrbitControls(camera, renderer.domElement);
-controls.target.set(103, 45, 0);
-controls.update();
+controls.maxPolarAngle = Math.PI * 0.5;
+controls.minDistance = 1;
+controls.maxDistance = 100;
+controls.addEventListener('change', render);
 
-document.body.append(renderer.domElement);
+const renderScene = new RenderPass(scene, camera);
 
-function render() {
-  requestAnimationFrame(render);
-  renderer.render(scene, camera);
+const bloomPass = new UnrealBloomPass(
+  new THREE.Vector2(window.innerWidth, window.innerHeight),
+  1.5,
+  0.4,
+  0.85,
+);
+bloomPass.threshold = params.threshold;
+bloomPass.strength = params.strength;
+bloomPass.radius = params.radius;
+
+const bloomComposer = new EffectComposer(renderer);
+bloomComposer.renderToScreen = false;
+bloomComposer.addPass(renderScene);
+bloomComposer.addPass(bloomPass);
+
+const mixPass = new ShaderPass(
+  new THREE.ShaderMaterial({
+    uniforms: {
+      baseTexture: { value: null },
+      bloomTexture: { value: bloomComposer.renderTarget2.texture },
+    },
+    vertexShader: document.getElementById('vertexshader').textContent,
+    fragmentShader: document.getElementById('fragmentshader').textContent,
+    defines: {},
+  }),
+  'baseTexture',
+);
+mixPass.needsSwap = true;
+
+const outputPass = new OutputPass();
+
+const finalComposer = new EffectComposer(renderer);
+finalComposer.addPass(renderScene);
+finalComposer.addPass(mixPass);
+finalComposer.addPass(outputPass);
+
+const raycaster = new THREE.Raycaster();
+
+const mouse = new THREE.Vector2();
+
+window.addEventListener('pointerdown', onPointerDown);
+
+const gui = new GUI();
+
+const bloomFolder = gui.addFolder('bloom');
+
+bloomFolder.add(params, 'threshold', 0.0, 1.0).onChange(function (value) {
+  bloomPass.threshold = Number(value);
+  render();
+});
+
+bloomFolder.add(params, 'strength', 0.0, 3).onChange(function (value) {
+  bloomPass.strength = Number(value);
+  render();
+});
+
+bloomFolder
+  .add(params, 'radius', 0.0, 1.0)
+  .step(0.01)
+  .onChange(function (value) {
+    bloomPass.radius = Number(value);
+    render();
+  });
+
+const toneMappingFolder = gui.addFolder('tone mapping');
+
+toneMappingFolder.add(params, 'exposure', 0.1, 2).onChange(function (value) {
+  renderer.toneMappingExposure = Math.pow(value, 4.0);
+  render();
+});
+
+setupScene();
+
+function onPointerDown(event) {
+  mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+  mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+
+
+
+  raycaster.setFromCamera(mouse, camera);
+  const intersects = raycaster.intersectObjects(scene.children, false);
+  // intersects.layers.toggle(BLOOM_SCENE);
+  // render();
+  // console.log('intersects',intersects)
+  if (intersects.length > 0) {
+    const object = intersects[0].object;
+    object.layers.toggle(BLOOM_SCENE);
+    render();
+  }
 }
 
-render();
+window.onresize = function () {
+  const width = window.innerWidth;
+  const height = window.innerHeight;
+
+  camera.aspect = width / height;
+  camera.updateProjectionMatrix();
+
+  renderer.setSize(width, height);
+
+  bloomComposer.setSize(width, height);
+  finalComposer.setSize(width, height);
+
+  render();
+};
+
+function setupScene() {
+  scene.traverse(disposeMaterial);
+  scene.children.length = 0;
+
+  const geometry = new THREE.IcosahedronGeometry(1, 15);
+
+  for (let i = 0; i < 50; i++) {
+    const color = new THREE.Color();
+    color.setHSL(Math.random(), 0.7, Math.random() * 0.2 + 0.05);
+
+    const material = new THREE.MeshBasicMaterial({ color: color });
+    const sphere = new THREE.Mesh(geometry, material);
+    sphere.position.x = Math.random() * 10 - 5;
+    sphere.position.y = Math.random() * 10 - 5;
+    sphere.position.z = Math.random() * 10 - 5;
+    sphere.position.normalize().multiplyScalar(Math.random() * 4.0 + 2.0);
+    sphere.scale.setScalar(Math.random() * Math.random() + 0.5);
+    scene.add(sphere);
+
+    if (Math.random() < 0.25) sphere.layers.enable(BLOOM_SCENE);
+  }
+
+  render();
+}
+
+function disposeMaterial(obj) {
+  if (obj.material) {
+    obj.material.dispose();
+  }
+}
+
+function render() {
+  scene.traverse(darkenNonBloomed);
+  bloomComposer.render();
+  scene.traverse(restoreMaterial);
+
+  // render the entire scene, then render bloom scene on top
+  finalComposer.render();
+}
+
+function darkenNonBloomed(obj) {
+  if (obj.isMesh && bloomLayer.test(obj.layers) === false) {
+    materials[obj.uuid] = obj.material;
+    obj.material = darkMaterial;
+  }
+}
+
+function restoreMaterial(obj) {
+  if (materials[obj.uuid]) {
+    obj.material = materials[obj.uuid];
+    delete materials[obj.uuid];
+  }
+}

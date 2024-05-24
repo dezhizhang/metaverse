@@ -5,7 +5,7 @@
  * :copyright: (c) 2022, Tungee
  * :date created: 2022-07-12 07:39:26
  * :last editor: 张德志
- * :date last edited: 2024-05-12 17:22:11
+ * :date last edited: 2024-05-24 14:36:51
 -->
 <!DOCTYPE html>
 <html lang="en">
@@ -140,6 +140,35 @@
     <span id="y" class="bu" style="margin-left: 10px;">y</span>
     <span id="z" class="bu" style="margin-left: 10px;">z</span>
   </div>
+  <script type="x-shader/x-vertex" id="vertexshader">
+
+    varying vec2 vUv;
+
+    void main() {
+
+      vUv = uv;
+
+      gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+
+    }
+
+  </script>
+
+  <script type="x-shader/x-fragment" id="fragmentshader">
+
+    uniform sampler2D baseTexture;
+    uniform sampler2D bloomTexture;
+
+    varying vec2 vUv;
+
+    void main() {
+
+      gl_FragColor = ( texture2D( baseTexture, vUv ) + vec4( 1.0 ) * texture2D( bloomTexture, vUv ) );
+
+    }
+
+  </script>
+
 
   <script async src="https://unpkg.com/es-module-shims@1.8.0/dist/es-module-shims.js"></script>
 </body>
