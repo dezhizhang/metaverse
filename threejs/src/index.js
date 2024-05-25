@@ -5,9 +5,10 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-04-07 20:33:12
  * :last editor: 张德志
- * :date last edited: 2024-05-25 15:51:11
+ * :date last edited: 2024-05-25 16:05:00
  */
 import * as THREE from 'three';
+import { pointInPolygon } from './pointInPolygon';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
 import polygonData from './polygonData';
@@ -75,27 +76,28 @@ function gridPoint(polygon) {
 
   const rectPointsArr = [];
 
-  for(let i=0;i < colum + 1;i++) {
-	for(let j=0;j < row + 1;j++) {
-		rectPointsArr.push([lonMin + i * step,latMin + j * step]);
-	}
+  for (let i = 0; i < colum + 1; i++) {
+    for (let j = 0; j < row + 1; j++) {
+      rectPointsArr.push([lonMin + i * step, latMin + j * step]);
+    }
   }
 
   const pointArr = [];
   rectPointsArr.forEach((elem) => {
-	pointArr.push(elem[0],elem[1],0);
+    if (pointInPolygon(elem, polygon)) {
+      pointArr.push(elem[0], elem[1], 0);
+    }
   });
 
   const geometry = new THREE.BufferGeometry();
   const attributes = new Float32Array(pointArr);
-  geometry.attributes.position = new THREE.BufferAttribute(attributes,3);
+  geometry.attributes.position = new THREE.BufferAttribute(attributes, 3);
   const material = new THREE.PointsMaterial({
-	color:0xff0000,
-	size:0.3
+    color: 0xff0000,
+    size: 0.3,
   });
-  const points = new THREE.Points(geometry,material);
+  const points = new THREE.Points(geometry, material);
   return points;
-
 }
 
 function minMax(arr) {
