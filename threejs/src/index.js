@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2023-03-13 05:58:33
  * :last editor: 张德志
- * :date last edited: 2024-05-26 22:20:58
+ * :date last edited: 2024-05-26 22:24:42
  */
 
 import * as THREE from 'three';
@@ -38,7 +38,6 @@ const fragmentShader = `
     }else {
       gl_FragColor = vec4(0.0,1.0,0.0,1.0);
     }
-  
   }
 `;
 
