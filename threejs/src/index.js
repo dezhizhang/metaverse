@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2023-03-13 05:58:33
  * :last editor: 张德志
- * :date last edited: 2024-05-27 06:14:06
+ * :date last edited: 2024-05-27 06:53:29
  */
 
 import * as THREE from 'three';
@@ -24,37 +24,34 @@ camera.lookAt(scene.position);
 // 初始化渲染器
 const renderer = new THREE.WebGLRenderer();
 
+
 const vertexShader = `
-  varying vec2 vUv;
   void main() {
-    vUv = uv;
+    gl_PointSize = 20.0;
     gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0);
   }
 `;
 
 const fragmentShader = `
-  uniform sampler2D map;
-  varying vec2 vUv;
   void main() {
-    
-    gl_FragColor = texture2D(map,vUv);
+    gl_FragColor = vec4(1.0,0.0,0.0,1.0);
   }
 `;
 
-const textureLoader = new THREE.TextureLoader();
-const texture = textureLoader.load('/earth.png');
+const geometry = new THREE.PlaneGeometry(100,50);
 
-const geometry = new THREE.SphereGeometry(100, 40, 40);
 const material = new THREE.ShaderMaterial({
-  uniforms: {
-    map: { value: texture },
-  },
   vertexShader,
-  fragmentShader,
+  fragmentShader
 });
 
-const mesh = new THREE.Mesh(geometry, material);
+const mesh = new THREE.Points(geometry,material);
 scene.add(mesh);
+
+
+scene.add(new THREE.AxesHelper(100));
+
+
 
 // 设置渲染器大小
 renderer.setSize(window.innerWidth, window.innerHeight);
