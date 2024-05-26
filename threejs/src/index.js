@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2023-03-13 05:58:33
  * :last editor: 张德志
- * :date last edited: 2024-05-26 14:37:57
+ * :date last edited: 2024-05-26 14:58:23
  */
 
 import * as THREE from 'three';
@@ -24,59 +24,19 @@ camera.lookAt(scene.position);
 // 初始化渲染器
 const renderer = new THREE.WebGLRenderer();
 
-
-const geometry = new THREE.BufferGeometry();
-const curve = new THREE.CatmullRomCurve3([
-  new THREE.Vector3(100,0,-100),
-  new THREE.Vector3(0,80,0),
-  new THREE.Vector3(-100,0,100),
-]);
-
-const points = curve.getSpacedPoints(100);
-geometry.setFromPoints(points);
-
-const material = new THREE.LineBasicMaterial({
-  color:0x006666,
+const geometry = new THREE.ConeGeometry(25,100,4);
+geometry.computeVertexNormals();
+geometry.rotateX(-Math.PI / 2);
+geometry.translate(0,0,100 / 2);
+const material = new THREE.MeshBasicMaterial({
+  color:0x00ffff
 });
+const mesh = new THREE.Mesh(geometry,material);
+scene.add(mesh);
 
-const line = new THREE.Line(geometry,material);
-scene.add(line);
+const ax = new THREE.AxesHelper(100);
+scene.add(ax);
 
-
-const index = 20;
-const num = 10;
-
-const points2 = points.slice(index,index + num);
-const geometry2 = new THREE.BufferGeometry();
-geometry2.setFromPoints(points2);
-
-const posNum = points.length - 2;
-const colorArr = [];
-
-for(let i=0;i < points2.length;i++) {
-  var color1 = new THREE.Color(0x006666); //轨迹线颜色 青色
-  var color2 = new THREE.Color(0xffff00); //黄色
-
-  let color = null;
-
-  if(i < posNum) {
-    color = color1.lerp(color2,i / posNum);
-  }else {
-    color = color2.lerp(color1, (i - posNum) / (points2.length - posNum));
-  }
-  colorArr.push(color.r,color.g,color.b);
-
-}
-
-geometry2.attributes.color = new THREE.BufferAttribute(new Float32Array(colorArr),3);
-
-const material2 = new THREE.LineBasicMaterial({
-  vertexColors: true //使用顶点颜色，不用设置color
-})
-
-
-const line2 = new THREE.Line(geometry2,material2);
-scene.add(line2);
 
 
 // 设置渲染器大小
