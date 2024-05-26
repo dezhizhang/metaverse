@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2023-03-13 05:58:33
  * :last editor: 张德志
- * :date last edited: 2024-04-08 06:11:07
+ * :date last edited: 2024-05-26 09:24:42
  */
 
 import * as THREE from 'three';
@@ -23,8 +23,8 @@ scene.add(camera);
 // 创建几何体
 // const cubeGeometry = new THREE.BoxGeometry(1,1,1);
 // const cubeMaterial = new THREE.MeshBasicMaterial({color:0xffff00});
-// const cube = new THREE.Mesh(cubeGeometry,cubeMaterial);
-
+// const cube = new THREE.Mesh(cubeGeometry,cubeMaterial)
+a
 const geometry = new THREE.PlaneGeometry();
 const material = new THREE.MeshBasicMaterial({
     color:'#00ff00',
