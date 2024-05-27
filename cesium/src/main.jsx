@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-04-22 20:18:01
  * :last editor: 张德志
- * :date last edited: 2024-04-25 07:02:37
+ * :date last edited: 2024-05-27 22:35:47
  */
 /*
  * :file description:
@@ -17,17 +17,6 @@
  * :date last edited: 2024-04-22 17:20:19
  */
 import * as Cesium from 'cesium';
-import modifyMap from './modifyMap';
-import modifyBuild from './modifyBuild';
-import LightCone from './lightCone';
-import RectFlyLight from './rectFlyLight';
-import RoadLightLine from './RoadLightLine';
-import RadarLight from './RadarLight';
-import LightSpread from './LightSpread';
-import LightWall from './LightWall';
-import ParticleLight from './ParticleLight';
-import CesiumNavigation from 'cesium-navigation-es6';
-import { renderToPipeableStream } from 'react-dom/server';
 
 // const atLayer = new Cesium.UrlTemplateImageryProvider({
 //     url: "https://webst02.is.autonavi.com/appmaptile?style=6&x={x}&y={y}&z={z}",
@@ -48,70 +37,9 @@ Cesium.Camera.DEFAULT_VIEW_RECTANGLE = Cesium.Rectangle.fromDegrees(
   //北边的维度
   61.2,
 );
-// An example of using a b3dm tileset to classify another b3dm tileset.
+
 const viewer = new Cesium.Viewer('root', {
-  // 是否显示信息窗口
-  // infoBox: false,
-  // // 是否显示查询按钮
-  // geocoder: false,
-  // // 不显示home按钮
-  // homeButton: false,
-  // // 控制查看器显示模式
-  // sceneModePicker: false,
-  // // 是否显示图层按钮
-  // baseLayerPicker: false,
-  // // 是否显不帮助
-  // navigationHelpButton: false,
-  // // 是否显示动画
-  // animation: false,
-  skyBox: new Cesium.SkyBox({
-    sources: {
-      positiveX: '/texture/sky/px.jpg',
-      negativeX: '/texture/sky/nx.jpg',
-      positiveY: '/texture/sky/ny.jpg',
-      negativeY: '/texture/sky/py.jpg',
-      positiveZ: '/texture/sky/pz.jpg',
-      negativeZ: '/texture/sky/nz.jpg',
-    },
-  }),
-  // 是否显示全屏按钮
-  timeline: false,
   terrainProvider: Cesium.createWorldTerrain({
-    requestVertexNormals: true,
     requestWaterMask: true,
   }),
-  fullscreenButton: false,
-  shouldAnimate: true,
 });
-
-
-const url = 'https://geo.datav.aliyun.com/areas_v3/bound/100000_full.json';
-
-const jsonData = await Cesium.GeoJsonDataSource.load(url, {
-  stroke: Cesium.Color.RED,
-  fill: Cesium.Color.BLUE,
-  strokeWidth: 4,
-});
-
-
-
-const entities = jsonData.entities.values;
-
-entities.forEach((entity) => {
-  entity.polygon.material = new Cesium.ColorMaterialProperty(
-    Cesium.Color.fromRandom({
-      alpha:0.9
-    })
-  ),
-  entity.polygon.outline = false;
-  entity.polygon.extrudedHeight = 100000;
-})
-
-
-
-
-viewer.dataSources.add(jsonData);
-
-
-
-

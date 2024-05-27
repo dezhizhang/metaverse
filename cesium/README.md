@@ -666,3 +666,12 @@ entities.forEach((entity) => {
 })
 
 ```
+### 添加水流动
+```ts
+const viewer = new Cesium.Viewer('root', {
+  terrainProvider: Cesium.createWorldTerrain({
+    requestWaterMask: true,
+  }),
+});
+
+```
