@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-04-22 20:18:01
  * :last editor: 张德志
- * :date last edited: 2024-05-28 05:52:08
+ * :date last edited: 2024-05-28 06:02:24
  */
 /*
  * :file description:
@@ -93,13 +93,37 @@ const lat = Cesium.Math.toDegrees(cartographic.latitude);
 //   duration: 3,
 // });
 
-const position = Cesium.Cartesian3.fromDegrees(110,20);
-viewer.camera.lookAt(
-  position,
-  new Cesium.HeadingPitchRange(
-    Cesium.Math.toRadians(0),
-    Cesium.Math.toRadians(-90),
-    20000
-  )
-)
+// const position = Cesium.Cartesian3.fromDegrees(110,20);
+// viewer.camera.lookAt(
+//   position,
+//   new Cesium.HeadingPitchRange(
+//     Cesium.Math.toRadians(0),
+//     Cesium.Math.toRadians(-90),
+//     20000
+//   )
+// )
+
+// const point = new Cesium.Entity({
+//   position:Cesium.Cartesian3.fromDegrees(120,30),
+//   point:{
+//     pixelSize:30,
+//     color:Cesium.Color.BLUE,
+//   }
+// });
+// viewer.entities.add(point);
+
+// viewer.zoomTo(point);
+
+const point = viewer.entities.add({
+  id:'point',
+  position:Cesium.Cartesian3.fromDegrees(121,30),
+  point:{
+    pixelSize:20,
+    color:Cesium.Color.YELLOW,
+  }
+});
+
+viewer.zoomTo(point);
+
+
 

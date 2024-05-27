@@ -712,3 +712,16 @@ viewer.camera.lookAt(
 )
 
 ```
+### 绘制点
+```js
+const point = viewer.entities.add({
+  id:'point',
+  position:Cesium.Cartesian3.fromDegrees(121,30),
+  point:{
+    pixelSize:20,
+    color:Cesium.Color.YELLOW,
+  }
+});
+
+viewer.zoomTo(point);
+```
