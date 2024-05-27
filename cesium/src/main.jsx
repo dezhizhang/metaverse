@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-04-22 20:18:01
  * :last editor: 张德志
- * :date last edited: 2024-05-28 06:24:15
+ * :date last edited: 2024-05-28 06:38:51
  */
 /*
  * :file description:
@@ -140,17 +140,42 @@ const lat = Cesium.Math.toDegrees(cartographic.latitude);
 
 // viewer.zoomTo(billboard);
 
-const label = viewer.entities.add({
-  position:Cesium.Cartesian3.fromDegrees(120,30,30),
-  label:{
-    text:'hello world',
-    fillColor:Cesium.Color.YELLOW,
-    showBackground:true,
-    backgroundColor:Cesium.Color.RED,
+
+
+// const polyline = viewer.entities.add({
+//   polyline:{
+//     positions:Cesium.Cartesian3.fromDegreesArray([
+//       120,20,
+//       121,20,
+//       121,20.5
+//     ]),
+//     width:10,
+//     material:Cesium.Color.YELLOW
+//   }
+// });
+
+// viewer.zoomTo(polyline);
+
+
+const polyline = viewer.entities.add({
+  polyline:{
+    positions:Cesium.Cartesian3.fromDegreesArray([
+      120,200,
+      121,20,
+      121,20.5
+    ]),
+    width:10,
+    material:Cesium.Color.YELLOW
   }
 });
 
-viewer.zoomTo(label)
+viewer.zoomTo(polyline);
+
+
+
+
+
+
 
 
 

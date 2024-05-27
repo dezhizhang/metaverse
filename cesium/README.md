@@ -754,3 +754,21 @@ const label = viewer.entities.add({
 viewer.zoomTo(label)
 
 ```
+
+### 绘制线
+```ts
+const polyline = viewer.entities.add({
+  polyline:{
+    positions:Cesium.Cartesian3.fromDegreesArray([
+      120,200,
+      121,20,
+      121,20.5
+    ]),
+    width:10,
+    material:Cesium.Color.YELLOW
+  }
+});
+
+viewer.zoomTo(polyline);
+
+```
