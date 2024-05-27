@@ -739,3 +739,18 @@ viewer.zoomTo(billboard);
 
 
 ```
+### 添加文字
+```ts
+const label = viewer.entities.add({
+  position:Cesium.Cartesian3.fromDegrees(120,30,30),
+  label:{
+    text:'hello world',
+    fillColor:Cesium.Color.YELLOW,
+    showBackground:true,
+    backgroundColor:Cesium.Color.RED,
+  }
+});
+
+viewer.zoomTo(label)
+
+```

@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-04-22 20:18:01
  * :last editor: 张德志
- * :date last edited: 2024-05-28 06:13:16
+ * :date last edited: 2024-05-28 06:24:15
  */
 /*
  * :file description:
@@ -130,15 +130,27 @@ const lat = Cesium.Math.toDegrees(cartographic.latitude);
 // })
 
 
-const billboard = viewer.entities.add({
-  position:Cesium.Cartesian3.fromDegrees(116,30,30),
-  billboard:{
-    image:'/LaserStation.png',
-    color:Cesium.Color.YELLOW
+// const billboard = viewer.entities.add({
+//   position:Cesium.Cartesian3.fromDegrees(116,30,30),
+//   billboard:{
+//     image:'/LaserStation.png',
+//     color:Cesium.Color.YELLOW
+//   }
+// });
+
+// viewer.zoomTo(billboard);
+
+const label = viewer.entities.add({
+  position:Cesium.Cartesian3.fromDegrees(120,30,30),
+  label:{
+    text:'hello world',
+    fillColor:Cesium.Color.YELLOW,
+    showBackground:true,
+    backgroundColor:Cesium.Color.RED,
   }
 });
 
-viewer.zoomTo(billboard);
+viewer.zoomTo(label)
 
 
 
