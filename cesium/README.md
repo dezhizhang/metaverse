@@ -772,3 +772,23 @@ const polyline = viewer.entities.add({
 viewer.zoomTo(polyline);
 
 ```
+### 绘制多边形
+```ts
+const polygon = viewer.entities.add({
+  polygon:{
+    hierarchy:{
+      positions:Cesium.Cartesian3.fromDegreesArray([
+        120,25,
+        121,25,
+        121,25.5
+      ]),
+    
+    },
+    material:Cesium.Color.RED,
+    height:1000,
+    extrudedHeight:20000,
+  }
+});
+
+viewer.zoomTo(polygon);
+```

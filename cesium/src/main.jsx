@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-04-22 20:18:01
  * :last editor: 张德志
- * :date last edited: 2024-05-28 06:38:51
+ * :date last edited: 2024-05-28 06:50:43
  */
 /*
  * :file description:
@@ -157,19 +157,53 @@ const lat = Cesium.Math.toDegrees(cartographic.latitude);
 // viewer.zoomTo(polyline);
 
 
-const polyline = viewer.entities.add({
-  polyline:{
-    positions:Cesium.Cartesian3.fromDegreesArray([
-      120,200,
-      121,20,
-      121,20.5
-    ]),
-    width:10,
-    material:Cesium.Color.YELLOW
+// const polyline = viewer.entities.add({
+//   polyline:{
+//     positions:Cesium.Cartesian3.fromDegreesArray([
+//       120,200,
+//       121,20,
+//       121,20.5
+//     ]),
+//     width:10,
+//     material:Cesium.Color.YELLOW
+//   }
+// });
+
+// viewer.zoomTo(polyline);
+
+// const polyline = viewer.entities.add({
+//   polyline:{
+//     positions:Cesium.Cartesian3.fromDegreesArray([
+//       120,200,
+//       121,20,
+//       121,20.5
+//     ]),
+//     width:10,
+//     material:Cesium.Color.YELLOW
+//   }
+// });
+
+// viewer.zoomTo(polyline);
+
+const polygon = viewer.entities.add({
+  polygon:{
+    hierarchy:{
+      positions:Cesium.Cartesian3.fromDegreesArray([
+        120,25,
+        121,25,
+        121,25.5
+      ]),
+    
+    },
+    material:Cesium.Color.RED,
+    height:1000,
+    extrudedHeight:20000,
   }
 });
 
-viewer.zoomTo(polyline);
+viewer.zoomTo(polygon);
+
+
 
 
 
