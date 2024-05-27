@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-04-22 20:18:01
  * :last editor: 张德志
- * :date last edited: 2024-05-27 22:35:47
+ * :date last edited: 2024-05-27 22:43:47
  */
 /*
  * :file description:
@@ -43,3 +43,7 @@ const viewer = new Cesium.Viewer('root', {
     requestWaterMask: true,
   }),
 });
+
+const cartesian3 = Cesium.Cartesian3.fromDegrees(110,20,20);
+console.log('cartesian3',cartesian3);
+
