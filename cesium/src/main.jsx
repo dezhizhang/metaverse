@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-04-22 20:18:01
  * :last editor: 张德志
- * :date last edited: 2024-05-28 06:02:24
+ * :date last edited: 2024-05-28 06:13:16
  */
 /*
  * :file description:
@@ -114,16 +114,31 @@ const lat = Cesium.Math.toDegrees(cartographic.latitude);
 
 // viewer.zoomTo(point);
 
-const point = viewer.entities.add({
-  id:'point',
-  position:Cesium.Cartesian3.fromDegrees(121,30),
-  point:{
-    pixelSize:20,
-    color:Cesium.Color.YELLOW,
+// const point = viewer.entities.add({
+//   id:'point',
+//   position:Cesium.Cartesian3.fromDegrees(121,30),
+//   point:{
+//     pixelSize:20,
+//     color:Cesium.Color.YELLOW,
+//   }
+// });
+
+// viewer.zoomTo(point);
+
+// const point = viewer.entities.add({
+
+// })
+
+
+const billboard = viewer.entities.add({
+  position:Cesium.Cartesian3.fromDegrees(116,30,30),
+  billboard:{
+    image:'/LaserStation.png',
+    color:Cesium.Color.YELLOW
   }
 });
 
-viewer.zoomTo(point);
+viewer.zoomTo(billboard);
 
 
 

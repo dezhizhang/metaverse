@@ -725,3 +725,17 @@ const point = viewer.entities.add({
 
 viewer.zoomTo(point);
 ```
+### 添加标注
+```ts
+const billboard = viewer.entities.add({
+  position:Cesium.Cartesian3.fromDegrees(116,30,30),
+  billboard:{
+    image:'/LaserStation.png',
+    color:Cesium.Color.YELLOW
+  }
+});
+
+viewer.zoomTo(billboard);
+
+
+```
