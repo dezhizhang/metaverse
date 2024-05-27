@@ -699,3 +699,16 @@ const lat = Cesium.Math.toDegrees(cartographic.latitude);
 console.log({lon,lat});
 
 ```
+### lookAt坐标看像
+```ts
+const position = Cesium.Cartesian3.fromDegrees(110,20);
+viewer.camera.lookAt(
+  position,
+  new Cesium.HeadingPitchRange(
+    Cesium.Math.toRadians(0),
+    Cesium.Math.toRadians(-90),
+    20000
+  )
+)
+
+```

@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-04-22 20:18:01
  * :last editor: 张德志
- * :date last edited: 2024-05-27 23:07:20
+ * :date last edited: 2024-05-28 05:52:08
  */
 /*
  * :file description:
@@ -44,7 +44,6 @@ const viewer = new Cesium.Viewer('root', {
   }),
 });
 
-
 const cartesian3 = Cesium.Cartesian3.fromDegrees(110, 20, 30);
 
 const cartographic = Cesium.Cartographic.fromCartesian(cartesian3);
@@ -52,4 +51,55 @@ const cartographic = Cesium.Cartographic.fromCartesian(cartesian3);
 const lon = Cesium.Math.toDegrees(cartographic.longitude);
 const lat = Cesium.Math.toDegrees(cartographic.latitude);
 
-console.log({ lon, lat });
+// 设置相机
+// const position = Cesium.Cartesian3.fromDegrees(110,20,2000);
+// viewer.camera.setView({
+//   destination:position,
+//   orientation:{
+//     heading:Cesium.Math.toRadians(-90),
+//     pitch:Cesium.Math.toRadians(-90)
+//   }
+// })
+
+// const position = Cesium.Cartesian3.fromDegrees(110, 20, 2000);
+// viewer.camera.setView({
+//   destination: position,
+//   orientation: {
+//     heading: Cesium.Math.toRadians(-90),
+//     pitch: Cesium.Math.toRadians(90),
+//     roll: Cesium.Math.toRadians(0),
+//   },
+// });
+
+// const position = Cesium.Cartesian3.fromDegrees(110,20,2000);
+// viewer.camera.flyTo({
+//   destination:position,
+//   orientation:{
+//     heading: Cesium.Math.toRadians(0),
+//     pitch: Cesium.Math.toRadians(0),
+//     roll: Cesium.Math.toRadians(0),
+//   },
+//   duration:3
+// })
+
+// const position = Cesium.cartesian3.fromDegrees(110, 20, 20000);
+// viewer.camera.flyTo({
+//   destination: position,
+//   orientation: {
+//     heading: Cesium.Math.toRadians(0),
+//     pitch: Cesium.Math.toRadians(0),
+//     roll: Cesium.Math.toRadians(0),
+//   },
+//   duration: 3,
+// });
+
+const position = Cesium.Cartesian3.fromDegrees(110,20);
+viewer.camera.lookAt(
+  position,
+  new Cesium.HeadingPitchRange(
+    Cesium.Math.toRadians(0),
+    Cesium.Math.toRadians(-90),
+    20000
+  )
+)
+
