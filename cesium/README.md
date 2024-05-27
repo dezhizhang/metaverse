@@ -675,3 +675,27 @@ const viewer = new Cesium.Viewer('root', {
 });
 
 ```
+### 坐标转换
+```js
+
+const viewer = new Cesium.Viewer('root', {
+  terrainProvider: Cesium.createWorldTerrain({
+    requestWaterMask: true,
+  }),
+});
+
+// const cartesian3 = Cesium.Cartesian3.fromDegrees(110,20,20);
+// console.log('cartesian3',cartesian3);
+
+// 经纬度转笛卡尔坐标
+const cartesian3 = Cesium.Cartesian3.fromDegrees(110,20,30);
+// 笛卡尔坐标转经纬度
+const cartographic = Cesium.Cartographic.fromCartesian(cartesian3);
+
+const lon = Cesium.Math.toDegrees(cartographic.longitude);
+const lat = Cesium.Math.toDegrees(cartographic.latitude);
+
+
+console.log({lon,lat});
+
+```

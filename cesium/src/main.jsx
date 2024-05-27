@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-04-22 20:18:01
  * :last editor: 张德志
- * :date last edited: 2024-05-27 22:43:47
+ * :date last edited: 2024-05-27 22:55:37
  */
 /*
  * :file description:
@@ -44,6 +44,23 @@ const viewer = new Cesium.Viewer('root', {
   }),
 });
 
-const cartesian3 = Cesium.Cartesian3.fromDegrees(110,20,20);
-console.log('cartesian3',cartesian3);
+// const cartesian3 = Cesium.Cartesian3.fromDegrees(110,20,20);
+// console.log('cartesian3',cartesian3);
+
+// 经纬度转笛卡尔坐标
+const cartesian3 = Cesium.Cartesian3.fromDegrees(110,20,30);
+// 笛卡尔坐标转经纬度
+const cartographic = Cesium.Cartographic.fromCartesian(cartesian3);
+
+const lon = Cesium.Math.toDegrees(cartographic.longitude);
+const lat = Cesium.Math.toDegrees(cartographic.latitude);
+
+
+console.log({lon,lat});
+
+
+
+
+console.log('cartographic',cartographic);
+
 
