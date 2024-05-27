@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-04-22 20:18:01
  * :last editor: 张德志
- * :date last edited: 2024-05-28 06:50:43
+ * :date last edited: 2024-05-28 07:00:50
  */
 /*
  * :file description:
@@ -185,23 +185,39 @@ const lat = Cesium.Math.toDegrees(cartographic.latitude);
 
 // viewer.zoomTo(polyline);
 
-const polygon = viewer.entities.add({
-  polygon:{
-    hierarchy:{
-      positions:Cesium.Cartesian3.fromDegreesArray([
-        120,25,
-        121,25,
-        121,25.5
-      ]),
+// const polygon = viewer.entities.add({
+//   polygon:{
+//     hierarchy:{
+//       positions:Cesium.Cartesian3.fromDegreesArray([
+//         120,25,
+//         121,25,
+//         121,25.5
+//       ]),
     
-    },
+//     },
+//     material:Cesium.Color.RED,
+//     height:1000,
+//     extrudedHeight:20000,
+//     outline:true,
+//     outlineColor:Cesium.Color.WHITE
+//   }
+// });
+
+// viewer.zoomTo(polygon);
+
+const box = viewer.entities.add({
+  position:Cesium.Cartesian3.fromDegrees(119,30,20000),
+  box:{
+    dimensions: new Cesium.Cartesian3(2000,1000,3000),
     material:Cesium.Color.RED,
-    height:1000,
-    extrudedHeight:20000,
   }
 });
 
-viewer.zoomTo(polygon);
+viewer.zoomTo(box);
+
+
+
+
 
 
 

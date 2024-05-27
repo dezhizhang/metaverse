@@ -792,3 +792,17 @@ const polygon = viewer.entities.add({
 
 viewer.zoomTo(polygon);
 ```
+### 绘制立方体
+```ts
+const box = viewer.entities.add({
+  position:Cesium.Cartesian3.fromDegrees(119,30,20000),
+  box:{
+    dimensions: new Cesium.Cartesian3(2000,1000,3000),
+    material:Cesium.Color.RED,
+  }
+});
+
+viewer.zoomTo(box);
+
+
+```
