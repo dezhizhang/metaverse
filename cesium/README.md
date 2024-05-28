@@ -831,6 +831,27 @@ const rectangle = viewer.entities.add({
 });
 
 viewer.zoomTo(rectangle);
+```
+### 组合实体
+```ts
+const entities = viewer.entities.add({
+  position:new Cesium.Cartesian3.fromDegrees(120,30,100),
+  billboard:{
+    image:'/LaserStation.png',
+    scale:0.3,
+    color:Cesium.Color.RED
+  },
+  polyline:{
+    positions:Cesium.Cartesian3.fromDegreesArrayHeights([120,30,0,120,30,100]),
+    material:Cesium.Color.RED,
+  },
+  label:{
+    text:'某某小区',
+    font:'12px',
+    fillColor:Cesium.Color.WHITE,
+    pixelOffset: new Cesium.Cartesian2(0,-40)
+  }
+});
 
-
+viewer.zoomTo(entities);
 ```

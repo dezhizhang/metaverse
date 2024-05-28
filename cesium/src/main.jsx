@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-04-22 20:18:01
  * :last editor: 张德志
- * :date last edited: 2024-05-28 20:05:22
+ * :date last edited: 2024-05-28 20:10:17
  */
 /*
  * :file description:
@@ -54,26 +54,26 @@ const lon = Cesium.Math.toDegrees(cartographic.longitude);
 const lat = Cesium.Math.toDegrees(cartographic.latitude);
 
 // 设置相机
-
 const entities = viewer.entities.add({
-  position: new Cesium.Cartesian3.fromDegrees(120, 30, 100),
-  billboard: {
-    image: '/LaserStation.png',
-    scale: 0.3,
-    color: Cesium.Color.RED,
+  position:new Cesium.Cartesian3.fromDegrees(120,30,100),
+  billboard:{
+    image:'/LaserStation.png',
+    scale:0.3,
+    color:Cesium.Color.RED
   },
-  polyline: {
-    positions: Cesium.Cartesian3.fromDegreesArrayHeights([120, 30, 0, 120, 30, 100]),
-    material: Cesium.Color.RED,
+  polyline:{
+    positions:Cesium.Cartesian3.fromDegreesArrayHeights([120,30,0,120,30,100]),
+    material:Cesium.Color.RED,
   },
   label:{
     text:'某某小区',
     font:'12px',
-    fillColor:Cesium.Color.WHEAT,
-    pixelOffset:new Cesium.Cartesian2(0,-40),
+    fillColor:Cesium.Color.WHITE,
+    pixelOffset: new Cesium.Cartesian2(0,-40)
   }
 });
 
 viewer.zoomTo(entities);
+
 
 
