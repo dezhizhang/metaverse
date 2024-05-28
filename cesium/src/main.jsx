@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-04-22 20:18:01
  * :last editor: 张德志
- * :date last edited: 2024-05-28 21:00:31
+ * :date last edited: 2024-05-28 22:30:05
  */
 import * as Cesium from 'cesium';
 
@@ -29,7 +29,6 @@ Cesium.Camera.DEFAULT_VIEW_RECTANGLE = Cesium.Rectangle.fromDegrees(
   61.2,
 );
 
-
 const viewer = new Cesium.Viewer('root', {
   infoBox: false,
   geocoder: false,
@@ -43,7 +42,54 @@ const viewer = new Cesium.Viewer('root', {
   sceneModePicker: false,
   selectionIndicator: false,
   baseLayerPicker: false,
+  imageryProvider: new Cesium.UrlTemplateImageryProvider({
+    url: 'http://webst01.is.autonavi.com/appmaptile?style=6&x={x}&y={y}&z={z}',
+    minimumLevel: 1,
+    maximumLevel: 18,
+  }),
   terrainProvider: Cesium.createWorldTerrain({
     requestWaterMask: true,
   }),
 });
+
+
+// viewer.imageryLayers.addImageryProvider(new Cesium.WebMapTileServiceImageryProvider({  //调用矢量地图中文注记服务
+//   url: "http://t{s}.tianditu.gov.cn/mapservice/swdx?service=wmts&request=GetTile&version=1.0.0&LAYER=cva&tileMatrixSet=w&TileMatrix={TileMatrix}&TileRow={TileRow}&TileCol={TileCol}&style=default&format=tiles&tk=d53ca517a1b035796b7b6cc4f527f845",
+//   subdomains:['0','1','2','3','4','5','6','7'],
+//   layer: "tdtAnnoLayer",
+//   style: "default",
+//   format: "image/jpeg",
+//    tileMatrixSetID: "GoogleMapsCompatible",
+//  }));
+
+
+//  https://[ t0-t7 ].tianditu.gov.cn/mapservice/swdx
+
+viewer.camera.flyTo({
+  destination:Cesium.Cartesian3.fromDegrees(109,34,10000),
+  orientation:{
+    heading:Cesium.Math.toRadians(0),
+    roll:Cesium.Math.toRadians(0),
+    pitch:Cesium.Math.toRadians(0),
+  }
+});
+
+// d53ca517a1b035796b7b6cc4f527f845
+
+
+const point = viewer.entities.add({
+  position:Cesium.Cartesian3.fromDegrees(109,0),
+  point:{
+    pixelSize:50,
+    color:new Cesium.Color(102,121,0)
+  }
+});
+
+viewer.zoomTo(point);
+
+// zhang701XTAY
+
+
+
+
+
