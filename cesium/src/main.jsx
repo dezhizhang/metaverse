@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-04-22 20:18:01
  * :last editor: 张德志
- * :date last edited: 2024-05-28 22:30:05
+ * :date last edited: 2024-05-29 05:33:03
  */
 import * as Cesium from 'cesium';
 
@@ -65,16 +65,22 @@ const viewer = new Cesium.Viewer('root', {
 
 //  https://[ t0-t7 ].tianditu.gov.cn/mapservice/swdx
 
-viewer.camera.flyTo({
-  destination:Cesium.Cartesian3.fromDegrees(109,34,10000),
-  orientation:{
-    heading:Cesium.Math.toRadians(0),
-    roll:Cesium.Math.toRadians(0),
-    pitch:Cesium.Math.toRadians(0),
-  }
+
+
+const promise = Cesium.GeoJsonDataSource.load('hbeiprovince.json');
+promise.then((dataSources) => {
+  // console.log(result);
+
+  viewer.dataSources.add(dataSources);
+  dataSources.entities.values.forEach(entitiey=> {
+    entitiey.polygon.outlineColor = Cesium.Color.RED,
+    entitiey.polygon.material = Cesium.Color.BLUE,
+    entitiey.polygon.height = 1000;
+    entitiey.polygon.extrudedHeight = 2000;
+  })
+  viewer.zoomTo(dataSources);
 });
 
-// d53ca517a1b035796b7b6cc4f527f845
 
 
 const point = viewer.entities.add({

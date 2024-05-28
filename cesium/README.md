@@ -855,3 +855,20 @@ const entities = viewer.entities.add({
 
 viewer.zoomTo(entities);
 ```
+### 加载geojson
+```ts
+const promise = Cesium.GeoJsonDataSource.load('hbeiprovince.json');
+promise.then((dataSources) => {
+  // console.log(result);
+
+  viewer.dataSources.add(dataSources);
+  dataSources.entities.values.forEach(entitiey=> {
+    entitiey.polygon.outlineColor = Cesium.Color.RED,
+    entitiey.polygon.material = Cesium.Color.BLUE,
+    entitiey.polygon.height = 1000;
+    entitiey.polygon.extrudedHeight = 2000;
+  })
+  viewer.zoomTo(dataSources);
+});
+
+```
