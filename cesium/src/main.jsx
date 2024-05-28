@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-04-22 20:18:01
  * :last editor: 张德志
- * :date last edited: 2024-05-29 07:23:41
+ * :date last edited: 2024-05-29 07:51:37
  */
 import * as Cesium from 'cesium';
 
@@ -78,46 +78,85 @@ handler.setInputAction((click) => {
   }
 }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
 
-// const position = Cesium.Cartesian3.fromDegrees(109, 34, 25000);
-// const hpRoll = new Cesium.HeadingPitchRoll(Cesium.Math.toRadians(0), 0, 0);
-// const orientation = Cesium.Transforms.headingPitchRollQuaternion(position, hpRoll);
-
-// const model = viewer.entities.add({
-//   id: 'model',
-//   position,
-//   orientation: orientation,
-//   model: {
-//     minimumPixelSize: 128,
-//     uri: '/Air.glb',
-//     // color:Cesium.Color.RED,
-//     silhouetteColor: Cesium.Color.RED,
-//     silhouetteSize: 2,
-//     // distanceDisplayCondition: new Cesium.DistanceDisplayCondition(100)
+// const polygon = viewer.entities.add({
+//   id: 'polygon',
+//   polygon: {
+//     hierarchy: Cesium.Cartesian3.fromDegreesArray([
+//       114.01633536999999, 37.434729099999998,
+//       114.02247930999999, 37.434116240000002,
+//       114.03590984, 37.436347550000001,
+//       114.04058147000001, 37.437265719999999,
+//       114.04891307, 37.439535120000002,
+//       114.04973968, 37.440902170000001,
+//       114.05312278, 37.44291956,
+//     ]),
+//     height: 100,
+//     outline: true,
+//     outlineWidth: 1,
+//     fill: true,
+//     material:new Cesium.ImageMaterialProperty({
+//       image:'/OpticalTrackingStation.png',
+//       repeat:new Cesium.Cartesian2(2,10),
+//     })
 //   },
 // });
-// viewer.zoomTo(model);
 
-const polygon = viewer.entities.add({
-  id: 'polygon',
-  polygon: {
-    hierarchy: Cesium.Cartesian3.fromDegreesArray([
-      114.01633536999999, 37.434729099999998,
-      114.02247930999999, 37.434116240000002, 
-      114.03590984, 37.436347550000001,
-      114.04058147000001, 37.437265719999999,
-      114.04891307, 37.439535120000002,
-      114.04973968, 37.440902170000001,
-      114.05312278, 37.44291956,
-    ]),
-    height: 100,
-    outline: true,
-    outlineWidth: 1,
-    fill: true,
-    material:new Cesium.ImageMaterialProperty({
-      image:'/OpticalTrackingStation.png',
-      repeat:new Cesium.Cartesian2(2,10),
-    })
-  },
+// viewer.zoomTo(polygon);
+
+// const line = viewer.entities.add({
+//   id:'polyline',
+//   polyline:{
+//     width:2,
+//     positions:Cesium.Cartesian3.fromDegreesArray([88,39,109,39]),
+//     material:Cesium.Color.RED
+//   }
+// });
+
+// viewer.zoomTo(line);
+
+// const arrowLine = viewer.entities.add({
+//   id: 'arrowLine',
+//   polyline: {
+//     positions: Cesium.Cartesian3.fromDegreesArray([88, 39, 109, 39]),
+//     width: 20,
+//     material: new Cesium.PolylineArrowMaterialProperty(Cesium.Color.RED),
+//   },
+// });
+
+// viewer.zoomTo(arrowLine);
+
+// const arrowLine = viewer.entities.add({
+//   id:'arrowLine',
+//   polyline:{
+//     positions:Cesium.Cartesian3.fromDegreesArray([
+//       88, 39,
+//       109, 39
+//     ]),
+//     width:20,
+//     material:new Cesium.PolylineArrowMaterialProperty(Cesium.Color.RED)
+//   }
+// });
+
+// const arrowLine = viewer.entities.add({
+//   id: 'arrowline',
+//   polyline: {
+//     positions: Cesium.Cartesian3.fromDegreesArray([88, 39, 109, 39]),
+//     width: 20,
+//     material: new Cesium.PolylineArrowMaterialProperty(Cesium.Color.RED),
+//   },
+// });
+
+// viewer.zoomTo(arrowLine);
+
+
+const arrowLine = viewer.entities.add({
+  id:'arrowline',
+  polyline:{
+    positions:Cesium.Cartesian3.fromDegreesArray([88, 39, 109, 39]),
+    width:20,
+    material: new Cesium.PolylineArrowMaterialProperty(Cesium.Color.RED)
+  }
 });
 
-viewer.zoomTo(polygon);
+viewer.zoomTo(arrowLine);
+
