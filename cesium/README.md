@@ -906,4 +906,28 @@ handler.setInputAction((click) => {
 
 },Cesium.ScreenSpaceEventType.LEFT_CLICK);
 ```
+### 添加模型
+
+```ts
+const position = Cesium.Cartesian3.fromDegrees(109, 34, 25000);
+const hpRoll = new Cesium.HeadingPitchRoll(Cesium.Math.toRadians(0), 0, 0);
+const orientation = Cesium.Transforms.headingPitchRollQuaternion(position, hpRoll);
+
+const model = viewer.entities.add({
+  id: 'model',
+  position,
+  orientation: orientation,
+  model: {
+    minimumPixelSize: 128,
+    uri: '/Air.glb',
+    // color:Cesium.Color.RED,
+    silhouetteColor: Cesium.Color.RED,
+    silhouetteSize: 2,
+    // distanceDisplayCondition: new Cesium.DistanceDisplayCondition(100)
+  },
+});
+viewer.zoomTo(model);
+
+```
+
 
