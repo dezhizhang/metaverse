@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-04-22 20:18:01
  * :last editor: 张德志
- * :date last edited: 2024-05-29 05:33:03
+ * :date last edited: 2024-05-29 05:48:00
  */
 import * as Cesium from 'cesium';
 
@@ -67,7 +67,24 @@ const viewer = new Cesium.Viewer('root', {
 
 
 
-const promise = Cesium.GeoJsonDataSource.load('hbeiprovince.json');
+// const promise = Cesium.GeoJsonDataSource.load('hbeiprovince.json');
+// promise.then((dataSources) => {
+//   // console.log(result);
+
+//   viewer.dataSources.add(dataSources);
+//   dataSources.entities.values.forEach(entitiey=> {
+//     entitiey.polygon.outlineColor = Cesium.Color.RED,
+//     entitiey.polygon.material = Cesium.Color.BLUE,
+//     entitiey.polygon.height = 1000;
+//     entitiey.polygon.extrudedHeight = 2000;
+//   })
+//   viewer.zoomTo(dataSources);
+// });
+
+const promise = viewer.dataSources.add(Cesium.KmlDataSource.load('/test.kml',{
+  camera:viewer.scene.camera,
+  canvas:viewer.scene.canvas
+}));
 promise.then((dataSources) => {
   // console.log(result);
 
@@ -76,10 +93,11 @@ promise.then((dataSources) => {
     entitiey.polygon.outlineColor = Cesium.Color.RED,
     entitiey.polygon.material = Cesium.Color.BLUE,
     entitiey.polygon.height = 1000;
-    entitiey.polygon.extrudedHeight = 2000;
+    entitiey.polygon.extrudedHeight = 20;
   })
   viewer.zoomTo(dataSources);
 });
+
 
 
 
