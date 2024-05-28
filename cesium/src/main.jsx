@@ -5,16 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-04-22 20:18:01
  * :last editor: 张德志
- * :date last edited: 2024-05-28 20:10:17
- */
-/*
- * :file description:
- * :name: /cesium/src/main.jsx
- * :author: 张德志
- * :copyright: (c) 2022, Tungee
- * :date created: 2022-08-27 16:29:41
- * :last editor: 张德志
- * :date last edited: 2024-04-22 17:20:19
+ * :date last edited: 2024-05-28 21:00:31
  */
 import * as Cesium from 'cesium';
 
@@ -38,42 +29,21 @@ Cesium.Camera.DEFAULT_VIEW_RECTANGLE = Cesium.Rectangle.fromDegrees(
   61.2,
 );
 
+
 const viewer = new Cesium.Viewer('root', {
   infoBox: false,
+  geocoder: false,
+  // 动画控件
+  animation: false,
+  homeButton: false,
+  timeline: false,
+  fullscreenButton: false,
   selectionIndicator: false,
+  navigationHelpButton: false,
+  sceneModePicker: false,
+  selectionIndicator: false,
+  baseLayerPicker: false,
   terrainProvider: Cesium.createWorldTerrain({
     requestWaterMask: true,
   }),
 });
-
-const cartesian3 = Cesium.Cartesian3.fromDegrees(110, 20, 30);
-
-const cartographic = Cesium.Cartographic.fromCartesian(cartesian3);
-
-const lon = Cesium.Math.toDegrees(cartographic.longitude);
-const lat = Cesium.Math.toDegrees(cartographic.latitude);
-
-// 设置相机
-const entities = viewer.entities.add({
-  position:new Cesium.Cartesian3.fromDegrees(120,30,100),
-  billboard:{
-    image:'/LaserStation.png',
-    scale:0.3,
-    color:Cesium.Color.RED
-  },
-  polyline:{
-    positions:Cesium.Cartesian3.fromDegreesArrayHeights([120,30,0,120,30,100]),
-    material:Cesium.Color.RED,
-  },
-  label:{
-    text:'某某小区',
-    font:'12px',
-    fillColor:Cesium.Color.WHITE,
-    pixelOffset: new Cesium.Cartesian2(0,-40)
-  }
-});
-
-viewer.zoomTo(entities);
-
-
-
