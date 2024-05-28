@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-04-22 20:18:01
  * :last editor: 张德志
- * :date last edited: 2024-05-29 06:45:03
+ * :date last edited: 2024-05-29 07:23:41
  */
 import * as Cesium from 'cesium';
 
@@ -43,7 +43,7 @@ const viewer = new Cesium.Viewer('root', {
   selectionIndicator: false,
   baseLayerPicker: false,
   shouldAnimate: true,
-  shadows:true,
+  shadows: true,
   imageryProvider: new Cesium.UrlTemplateImageryProvider({
     url: 'http://webst01.is.autonavi.com/appmaptile?style=6&x={x}&y={y}&z={z}',
     minimumLevel: 1,
@@ -96,3 +96,28 @@ handler.setInputAction((click) => {
 //   },
 // });
 // viewer.zoomTo(model);
+
+const polygon = viewer.entities.add({
+  id: 'polygon',
+  polygon: {
+    hierarchy: Cesium.Cartesian3.fromDegreesArray([
+      114.01633536999999, 37.434729099999998,
+      114.02247930999999, 37.434116240000002, 
+      114.03590984, 37.436347550000001,
+      114.04058147000001, 37.437265719999999,
+      114.04891307, 37.439535120000002,
+      114.04973968, 37.440902170000001,
+      114.05312278, 37.44291956,
+    ]),
+    height: 100,
+    outline: true,
+    outlineWidth: 1,
+    fill: true,
+    material:new Cesium.ImageMaterialProperty({
+      image:'/OpticalTrackingStation.png',
+      repeat:new Cesium.Cartesian2(2,10),
+    })
+  },
+});
+
+viewer.zoomTo(polygon);

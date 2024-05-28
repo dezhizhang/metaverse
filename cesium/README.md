@@ -929,5 +929,32 @@ const model = viewer.entities.add({
 viewer.zoomTo(model);
 
 ```
+### ImageMaterialProperty财质
+```js
+const polygon = viewer.entities.add({
+  id: 'polygon',
+  polygon: {
+    hierarchy: Cesium.Cartesian3.fromDegreesArray([
+      114.01633536999999, 37.434729099999998,
+      114.02247930999999, 37.434116240000002, 
+      114.03590984, 37.436347550000001,
+      114.04058147000001, 37.437265719999999,
+      114.04891307, 37.439535120000002,
+      114.04973968, 37.440902170000001,
+      114.05312278, 37.44291956,
+    ]),
+    height: 100,
+    outline: true,
+    outlineWidth: 1,
+    fill: true,
+    material:new Cesium.ImageMaterialProperty({
+      image:'/OpticalTrackingStation.png',
+      repeat:new Cesium.Cartesian2(2,10),
+    })
+  },
+});
+
+viewer.zoomTo(polygon);
+```
 
 
