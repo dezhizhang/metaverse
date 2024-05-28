@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-04-22 20:18:01
  * :last editor: 张德志
- * :date last edited: 2024-05-29 05:48:00
+ * :date last edited: 2024-05-29 06:19:48
  */
 import * as Cesium from 'cesium';
 
@@ -53,63 +53,48 @@ const viewer = new Cesium.Viewer('root', {
 });
 
 
-// viewer.imageryLayers.addImageryProvider(new Cesium.WebMapTileServiceImageryProvider({  //调用矢量地图中文注记服务
-//   url: "http://t{s}.tianditu.gov.cn/mapservice/swdx?service=wmts&request=GetTile&version=1.0.0&LAYER=cva&tileMatrixSet=w&TileMatrix={TileMatrix}&TileRow={TileRow}&TileCol={TileCol}&style=default&format=tiles&tk=d53ca517a1b035796b7b6cc4f527f845",
-//   subdomains:['0','1','2','3','4','5','6','7'],
-//   layer: "tdtAnnoLayer",
-//   style: "default",
-//   format: "image/jpeg",
-//    tileMatrixSetID: "GoogleMapsCompatible",
-//  }));
+viewer.imageryLayers.addImageryProvider(new Cesium.WebMapTileServiceImageryProvider({  //调用矢量地图中文注记服务
+  url: "http://t{s}.tianditu.gov.cn/mapservice/swdx?service=wmts&request=GetTile&version=1.0.0&LAYER=cva&tileMatrixSet=w&TileMatrix={TileMatrix}&TileRow={TileRow}&TileCol={TileCol}&style=default&format=tiles&tk=d53ca517a1b035796b7b6cc4f527f845",
+  subdomains:['0','1','2','3','4','5','6','7'],
+  layer: "tdtAnnoLayer",
+  style: "default",
+  format: "image/jpeg",
+   tileMatrixSetID: "GoogleMapsCompatible",
+ }));
 
 
-//  https://[ t0-t7 ].tianditu.gov.cn/mapservice/swdx
+const handler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
+handler.setInputAction((click) => {
+  const ray = viewer.camera.getPickRay(click.position);
+
+  const position = viewer.scene.globe.pick(ray,viewer.scene);
+
+  if(position) {
+    const wgs84 = Cesium.Ellipsoid.WGS84.cartesianToCartographic(position);
+    console.log(wgs84);
+  }
+
+},Cesium.ScreenSpaceEventType.LEFT_CLICK);
 
 
-
-// const promise = Cesium.GeoJsonDataSource.load('hbeiprovince.json');
-// promise.then((dataSources) => {
-//   // console.log(result);
-
-//   viewer.dataSources.add(dataSources);
-//   dataSources.entities.values.forEach(entitiey=> {
-//     entitiey.polygon.outlineColor = Cesium.Color.RED,
-//     entitiey.polygon.material = Cesium.Color.BLUE,
-//     entitiey.polygon.height = 1000;
-//     entitiey.polygon.extrudedHeight = 2000;
-//   })
-//   viewer.zoomTo(dataSources);
+// const tileset = new Cesium.Cesium3DTileset({
+//   url:'/tileset.json',
 // });
 
-const promise = viewer.dataSources.add(Cesium.KmlDataSource.load('/test.kml',{
-  camera:viewer.scene.camera,
-  canvas:viewer.scene.canvas
-}));
-promise.then((dataSources) => {
-  // console.log(result);
-
-  viewer.dataSources.add(dataSources);
-  dataSources.entities.values.forEach(entitiey=> {
-    entitiey.polygon.outlineColor = Cesium.Color.RED,
-    entitiey.polygon.material = Cesium.Color.BLUE,
-    entitiey.polygon.height = 1000;
-    entitiey.polygon.extrudedHeight = 20;
-  })
-  viewer.zoomTo(dataSources);
-});
+// viewer.zoomTo(tileset)
 
 
 
 
-const point = viewer.entities.add({
-  position:Cesium.Cartesian3.fromDegrees(109,0),
-  point:{
-    pixelSize:50,
-    color:new Cesium.Color(102,121,0)
-  }
-});
+// const point = viewer.entities.add({
+//   position:Cesium.Cartesian3.fromDegrees(109,0),
+//   point:{
+//     pixelSize:50,
+//     color:new Cesium.Color(102,121,0)
+//   }
+// });
 
-viewer.zoomTo(point);
+// viewer.zoomTo(point);
 
 // zhang701XTAY
 

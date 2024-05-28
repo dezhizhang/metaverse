@@ -891,3 +891,19 @@ promise.then((dataSources) => {
   viewer.zoomTo(dataSources);
 });
 ```
+### 鼠标事件
+```js
+const handler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
+handler.setInputAction((click) => {
+  const ray = viewer.camera.getPickRay(click.position);
+
+  const position = viewer.scene.globe.pick(ray,viewer.scene);
+
+  if(position) {
+    const wgs84 = Cesium.Ellipsoid.WGS84.cartesianToCartographic(position);
+    console.log(wgs84);
+  }
+
+},Cesium.ScreenSpaceEventType.LEFT_CLICK);
+```
+
