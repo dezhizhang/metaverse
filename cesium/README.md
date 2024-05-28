@@ -806,3 +806,31 @@ viewer.zoomTo(box);
 
 
 ```
+### 绘制椭圆
+```ts
+const ellipe = viewer.entities.add({
+  position:Cesium.Cartesian3.fromDegrees(118,30),
+  ellipse:{
+    semiMajorAxis:500,
+    semiMinorAxis:300
+  }
+});
+
+viewer.zoomTo(ellipe);
+
+```
+
+### 绘制矩形
+```ts
+const rectangle = viewer.entities.add({
+  rectangle:{
+    coordinates:Cesium.Rectangle.fromDegrees(120,30,123,45),
+    extrudedHeight:2000,
+    material:Cesium.Color.YELLOW,
+  }
+});
+
+viewer.zoomTo(rectangle);
+
+
+```

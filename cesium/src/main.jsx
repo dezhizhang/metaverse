@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-04-22 20:18:01
  * :last editor: 张德志
- * :date last edited: 2024-05-28 07:00:50
+ * :date last edited: 2024-05-28 19:53:27
  */
 /*
  * :file description:
@@ -39,6 +39,8 @@ Cesium.Camera.DEFAULT_VIEW_RECTANGLE = Cesium.Rectangle.fromDegrees(
 );
 
 const viewer = new Cesium.Viewer('root', {
+  infoBox: false,
+  selectionIndicator: false,
   terrainProvider: Cesium.createWorldTerrain({
     requestWaterMask: true,
   }),
@@ -52,180 +54,34 @@ const lon = Cesium.Math.toDegrees(cartographic.longitude);
 const lat = Cesium.Math.toDegrees(cartographic.latitude);
 
 // 设置相机
-// const position = Cesium.Cartesian3.fromDegrees(110,20,2000);
-// viewer.camera.setView({
-//   destination:position,
-//   orientation:{
-//     heading:Cesium.Math.toRadians(-90),
-//     pitch:Cesium.Math.toRadians(-90)
-//   }
-// })
 
-// const position = Cesium.Cartesian3.fromDegrees(110, 20, 2000);
-// viewer.camera.setView({
-//   destination: position,
-//   orientation: {
-//     heading: Cesium.Math.toRadians(-90),
-//     pitch: Cesium.Math.toRadians(90),
-//     roll: Cesium.Math.toRadians(0),
-//   },
-// });
-
-// const position = Cesium.Cartesian3.fromDegrees(110,20,2000);
-// viewer.camera.flyTo({
-//   destination:position,
-//   orientation:{
-//     heading: Cesium.Math.toRadians(0),
-//     pitch: Cesium.Math.toRadians(0),
-//     roll: Cesium.Math.toRadians(0),
-//   },
-//   duration:3
-// })
-
-// const position = Cesium.cartesian3.fromDegrees(110, 20, 20000);
-// viewer.camera.flyTo({
-//   destination: position,
-//   orientation: {
-//     heading: Cesium.Math.toRadians(0),
-//     pitch: Cesium.Math.toRadians(0),
-//     roll: Cesium.Math.toRadians(0),
-//   },
-//   duration: 3,
-// });
-
-// const position = Cesium.Cartesian3.fromDegrees(110,20);
-// viewer.camera.lookAt(
-//   position,
-//   new Cesium.HeadingPitchRange(
-//     Cesium.Math.toRadians(0),
-//     Cesium.Math.toRadians(-90),
-//     20000
-//   )
-// )
-
-// const point = new Cesium.Entity({
-//   position:Cesium.Cartesian3.fromDegrees(120,30),
-//   point:{
-//     pixelSize:30,
-//     color:Cesium.Color.BLUE,
-//   }
-// });
-// viewer.entities.add(point);
-
-// viewer.zoomTo(point);
-
-// const point = viewer.entities.add({
-//   id:'point',
-//   position:Cesium.Cartesian3.fromDegrees(121,30),
-//   point:{
-//     pixelSize:20,
-//     color:Cesium.Color.YELLOW,
-//   }
-// });
-
-// viewer.zoomTo(point);
-
-// const point = viewer.entities.add({
-
-// })
+const billboard = viewer.entities.add({
+  position: new Cesium.Cartesian3.fromDegrees(120, 30, 100),
+  billboard: {
+    image: '/LaserStation.png',
+    scale: 0.3,
+    color: Cesium.Color.RED,
+  },
+});
 
 
-// const billboard = viewer.entities.add({
-//   position:Cesium.Cartesian3.fromDegrees(116,30,30),
-//   billboard:{
-//     image:'/LaserStation.png',
-//     color:Cesium.Color.YELLOW
-//   }
-// });
+const line = viewer.entities.add({
+  polyline: {
+    positions: Cesium.Cartesian3.fromDegreesArrayHeights([120, 30, 0, 120, 30, 100]),
+    material: Cesium.Color.RED,
+  },
+});
 
-// viewer.zoomTo(billboard);
-
-
-
-// const polyline = viewer.entities.add({
-//   polyline:{
-//     positions:Cesium.Cartesian3.fromDegreesArray([
-//       120,20,
-//       121,20,
-//       121,20.5
-//     ]),
-//     width:10,
-//     material:Cesium.Color.YELLOW
-//   }
-// });
-
-// viewer.zoomTo(polyline);
-
-
-// const polyline = viewer.entities.add({
-//   polyline:{
-//     positions:Cesium.Cartesian3.fromDegreesArray([
-//       120,200,
-//       121,20,
-//       121,20.5
-//     ]),
-//     width:10,
-//     material:Cesium.Color.YELLOW
-//   }
-// });
-
-// viewer.zoomTo(polyline);
-
-// const polyline = viewer.entities.add({
-//   polyline:{
-//     positions:Cesium.Cartesian3.fromDegreesArray([
-//       120,200,
-//       121,20,
-//       121,20.5
-//     ]),
-//     width:10,
-//     material:Cesium.Color.YELLOW
-//   }
-// });
-
-// viewer.zoomTo(polyline);
-
-// const polygon = viewer.entities.add({
-//   polygon:{
-//     hierarchy:{
-//       positions:Cesium.Cartesian3.fromDegreesArray([
-//         120,25,
-//         121,25,
-//         121,25.5
-//       ]),
-    
-//     },
-//     material:Cesium.Color.RED,
-//     height:1000,
-//     extrudedHeight:20000,
-//     outline:true,
-//     outlineColor:Cesium.Color.WHITE
-//   }
-// });
-
-// viewer.zoomTo(polygon);
-
-const box = viewer.entities.add({
-  position:Cesium.Cartesian3.fromDegrees(119,30,20000),
-  box:{
-    dimensions: new Cesium.Cartesian3(2000,1000,3000),
-    material:Cesium.Color.RED,
+const label = viewer.entities.add({
+  position:new Cesium.Cartesian3.fromDegrees(120,30,100),
+  label:{
+    text:'某某小区',
+    font:'12px',
+    fillColor:Cesium.Color.WHEAT,
+    pixelOffset:new Cesium.Cartesian2(0,-40),
   }
 });
 
-viewer.zoomTo(box);
-
-
-
-
-
-
-
-
-
-
-
-
-
+viewer.zoomTo(billboard);
 
 
