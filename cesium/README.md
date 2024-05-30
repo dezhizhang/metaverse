@@ -967,5 +967,88 @@ points.add({
 });
 
 ```
+### 
+```js
+const polygon = new Cesium.PolygonGeometry({
+  polygonHierarchy: new Cesium.PolygonHierarchy(
+      Cesium.Cartesian3.fromDegreesArray([
+          -72.0, 40.0,
+          -70.0, 35.0,
+          -75.0, 30.0,
+          -70.0, 30.0,
+          -68.0, 40.0
+      ])
+  )
+});
+const geometry = Cesium.PolygonGeometry.createGeometry(polygon);
+
+const instance = new Cesium.GeometryInstance({
+  geometry: geometry,
+ 
+});
+viewer.scene.primitives.add(new Cesium.Primitive({
+  geometryInstances: instance,
+  asynchronous: false,
+  appearance: new Cesium.MaterialAppearance({
+      material: new Cesium.Material({
+          fabric: {
+              type: 'Image',
+              uniforms: {   
+                  image:'/bricknormal.png',
+                  repeat:new Cesium.Cartesian2(10,10)
+              }
+          }
+      })
+
+  })
+}));
+```
+### 创建水面
+```ts
+const polygon = new Cesium.PolygonGeometry({
+  polygonHierarchy: new Cesium.PolygonHierarchy(
+    Cesium.Cartesian3.fromDegreesArray([
+      90,40,
+      120,40,
+      120,30,
+      90,30
+    ])
+  )
+});
+const geometry = Cesium.PolygonGeometry.createGeometry(polygon);
+
+// 2，创建geometryInstance
+const instance = new Cesium.GeometryInstance({
+  geometry:geometry,
+});
+
+// 3,创建 material
+const material = new Cesium.Material({
+  fabric:{
+    type:'Water',
+    uniforms:{
+      baseWaterColor:new Cesium.Color(64 / 255.0, 157 / 255.0, 253 / 255.0, 0.7),
+      normalMap:'/waterNormals.jpg',
+      frequency:20000,
+      animationSpeed:0.1,
+      amplitude:50,
+      specularIntensity:0.5
+    }
+  }
+});
+
+// 4 创建Appearance
+const appearance = new Cesium.EllipsoidSurfaceAppearance({
+  material,
+});
+
+// 5创建primitive
+viewer.scene.primitives.add(new Cesium.Primitive({
+  geometryInstances:instance,
+  appearance:appearance,
+  asynchronous:false,
+}));
+
+```
 
 
