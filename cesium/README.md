@@ -956,5 +956,16 @@ const polygon = viewer.entities.add({
 
 viewer.zoomTo(polygon);
 ```
+### primitives - points
+```ts
+const points = viewer.scene.primitives.add(new Cesium.PointPrimitiveCollection());
+points.add({
+  position:new Cesium.Cartesian3.fromDegrees(109,34),
+  color:Cesium.Color.YELLOW,
+  outlineColor:Cesium.Color.RED,
+  outlineWidth:2,
+});
+
+```
 
 
