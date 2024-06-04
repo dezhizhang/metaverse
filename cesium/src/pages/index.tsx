@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-06-02 21:15:48
  * :last editor: 张德志
- * :date last edited: 2024-06-04 07:53:42
+ * :date last edited: 2024-06-04 20:20:45
  */
 import * as Cesium from 'cesium';
 import '/public/Widgets/widgets.css';
@@ -28,7 +28,7 @@ export default function IndexPage() {
       61.2,
     );
     const viewer = new Cesium.Viewer('container', {
-      infoBox: false,
+      // infoBox: false,
       // 是否显示查询按钮
       geocoder: false,
       // 不显示home按钮
@@ -47,7 +47,7 @@ export default function IndexPage() {
       fullscreenButton: false,
       imageryProvider: new Cesium.UrlTemplateImageryProvider({
         url:
-          'http://webrd02.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=8&x={x}&y={y}&z={z}',
+          'http://webrd02.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=18&x={x}&y={y}&z={z}',
         // layer: "tdtVecBasicLayer",
         // style: "default",
         // format: "image/png",
@@ -60,110 +60,66 @@ export default function IndexPage() {
     });
 
     const tiles3d = Cesium.createOsmBuildings();
-
     const osmBuildings = viewer.scene.primitives.add(tiles3d);
 
-    // const dataGeo = Cesium.GeoJsonDataSource.load(
-    //   'https://geo.datav.aliyun.com/areas_v3/bound/100000_full.json',
-    //   {
-    //     stroke: Cesium.Color.YELLOW,
-    //     fill: Cesium.Color.BLUE.withAlpha(0.5),
-    //     strokeWidth: 10,
-    //   },
-    // );
+    viewer.camera.setView({
+      destination: Cesium.Cartesian3.fromDegrees(113.3919, 23.109, 1000),
+      orientation: {
+       
+        // heading:Cesium.Cartesian3.fromRadians(-30)
+      },
+    });
 
-    // viewer.dataSources.add(dataGeo);
+    // tiles3d.style = new Cesium.Cesium3DTileStyle({
+    //   color: 'color("yellow")',
+    //   show: true,
+    // });
 
-    // const dataGeo = Cesium.GeoJsonDataSource.load(
-    //   'https://geo.datav.aliyun.com/areas_v3/bound/100000_full.json',
-    //   {
-    //     stroke:Cesium.Color.YELLOW,
-    //     fill:Cesium.Color.BLUE.withAlpha(0.9),
-    //     strokeWidth:10
+
+    // tiles3d.style = new Cesium.Cesium3DTileStyle({
+    //   color:{
+    //     conditions:[
+    //       ["${feature['name']} === '广州塔'","color('red')"]
+    //     ]
+    // },
+    //   show:true
+    // });
+
+
+    // tiles3d.style = new Cesium.Cesium3DTileStyle({
+    //   color:{
+    //     conditions:[
+    //       ["${feature['name']} === '广州塔'","color('yellow')"]
+    //     ]
     //   }
-    // )
-
-
-    // const dataGeo = Cesium.GeoJsonDataSource.load('https://geo.datav.aliyun.com/areas_v3/bound/100000_full.json');
-
-    // dataGeo.then((dataSources) => {
-    //   viewer.dataSources.add(dataSources);
-    //   const entities = dataSources.entities.values;
-    //   entities.forEach((entity:any) => {
-    //     entity.polygon.material = new Cesium.ColorMaterialProperty(
-    //       Cesium.Color.fromRandom({
-    //         alpha:0.8
-    //       })
-    //     )
-    //   })
     // })
 
+    tiles3d.style = new Cesium.Cesium3DTileStyle({
+      color:{
+        conditions:[
+          ["${feature['name']} === '广州塔'","color('yellow')"]
+        ]
+      }
+    });
+    
 
-
-    const czml = [
-      {
-        id: "document",
-        name: "box",
-        version: "1.0",
+    var postion = Cesium.Cartesian3.fromDegrees(
+      // 经度
+      113.3301,
+      // 纬度
+      23.0991,
+      // 高度
+      1700,
+    );
+    viewer.camera.setView({
+      destination: postion,
+      orientation: {
+        heading: Cesium.Math.toRadians(-35),
+        pitch: Cesium.Math.toRadians(-35),
+        roll: 0,
       },
-      {
-        id: "shape1",
-        name: "Blue box",
-        position: {
-          cartographicDegrees: [-114.0, 40.0, 300000.0],
-        },
-        box: {
-          dimensions: {
-            cartesian: [400000.0, 300000.0, 500000.0],
-          },
-          material: {
-            solidColor: {
-              color: {
-                rgba: [0, 0, 255, 255],
-              },
-            },
-          },
-        },
-      },
-    ];
-
-  //   let promiseData = Cesium.CzmlDataSource.load(czml);
-  // promiseData.then((dataSource) => {
-  //   console.log(dataSource);
-  //   viewer.dataSources.add(dataSource);
-  //   viewer.flyTo(dataSource);
-  // });
-
-
-  // const promiseData = Cesium.CzmlDataSource.load(czml);
-
-  // promiseData.then((dataSource) => {
-  //   viewer.dataSources.add(dataSource);
-  //   viewer.zoomTo(dataSource);
-  // })
-
-
-  // const promiseData = Cesium.CzmlDataSource.load(czml);
-
-
- 
-
-  const promiseData = Cesium.CzmlDataSource.load(czml);
-
-  promiseData.then((dataSource) => {
-    viewer.dataSources.add(dataSource);
-    viewer.zoomTo(dataSource);
-  })
-
-
-
-
+    });
   
-
-
-
-   
-
   }, []);
 
   return <div id="container" />;
