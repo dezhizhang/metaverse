@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-06-02 21:15:48
  * :last editor: 张德志
- * :date last edited: 2024-06-04 20:20:45
+ * :date last edited: 2024-06-04 20:54:04
  */
 import * as Cesium from 'cesium';
 import '/public/Widgets/widgets.css';
@@ -94,31 +94,37 @@ export default function IndexPage() {
     //   }
     // })
 
-    tiles3d.style = new Cesium.Cesium3DTileStyle({
-      color:{
-        conditions:[
-          ["${feature['name']} === '广州塔'","color('yellow')"]
-        ]
-      }
-    });
-    
+ 
 
-    var postion = Cesium.Cartesian3.fromDegrees(
-      // 经度
-      113.3301,
-      // 纬度
-      23.0991,
-      // 高度
-      1700,
-    );
-    viewer.camera.setView({
-      destination: postion,
-      orientation: {
-        heading: Cesium.Math.toRadians(-35),
-        pitch: Cesium.Math.toRadians(-35),
-        roll: 0,
-      },
-    });
+    // const position = Cesium.Cartesian3.fromDegrees(120,36.328,4000)
+    // const air = viewer.entities.add({
+    //   name:'apiri',
+    //   position,
+    //  model:{
+    //   uri:'/Air.glb',
+    //   minimumPixelSize:128,
+    //   maximumScale:20000,
+    //  }
+    // });
+
+    // viewer.zoomTo(air);
+
+    // const position = Cesium.Cartesian3.fromDegrees(120,36.328,4000);
+
+    // const air = viewer.entities.add({
+    //   name:'apiri',
+    //   position,
+    //   model:{
+    //     uri:'/Air.glb',
+    //     minimumPixelSize:128,
+    //     maximumScale:20000
+    //   }
+    // });
+
+    // viewer.zoomTo(air);
+
+
+
   
   }, []);
 
