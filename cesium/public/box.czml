@@ -1,0 +1,1 @@
+[{"id":"document","name":"box","version":"1.0"},{"id":"shape1","name":"Blue box","position":{"cartographicDegrees":[-114,40,300000]},"box":{"dimensions":{"cartesian":[400000,300000,500000]},"material":{"solidColor":{"color":{"rgba":[0,0,255,255]}}}}}]
