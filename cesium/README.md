@@ -21,7 +21,7 @@ const tileset = new Cesium.Cesium3DTileset({
 });
 viewer.scene.primitives.add(tileset);
 
-tileset.readyPromise.then((title) => {
+tileset.readyPromise.then((title) => {å
     viewer.zoomTo(title);
 })
 ```
@@ -35,4 +35,33 @@ tiles3d.style = new Cesium.Cesium3DTileStyle({
     }
 });
 
+```
+### 鼠标事件
+```ts
+
+    const tileset = new Cesium.Cesium3DTileset({
+      url: '/tileset.json',
+    });
+
+    tileset.readyPromise.then((tile) => {
+      viewer.zoomTo(tile);
+    });
+
+    viewer.scene.primitives.add(tileset);
+
+   
+    let selectedFeature: any;
+
+    const handler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
+
+    handler.setInputAction((movement) => {
+      if (selectedFeature) {
+        selectedFeature.color = Cesium.Color.WHITE;
+      }
+
+      selectedFeature = viewer.scene.pick(movement.position);
+      if (!selectedFeature) return;
+
+      selectedFeature.color = Cesium.Color.AQUA;
+    }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
 ```
