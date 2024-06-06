@@ -97,3 +97,24 @@ dataSource.then((data) => {
   viewer.zoomTo(data);
 })
 ```
+
+### 绘制圆
+```ts
+const center = [108.5,34.5];
+const radis = 5;
+
+const options = {steps:100,unit:'kilometers'};
+const circle = turf.circle(center,radis,options);
+
+
+const collection = turf.featureCollection([
+  circle
+]);
+
+const dataSource = Cesium.GeoJsonDataSource.load(collection);
+
+dataSource.then((data) => {
+  viewer.dataSources.add(data);
+  viewer.zoomTo(data);
+})
+```

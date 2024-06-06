@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-06-02 21:15:48
  * :last editor: 张德志
- * :date last edited: 2024-06-06 22:27:48
+ * :date last edited: 2024-06-06 22:37:30
  */
 import * as Cesium from 'cesium';
 import * as turf from '@turf/turf'
@@ -79,26 +79,39 @@ export default function IndexPage() {
 
 
 
-    const polygon = turf.polygon(
-      [
-        [
-          [108,34],
-          [108,34.5],
-          [109,34.5],
-          [109,34],
-          [108,34],
-        ]
-      ],
-      {
-        name:'polygon'
-      }
-    );
+    // const polygon = turf.polygon(
+    //   [
+    //     [
+    //       [108,34],
+    //       [108,34.5],
+    //       [109,34.5],
+    //       [109,34],
+    //       [108,34],
+    //     ]
+    //   ],
+    //   {
+    //     name:'polygon'
+    //   }
+    // );
 
-    const point:any = turf.point([109,34],{name:'point'});
+    // const point:any = turf.point([109,34],{name:'point'});
+
+    // const collection = turf.featureCollection([
+    //   point,
+    //   polygon
+    // ]);
+
+  
+
+    const center = [108.5,34.5];
+    const radis = 5;
+
+    const options = {steps:100,unit:'kilometers'};
+    const circle = turf.circle(center,radis,options);
+
 
     const collection = turf.featureCollection([
-      point,
-      polygon
+      circle
     ]);
 
     const dataSource = Cesium.GeoJsonDataSource.load(collection);
@@ -107,6 +120,8 @@ export default function IndexPage() {
       viewer.dataSources.add(data);
       viewer.zoomTo(data);
     })
+
+
     
 
 
