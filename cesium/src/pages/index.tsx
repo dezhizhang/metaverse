@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-06-02 21:15:48
  * :last editor: 张德志
- * :date last edited: 2024-06-06 06:21:52
+ * :date last edited: 2024-06-06 22:27:48
  */
 import * as Cesium from 'cesium';
 import * as turf from '@turf/turf'
@@ -71,19 +71,43 @@ export default function IndexPage() {
     // });
 
 
-    viewer.camera.setView({
-      destination:Cesium.Cartesian3.fromDegrees(109,34,10000)
+    // viewer.camera.setView({
+    //   destination:Cesium.Cartesian3.fromDegrees(109,34,10000)
+    // })
+    // var polygons = turf.randomPolygon(25, {bbox: [-180, -90, 180, 90]})
+
+
+
+
+    const polygon = turf.polygon(
+      [
+        [
+          [108,34],
+          [108,34.5],
+          [109,34.5],
+          [109,34],
+          [108,34],
+        ]
+      ],
+      {
+        name:'polygon'
+      }
+    );
+
+    const point:any = turf.point([109,34],{name:'point'});
+
+    const collection = turf.featureCollection([
+      point,
+      polygon
+    ]);
+
+    const dataSource = Cesium.GeoJsonDataSource.load(collection);
+
+    dataSource.then((data) => {
+      viewer.dataSources.add(data);
+      viewer.zoomTo(data);
     })
-    var polygons = turf.randomPolygon(25, {bbox: [-180, -90, 180, 90]})
-
     
-  
-    
-
-    
-
-
-   
 
 
 

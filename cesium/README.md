@@ -39,29 +39,61 @@ tiles3d.style = new Cesium.Cesium3DTileStyle({
 ### 鼠标事件
 ```ts
 
-    const tileset = new Cesium.Cesium3DTileset({
-      url: '/tileset.json',
-    });
+const tileset = new Cesium.Cesium3DTileset({
+  url: '/tileset.json',
+});
 
-    tileset.readyPromise.then((tile) => {
-      viewer.zoomTo(tile);
-    });
+tileset.readyPromise.then((tile) => {
+  viewer.zoomTo(tile);
+});
 
-    viewer.scene.primitives.add(tileset);
+viewer.scene.primitives.add(tileset);
 
    
-    let selectedFeature: any;
+let selectedFeature: any;
 
-    const handler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
+const handler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
 
-    handler.setInputAction((movement) => {
-      if (selectedFeature) {
-        selectedFeature.color = Cesium.Color.WHITE;
-      }
+handler.setInputAction((movement) => {
+  if (selectedFeature) {
+    selectedFeature.color = Cesium.Color.WHITE;
+  }
 
-      selectedFeature = viewer.scene.pick(movement.position);
-      if (!selectedFeature) return;
+  selectedFeature = viewer.scene.pick(movement.position);
+  if (!selectedFeature) return;
 
-      selectedFeature.color = Cesium.Color.AQUA;
-    }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
+  selectedFeature.color = Cesium.Color.AQUA;
+}, Cesium.ScreenSpaceEventType.LEFT_CLICK);
+```
+### 加载面数据
+```ts
+
+const polygon = turf.polygon(
+  [
+    [
+        [108,34],
+            [108,34.5],
+            [109,34.5],
+            [109,34],
+            [108,34],
+          ]
+        ],
+        {
+          name:'polygon'
+        }
+      );
+
+const point:any = turf.point([109,34],{name:'point'});
+
+const collection = turf.featureCollection([
+  point,
+  polygon
+]);
+
+const dataSource = Cesium.GeoJsonDataSource.load(collection);
+
+dataSource.then((data) => {
+  viewer.dataSources.add(data);
+  viewer.zoomTo(data);
+})
 ```
