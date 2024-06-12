@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-06-02 21:15:48
  * :last editor: 张德志
- * :date last edited: 2024-06-13 05:38:57
+ * :date last edited: 2024-06-13 05:52:46
  */
 import * as Cesium from 'cesium';
 import * as turf from '@turf/turf';
@@ -101,23 +101,52 @@ export default function IndexPage() {
     // bloom.uniforms.contrast = 128;
     // bloom.uniforms.brightness = -0.3;
 
-    const box= viewer.entities.add({
-      name: 'blue box',
-      position: Cesium.Cartesian3.fromDegrees(0.0, 40.0, 0.0),
-      box: {
-        show: true,
-        heightReference: Cesium.HeightReference.NONE,
-        dimensions: new Cesium.Cartesian3(100, 100, 100),
-        fill: true,
-        material: Cesium.Color.BLUE,
-        outline: true,
-        outlineColor: Cesium.Color.YELLOW,
-        outlineWidth: 10,
-        shadows: Cesium.ShadowMode.RECEIVE_ONLY,
-      },
+    // const box= viewer.entities.add({
+    //   name: 'blue box',
+    //   position: Cesium.Cartesian3.fromDegrees(0.0, 40.0, 0.0),
+    //   box: {
+    //     show: true,
+    //     heightReference: Cesium.HeightReference.NONE,
+    //     dimensions: new Cesium.Cartesian3(100, 100, 100),
+    //     fill: true,
+    //     material: Cesium.Color.BLUE,
+    //     outline: true,
+    //     outlineColor: Cesium.Color.YELLOW,
+    //     outlineWidth: 10,
+    //     shadows: Cesium.ShadowMode.RECEIVE_ONLY,
+    //   },
+    // });
+
+    // viewer.zoomTo(box);
+
+    // 添加平行光
+    viewer.scene.light = new Cesium.DirectionalLight({
+      direction:Cesium.Cartesian3.fromElements(-0.2,-0.5,-0.8),
+      intensity:1,
+    });
+
+
+
+
+    const box = viewer.entities.add({
+      name:'blue box',
+      position:Cesium.Cartesian3.fromDegrees(0.0,40.0,0.0),
+      box:{
+        show:true,
+        heightReference:Cesium.HeightReference.NONE,
+        dimensions:new Cesium.Cartesian3(100,100,100),
+        fill:true,
+        material:Cesium.Color.YELLOW,
+        outline:true,
+        outlineColor:Cesium.Color.BLUE,
+        outlineWidth:10,
+        shadows:Cesium.ShadowMode.RECEIVE_ONLY,
+      }
     });
 
     viewer.zoomTo(box);
+
+
 
 
   };

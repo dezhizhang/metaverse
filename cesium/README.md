@@ -232,3 +232,10 @@ const box= viewer.entities.add({
     },
 });
 ```
+### 平行光
+```ts
+viewer.scene.light = new Cesium.DirectionalLight({
+  direction:Cesium.Cartesian3.fromElements(-0.2,-0.5,-0.8),
+  intensity:1,
+});
+```
