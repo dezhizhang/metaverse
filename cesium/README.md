@@ -205,3 +205,30 @@ tilset.style = new Cesium.Cesium3DTileStyle(styleArr[0]);
     viewer.scene.highDynamicRange = true;
 
 ```
+
+### 光照效果
+```ts
+const bloom = viewer.scene.postProcessStages.bloom;
+bloom.enabled = true;
+bloom.uniforms.glowOnly = false;
+bloom.uniforms.contrast = 128;
+bloom.uniforms.brightness = -0.3;
+```
+### box盒子
+```ts
+const box= viewer.entities.add({
+  name: 'blue box',
+  position: Cesium.Cartesian3.fromDegrees(0.0, 40.0, 0.0),
+  box: {
+    show: true,
+    heightReference: Cesium.HeightReference.NONE,
+    dimensions: new Cesium.Cartesian3(100, 100, 100),
+    fill: true,
+    material: Cesium.Color.BLUE,
+    outline: true,
+    outlineColor: Cesium.Color.YELLOW,
+    outlineWidth: 10,
+    shadows: Cesium.ShadowMode.RECEIVE_ONLY,
+    },
+});
+```

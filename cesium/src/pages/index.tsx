@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-06-02 21:15:48
  * :last editor: 张德志
- * :date last edited: 2024-06-12 05:30:59
+ * :date last edited: 2024-06-13 05:38:57
  */
 import * as Cesium from 'cesium';
 import * as turf from '@turf/turf';
@@ -61,40 +61,68 @@ export default function IndexPage() {
     });
 
     // 光照效果
-    viewer.scene.globe.enableLighting = true;
+    // viewer.scene.globe.enableLighting = true;
 
     // 雾
     // viewer.scene.fog.enabled = true;
     // viewer.scene.fog.minimumBrightness = 0.1;
     // viewer.scene.fog.density = 0.03;
 
-
     // viewer.scene.globe.showGroundAtmosphere = true;
     // viewer.scene.globe.lightingFadeInDistance = 10;
-    
-    
+
     // 天空大气效果
     // viewer.scene.skyAtmosphere.show = true;
     // viewer.scene.skyAtmosphere.brightnessShift = 20;
 
     // HDR效果
-    viewer.scene.highDynamicRange = true;
+    // viewer.scene.highDynamicRange = true;
 
-    
+    // const entity = viewer.entities.add({
+    //   position:Cesium.Cartesian3.fromDegrees(86.66,28.1),
+    //   billboard:{
+    //     show:true,
+    //     image: '/LaunchPad.png',
+    //     pixelOffset: new Cesium.Cartesian2(100,100),
+    //     eyeOffset: new Cesium.Cartesian3(0,0,0),
+    //     scale:0.8,
+    //     horizontalOrigin:Cesium.HorizontalOrigin.CENTER,
+    //     verticalOrigin:Cesium.VerticalOrigin.BOTTOM,
 
+    //   }
+    // });
 
-    
+    // viewer.zoomTo(entity);
 
+    // 光效果
+    // const bloom = viewer.scene.postProcessStages.bloom;
+    // bloom.enabled = true;
+    // bloom.uniforms.glowOnly = false;
+    // bloom.uniforms.contrast = 128;
+    // bloom.uniforms.brightness = -0.3;
 
+    const box= viewer.entities.add({
+      name: 'blue box',
+      position: Cesium.Cartesian3.fromDegrees(0.0, 40.0, 0.0),
+      box: {
+        show: true,
+        heightReference: Cesium.HeightReference.NONE,
+        dimensions: new Cesium.Cartesian3(100, 100, 100),
+        fill: true,
+        material: Cesium.Color.BLUE,
+        outline: true,
+        outlineColor: Cesium.Color.YELLOW,
+        outlineWidth: 10,
+        shadows: Cesium.ShadowMode.RECEIVE_ONLY,
+      },
+    });
 
-    
+    viewer.zoomTo(box);
 
 
   };
   useEffect(() => {
     load3dModel();
-
-   
   }, []);
 
   return <div id="container" />;
