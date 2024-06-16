@@ -46,106 +46,75 @@ export default function IndexPage() {
       timeline: false,
       // 是否显示全屏按钮
       fullscreenButton: false,
-      // imageryProvider: new Cesium.UrlTemplateImageryProvider({
-      //   url:
-      //     'http://webrd02.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=18&x={x}&y={y}&z={z}',
-      //   // layer: "tdtVecBasicLayer",
-      //   // style: "default",
-      //   // format: "image/png",
-      //   // tileMatrixSetID: "GoogleMapsCompatible",
-      // }),
+      imageryProvider: new Cesium.UrlTemplateImageryProvider({
+        url:
+          'http://webrd02.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=18&x={x}&y={y}&z={z}',
+        // layer: "tdtVecBasicLayer",
+        // style: "default",
+        // format: "image/png",
+        // tileMatrixSetID: "GoogleMapsCompatible",
+      }),
       // 添加天空盒子
       // terrainProvider:new Cesium.CesiumTerrainProvider({
       //   url:'',
       // })
+      // imageryProvider: new Cesium.WebMapTileServiceImageryProvider({
+      //   url: "http://t{s}.tianditu.gov.cn/vec_w/wmts?service=wmts&request=GetTile&version=1.0.0&LAYER=vec&tileMatrixSet=w&TileMatrix={TileMatrix}&TileRow={TileRow}&TileCol={TileCol}&style=default&format=tiles&tk=你的token",
+      //   subdomains: ['0', '1', '2', '3', '4', '5', '6', '7'],
+      //   layer: "tdtImgLayer",
+      //   style: "default",
+      //   format: "image/jpeg",
+      // })
+        
     });
 
-    // 光照效果
-    // viewer.scene.globe.enableLighting = true;
+    const xhr = new XMLHttpRequest();
+    xhr.open('GET','/chaoyangbaimo1.json');
+    xhr.send(null);
 
-    // 雾
-    // viewer.scene.fog.enabled = true;
-    // viewer.scene.fog.minimumBrightness = 0.1;
-    // viewer.scene.fog.density = 0.03;
+    xhr.onload = function() {
+      const data = JSON.parse(xhr.responseText);
+      const { features } = data || {};
 
-    // viewer.scene.globe.showGroundAtmosphere = true;
-    // viewer.scene.globe.lightingFadeInDistance = 10;
+      features.forEach((feature:any) => {
+        const { coordinates } = feature.geometry || {};
+        coordinates.forEach((coordinate:any) => {
+          viewer.entities.add({
+            wall:{
+              positions:Cesium.Cartesian3.fromDegreesArray(coordinate.flat()),
+              minimumHeights: new Array(coordinate.length).fill(0),
+              maximumHeights: new Array(coordinate.length).fill(feature.properties.height * 3),
+              material:new Cesium.Color(1.0,0.0,0.0,1),
+            },
+            polygon:{
+              hierarchy: Cesium.Cartesian3.fromDegreesArray(coordinate.flat()),
+              material:new Cesium.ImageMaterialProperty({
+                image: '/wuding.png',
+                repeat: new Cesium.Cartesian2(10, 1)
+              }),
+              height:feature.properties.height * 3,
+            }
+          });
 
-    // 天空大气效果
-    // viewer.scene.skyAtmosphere.show = true;
-    // viewer.scene.skyAtmosphere.brightnessShift = 20;
+        })
+      });
 
-    // HDR效果
-    // viewer.scene.highDynamicRange = true;
+    }
 
-    // const entity = viewer.entities.add({
-    //   position:Cesium.Cartesian3.fromDegrees(86.66,28.1),
-    //   billboard:{
-    //     show:true,
-    //     image: '/LaunchPad.png',
-    //     pixelOffset: new Cesium.Cartesian2(100,100),
-    //     eyeOffset: new Cesium.Cartesian3(0,0,0),
-    //     scale:0.8,
-    //     horizontalOrigin:Cesium.HorizontalOrigin.CENTER,
-    //     verticalOrigin:Cesium.VerticalOrigin.BOTTOM,
+    viewer.camera.setView({
+      destination:Cesium.Cartesian3.fromDegrees(116.45,39.932,3000)
+    })
 
-    //   }
-    // });
+    
 
-    // viewer.zoomTo(entity);
-
-    // 光效果
-    // const bloom = viewer.scene.postProcessStages.bloom;
-    // bloom.enabled = true;
-    // bloom.uniforms.glowOnly = false;
-    // bloom.uniforms.contrast = 128;
-    // bloom.uniforms.brightness = -0.3;
-
-    // const box= viewer.entities.add({
-    //   name: 'blue box',
-    //   position: Cesium.Cartesian3.fromDegrees(0.0, 40.0, 0.0),
-    //   box: {
-    //     show: true,
-    //     heightReference: Cesium.HeightReference.NONE,
-    //     dimensions: new Cesium.Cartesian3(100, 100, 100),
-    //     fill: true,
-    //     material: Cesium.Color.BLUE,
-    //     outline: true,
-    //     outlineColor: Cesium.Color.YELLOW,
-    //     outlineWidth: 10,
-    //     shadows: Cesium.ShadowMode.RECEIVE_ONLY,
-    //   },
-    // });
-
-    // viewer.zoomTo(box);
-
-    // 添加平行光
-    viewer.scene.light = new Cesium.DirectionalLight({
-      direction:Cesium.Cartesian3.fromElements(-0.2,-0.5,-0.8),
-      intensity:1,
-    });
+   
+  
 
 
+ 
 
 
-    const box = viewer.entities.add({
-      name:'blue box',
-      position:Cesium.Cartesian3.fromDegrees(0.0,40.0,0.0),
-      box:{
-        show:true,
-        heightReference:Cesium.HeightReference.NONE,
-        dimensions:new Cesium.Cartesian3(100,100,100),
-        fill:true,
-        material:Cesium.Color.YELLOW,
-        outline:true,
-        outlineColor:Cesium.Color.BLUE,
-        outlineWidth:10,
-        shadows:Cesium.ShadowMode.RECEIVE_ONLY,
-      }
-    });
-
-    viewer.zoomTo(box);
-
+   
 
 
 
@@ -156,3 +125,6 @@ export default function IndexPage() {
 
   return <div id="container" />;
 }
+
+
+
