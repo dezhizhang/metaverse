@@ -451,3 +451,25 @@ viewer.camera.setView({
 })
 
 ```
+### 坐标转换
+```ts
+// 角度转换成孤度
+const radians = Cesium.Math.toRadians(90);
+console.log('radians',radians);
+
+// 孤度转换成角度
+const degrees = Cesium.Math.toDegrees(2 *Math.PI);
+console.log('degrees',degrees);
+
+  // 
+const cartesian3 = Cesium.Cartesian3.fromDegrees(
+    89.5,
+    20.4,
+    100
+);
+
+// 卡尔坐标转换成经纬度
+const cartographic = Cesium.Cartographic.fromCartesian(cartesian3);
+console.log('cartographic',cartographic);
+  
+  ```

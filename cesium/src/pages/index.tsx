@@ -22,100 +22,108 @@ export const ACCESS_TOKEN =
 export default function IndexPage() {
   const load3dModel = async () => {
     Cesium.Ion.defaultAccessToken = ACCESS_TOKEN;
+
+    // 设置默认视角
     Cesium.Camera.DEFAULT_VIEW_RECTANGLE = Cesium.Rectangle.fromDegrees(
       89.5,
       20.4,
       110.4,
       61.2,
     );
-    const viewer = new Cesium.Viewer('container', {
-      // infoBox: false,
+
+    const viewer = new Cesium.Viewer('container',{
+      // 是否显示信息框
+      infoBox:false,
       // 是否显示查询按钮
-      geocoder: false,
-      // 不显示home按钮
-      homeButton: false,
-      // 查看器模式
-      sceneModePicker: false,
-      // 是否显示图层按钮
-      baseLayerPicker: false,
+      geocoder:false,
+      // 是否显示home
+      homeButton:false,
+      // 查看器显示模式
+      sceneModePicker:false,
+      // 是否显示图层显示器
+      baseLayerPicker:false,
       // 是否显示帮助按钮
-      navigationHelpButton: false,
-      // 是否显示动画
-      animation: false,
-      // 时间轴
-      timeline: false,
-      // 是否显示全屏按钮
-      fullscreenButton: false,
-      imageryProvider: new Cesium.UrlTemplateImageryProvider({
-        url:
-          'http://webrd02.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=18&x={x}&y={y}&z={z}',
-        // layer: "tdtVecBasicLayer",
-        // style: "default",
-        // format: "image/png",
-        // tileMatrixSetID: "GoogleMapsCompatible",
-      }),
-      // 添加天空盒子
-      // terrainProvider:new Cesium.CesiumTerrainProvider({
-      //   url:'',
-      // })
-      // imageryProvider: new Cesium.WebMapTileServiceImageryProvider({
-      //   url: "http://t{s}.tianditu.gov.cn/vec_w/wmts?service=wmts&request=GetTile&version=1.0.0&LAYER=vec&tileMatrixSet=w&TileMatrix={TileMatrix}&TileRow={TileRow}&TileCol={TileCol}&style=default&format=tiles&tk=你的token",
-      //   subdomains: ['0', '1', '2', '3', '4', '5', '6', '7'],
-      //   layer: "tdtImgLayer",
-      //   style: "default",
-      //   format: "image/jpeg",
-      // })
-        
-    });
-
-    const xhr = new XMLHttpRequest();
-    xhr.open('GET','/chaoyangbaimo1.json');
-    xhr.send(null);
-
-    xhr.onload = function() {
-      const data = JSON.parse(xhr.responseText);
-      const { features } = data || {};
-
-      features.forEach((feature:any) => {
-        const { coordinates } = feature.geometry || {};
-        coordinates.forEach((coordinate:any) => {
-          viewer.entities.add({
-            wall:{
-              positions:Cesium.Cartesian3.fromDegreesArray(coordinate.flat()),
-              minimumHeights: new Array(coordinate.length).fill(0),
-              maximumHeights: new Array(coordinate.length).fill(feature.properties.height * 3),
-              material:new Cesium.Color(1.0,0.0,0.0,1),
-            },
-            polygon:{
-              hierarchy: Cesium.Cartesian3.fromDegreesArray(coordinate.flat()),
-              material:new Cesium.ImageMaterialProperty({
-                image: '/wuding.png',
-                repeat: new Cesium.Cartesian2(10, 1)
-              }),
-              height:feature.properties.height * 3,
-            }
-          });
-
-        })
-      });
-
-    }
-
-    viewer.camera.setView({
-      destination:Cesium.Cartesian3.fromDegrees(116.45,39.932,3000)
-    })
-
+      navigationHelpButton:false,
+      // 是否播放动画
+      animation:false,
+      // 是否显示时间轴
+      timeline:false,
+      // 是不显示全屏
+      fullscreenButton:false,
+      // skyBox: new Cesium.SkyBox({
+      //   // sources:{
+      //   //   positiveX:'/texture/sky/px.jpg',
+      //   //   negativeX:'/textuer/sky/nx.jpg',
+      //   //   positiveY:'/texture/sky/py.jpg',
+      //   //   negativeY:'/texture/sky/ny.jpg',
+      //   //   positivez:'/texture/sky/nz.jpg',
+      //   // }
+      //   sources : {
+      //     positiveX : '/texture/sky/px.jpg',
+      //     negativeX : '/texture/sky/nx.jpg',
+      //     positiveY : '/texture/sky/py.jpg',
+      //     negativeY :'/texture/sky/ny.jpg',
+      //     positiveZ :'/texture/sky/pz.jpg',
+      //     negativeZ :'/texture/sky/nz.jpg'
+      //   }
+      // }),
     
 
-   
+      // 添加高德地图
+      imageryProvider: new Cesium.UrlTemplateImageryProvider({
+        url:'http://webrd02.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=18&x={x}&y={y}&z={z}',
+        layer:'tdtVecBasicLayer',
+        style:'default',
+        format:'image/png',
+        tileMatrixSetID:'GoogleMapsCompatible',
+      }),
+
+      // 设置地形
+      terrainProvider:Cesium.createWorldTerrain({
+        requestVertexNormals:true,
+        requestWaterMask:true
+      }),
+  });
+
+  // 坐标转换
+
+  // // 角度转换成孤度
+  // const radians = Cesium.Math.toRadians(90);
+  // console.log('radians',radians);
+
+  // // 孤度转换成角度
+  // const degrees = Cesium.Math.toDegrees(2 *Math.PI);
+  // console.log('degrees',degrees);
+
+  // const cartesian3 = Cesium.Cartesian3.fromDegrees(
+  //   89.5,
+  //   20.4,
+  //   100
+  // );
+
+  // // 卡尔坐标转换成经纬度
+  // const cartographic = Cesium.Cartographic.fromCartesian(cartesian3);
+  // console.log('cartographic',cartographic);
+
+  // 角度转换成孤度
+  const radians = Cesium.Math.toRadians(90);
+  console.log('radians',radians);
+
+  // 孤度转换成角度
+  const degrees = Cesium.Math.toDegrees(2 *Math.PI);
+  console.log('degrees',degrees);
+
+  // 
+  const cartesian3 = Cesium.Cartesian3.fromDegrees(
+    89.5,
+    20.4,
+    100
+  );
+
+  // 卡尔坐标转换成经纬度
+  const cartographic = Cesium.Cartographic.fromCartesian(cartesian3);
+  console.log('cartographic',cartographic);
   
-
-
- 
-
-
-   
-
 
 
   };
