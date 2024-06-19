@@ -488,3 +488,39 @@ const airplane = viewer.entities.add({
 viewer.zoomTo(airplane);
 
 ```
+
+### primitive 添加图元
+```ts
+// 创建几何体
+const rectGeometry = new Cesium.RectangleGeometry({
+    rectangle:Cesium.Rectangle.fromDegrees(
+      115,
+      20,
+      135,
+      30
+    ),
+    height:10,
+    extrudedHeight:100000,
+    vertexFormat:Cesium.PerInstanceColorAppearance.VERTEX_FORMAT,
+  });
+
+
+const instance = new Cesium.GeometryInstance({
+  geometry:rectGeometry,
+    attributes:{
+      color:Cesium.ColorGeometryInstanceAttribute.fromColor(
+        Cesium.Color.RED.withAlpha(0.5),
+      )
+    }
+});
+  
+  // 创建图元
+const primitive = new Cesium.Primitive({
+  geometryInstances:instance,
+  appearance:new Cesium.PerInstanceColorAppearance({
+    flat:true,
+  })
+});
+
+viewer.scene.primitives.add(primitive);
+```

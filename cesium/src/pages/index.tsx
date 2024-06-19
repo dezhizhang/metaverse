@@ -102,16 +102,73 @@ export default function IndexPage() {
   viewer.scene.primitives.add(osmBuildings)
 
   // 添加3d模型
-  const airplane = viewer.entities.add({
-    name:'Airplane',
-    position:Cesium.Cartesian3.fromDegrees(113.3191,23.109,1500),
-    model:{
-      uri:'/Air.glb',
-      minimumPixelSize:128,
-    }
+  // const airplane = viewer.entities.add({
+  //   name:'Airplane',
+  //   position:Cesium.Cartesian3.fromDegrees(113.3191,23.109,1500),
+  //   model:{
+  //     uri:'/Air.glb',
+  //     minimumPixelSize:128,
+  //     silhouetteSize:5,
+  //     distanceDisplayCondition: new Cesium.DistanceDisplayCondition(0,2000000),
+  //   }
+  // });
+
+  // viewer.zoomTo(airplane);
+
+  // const airplane = viewer.entities.add({
+  //   name:'Airplane',
+  //   position:Cesium.Cartesian3.fromDegrees(113.3191,23.109,1500),
+  //   model:{
+  //     uri:'/Air.glb',
+  //     minimumPixelSize:128,
+  //     silhouetteSize:5,
+  //     distanceDisplayCondition: new Cesium.DistanceDisplayCondition(0,2000000),
+  //   }
+  // });
+
+  // viewer.zoomTo(airplane);
+
+
+  // 创建几何体
+  const rectGeometry = new Cesium.RectangleGeometry({
+    rectangle:Cesium.Rectangle.fromDegrees(
+      115,
+      20,
+      135,
+      30
+    ),
+    height:10,
+    extrudedHeight:100000,
+    vertexFormat:Cesium.PerInstanceColorAppearance.VERTEX_FORMAT,
   });
 
-  viewer.zoomTo(airplane);
+
+  const instance = new Cesium.GeometryInstance({
+    geometry:rectGeometry,
+    attributes:{
+      color:Cesium.ColorGeometryInstanceAttribute.fromColor(
+        Cesium.Color.RED.withAlpha(0.5),
+      )
+    }
+  });
+  
+  // 创建图元
+  const primitive = new Cesium.Primitive({
+    geometryInstances:instance,
+    appearance:new Cesium.PerInstanceColorAppearance({
+      flat:true,
+    })
+  });
+
+
+  viewer.scene.primitives.add(primitive);
+  
+
+
+
+
+
+  
 
 
 
