@@ -70,13 +70,13 @@ export default function IndexPage() {
     
 
       // 添加高德地图
-      imageryProvider: new Cesium.UrlTemplateImageryProvider({
-        url:'http://webrd02.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=18&x={x}&y={y}&z={z}',
-        layer:'tdtVecBasicLayer',
-        style:'default',
-        format:'image/png',
-        tileMatrixSetID:'GoogleMapsCompatible',
-      }),
+      // imageryProvider: new Cesium.UrlTemplateImageryProvider({
+      //   url:'http://webrd02.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=18&x={x}&y={y}&z={z}',
+      //   layer:'tdtVecBasicLayer',
+      //   style:'default',
+      //   format:'image/png',
+      //   tileMatrixSetID:'GoogleMapsCompatible',
+      // }),
 
       // 设置地形
       terrainProvider:Cesium.createWorldTerrain({
@@ -85,45 +85,39 @@ export default function IndexPage() {
       }),
   });
 
-  // 坐标转换
+  const position = Cesium.Cartesian3.fromDegrees(113.3191,23.109,1000);
 
-  // // 角度转换成孤度
-  // const radians = Cesium.Math.toRadians(90);
-  // console.log('radians',radians);
+  viewer.camera.flyTo({
+    destination:position,
+    orientation:{
+      heading:Cesium.Math.toRadians(0),
+      pitch:Cesium.Math.toRadians(-90),
+      roll:0
+    }
+  });
 
-  // // 孤度转换成角度
-  // const degrees = Cesium.Math.toDegrees(2 *Math.PI);
-  // console.log('degrees',degrees);
+  const osmBuildings = Cesium.createOsmBuildings();
 
-  // const cartesian3 = Cesium.Cartesian3.fromDegrees(
-  //   89.5,
-  //   20.4,
-  //   100
-  // );
+  // 添加3D建筑物
+  viewer.scene.primitives.add(osmBuildings)
 
-  // // 卡尔坐标转换成经纬度
-  // const cartographic = Cesium.Cartographic.fromCartesian(cartesian3);
-  // console.log('cartographic',cartographic);
+  // 添加3d模型
+  const airplane = viewer.entities.add({
+    name:'Airplane',
+    position:Cesium.Cartesian3.fromDegrees(113.3191,23.109,1500),
+    model:{
+      uri:'/Air.glb',
+      minimumPixelSize:128,
+    }
+  });
 
-  // 角度转换成孤度
-  const radians = Cesium.Math.toRadians(90);
-  console.log('radians',radians);
+  viewer.zoomTo(airplane);
 
-  // 孤度转换成角度
-  const degrees = Cesium.Math.toDegrees(2 *Math.PI);
-  console.log('degrees',degrees);
 
-  // 
-  const cartesian3 = Cesium.Cartesian3.fromDegrees(
-    89.5,
-    20.4,
-    100
-  );
 
-  // 卡尔坐标转换成经纬度
-  const cartographic = Cesium.Cartographic.fromCartesian(cartesian3);
-  console.log('cartographic',cartographic);
-  
+
+
+
 
 
   };

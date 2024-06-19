@@ -472,4 +472,19 @@ const cartesian3 = Cesium.Cartesian3.fromDegrees(
 const cartographic = Cesium.Cartographic.fromCartesian(cartesian3);
 console.log('cartographic',cartographic);
   
-  ```
+```
+
+### 添加3d模型
+```ts
+const airplane = viewer.entities.add({
+  name:'Airplane',
+  position:Cesium.Cartesian3.fromDegrees(113.3191,23.109,1500),
+  model:{
+      uri:'/Air.glb',
+      minimumPixelSize:128,
+    }
+  });
+
+viewer.zoomTo(airplane);
+
+```
