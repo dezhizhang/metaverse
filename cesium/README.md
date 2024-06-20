@@ -558,3 +558,16 @@ const redline = viewer.entities.add({
 });
 viewer.zoomTo(redline);
 ```
+### 箭头材质
+```ts
+const material = new Cesium.PolylineArrowMaterialProperty(Cesium.Color.YELLOW);
+
+const redline = viewer.entities.add({
+  polyline: {
+    positions: Cesium.Cartesian3.fromDegreesArray([-75, 35, -125, 35]),
+      width: 5,
+      material,
+    },
+  });
+viewer.zoomTo(redline);
+```
