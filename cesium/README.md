@@ -674,3 +674,35 @@ const primitive = new Cesium.Primitive({
 viewer.scene.primitives.add(primitive);
 
 ```
+
+### 水材质
+```ts
+const rectGeometry = new Cesium.RectangleGeometry({
+  rectangle:Cesium.Rectangle.fromDegrees(115, 20, 135, 30),
+  extrudedHeight:1000,
+  vertexFormat:Cesium.EllipsoidSurfaceAppearance.VERTEX_FORMAT
+});
+
+const instance = new Cesium.GeometryInstance({
+  id:'rectGeometry',
+  geometry:rectGeometry
+});
+
+const material = Cesium.Material.fromType('Water',{
+  color:Cesium.Color.AQUA.withAlpha(0.8),
+  difference:0.25,
+  normalMap:'/waterNormals.jpg',
+});
+
+const appearance = new Cesium.EllipsoidSurfaceAppearance({
+  material
+});
+
+const primitive = new Cesium.Primitive({
+  geometryInstances:instance,
+    appearance
+  });
+
+viewer.scene.primitives.add(primitive);
+
+```
