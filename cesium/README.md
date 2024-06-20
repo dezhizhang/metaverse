@@ -539,3 +539,22 @@ handler.setInputAction((event) => {
 },Cesium.ScreenSpaceEventType.LEFT_CLICK);
 
 ```
+### 虚线材质
+```ts
+const material = new Cesium.PolylineDashMaterialProperty({
+  dashLength:30,
+  color:Cesium.Color.RED
+});
+
+const redline = viewer.entities.add({
+  polyline:{
+    positions:Cesium.Cartesian3.fromDegreesArray([
+      -75,35,
+      -125,35
+    ]),
+    width:5,
+    material
+  }
+});
+viewer.zoomTo(redline);
+```

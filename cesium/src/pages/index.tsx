@@ -86,51 +86,103 @@ export default function IndexPage() {
       }),
   });
 
- 
 
-  const rectGeometry = new Cesium.RectangleGeometry({
+  // const material = new Cesium.CheckerboardMaterialProperty({
+  //   evenColor:Cesium.Color.WHITE,
+  //   oddColor: Cesium.Color.BLACK,
+  //   repeat: new Cesium.Cartesian2(4,4),
+  // });
+
+  // const rectangle = viewer.entities.add({
+  //   id:'rectangle',
+  //   rectangle:{
+  //     material,
+  //     coordinates: Cesium.Rectangle.fromDegrees(
+  //       115,
+  //       20,
+  //       135,
+  //       30
+  //     )
+  //   }
+  // });
+
+  // viewer.zoomTo(rectangle);
+
+  const material = new Cesium.PolylineDashMaterialProperty({
+    dashLength:30,
+    color:Cesium.Color.RED
+  });
+
+  const redline = viewer.entities.add({
+    polyline:{
+      positions:Cesium.Cartesian3.fromDegreesArray([
+        -75,35,
+        -125,35
+      ]),
+      width:5,
+      material
+    }
+  });
+  viewer.zoomTo(redline);
   
-    rectangle:Cesium.Rectangle.fromDegrees(
-      115,
-      20,
-      135,
-      30
-    ),
-    extrudedHeight:10000,
-    vertexFormat:Cesium.PerInstanceColorAppearance.VERTEX_FORMAT
-  });
 
-  const instance = new Cesium.GeometryInstance({
-    id:'rectGeometry',
-    geometry:rectGeometry,
-    attributes:{
-      color:Cesium.ColorGeometryInstanceAttribute.fromColor(
-        Cesium.Color.RED.withAlpha(0.5),
-      )
-    }
-  });
 
-  const primitive = new Cesium.Primitive({
-    geometryInstances:instance,
-    appearance: new Cesium.PerInstanceColorAppearance({
-      flat:true
-    })
-  });
 
-  viewer.scene.primitives.add(primitive);
 
-  // 添加交互
-  const handler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
 
-  handler.setInputAction((event) => {
-    const pickedObject = viewer.scene.pick(event.position);
-    if(Cesium.defined(pickedObject)) {
-      const attributes = primitive.getGeometryInstanceAttributes(pickedObject.id);
-      attributes.color = Cesium.ColorGeometryInstanceAttribute.toValue(
-        Cesium.Color.YELLOW.withAlpha(0.5),
-      );
-    }
-  },Cesium.ScreenSpaceEventType.LEFT_CLICK);
+
+  
+  // const rectGeometry = new Cesium.RectangleGeometry({
+
+  //   rectangle:{
+  //     coordinates:Cesium.Rectangle.fromDegrees(
+  //       115,
+  //       20,
+  //       135,
+  //       30
+  //     ),
+  //     material:material,
+  //   },
+
+  
+  //   extrudedHeight:10000,
+  //   vertexFormat:Cesium.PerInstanceColorAppearance.VERTEX_FORMAT,
+  // });
+
+  // const instance = new Cesium.GeometryInstance({
+  //   id:'rectGeometry',
+  //   geometry:rectGeometry,
+  //   attributes:{
+  //     color:Cesium.ColorGeometryInstanceAttribute.fromColor(
+  //       Cesium.Color.RED.withAlpha(0.9)
+  //     )
+  //   }
+  // })
+
+  // const primitive = new Cesium.Primitive({
+  //   geometryInstances:instance,
+  //   appearance: new Cesium.PerInstanceColorAppearance({
+  //     flat:true
+  //   })
+  // });
+
+  // viewer.scene.primitives.add(primitive);
+
+
+
+
+  // // 添加交互
+  // const handler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
+
+  // handler.setInputAction((event) => {
+  //   const pickedObject = viewer.scene.pick(event.position);
+  //   if(Cesium.defined(pickedObject)) {
+  //     const attributes = primitive.getGeometryInstanceAttributes(pickedObject.id);
+  //     attributes.color = Cesium.ColorGeometryInstanceAttribute.toValue(
+  //       Cesium.Color.YELLOW.withAlpha(0.5)
+  //     )
+  //   }
+  // },Cesium.ScreenSpaceEventType.LEFT_CLICK)
 
 
 
