@@ -592,3 +592,32 @@ const redline = viewer.entities.add({
 });
 viewer.zoomTo(redline);
 ```
+
+### Primitive材质
+```ts
+const rectGeometry = new Cesium.RectangleGeometry({
+  rectangle:Cesium.Rectangle.fromDegrees(115, 20, 135, 30),
+  extrudedHeight:10000,
+  vertexFormat:Cesium.PerInstanceColorAppearance.VERTEX_FORMAT
+});
+
+const instance = new Cesium.GeometryInstance({
+  id:'rectGeometry',
+  geometry:rectGeometry,
+});
+
+
+const material = Cesium.Material.fromType('Color',{
+  color:Cesium.Color.AQUA.withAlpha(0.5),
+});
+
+const appearance = new Cesium.EllipsoidSurfaceAppearance({
+  material
+});
+
+const primitive = new Cesium.Primitive({
+  geometryInstances:instance,
+  appearance
+});
+viewer.scene.primitives.add(primitive);
+```

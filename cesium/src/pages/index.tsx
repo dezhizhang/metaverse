@@ -85,68 +85,31 @@ export default function IndexPage() {
       }),
     });
 
-    // const material = new Cesium.CheckerboardMaterialProperty({
-    //   evenColor:Cesium.Color.WHITE,
-    //   oddColor: Cesium.Color.BLACK,
-    //   repeat: new Cesium.Cartesian2(4,4),
-    // });
-
-    // const rectangle = viewer.entities.add({
-    //   id:'rectangle',
-    //   rectangle:{
-    //     material,
-    //     coordinates: Cesium.Rectangle.fromDegrees(
-    //       115,
-    //       20,
-    //       135,
-    //       30
-    //     )
-    //   }
-    // });
-
-    // viewer.zoomTo(rectangle);
-
-    // const material = new Cesium.PolylineDashMaterialProperty({
-    //   dashLength: 30,
-    //   color: Cesium.Color.RED,
-    // });
-
-    // const material = new Cesium.PolylineArrowMaterialProperty(Cesium.Color.YELLOW);
-
-
-
-    // const material = new Cesium.PolylineArrowMaterialProperty(Cesium.Color.YELLOW);
-
-    // const redline = viewer.entities.add({
-    //   polyline:{
-    //     positions:Cesium.Cartesian3.fromDegreesArray([
-    //       -75, 35,
-    //       -125, 35
-    //     ]),
-    //     width:5,
-    //     material
-    //   }
-    // });
-    // viewer.zoomTo(redline);
-
-    // 发光飞线效果
-    const material = new Cesium.PolylineGlowMaterialProperty({
-      glowPower:0.8,
-      taperPower:0.7,
-      color:Cesium.Color.YELLOW
+    const rectGeometry = new Cesium.RectangleGeometry({
+      rectangle:Cesium.Rectangle.fromDegrees(115, 20, 135, 30),
+      extrudedHeight:10000,
+      vertexFormat:Cesium.PerInstanceColorAppearance.VERTEX_FORMAT
     });
 
-    const redline = viewer.entities.add({
-      polyline:{
-        positions:Cesium.Cartesian3.fromDegreesArray([
-          -75, 35,
-          -125, 35
-        ]),
-        width:5,
-        material
-      }
+    const instance = new Cesium.GeometryInstance({
+      id:'rectGeometry',
+      geometry:rectGeometry,
     });
-    viewer.zoomTo(redline);
+
+
+    const material = Cesium.Material.fromType('Color',{
+      color:Cesium.Color.AQUA.withAlpha(0.5),
+    });
+
+    const appearance = new Cesium.EllipsoidSurfaceAppearance({
+      material
+    });
+
+    const primitive = new Cesium.Primitive({
+      geometryInstances:instance,
+      appearance
+    });
+    viewer.scene.primitives.add(primitive);
 
 
 
@@ -154,40 +117,6 @@ export default function IndexPage() {
 
 
 
-    // const rectGeometry = new Cesium.RectangleGeometry({
-
-    //   rectangle:{
-    //     coordinates:Cesium.Rectangle.fromDegrees(
-    //       115,
-    //       20,
-    //       135,
-    //       30
-    //     ),
-    //     material:material,
-    //   },
-
-    //   extrudedHeight:10000,
-    //   vertexFormat:Cesium.PerInstanceColorAppearance.VERTEX_FORMAT,
-    // });
-
-    // const instance = new Cesium.GeometryInstance({
-    //   id:'rectGeometry',
-    //   geometry:rectGeometry,
-    //   attributes:{
-    //     color:Cesium.ColorGeometryInstanceAttribute.fromColor(
-    //       Cesium.Color.RED.withAlpha(0.9)
-    //     )
-    //   }
-    // })
-
-    // const primitive = new Cesium.Primitive({
-    //   geometryInstances:instance,
-    //   appearance: new Cesium.PerInstanceColorAppearance({
-    //     flat:true
-    //   })
-    // });
-
-    // viewer.scene.primitives.add(primitive);
 
     // // 添加交互
     // const handler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
