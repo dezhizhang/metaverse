@@ -621,3 +621,33 @@ const primitive = new Cesium.Primitive({
 });
 viewer.scene.primitives.add(primitive);
 ```
+### 图片纹理贴图
+```ts
+const rectGeometry = new Cesium.RectangleGeometry({
+  rectangle:Cesium.Rectangle.fromDegrees(115, 20, 135, 30),
+  extrudedHeight:10000,
+  vertexFormat:Cesium.EllipsoidSurfaceAppearance.VERTEX_FORMAT
+});
+
+const instance = new Cesium.GeometryInstance({
+  id:'rectGeometry',
+  geometry:rectGeometry,
+});
+
+// 图片材质
+const material = Cesium.Material.fromType('Image',{
+  image:'/wuding.png',
+  repeat: new Cesium.Cartesian2(2,2),
+})
+
+const appearance = new Cesium.EllipsoidSurfaceAppearance({
+  material
+});
+
+const primitive = new Cesium.Primitive({
+  geometryInstances:instance,
+  appearance
+});
+
+viewer.scene.primitives.add(primitive);
+```

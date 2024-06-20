@@ -11,8 +11,8 @@ import * as Cesium from 'cesium';
 import * as turf from '@turf/turf';
 import '/public/Widgets/widgets.css';
 import { useEffect } from 'react';
-import PolylineTrailLinkMaterialProperty from './PolylineTrailLinkMaterialProperty';
 import './index.less';
+import Viewer from 'cesium/Source/Widgets/Viewer/Viewer';
 
 export const ACCESS_TOKEN =
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI3NWVlNTI2MC00YTViLTQzZjYtOGMxNy1lYTAxMDVkMTMwNTQiLCJpZCI6MTA3NjIxLCJpYXQiOjE2NjI3OTY2ODR9.9Amu-saGmeaPMMt9LE5MjF0FQcoC3toDrxCo_J4ItAg';
@@ -85,10 +85,11 @@ export default function IndexPage() {
       }),
     });
 
+  
     const rectGeometry = new Cesium.RectangleGeometry({
       rectangle:Cesium.Rectangle.fromDegrees(115, 20, 135, 30),
       extrudedHeight:10000,
-      vertexFormat:Cesium.PerInstanceColorAppearance.VERTEX_FORMAT
+      vertexFormat:Cesium.EllipsoidSurfaceAppearance.VERTEX_FORMAT
     });
 
     const instance = new Cesium.GeometryInstance({
@@ -96,10 +97,11 @@ export default function IndexPage() {
       geometry:rectGeometry,
     });
 
-
-    const material = Cesium.Material.fromType('Color',{
-      color:Cesium.Color.AQUA.withAlpha(0.5),
-    });
+    // 图片材质
+    const material = Cesium.Material.fromType('Image',{
+      image:'/wuding.png',
+      repeat: new Cesium.Cartesian2(2,2),
+    })
 
     const appearance = new Cesium.EllipsoidSurfaceAppearance({
       material
@@ -109,7 +111,12 @@ export default function IndexPage() {
       geometryInstances:instance,
       appearance
     });
+
     viewer.scene.primitives.add(primitive);
+
+
+
+
 
 
 
