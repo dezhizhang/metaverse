@@ -571,3 +571,24 @@ const redline = viewer.entities.add({
   });
 viewer.zoomTo(redline);
 ```
+
+### 发光飞线效果
+```ts
+const material = new Cesium.PolylineGlowMaterialProperty({
+  glowPower:0.8,
+  taperPower:0.7,
+  color:Cesium.Color.YELLOW
+});
+
+const redline = viewer.entities.add({
+  polyline:{
+    positions:Cesium.Cartesian3.fromDegreesArray([
+      -75, 35,
+      -125, 35
+    ]),
+    width:5,
+    material
+    }
+});
+viewer.zoomTo(redline);
+```

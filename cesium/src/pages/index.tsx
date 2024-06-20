@@ -111,16 +111,48 @@ export default function IndexPage() {
     //   color: Cesium.Color.RED,
     // });
 
-    const material = new Cesium.PolylineArrowMaterialProperty(Cesium.Color.YELLOW);
+    // const material = new Cesium.PolylineArrowMaterialProperty(Cesium.Color.YELLOW);
+
+
+
+    // const material = new Cesium.PolylineArrowMaterialProperty(Cesium.Color.YELLOW);
+
+    // const redline = viewer.entities.add({
+    //   polyline:{
+    //     positions:Cesium.Cartesian3.fromDegreesArray([
+    //       -75, 35,
+    //       -125, 35
+    //     ]),
+    //     width:5,
+    //     material
+    //   }
+    // });
+    // viewer.zoomTo(redline);
+
+    // 发光飞线效果
+    const material = new Cesium.PolylineGlowMaterialProperty({
+      glowPower:0.8,
+      taperPower:0.7,
+      color:Cesium.Color.YELLOW
+    });
 
     const redline = viewer.entities.add({
-      polyline: {
-        positions: Cesium.Cartesian3.fromDegreesArray([-75, 35, -125, 35]),
-        width: 5,
-        material,
-      },
+      polyline:{
+        positions:Cesium.Cartesian3.fromDegreesArray([
+          -75, 35,
+          -125, 35
+        ]),
+        width:5,
+        material
+      }
     });
     viewer.zoomTo(redline);
+
+
+
+
+
+
 
     // const rectGeometry = new Cesium.RectangleGeometry({
 
