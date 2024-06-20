@@ -86,6 +86,8 @@ export default function IndexPage() {
     });
 
   
+
+
     const rectGeometry = new Cesium.RectangleGeometry({
       rectangle:Cesium.Rectangle.fromDegrees(115, 20, 135, 30),
       extrudedHeight:10000,
@@ -97,11 +99,13 @@ export default function IndexPage() {
       geometry:rectGeometry,
     });
 
-    // 图片材质
-    const material = Cesium.Material.fromType('Image',{
-      image:'/wuding.png',
-      repeat: new Cesium.Cartesian2(2,2),
-    })
+    
+    const material = Cesium.Material.fromType('Grid',{
+      color:Cesium.Color.AQUA.withAlpha(0.5),
+      cellAlpha:0.2,
+      lineCount:new Cesium.Cartesian2(4,4),
+      lineThickness: new Cesium.Cartesian2(4,4),
+    })  
 
     const appearance = new Cesium.EllipsoidSurfaceAppearance({
       material
@@ -113,15 +117,6 @@ export default function IndexPage() {
     });
 
     viewer.scene.primitives.add(primitive);
-
-
-
-
-
-
-
-
-
 
 
 

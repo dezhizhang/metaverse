@@ -1,18 +1,5 @@
-# umi project
 
-## Getting Started
-
-Install dependencies,
-
-```bash
-$ yarn
-```
-
-Start the dev server,
-
-```bash
-$ yarn start
-```
+# cesium 
 
 ### tiles3d 模型数据加载
 ```ts
@@ -524,6 +511,7 @@ const primitive = new Cesium.Primitive({
 
 viewer.scene.primitives.add(primitive);
 ```
+
 ### cesium 添加交互
 ```ts
 const handler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
@@ -621,6 +609,7 @@ const primitive = new Cesium.Primitive({
 });
 viewer.scene.primitives.add(primitive);
 ```
+
 ### 图片纹理贴图
 ```ts
 const rectGeometry = new Cesium.RectangleGeometry({
@@ -650,4 +639,38 @@ const primitive = new Cesium.Primitive({
 });
 
 viewer.scene.primitives.add(primitive);
+```
+
+### 网格材质 
+```ts
+const rectGeometry = new Cesium.RectangleGeometry({
+  rectangle:Cesium.Rectangle.fromDegrees(115, 20, 135, 30),
+  extrudedHeight:10000,
+  vertexFormat:Cesium.EllipsoidSurfaceAppearance.VERTEX_FORMAT
+});
+
+const instance = new Cesium.GeometryInstance({
+  id:'rectGeometry',
+  geometry:rectGeometry,
+});
+
+// 网格材质
+const material = Cesium.Material.fromType('Grid',{
+  color:Cesium.Color.AQUA.withAlpha(0.5),
+  cellAlpha:0.2,
+  lineCount:new Cesium.Cartesian2(4,4),
+  lineThickness: new Cesium.Cartesian2(4,4),
+})  
+
+const appearance = new Cesium.EllipsoidSurfaceAppearance({
+  material
+});
+
+const primitive = new Cesium.Primitive({
+  geometryInstances:instance,
+  appearance
+});
+
+viewer.scene.primitives.add(primitive);
+
 ```
