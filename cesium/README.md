@@ -524,3 +524,18 @@ const primitive = new Cesium.Primitive({
 
 viewer.scene.primitives.add(primitive);
 ```
+### cesium 添加交互
+```ts
+const handler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
+
+handler.setInputAction((event) => {
+  const pickedObject = viewer.scene.pick(event.position);
+  if(Cesium.defined(pickedObject)) {
+    const attributes = primitive.getGeometryInstanceAttributes(pickedObject.id);
+    attributes.color = Cesium.ColorGeometryInstanceAttribute.toValue(
+      Cesium.Color.YELLOW.withAlpha(0.5),
+    );
+  }
+},Cesium.ScreenSpaceEventType.LEFT_CLICK);
+
+```

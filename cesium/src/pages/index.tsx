@@ -11,6 +11,7 @@ import * as Cesium from 'cesium';
 import * as turf from '@turf/turf';
 import '/public/Widgets/widgets.css';
 import { useEffect } from 'react';
+import PolylineTrailLinkMaterialProperty from './PolylineTrailLinkMaterialProperty'
 import './index.less';
 
 export const ACCESS_TOKEN =
@@ -85,65 +86,22 @@ export default function IndexPage() {
       }),
   });
 
-  const position = Cesium.Cartesian3.fromDegrees(113.3191,23.109,1000);
+ 
 
-  viewer.camera.flyTo({
-    destination:position,
-    orientation:{
-      heading:Cesium.Math.toRadians(0),
-      pitch:Cesium.Math.toRadians(-90),
-      roll:0
-    }
-  });
-
-  const osmBuildings = Cesium.createOsmBuildings();
-
-  // 添加3D建筑物
-  viewer.scene.primitives.add(osmBuildings)
-
-  // 添加3d模型
-  // const airplane = viewer.entities.add({
-  //   name:'Airplane',
-  //   position:Cesium.Cartesian3.fromDegrees(113.3191,23.109,1500),
-  //   model:{
-  //     uri:'/Air.glb',
-  //     minimumPixelSize:128,
-  //     silhouetteSize:5,
-  //     distanceDisplayCondition: new Cesium.DistanceDisplayCondition(0,2000000),
-  //   }
-  // });
-
-  // viewer.zoomTo(airplane);
-
-  // const airplane = viewer.entities.add({
-  //   name:'Airplane',
-  //   position:Cesium.Cartesian3.fromDegrees(113.3191,23.109,1500),
-  //   model:{
-  //     uri:'/Air.glb',
-  //     minimumPixelSize:128,
-  //     silhouetteSize:5,
-  //     distanceDisplayCondition: new Cesium.DistanceDisplayCondition(0,2000000),
-  //   }
-  // });
-
-  // viewer.zoomTo(airplane);
-
-
-  // 创建几何体
   const rectGeometry = new Cesium.RectangleGeometry({
+  
     rectangle:Cesium.Rectangle.fromDegrees(
       115,
       20,
       135,
       30
     ),
-    height:10,
-    extrudedHeight:100000,
-    vertexFormat:Cesium.PerInstanceColorAppearance.VERTEX_FORMAT,
+    extrudedHeight:10000,
+    vertexFormat:Cesium.PerInstanceColorAppearance.VERTEX_FORMAT
   });
 
-
   const instance = new Cesium.GeometryInstance({
+    id:'rectGeometry',
     geometry:rectGeometry,
     attributes:{
       color:Cesium.ColorGeometryInstanceAttribute.fromColor(
@@ -151,17 +109,35 @@ export default function IndexPage() {
       )
     }
   });
-  
-  // 创建图元
+
   const primitive = new Cesium.Primitive({
     geometryInstances:instance,
-    appearance:new Cesium.PerInstanceColorAppearance({
-      flat:true,
+    appearance: new Cesium.PerInstanceColorAppearance({
+      flat:true
     })
   });
 
-
   viewer.scene.primitives.add(primitive);
+
+  // 添加交互
+  const handler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
+
+  handler.setInputAction((event) => {
+    const pickedObject = viewer.scene.pick(event.position);
+    if(Cesium.defined(pickedObject)) {
+      const attributes = primitive.getGeometryInstanceAttributes(pickedObject.id);
+      attributes.color = Cesium.ColorGeometryInstanceAttribute.toValue(
+        Cesium.Color.YELLOW.withAlpha(0.5),
+      );
+    }
+  },Cesium.ScreenSpaceEventType.LEFT_CLICK);
+
+
+
+
+
+
+
   
 
 
