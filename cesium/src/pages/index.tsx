@@ -86,25 +86,48 @@ export default function IndexPage() {
     });
 
   
+    // const material = new Cesium.Material({
+    //   fabric:{
+    //     type:"Color",
+    //     uniforms:{
+    //       color: new Cesium.Color(1.0,0.0,0.0,1.0),
+    //     }
+    //   }
+    // });
+
+    // const material = new Cesium.Material({
+    //   fabric:{
+    //     type:'Image',
+    //     uniforms:{
+    //       image:'/wuding.png'
+    //     }
+    //   }
+    // })
 
 
-  
+    // 自定义着色器
+    const material = new Cesium.Material({
+      fabric:{
+        uniforms:{},
+        source:`
+          czm_material czm_getMaterial(czm_materialInput materialInput) {
+            czm_material material = czm_getDefaultMaterial(materialInput);
+            material.diffuse = vec3(0.0,1.0,0.0);
+            return material;
+          }
+        `
+      }
+    });
 
     const rectGeometry = new Cesium.RectangleGeometry({
       rectangle:Cesium.Rectangle.fromDegrees(115, 20, 135, 30),
-      extrudedHeight:1000,
+      extrudedHeight:10000,
       vertexFormat:Cesium.EllipsoidSurfaceAppearance.VERTEX_FORMAT
     });
 
     const instance = new Cesium.GeometryInstance({
       id:'rectGeometry',
-      geometry:rectGeometry,
-    });
-
-    const material = Cesium.Material.fromType('Water',{
-      color:Cesium.Color.AQUA.withAlpha(0.8),
-      distance:0.25,
-      normalMap:'/waterNormals.jpg'
+      geometry:rectGeometry
     });
 
     const appearance = new Cesium.EllipsoidSurfaceAppearance({
@@ -117,6 +140,8 @@ export default function IndexPage() {
     });
 
     viewer.scene.primitives.add(primitive);
+
+
   
 
     // // 添加交互

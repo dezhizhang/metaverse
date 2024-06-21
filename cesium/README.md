@@ -706,3 +706,41 @@ const primitive = new Cesium.Primitive({
 viewer.scene.primitives.add(primitive);
 
 ```
+### 自定义着色器
+```ts
+// 自定义着色器
+const material = new Cesium.Material({
+  fabric:{
+    uniforms:{},
+    source:`
+      czm_material czm_getMaterial(czm_materialInput materialInput) {
+        czm_material material = czm_getDefaultMaterial(materialInput);
+        material.diffuse = vec3(0.0,1.0,0.0);
+        return material;
+      }
+      `
+  }
+});
+
+const rectGeometry = new Cesium.RectangleGeometry({
+  rectangle:Cesium.Rectangle.fromDegrees(115, 20, 135, 30),
+  extrudedHeight:10000,
+    vertexFormat:Cesium.EllipsoidSurfaceAppearance.VERTEX_FORMAT
+});
+
+const instance = new Cesium.GeometryInstance({
+  id:'rectGeometry',
+  geometry:rectGeometry
+});
+
+const appearance = new Cesium.EllipsoidSurfaceAppearance({
+  material
+});
+
+const primitive = new Cesium.Primitive({
+  geometryInstances:instance,
+  appearance
+});
+
+viewer.scene.primitives.add(primitive);
+```
