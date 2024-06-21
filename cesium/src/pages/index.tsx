@@ -88,14 +88,28 @@ export default function IndexPage() {
 
     const url = `https://geo.datav.aliyun.com/areas_v3/bound/geojson?code=100000_full`;
     
+  
     const jsonData = await Cesium.GeoJsonDataSource.load(url,{
-      fill:Cesium.Color.PINK,
+      fill:Cesium.Color.BLUE,
       stroke:Cesium.Color.YELLOW,
       strokeWidth:10,
-    
     });
 
+    const entities = jsonData.entities.values;
+
+    entities.forEach((entity:any) => {
+      entity.polygon.material = new Cesium.ColorMaterialProperty(
+        Cesium.Color.fromRandom({
+          alpha:0.9,
+        })
+      ),
+      entity.polygon.extrudedHeight =  (Math.random() * 5) * 100000;
+    })
+
     viewer.dataSources.add(jsonData);
+
+
+
 
 
  
