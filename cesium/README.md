@@ -895,3 +895,15 @@ entities.forEach((entity:any) => {
 viewer.dataSources.add(jsonData);
 
 ```
+### kml数据的加载
+```ts
+// 加载kml数据
+const promise = await Cesium.KmlDataSource.load('/facilities1.kml',{
+   // camera:Cesium.Camera,
+  camera: viewer.scene.camera,
+  canvas:viewer.scene.canvas,
+  // screenOverlayContainer: viewer.container,
+});
+
+viewer.dataSources.add(promise);
+```
