@@ -744,3 +744,52 @@ const primitive = new Cesium.Primitive({
 
 viewer.scene.primitives.add(primitive);
 ```
+
+### 自定义着色器并添加动画
+```ts
+const material = new Cesium.Material({
+      fabric:{
+        uniforms:{
+          uTime:0.0,
+        },
+        source:`
+          czm_material czm_getMaterial(czm_materialInput materialInput) {
+            czm_material material = czm_getDefaultMaterial(materialInput);
+            float strength = mod((materialInput.s + uTime) * 10.0,1.0);
+            material.diffuse = vec3(strength,0.0,0.0);
+            return material;
+          }
+        `
+      }
+});
+
+  gsap.to(material.uniforms,{
+    uTime:1,
+    duration:2,
+    repeat:-1,
+    ease:'linear',
+  });
+
+    
+const rectGeometry = new Cesium.RectangleGeometry({
+  rectangle:Cesium.Rectangle.fromDegrees(115, 20, 135, 30),
+  extrudedHeight:10000,
+  vertexFormat:Cesium.EllipsoidSurfaceAppearance.VERTEX_FORMAT
+});
+
+const instance = new Cesium.GeometryInstance({
+  id:'rectGeometry',
+  geometry:rectGeometry
+});
+
+let appearance = new Cesium.EllipsoidSurfaceAppearance({
+  material
+});
+
+const primitive = new Cesium.Primitive({
+  geometryInstances:instance,
+  appearance
+});
+
+viewer.scene.primitives.add(primitive);
+```
