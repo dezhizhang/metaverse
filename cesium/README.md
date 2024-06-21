@@ -860,3 +860,14 @@ const redline = viewer.entities.add({
 });
 viewer.zoomTo(redline);
 ```
+### 加载geoJson数据
+```ts
+const url = `https://geo.datav.aliyun.com/areas_v3/bound/geojson?code=100000_full`; 
+const jsonData = await Cesium.GeoJsonDataSource.load(url,{
+  fill:Cesium.Color.PINK,
+  stroke:Cesium.Color.YELLOW,
+  strokeWidth:10,
+});
+
+viewer.dataSources.add(jsonData);
+```

@@ -86,48 +86,23 @@ export default function IndexPage() {
       }),
     });
 
-    class CustomMaterialPropery {
-      definitionChanged: any;
-      constructor() {
-        this.definitionChanged = new Cesium.Event();
-        (Cesium.Material as any)._materialCache.addMaterial(
-          'CustomMaterialPropery',
-          {
-            fabric: {
-              type: 'CustomMaterialPropery',
-              uniforms: {},
-
-              source: `
-              czm_material czm_getMaterial(czm_materialInput materialInput) {
-                czm_material material = czm_getDefaultMaterial(materialInput);
-                material.diffuse = vec3(materialInput.st,1.0);
-                return material;
-              }
-            `,
-            },
-          },
-        );
-      }
-      // 获取材质类型
-      getType() {
-        return 'CustomMaterialPropery';
-      }
-      getValue(time: number, result: any) {
-        return result;
-      }
-    }
-
-    const material:any= new CustomMaterialPropery();
-
-    const redline = viewer.entities.add({
-      polyline: {
-        positions: Cesium.Cartesian3.fromDegreesArray([-75, 35, -125, 35]),
-        width: 5,
-        material,
-        // material: material as any,
-      },
+    const url = `https://geo.datav.aliyun.com/areas_v3/bound/geojson?code=100000_full`;
+    
+    const jsonData = await Cesium.GeoJsonDataSource.load(url,{
+      fill:Cesium.Color.PINK,
+      stroke:Cesium.Color.YELLOW,
+      strokeWidth:10,
+    
     });
-    viewer.zoomTo(redline);
+
+    viewer.dataSources.add(jsonData);
+
+
+ 
+
+
+
+
 
     // // 添加交互
     // const handler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
