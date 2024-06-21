@@ -793,3 +793,49 @@ const primitive = new Cesium.Primitive({
 
 viewer.scene.primitives.add(primitive);
 ```
+
+### appearance上设置着色器
+```ts
+const rectGeometry = new Cesium.RectangleGeometry({
+  rectangle:Cesium.Rectangle.fromDegrees(115,20, 135, 30),
+  extrudedHeight:1000,
+  vertexFormat:Cesium.EllipsoidSurfaceAppearance.VERTEX_FORMAT,
+});
+
+const instance = new Cesium.GeometryInstance({
+  id:'rectGeometry',
+  geometry:rectGeometry,
+});
+
+let appearance: any = new Cesium.EllipsoidSurfaceAppearance({
+  // material
+  fragmentShaderSource:`
+    varying vec3 v_positionMC;
+    varying vec3 v_positionEC;
+    varying vec2 v_st;
+    uniform float uTime;
+    void main() {
+      czm_materialInput materialInput;
+      gl_FragColor = vec4(v_st,uTime,1.0);
+    }
+    `
+});
+
+appearance.uniforms = {
+  uTime:0,
+}
+
+gsap.to(appearance.uniforms,{
+  uTime:1,
+  duration:2,
+  repeat:-1,
+  ease:'linear'
+});
+
+const primitive = new Cesium.Primitive({
+  geometryInstances:instance,
+  appearance
+});
+
+viewer.scene.primitives.add(primitive);
+```

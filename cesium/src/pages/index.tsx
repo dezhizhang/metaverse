@@ -87,43 +87,63 @@ export default function IndexPage() {
     });
 
 
-    const material = new Cesium.Material({
-      fabric:{
-        uniforms:{
-          uTime:0.0,
-        },
-        source:`
-          czm_material czm_getMaterial(czm_materialInput materialInput) {
-            czm_material material = czm_getDefaultMaterial(materialInput);
-            float strength = mod((materialInput.s + uTime) * 10.0,1.0);
-            material.diffuse = vec3(strength,0.0,0.0);
-            return material;
-          }
-        `
-      }
-    });
+    // const material = new Cesium.Material({
+    //   fabric:{
+    //     uniforms:{
+    //       uTime:0.0,
+    //     },
+    //     source:`
+    //       czm_material czm_getMaterial(czm_materialInput materialInput) {
+    //         czm_material material = czm_getDefaultMaterial(materialInput);
+    //         float strength = mod((materialInput.s + uTime) * 10.0,1.0);
+    //         material.diffuse = vec3(strength,0.0,0.0);
+    //         return material;
+    //       }
+    //     `
+    //   }
+    // });
 
-    gsap.to(material.uniforms,{
-      uTime:1,
-      duration:2,
-      repeat:-1,
-      ease:'linear',
-    });
+    // gsap.to(material.uniforms,{
+    //   uTime:1,
+    //   duration:2,
+    //   repeat:-1,
+    //   ease:'linear'
+    // });
 
-    
     const rectGeometry = new Cesium.RectangleGeometry({
-      rectangle:Cesium.Rectangle.fromDegrees(115, 20, 135, 30),
-      extrudedHeight:10000,
-      vertexFormat:Cesium.EllipsoidSurfaceAppearance.VERTEX_FORMAT
+      rectangle:Cesium.Rectangle.fromDegrees(115,20, 135, 30),
+      extrudedHeight:1000,
+      vertexFormat:Cesium.EllipsoidSurfaceAppearance.VERTEX_FORMAT,
     });
 
     const instance = new Cesium.GeometryInstance({
       id:'rectGeometry',
-      geometry:rectGeometry
+      geometry:rectGeometry,
     });
 
-    let appearance = new Cesium.EllipsoidSurfaceAppearance({
-      material
+    let appearance: any = new Cesium.EllipsoidSurfaceAppearance({
+      // material
+      fragmentShaderSource:`
+        varying vec3 v_positionMC;
+        varying vec3 v_positionEC;
+        varying vec2 v_st;
+        uniform float uTime;
+        void main() {
+          czm_materialInput materialInput;
+          gl_FragColor = vec4(v_st,uTime,1.0);
+        }
+      `
+    });
+
+    appearance.uniforms = {
+      uTime:0,
+    }
+
+    gsap.to(appearance.uniforms,{
+      uTime:1,
+      duration:2,
+      repeat:-1,
+      ease:'linear'
     });
 
     const primitive = new Cesium.Primitive({
