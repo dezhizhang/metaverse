@@ -86,75 +86,48 @@ export default function IndexPage() {
       }),
     });
 
+    class CustomMaterialPropery {
+      definitionChanged: any;
+      constructor() {
+        this.definitionChanged = new Cesium.Event();
+        (Cesium.Material as any)._materialCache.addMaterial(
+          'CustomMaterialPropery',
+          {
+            fabric: {
+              type: 'CustomMaterialPropery',
+              uniforms: {},
 
-    // const material = new Cesium.Material({
-    //   fabric:{
-    //     uniforms:{
-    //       uTime:0.0,
-    //     },
-    //     source:`
-    //       czm_material czm_getMaterial(czm_materialInput materialInput) {
-    //         czm_material material = czm_getDefaultMaterial(materialInput);
-    //         float strength = mod((materialInput.s + uTime) * 10.0,1.0);
-    //         material.diffuse = vec3(strength,0.0,0.0);
-    //         return material;
-    //       }
-    //     `
-    //   }
-    // });
-
-    // gsap.to(material.uniforms,{
-    //   uTime:1,
-    //   duration:2,
-    //   repeat:-1,
-    //   ease:'linear'
-    // });
-
-    const rectGeometry = new Cesium.RectangleGeometry({
-      rectangle:Cesium.Rectangle.fromDegrees(115,20, 135, 30),
-      extrudedHeight:1000,
-      vertexFormat:Cesium.EllipsoidSurfaceAppearance.VERTEX_FORMAT,
-    });
-
-    const instance = new Cesium.GeometryInstance({
-      id:'rectGeometry',
-      geometry:rectGeometry,
-    });
-
-    let appearance: any = new Cesium.EllipsoidSurfaceAppearance({
-      // material
-      fragmentShaderSource:`
-        varying vec3 v_positionMC;
-        varying vec3 v_positionEC;
-        varying vec2 v_st;
-        uniform float uTime;
-        void main() {
-          czm_materialInput materialInput;
-          gl_FragColor = vec4(v_st,uTime,1.0);
-        }
-      `
-    });
-
-    appearance.uniforms = {
-      uTime:0,
+              source: `
+              czm_material czm_getMaterial(czm_materialInput materialInput) {
+                czm_material material = czm_getDefaultMaterial(materialInput);
+                material.diffuse = vec3(materialInput.st,1.0);
+                return material;
+              }
+            `,
+            },
+          },
+        );
+      }
+      // 获取材质类型
+      getType() {
+        return 'CustomMaterialPropery';
+      }
+      getValue(time: number, result: any) {
+        return result;
+      }
     }
 
-    gsap.to(appearance.uniforms,{
-      uTime:1,
-      duration:2,
-      repeat:-1,
-      ease:'linear'
+    const material:any= new CustomMaterialPropery();
+
+    const redline = viewer.entities.add({
+      polyline: {
+        positions: Cesium.Cartesian3.fromDegreesArray([-75, 35, -125, 35]),
+        width: 5,
+        material,
+        // material: material as any,
+      },
     });
-
-    const primitive = new Cesium.Primitive({
-      geometryInstances:instance,
-      appearance
-    });
-
-    viewer.scene.primitives.add(primitive);
-
-
-  
+    viewer.zoomTo(redline);
 
     // // 添加交互
     // const handler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);

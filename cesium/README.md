@@ -169,30 +169,6 @@ const styleArr = [
 tilset.style = new Cesium.Cesium3DTileStyle(styleArr[0]);
 ```
 
-###  
-```ts
-  // 光照效果
-    viewer.scene.globe.enableLighting = true;
-
-    // 雾
-    // viewer.scene.fog.enabled = true;
-    // viewer.scene.fog.minimumBrightness = 0.1;
-    // viewer.scene.fog.density = 0.03;
-
-
-    // viewer.scene.globe.showGroundAtmosphere = true;
-    // viewer.scene.globe.lightingFadeInDistance = 10;
-    
-    
-    // 天空大气效果
-    // viewer.scene.skyAtmosphere.show = true;
-    // viewer.scene.skyAtmosphere.brightnessShift = 20;
-
-    // HDR效果
-    viewer.scene.highDynamicRange = true;
-
-```
-
 ### 光照效果
 ```ts
 const bloom = viewer.scene.postProcessStages.bloom;
@@ -838,4 +814,49 @@ const primitive = new Cesium.Primitive({
 });
 
 viewer.scene.primitives.add(primitive);
+```
+### 自定义材质
+```ts
+class CustomMaterialPropery {
+  definitionChanged: any;
+    constructor() {
+      this.definitionChanged = new Cesium.Event();
+      (Cesium.Material as any)._materialCache.addMaterial(
+        'CustomMaterialPropery',
+        {
+          fabric: {
+            type: 'CustomMaterialPropery',
+            uniforms: {},
+
+            source: `
+              czm_material czm_getMaterial(czm_materialInput materialInput) {
+                czm_material material = czm_getDefaultMaterial(materialInput);
+                material.diffuse = vec3(materialInput.st,1.0);
+                return material;
+              }
+            `,
+            },
+          },
+    );
+}
+// 获取材质类型
+getType() {
+  return 'CustomMaterialPropery';
+}
+getValue(time: number, result: any) {
+  return result;
+  }
+}
+
+const material:any= new CustomMaterialPropery();
+
+const redline = viewer.entities.add({
+  polyline: {
+    positions: Cesium.Cartesian3.fromDegreesArray([-75, 35, -125, 35]),
+    width: 5,
+    material,
+        // material: material as any,
+  },
+});
+viewer.zoomTo(redline);
 ```
