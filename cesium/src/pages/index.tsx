@@ -70,6 +70,7 @@ export default function IndexPage() {
       //   }
       // }),
 
+
       // 添加高德地图
       // imageryProvider: new Cesium.UrlTemplateImageryProvider({
       //   url:'http://webrd02.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=18&x={x}&y={y}&z={z}',
@@ -78,44 +79,33 @@ export default function IndexPage() {
       //   format:'image/png',
       //   tileMatrixSetID:'GoogleMapsCompatible',
       // }),
-
-      // 设置地形
-      terrainProvider: Cesium.createWorldTerrain({
-        requestVertexNormals: true,
-        requestWaterMask: true,
-      }),
     });
 
-    // const url = `https://geo.datav.aliyun.com/areas_v3/bound/geojson?code=100000_full`;
+      // 添加3d建筑物
+      const tileset = new Cesium.Cesium3DTileset({
+        url:'/tileset.json'
+      });
 
-    // const jsonData = await Cesium.GeoJsonDataSource.load(url,{
-    //   fill:Cesium.Color.YELLOW,
-    //   stroke:Cesium.Color.YELLOW,
-    //   strokeWidth:10,
-    // });
+      tileset.readyPromise.then((tile) => {
+        viewer.zoomTo(tile)
+      })
 
-    // const entities = jsonData.entities.values;
+      viewer.scene.primitives.add(tileset);
 
-    // entities.forEach((entity:any) => {
-    //   entity.polygon.material = new Cesium.ColorMaterialProperty(
-    //     Cesium.Color.fromRandom({
-    //       alpha:0.9
-    //     })
-    //   )
-    // });
-
-    // viewer.dataSources.add(jsonData);
+      // 3d物体调式
+      viewer.extend(Cesium.viewerCesium3DTilesInspectorMixin);
+      
 
 
-    // 加载kml数据
-    const promise = await Cesium.KmlDataSource.load('/facilities1.kml',{
-      // camera:Cesium.Camera,
-      camera: viewer.scene.camera,
-      canvas:viewer.scene.canvas,
-      // screenOverlayContainer: viewer.container,
-    });
+      
 
-    viewer.dataSources.add(promise);
+
+
+
+
+
+
+
 
 
 

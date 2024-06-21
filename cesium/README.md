@@ -907,3 +907,27 @@ const promise = await Cesium.KmlDataSource.load('/facilities1.kml',{
 
 viewer.dataSources.add(promise);
 ```
+### czml数据的加载
+```ts
+const czmlData = await Cesium.CzmlDataSource.load('/ClampToGround.czml');
+viewer.dataSources.add(czmlData);
+
+viewer.zoomTo(czmlData);
+
+```
+### 添加3d建筑物
+```ts
+// 添加3d建筑物
+const tileset = new Cesium.Cesium3DTileset({
+  url:'/tileset.json'
+});
+
+tileset.readyPromise.then((tile) => {
+  viewer.zoomTo(tile)
+})
+
+viewer.scene.primitives.add(tileset);
+
+// 3d物体调式
+viewer.extend(Cesium.viewerCesium3DTilesInspectorMixin);
+```
