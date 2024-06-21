@@ -1,5 +1,5 @@
 
-# cesium 
+# cesium 基础教程
 
 ### tiles3d 模型数据加载
 ```ts
@@ -931,3 +931,7 @@ viewer.scene.primitives.add(tileset);
 // 3d物体调式
 viewer.extend(Cesium.viewerCesium3DTilesInspectorMixin);
 ```
+
+[源码地址](https://github.com/dezhizhang/metaverse/tree/main/cesium)  
+[晓智科技](https://xiaozhi.shop/)     
+[晓智文档](https://doc.xiaozhi.shop/)

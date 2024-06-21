@@ -35,7 +35,7 @@ export default function IndexPage() {
 
     const viewer = new Cesium.Viewer('container', {
       // 是否显示信息框
-      infoBox: false,
+      infoBox: true,
       // 是否显示查询按钮
       geocoder: false,
       // 是否显示home
@@ -81,20 +81,31 @@ export default function IndexPage() {
       // }),
     });
 
-      // 添加3d建筑物
-      const tileset = new Cesium.Cesium3DTileset({
-        url:'/tileset.json'
-      });
+    let tiles3d = Cesium.createOsmBuildings();
 
-      tileset.readyPromise.then((tile) => {
-        viewer.zoomTo(tile)
-      })
+    const osmBuildings = viewer.scene.primitives.add(tiles3d);
 
-      viewer.scene.primitives.add(tileset);
+    viewer.camera.flyTo({
+      destination:Cesium.Cartesian3.fromDegrees(113.3191,23.109,1000),
+      duration:2,
+    });
 
-      // 3d物体调式
-      viewer.extend(Cesium.viewerCesium3DTilesInspectorMixin);
+    tiles3d.style = new Cesium.Cesium3DTileStyle({
+      show:true,
       
+      color:{
+        conditions:[
+          ["${feature['cesium#estimatedHeight']} > 500","color(red)"],
+      
+          // ["${feature['name']} === '广州塔'","color('yellow')"]
+        ]
+      }
+    })
+
+
+  
+
+
 
 
       
