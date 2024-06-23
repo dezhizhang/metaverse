@@ -14,7 +14,7 @@ class Vector3 {
   }
 }
 
-const vector3 = new Vector3(3,4,5);
+const vector3 = new Vector3(5,-4,7);
 
 
 console.log(vector3.model())
