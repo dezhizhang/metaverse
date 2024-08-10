@@ -19,15 +19,16 @@ async function init() {
     0.0, 1.0, 0.0,
   ]);
 
-  // const matArray = glMatrix.mat4.create();
-  // glMatrix.mat4.scale(matArray,matArray,[0.1,0.1,1.0]);
 
+  const matArray = glMatrix.mat4.create();
+  glMatrix.mat4.scale(matArray,matArray,[0.1,0.1,1.0]);
 
-  // const scaleBuffer = device.createBuffer({
-  //   size:matArray.byteLength,
-  //   usage:GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
-  // });
-  // device.queue.writeBuffer(scaleBuffer,0,matArray);
+  const scaleBuffer = device.createBuffer({
+    size:matArray.byteLength,
+    usage:GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
+  });
+  device.queue.writeBuffer(scaleBuffer,0,matArray);
+
 
  
   const vertexBuffer = device.createBuffer({
@@ -83,8 +84,7 @@ async function init() {
         resource:{buffer:scaleBuffer}
       }
     ]
-  })
-
+  });
 
   const commandEncoder = device.createCommandEncoder();
   // 创建渲染通道
@@ -95,10 +95,10 @@ async function init() {
         storeOp:'store',
         loadOp:'clear',
         clearValue:{
-          r:0.0,
-          g:0.0,
-          b:0.0,
-          a:1.0,
+          r:0,
+          g:0,
+          b:0,
+          a:1
         }
       }
     ]
@@ -115,9 +115,6 @@ async function init() {
   // 创建命令缓冲区
   const commandBuffer = commandEncoder.finish();
   device.queue.submit([commandBuffer]);
-
-
-
 
 }
 
