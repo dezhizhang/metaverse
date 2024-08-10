@@ -14,65 +14,77 @@ async function init() {
   const ctx = canvas.getContext("webgpu");
 
   const vertexArray = new Float32Array([
-    0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0,
-    // 三角形2对应的xyz值
-    -0.5, -0.5, 0.0, -0.1, -0.5, 0.0, -0.5, -1.0, 0.0,
+    0.0, 0.0, 0.0, 
+    1.0,0.0, 0.0,
+    0.0, 1.0, 0.0,
   ]);
 
-  // const mat4T = glMatrix.mat4.fromValues(1,0,0,0, 0,1,0,0,0,0,1,0,1,2,3,1);
-  // console.log('mat4',mat4T);
-
-  // 单位矩阵
-  const mat4 = glMatrix.mat4.create();
-  console.log('mat4',mat4);
-  
+  // const matArray = glMatrix.mat4.create();
+  // glMatrix.mat4.scale(matArray,matArray,[0.1,0.1,1.0]);
 
 
+  // const scaleBuffer = device.createBuffer({
+  //   size:matArray.byteLength,
+  //   usage:GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
+  // });
+  // device.queue.writeBuffer(scaleBuffer,0,matArray);
+
+ 
   const vertexBuffer = device.createBuffer({
-    // 缓冲区的长度
+    // 绘冲区长度
     size: vertexArray.byteLength,
     usage: GPUBufferUsage.VERTEX | GPUBufferUsage.COPY_DST,
   });
-
-  device.queue.writeBuffer(vertexBuffer, 0, vertexArray);
+  device.queue.writeBuffer(vertexBuffer,0,vertexArray);
 
   ctx.configure({
     device,
     format,
   });
 
-  // 创建渲染管线
+  // 创建渲染管理
   const pipeline = device.createRenderPipeline({
-    layout: "auto",
-    vertex: {
-      module: device.createShaderModule({ code: vertex }),
-      entryPoint: "main",
-      buffers: [
+    layout:'auto',
+    vertex:{
+      module:device.createShaderModule({code:vertex}),
+      entryPoint:'main',
+      buffers:[
         {
           arrayStride: 3 * 4,
-          attributes: [
+          attributes:[
             {
-              shaderLocation: 0,
-              format: "float32x3",
-              offset: 0,
-            },
-          ],
-        },
-      ],
+              shaderLocation:0,
+              format:'float32x3',
+              offset:0,
+            }
+          ]
+        }
+      ]
     },
-    fragment: {
-      module: device.createShaderModule({ code: fragment }),
-      targets: [
+    fragment:{
+      module:device.createShaderModule({code:fragment}),
+      targets:[
         {
-          format,
-        },
-      ],
+          format
+        }
+      ]
     },
-    // 图元装配
-    primitive: {
-      topology: "triangle-list",
-    },
-  });
+    primitive:{
+      topology:'triangle-list'
+    }
+  })
+
+  // 设置uniform数据的绑定组
+  const bindGroup = device.createBindGroup({
+    layout:pipeline.getBindGroupLayout(0),
+    entries:[
+      {
+        binding:0,
+        resource:{buffer:scaleBuffer}
+      }
+    ]
+  })
+
 
   const commandEncoder = device.createCommandEncoder();
   // 创建渲染通道
@@ -83,9 +95,9 @@ async function init() {
         storeOp:'store',
         loadOp:'clear',
         clearValue:{
-          r:0.5,
-          g:0.5,
-          b:0.5,
+          r:0.0,
+          g:0.0,
+          b:0.0,
           a:1.0,
         }
       }
@@ -95,8 +107,9 @@ async function init() {
   // 设置渲染管线
   renderPass.setPipeline(pipeline);
   renderPass.setVertexBuffer(0,vertexBuffer);
+  renderPass.setBindGroup(0,bindGroup);
 
-  renderPass.draw(6);
+  renderPass.draw(3);
   renderPass.end();
 
   // 创建命令缓冲区
