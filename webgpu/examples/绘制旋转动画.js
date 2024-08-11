@@ -132,7 +132,6 @@ async function init() {
 
   }
 
-  
   render();
 }
 
