@@ -87,34 +87,36 @@ async function init() {
     }
   });
 
-  // 创建命令编码器
+  
   const commandEncoder = device.createCommandEncoder();
   // 创建渲染通道
   const renderPass = commandEncoder.beginRenderPass({
-    colorAttachments: [
+    colorAttachments:[
       {
-        view: ctx.getCurrentTexture().createView(),
-        storeOp: "store",
-        loadOp: "clear",
-        clearValue: {
-          r: 0,
-          g: 0,
-          b: 0,
-          a: 1,
-        },
-      },
-    ],
+        view:ctx.getCurrentTexture().createView(),
+        storeOp:'store',
+        loadOp:'clear',
+        clearValue:{
+          r:0,
+          g:0,
+          b:0,
+          a:1,
+        }
+      }
+    ]
   });
 
   renderPass.setPipeline(pipeline);
-  renderPass.setVertexBuffer(0, vertexBuffer);
-  renderPass.setVertexBuffer(1, colorBuffer);
+  renderPass.setVertexBuffer(0,vertexBuffer);
+  renderPass.setVertexBuffer(1,colorBuffer);
   renderPass.draw(3);
   renderPass.end();
 
   // 创建命令缓冲区
   const commandBuffer = commandEncoder.finish();
   device.queue.submit([commandBuffer]);
+
+
 }
 
 init();
