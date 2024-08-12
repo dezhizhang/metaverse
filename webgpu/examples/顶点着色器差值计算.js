@@ -1,4 +1,26 @@
-import { vertex, fragment } from "./shader";
+const vertex = /*wgsl*/ `
+
+struct Out{
+    @builtin(position) position:vec4<f32>,
+    @location(0) vPosition:vec3<f32>
+}
+@vertex
+fn main(@location(0) pos:vec3<f32>) -> Out {
+    var out:Out;
+    out.position = vec4<f32>(pos,1.0);
+    // 插值计算生成每个片元对应的xyz坐标
+    out.vPosition = pos;
+    return out;
+}
+`
+
+
+const fragment = /*wgsl*/`
+@fragment
+fn main(@location(0) vPosition:vec3<f32>) -> @location(0) vec4<f32>{
+    return vec4<f32>(vPosition.x,1.0 - vPosition.x,0.0,1.0);
+}
+`
 
 async function init() {
   const canvas = document.createElement("canvas");
@@ -6,17 +28,17 @@ async function init() {
   canvas.height = 500;
   document.body.append(canvas);
 
-  
   const adapter = await navigator.gpu.requestAdapter();
   const device = await adapter.requestDevice();
-  const ctx = canvas.getContext('webgpu');
+
+  const ctx = canvas.getContext("webgpu");
 
   const format = navigator.gpu.getPreferredCanvasFormat();
 
-  // 设置gup配置对像
+  // 设置gup设置对像
   ctx.configure({
     device,
-    format
+    format, //颜色格式
   });
 
   // 创建顶点缓冲区数据
@@ -26,16 +48,15 @@ async function init() {
     0.0, 1.0, 0.0,
   ]);
 
-  // 创建顶点缓冲区
   const vertexBuffer = device.createBuffer({
     // 缓冲区的长度
-    size:vertexArray.byteLength,
-    usage:GPUBufferUsage.VERTEX | GPUBufferUsage.COPY_DST,
+    size: vertexArray.byteLength,
+    // 缓冲区顶点
+    usage: GPUBufferUsage.VERTEX | GPUBufferUsage.COPY_DST,
   });
 
   // 顶点数据写入到缓冲区
-  device.queue.writeBuffer(vertexBuffer,0,vertexArray);
-
+  device.queue.writeBuffer(vertexBuffer, 0, vertexArray);
 
   // 创建渲染管线
   const pipeline = device.createRenderPipeline({
