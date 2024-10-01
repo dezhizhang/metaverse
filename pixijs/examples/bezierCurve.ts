@@ -1,13 +1,12 @@
 /*
  * :file description: 
- * :name: /pixijs/src/main.ts
- * :author: 张德志
- * :copyright: (c) 2023, Tungee
- * :date created: 2023-07-09 20:13:22
+ * :name: /pixijs/examples/.bezierCurve.ts
+ * :author:张德志
+ * :copyright: (c) 2024, Xiaozhi
+ * :date created: 2024-10-01 23:05:40
  * :last editor: 张德志
- * :date last edited: 2024-10-01 23:09:08
+ * :date last edited: 2024-10-01 23:05:47
  */
-
 import * as PIXI from 'pixi.js';
 
 const app = new PIXI.Application({
@@ -18,14 +17,10 @@ const app = new PIXI.Application({
 });
 
 const graphics = new PIXI.Graphics();
-graphics.beginFill(0x0000ff,0.5);
-graphics.drawRect(150, 150, 100, 100);
-graphics.endFill();
+graphics.lineStyle(2,0xff00ff);
+graphics.moveTo(400, 200);
+graphics.bezierCurveTo(450, 100, 500, 300, 600, 200);
 graphics.position.set(100,100);
 app.stage.addChild(graphics);
 
 document.body.appendChild(app.view as any);
-
-
-
-

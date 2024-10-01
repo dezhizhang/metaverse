@@ -1,31 +1,28 @@
 /*
  * :file description: 
- * :name: /pixijs/src/main.ts
- * :author: 张德志
- * :copyright: (c) 2023, Tungee
- * :date created: 2023-07-09 20:13:22
+ * :name: /pixijs/examples/rect.ts
+ * :author:张德志
+ * :copyright: (c) 2024, Xiaozhi
+ * :date created: 2024-10-01 22:07:29
  * :last editor: 张德志
- * :date last edited: 2024-10-01 23:09:08
+ * :date last edited: 2024-10-01 22:07:29
  */
-
 import * as PIXI from 'pixi.js';
 
 const app = new PIXI.Application({
     width: window.innerWidth,
     height: window.innerHeight,
-    background:0x1099bb,
-    resolution: window.devicePixelRatio || 1,
+    background: 0x1099bb,
+    resolution: window.devicePixelRatio || 1
 });
 
+
 const graphics = new PIXI.Graphics();
-graphics.beginFill(0x0000ff,0.5);
-graphics.drawRect(150, 150, 100, 100);
+graphics.beginFill(0xff0000);
+graphics.drawRect(50,50,100,100);
 graphics.endFill();
 graphics.position.set(100,100);
 app.stage.addChild(graphics);
 
 document.body.appendChild(app.view as any);
-
-
-
 
