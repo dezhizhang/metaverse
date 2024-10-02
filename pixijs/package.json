@@ -9,10 +9,14 @@
     "preview": "vite preview"
   },
   "devDependencies": {
+    "@types/matter-js": "^0.19.7",
     "typescript": "^5.0.2",
     "vite": "^4.4.0"
   },
   "dependencies": {
+    "@pixi/particle-emitter": "^5.0.8",
+    "@pixi/particles": "^6.1.0",
+    "matter-js": "^0.20.0",
     "pixi.js": "^7.2.4"
   }
 }
