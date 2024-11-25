@@ -1,11 +1,11 @@
 /*
  * :file description: 
- * :name: /physics/src/index.js
+ * :name: /physics/examples/自由落体.js
  * :author:张德志
  * :copyright: (c) 2024, Xiaozhi
- * :date created: 2024-11-26 05:55:59
+ * :date created: 2024-11-26 06:42:07
  * :last editor: 张德志
- * :date last edited: 2024-11-26 06:48:06
+ * :date last edited: 2024-11-26 06:42:07
  */
 import * as THREE from 'three';
 import {
@@ -39,16 +39,6 @@ const sphereBody = new CANNON.Body({
 
 world.addBody(sphereBody);
 
-// 创建一个物理平面
-const planeShape = new CANNON.Plane();
-const planeBody = new CANNON.Body({
-    mass:0,
-    shape:planeShape,
-    position:new CANNON.Vec3(0,0,0)
-});
-world.addBody(planeBody);
-
-
 
 
 const sphereGeometry = new THREE.SphereGeometry(0.5, 32, 32);
@@ -61,14 +51,6 @@ scene.add(sphereMesh);
 
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
-
-// 创建一个平面
-const planeGeometry = new THREE.PlaneGeometry(10,10);
-const planeMaterial = new THREE.MeshBasicMaterial({
-    color:0xffff00
-});
-const planeMesh = new THREE.Mesh(planeGeometry,planeMaterial);
-scene.add(planeMesh);
 
 
 const axesHelper = new THREE.AxesHelper(10);
