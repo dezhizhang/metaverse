@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Xiaozhi
  * :date created: 2024-11-26 05:55:59
  * :last editor: 张德志
- * :date last edited: 2024-11-27 06:31:25
+ * :date last edited: 2024-11-27 06:51:45
  */
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
@@ -38,6 +38,8 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 
 const boxShape = new CANNON.Box(new CANNON.Vec3(0.5,0.5,0.5));
 const boxMaterial = new CANNON.Material('boxMaterial');
+boxMaterial.friction = 0.1;
+
 
 const boxBody = new CANNON.Body({
   shape:boxShape,
@@ -64,6 +66,32 @@ const boxBody3 = new CANNON.Body({
 
 world.addBody(boxBody3);
 phyMeshes.push(boxBody3);
+
+
+// 创建物理球
+const sphereShape = new CANNON.Sphere(0.5);
+// 创建一个刚体
+const sphereBody = new CANNON.Body({
+  shape: sphereShape,
+  position: new CANNON.Vec3(0,10,0),
+  mass:1,
+  material:boxMaterial,
+});
+
+world.addBody(sphereBody);
+phyMeshes.push(sphereBody);
+
+// 创建球的几何体
+const sphereGeometry = new THREE.SphereGeometry(0.5,32,32);
+// 创建球材质
+const sphereMaterial = new THREE.MeshBasicMaterial({
+  color:0x0000ff
+});
+const sphereMesh = new THREE.Mesh(sphereGeometry,sphereMaterial);
+scene.add(sphereMesh);
+meshes.push(sphereMesh);
+
+
 
 
 
@@ -117,11 +145,6 @@ function render() {
   const delta = clock.getDelta();
   world.step(1 / 60, delta);
 
-  // // 更新位置和旋转
-  // for(let i=0;i < phyMeshes.length;i++) {
-  //   meshes[i].position.copy(phyMeshes[i].position);
-  //   meshes[i].quaternion.copy(phyMeshes[i].quaternion);
-  // }
 
   controls.update();
 
