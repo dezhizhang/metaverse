@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Xiaozhi
  * :date created: 2024-11-26 05:55:59
  * :last editor: 张德志
- * :date last edited: 2024-11-27 06:18:25
+ * :date last edited: 2024-11-27 06:31:25
  */
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
@@ -48,6 +48,23 @@ const boxBody = new CANNON.Body({
 
 world.addBody(boxBody);
 phyMeshes.push(boxBody);
+
+// 创建第三个立方体
+const boxBouncyMaterial = new CANNON.Material('boxBouncyMaterial');
+boxBouncyMaterial.friction = 0.1;
+boxBouncyMaterial.restitution = 1;
+
+// 创建物理几何体
+const boxBody3 = new CANNON.Body({
+  shape:boxShape,
+  position:new CANNON.Vec3(2,5,0),
+  mass:1,
+  material:boxBouncyMaterial,
+});
+
+world.addBody(boxBody3);
+phyMeshes.push(boxBody3);
+
 
 
 
@@ -100,11 +117,11 @@ function render() {
   const delta = clock.getDelta();
   world.step(1 / 60, delta);
 
-  // 更新位置和旋转
-  for(let i=0;i < phyMeshes.length;i++) {
-    meshes[i].position.copy(phyMeshes[i].position);
-    meshes[i].quaternion.copy(phyMeshes[i].quaternion);
-  }
+  // // 更新位置和旋转
+  // for(let i=0;i < phyMeshes.length;i++) {
+  //   meshes[i].position.copy(phyMeshes[i].position);
+  //   meshes[i].quaternion.copy(phyMeshes[i].quaternion);
+  // }
 
   controls.update();
 
