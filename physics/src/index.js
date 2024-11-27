@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Xiaozhi
  * :date created: 2024-11-26 05:55:59
  * :last editor: 张德志
- * :date last edited: 2024-11-28 07:05:50
+ * :date last edited: 2024-11-28 07:15:38
  */
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
@@ -17,7 +17,7 @@ let meshes = [];
 
 // 初始化物理世界
 const world = new CANNON.World();
-world.gravity.set(0, -9.82, 0);
+// world.gravity.set(0, -9.82, 0);
 
 
 const scene = new THREE.Scene();
@@ -40,6 +40,10 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
+
+// 设置物理立方体材质
+const boxMaterialCon = new CANNON.Material('boxMaterial');
+boxMaterialCon.friction = 0;
 
 
 
@@ -106,7 +110,18 @@ const planeMaterial = new THREE.MeshBasicMaterial({
 const planeMesh = new THREE.Mesh(planeGeometry,planeMaterial);
 scene.add(planeMesh);
 
-// 创建园柱体
+// 创建圆柱体
+const cylinderGeometry = new THREE.CylinderGeometry(0.5,0.5,1,32);
+const cylinderMaterial = new THREE.MeshBasicMaterial({
+  color:0xff0000
+});
+const cylinderMesh = new THREE.Mesh(cylinderGeometry,cylinderMaterial);
+scene.add(cylinderMesh);
+meshes.push(cylinderMesh);
+
+boxBody.velocity.set(2,0,0);
+
+
 
 
 
@@ -131,6 +146,13 @@ function render() {
   //   meshes[i].quaternion.copy(phyMeshes[i].quaternion);
   // }
 
+  for(let i=0;i < phyMeshes.length;i++) {
+    meshes[i].position.copy(phyMeshes[i].position);
+  }
+
+  console.log('phyMeshes',phyMeshes);
+  console.log('meshes',meshes);
+  
 
   controls.update();
 
