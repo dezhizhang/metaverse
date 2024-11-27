@@ -5,29 +5,32 @@
  * :copyright: (c) 2024, Xiaozhi
  * :date created: 2024-11-26 05:55:59
  * :last editor: 张德志
- * :date last edited: 2024-11-27 06:51:45
+ * :date last edited: 2024-11-28 07:05:50
  */
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import * as CANNON from "cannon-es";
 
-// 初始化物理世界
-const world = new CANNON.World();
-world.gravity.set(0, -9.82, 0);
 
 let phyMeshes = [];
 let meshes = [];
+
+// 初始化物理世界
+const world = new CANNON.World();
+world.gravity.set(0, -9.82, 0);
 
 
 const scene = new THREE.Scene();
 
 const camera = new THREE.PerspectiveCamera(
-  45,
+  75,
   window.innerWidth / window.innerHeight,
   0.1,
   1000
 );
-camera.position.z = 3;
+
+camera.position.set(0.14,2.13,6.795)
+
 
 const renderer = new THREE.WebGLRenderer({
   antialias: true,
@@ -35,55 +38,46 @@ const renderer = new THREE.WebGLRenderer({
 renderer.setSize(window.innerWidth, window.innerHeight);
 
 
-
-const boxShape = new CANNON.Box(new CANNON.Vec3(0.5,0.5,0.5));
-const boxMaterial = new CANNON.Material('boxMaterial');
-boxMaterial.friction = 0.1;
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true;
 
 
-const boxBody = new CANNON.Body({
-  shape:boxShape,
-  position: new CANNON.Vec3(0,5,0),
-  mass:1,
-  Material:boxMaterial
+
+// 创建一个立方体
+const boxGeometry = new THREE.BoxGeometry(1,1,1);
+const boxMaterial = new THREE.MeshBasicMaterial({
+  color:0x00ff00
 });
+const boxMesh = new THREE.Mesh(boxGeometry,boxMaterial);
+scene.add(boxMesh);
 
-world.addBody(boxBody);
-phyMeshes.push(boxBody);
-
-// 创建第三个立方体
-const boxBouncyMaterial = new CANNON.Material('boxBouncyMaterial');
-boxBouncyMaterial.friction = 0.1;
-boxBouncyMaterial.restitution = 1;
-
-// 创建物理几何体
-const boxBody3 = new CANNON.Body({
-  shape:boxShape,
-  position:new CANNON.Vec3(2,5,0),
-  mass:1,
-  material:boxBouncyMaterial,
-});
-
-world.addBody(boxBody3);
-phyMeshes.push(boxBody3);
-
-
-// 创建物理球
+// 创建一个物理球
 const sphereShape = new CANNON.Sphere(0.5);
 // 创建一个刚体
 const sphereBody = new CANNON.Body({
-  shape: sphereShape,
-  position: new CANNON.Vec3(0,10,0),
+  shape:sphereShape,
+  position:new CANNON.Vec3(0,10,0),
   mass:1,
-  material:boxMaterial,
+  material:boxMaterial
 });
-
 world.addBody(sphereBody);
-phyMeshes.push(sphereBody);
 
-// 创建球的几何体
+// 创建物理几何体
+const boxShape = new CANNON.Box(new CANNON.Vec3(0.5,0.5,0.5));
+
+const boxBody = new CANNON.Body({
+  shape:boxShape,
+  position: new CANNON.Vec3(-2,0.5,0),
+  mass:1,
+  material: boxMaterial,
+});
+world.addBody(boxBody);
+phyMeshes.push(boxBody);
+
+
+
+// 创建几何体球
 const sphereGeometry = new THREE.SphereGeometry(0.5,32,32);
-// 创建球材质
 const sphereMaterial = new THREE.MeshBasicMaterial({
   color:0x0000ff
 });
@@ -92,49 +86,35 @@ scene.add(sphereMesh);
 meshes.push(sphereMesh);
 
 
-
-
-
-
-
-// 创建立方体几何体
-const boxGeometry = new THREE.BoxGeometry(1,1,1);
-const boxMaterial1 = new THREE.MeshBasicMaterial({
-  color:0x00ff00
+// 创建物理圆柱体
+const cylinderShape = new CANNON.Cylinder(0.5,0.5,1,32);
+const cylinderBody = new CANNON.Body({
+  shape:cylinderShape,
+  position:new CANNON.Vec3(0,0.5,0),
+  mass:1,
+  material:boxMaterial
 });
-const boxMesh = new THREE.Mesh(boxGeometry,boxMaterial1);
-scene.add(boxMesh);
-
-meshes.push(boxMesh);
-
-// 创建一个物理平面
-// const planeShape = new CANNON.Plane();
-const planeShape = new CANNON.Box(new CANNON.Vec3(5,0.1,5));
-
-const planeBody = new CANNON.Body({
-  mass: 0,
-  shape: planeShape,
-  position: new CANNON.Vec3(0, 0, 0),
-  type: CANNON.Body.STATIC,
-});
-planeBody.quaternion.setFromAxisAngle(new CANNON.Vec3(1,0,0),0.1);
-
-
-world.addBody(planeBody);
-
-
-const controls = new OrbitControls(camera, renderer.domElement);
-controls.enableDamping = true;
+world.addBody(cylinderBody);
+phyMeshes.push(cylinderBody);
 
 // 创建一个平面
-// const planeGeometry = new THREE.PlaneGeometry(10, 10);
 const planeGeometry = new THREE.BoxGeometry(10,0.2,10);
+// 创建一个平面材质
 const planeMaterial = new THREE.MeshBasicMaterial({
-  color: 0xffff00,
+  color:0xffff00
 });
-const planeMesh = new THREE.Mesh(planeGeometry, planeMaterial);
-// planeMesh.rotation.x = -Math.PI / 2 + 0.1;
+const planeMesh = new THREE.Mesh(planeGeometry,planeMaterial);
 scene.add(planeMesh);
+
+// 创建园柱体
+
+
+
+window.addEventListener('resize',() => {
+  renderer.setSize(window.innerWidth,window.innerHeight);
+})
+
+
 
 const axesHelper = new THREE.AxesHelper(10);
 scene.add(axesHelper);
@@ -144,6 +124,12 @@ const clock = new THREE.Clock();
 function render() {
   const delta = clock.getDelta();
   world.step(1 / 60, delta);
+  // 更新位置和旋转
+
+  // for(let i=0;i < phyMeshes.length;i++) {
+  //   meshes[i].position.copy(phyMeshes[i.position]);
+  //   meshes[i].quaternion.copy(phyMeshes[i].quaternion);
+  // }
 
 
   controls.update();
