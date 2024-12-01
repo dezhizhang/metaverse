@@ -1,11 +1,11 @@
 /*
- * :file description:
- * :name: /physics/src/index.js
+ * :file description: 
+ * :name: /physics/examples/5.力的控制.js
  * :author:张德志
  * :copyright: (c) 2024, Xiaozhi
- * :date created: 2024-11-26 05:55:59
+ * :date created: 2024-12-02 05:07:34
  * :last editor: 张德志
- * :date last edited: 2024-12-02 05:07:04
+ * :date last edited: 2024-12-02 05:07:52
  */
 import * as THREE from "three";
 import * as CANNON from 'cannon-es';
