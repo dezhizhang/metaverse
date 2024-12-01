@@ -1,11 +1,11 @@
 /*
- * :file description:
- * :name: /physics/src/index.js
+ * :file description: 
+ * :name: /physics/examples/4.简单几何体.js
  * :author:张德志
  * :copyright: (c) 2024, Xiaozhi
- * :date created: 2024-11-26 05:55:59
+ * :date created: 2024-12-01 10:22:17
  * :last editor: 张德志
- * :date last edited: 2024-12-01 10:21:58
+ * :date last edited: 2024-12-01 10:22:18
  */
 import * as THREE from "three";
 import * as CANNON from 'cannon-es';
@@ -103,15 +103,10 @@ groundBody.material = groundMaterial;
 sphereBody.material = sphereMaterial;
 
 
-
-
 const controls = new OrbitControls(camera,renderer.domElement);
 
 const axesHelper = new THREE.AxesHelper(5);
 scene.add(axesHelper);
-
-
-
 
 
 window.addEventListener('resize',() => {
