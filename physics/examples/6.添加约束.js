@@ -68,8 +68,6 @@ for(let i=0;i < 10;i++) {
   previousBody = boxBody;
 }
 
-
-
 scene.add(new THREE.AxesHelper(5));
 
 // 添加控制器
@@ -84,8 +82,6 @@ window.addEventListener('resize',() => {
   renderer.setSize(window.innerWidth,window.innerHeight);
   renderer.setPixelRatio(window.devicePixelRatio);
 });
-
-
 
 const clock = new THREE.Clock();
 
