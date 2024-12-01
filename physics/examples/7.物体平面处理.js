@@ -1,4 +1,13 @@
 /*
+ * :file description: 
+ * :name: /physics/examples/7.物体平面处理.js
+ * :author:张德志
+ * :copyright: (c) 2024, Xiaozhi
+ * :date created: 2024-12-02 06:28:44
+ * :last editor: 张德志
+ * :date last edited: 2024-12-02 06:28:44
+ */
+/*
  * :file description:
  * :name: /physics/src/index.js
  * :author:张德志
@@ -86,8 +95,6 @@ window.addEventListener('resize',() => {
   renderer.setPixelRatio(window.devicePixelRatio);
 });
 
-
-
 const clock = new THREE.Clock();
 
 
@@ -108,13 +115,4 @@ function render() {
 render();
 
 document.body.appendChild(renderer.domElement);
-
-
-
-
-
-
-
-
-
 
