@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Xiaozhi
  * :date created: 2024-11-26 05:55:59
  * :last editor: 张德志
- * :date last edited: 2024-12-04 06:44:21
+ * :date last edited: 2024-12-04 07:14:22
  */
 import * as THREE from "three";
 import * as CANNON from 'cannon-es';
@@ -29,31 +29,28 @@ renderer.setSize(window.innerWidth,window.innerHeight);
 
 //------------------------------------------------------
 
-// const world = new CANNON.World();
-// world.gravity.set(0,-9.82,0);
 
-// // 创建物理世界的平面
-// const planeShape = new CANNON.Plane();
-// const planeBody = new CANNON.Body({
-//   mass:0,
-//   shape:planeShape,
-//   position:new CANNON.Vec3(0,0,0)
-// });
 // planeBody.quaternion.setFromAxisAngle(new CANNON.Vec3(1,0,0),-Math.PI / 2);
 // world.addBody(planeBody);
 
 // const boxShape = new CANNON.Box(
 //   new CANNON.Vec3(0.5,0.5,0.5)
 // );
-// const boxMaterialCon = new CANNON.Material('boxMaterialCon');
+
+// const boxMaterialCon1 = new CANNON.Material('boxMaterialCon1');
+// boxMaterialCon1.friction = 0.1;
+// boxMaterialCon1.restitution = 1;
+
 // const boxBody = new CANNON.Body({
 //   shape:boxShape,
 //   position: new CANNON.Vec3(0,5,0),
 //   mass:1,
-//   material:boxMaterialCon,
+//   material:boxMaterialCon1,
 // });
 // physics.push(boxBody);
 // world.addBody(boxBody);
+
+
 
 const world = new CANNON.World();
 world.gravity.set(0,-9.82,0);
@@ -66,18 +63,18 @@ boxMaterialCon.restitution = 1;
 const planeShape = new CANNON.Plane();
 const planeBody = new CANNON.Body({
   mass:0,
-  shape:planeShape,
+  shape: planeShape,
   position:new CANNON.Vec3(0,0,0),
-  material:boxMaterialCon
+  material:boxMaterialCon,
 });
 
 planeBody.quaternion.setFromAxisAngle(new CANNON.Vec3(1,0,0),-Math.PI / 2);
 world.addBody(planeBody);
 
+// 创建物理几何体
 const boxShape = new CANNON.Box(
   new CANNON.Vec3(0.5,0.5,0.5)
 );
-
 const boxMaterialCon1 = new CANNON.Material('boxMaterialCon1');
 boxMaterialCon1.friction = 0.1;
 boxMaterialCon1.restitution = 1;
@@ -86,23 +83,36 @@ const boxBody = new CANNON.Body({
   shape:boxShape,
   position: new CANNON.Vec3(0,5,0),
   mass:1,
-  material:boxMaterialCon1,
+  material:boxMaterialCon
 });
+
 physics.push(boxBody);
 world.addBody(boxBody);
 
 
-// 创建第三个立方体
-const boxBody3 = new CANNON.Body({
-  shape: boxShape,
-  position: new CANNON.Vec3(2,5,0),
+const sphereShape = new CANNON.Sphere(0.5);
+// 创建一个刚体
+const sphereBody = new CANNON.Body({
+  shape:sphereShape,
+  position: new CANNON.Vec3(0,10,0),
   mass:1,
   material:boxMaterialCon
 });
-world.addBody(boxBody3);
-physics.push(boxBody3);
+
+world.addBody(sphereBody);
+physics.push(sphereBody);
 
 
+// 创建圆柱体
+const cylinderShape = new CANNON.Cylinder(0.5,0.5,1,32);
+const cylinderBody = new CANNON.Body({
+  shape: cylinderShape,
+  position: new CANNON.Vec3(0,15,0),
+  mass:1,
+  material: boxMaterialCon,
+});
+world.addBody(cylinderBody);
+physics.push(cylinderBody);
 
 //----------------------------------------------------------------------
 
@@ -115,11 +125,30 @@ const boxMesh = new THREE.Mesh(boxGeometry,boxMaterial);
 scene.add(boxMesh);
 meshs.push(boxMesh);
 
+// 创建球几何体
+const sphereGeometry = new THREE.SphereGeometry(0.5,32,32);
+// 创建球材质
+const sphereMaterial = new THREE.MeshBasicMaterial({
+  color:0x0000ff
+});
+
+// 创建网格
+const sphereMesh = new THREE.Mesh(sphereGeometry,sphereMaterial);
+scene.add(sphereMesh);
+meshs.push(sphereMesh);
+
+
+
+
+
+
+
+
 
 // 创建第三立方体
-const boxMesh3 = new THREE.Mesh(boxGeometry,boxMaterial);
-scene.add(boxMesh3);
-meshs.push(boxMesh3);
+// const boxMesh3 = new THREE.Mesh(boxGeometry,boxMaterial);
+// scene.add(boxMesh3);
+// meshs.push(boxMesh3);
 
 
 // 创建渲染平面
