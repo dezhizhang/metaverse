@@ -1,11 +1,11 @@
 /*
- * :file description:
- * :name: /physics/src/index.js
+ * :file description: 
+ * :name: /physics/examples/9反弹效果.js
  * :author:张德志
  * :copyright: (c) 2024, Xiaozhi
- * :date created: 2024-11-26 05:55:59
+ * :date created: 2024-12-04 06:44:13
  * :last editor: 张德志
- * :date last edited: 2024-12-04 06:44:21
+ * :date last edited: 2024-12-04 06:44:14
  */
 import * as THREE from "three";
 import * as CANNON from 'cannon-es';
