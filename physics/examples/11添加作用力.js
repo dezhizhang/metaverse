@@ -143,12 +143,3 @@ render();
 
 document.body.appendChild(renderer.domElement);
 
-
-
-
-
-
-
-
-
-
