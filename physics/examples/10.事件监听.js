@@ -28,44 +28,6 @@ const renderer = new THREE.WebGLRenderer({
 renderer.setSize(window.innerWidth,window.innerHeight);
 
 //------------------------------------------------------
-
-
-// const world = new CANNON.World();
-// world.gravity.set(0,-9.82,0);
-
-// const boxMaterialCon = new CANNON.Material('boxMaterialCon');
-// boxMaterialCon.friction = 0.1;
-// boxMaterialCon.restitution = 1;
-
-// // 创建物理平面
-// const planeShape = new CANNON.Plane();
-// const planeBody = new CANNON.Body({
-//   mass:0,
-//   shape:planeShape,
-//   position:new CANNON.Vec3(0,0,0),
-//   material:boxMaterialCon
-// });
-
-// planeBody.quaternion.setFromAxisAngle(new CANNON.Vec3(1,0,0),-Math.PI / 2);
-// world.addBody(planeBody);
-
-// const boxShape = new CANNON.Box(
-//   new CANNON.Vec3(0.5,0.5,0.5)
-// );
-
-// const boxMaterialCon1 = new CANNON.Material('boxMaterialCon1');
-// boxMaterialCon1.friction = 0.1;
-// boxMaterialCon1.restitution = 1;
-
-// const boxBody = new CANNON.Body({
-//   shape:boxShape,
-//   position: new CANNON.Vec3(0,5,0),
-//   mass:1,
-//   material:boxMaterialCon1,
-// });
-// physics.push(boxBody);
-// world.addBody(boxBody);
-
 const world = new CANNON.World();
 world.gravity.set(0,-9.82,0);
 world.allowSleep = true;
