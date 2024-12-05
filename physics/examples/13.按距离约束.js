@@ -1,11 +1,11 @@
 /*
  * :file description: 
- * :name: /physics/src/index.js
+ * :name: /physics/examples/13.按距离约束.js
  * :author:张德志
  * :copyright: (c) 2024, Xiaozhi
  * :date created: 2024-12-04 06:44:13
  * :last editor: 张德志
- * :date last edited: 2024-12-06 06:41:19
+ * :date last edited: 2024-12-06 07:32:37
  */
 import * as THREE from "three";
 import * as CANNON from 'cannon-es';
@@ -75,38 +75,72 @@ const boxShape = new CANNON.Box(new CANNON.Vec3(0.5,0.5,0.05));
 let previousBody;
 
 
-for(let i=0;i < 10;i++) {
-  let sphereBody = new CANNON.Body({
-    mass:1,
-    shape: new CANNON.Sphere(0.5),
-    position: new CANNON.Vec3(0,15 - i * 1.2,0),
-    material: boxMaterialCon,
-    collisionFilterGroup:GROUP2,
-    collisionFilterMask: GROUP1 | GROUP2 | GROUP3,
-  });
-  world.addBody(sphereBody);
-  physics.push(sphereBody);
+let bodies = {
 
-
-  const sphereGeometry = new THREE.SphereGeometry(0.5,12,32);
-  const sphereMaterial = new THREE.MeshBasicMaterial({
-    color:0x00ff00
-  });
-  const sphereMesh = new THREE.Mesh(sphereGeometry,sphereMaterial);
-  sphereMesh.position.y = 15 - i * 1.2;
-  scene.add(sphereMesh);
-  meshs.push(sphereMesh);
-
-  if(i > 0) {
-    const constraint = new CANNON.DistanceConstraint(
-      previousBody,
-      sphereBody,
-      1.2
-    );
-    world.addConstraint(constraint);
-  }
-  previousBody = sphereBody;
 }
+
+const boxGeometry = new THREE.SphereGeometry(0.1,32,32);
+const boxMaterial = new THREE.MeshNormalMaterial({
+    color:0xff0000
+});
+const particleShape = new CANNON.Particle();
+
+for(let i=0;i < cols;i++) {
+    for(let j=0;j < rows;j++) {
+        const boxBody = new CANNON.Body({
+            mass:0.5,
+            shape:particleShape,
+            position: new CANNON.Vec3(i-cols * 0.5,10,j-rows * 0.5)
+        });
+        world.addBody(boxBody);
+        bodies[`${i}-${j}`] = boxBody;
+        physics.push(boxBody);
+
+        const boxMesh = new THREE.Mesh(boxGeometry,boxMaterial);
+        boxMesh.position.set(i-cols * 0.5,10,j-rows * 0.5);
+        meshs.push(boxMesh);
+        scene.add(boxMesh);
+    }
+}
+
+
+// for(let i=0;i < 10;i++) {
+//   let sphereBody = new CANNON.Body({
+//     mass:1,
+//     shape: new CANNON.Sphere(0.5),
+//     position: new CANNON.Vec3(0,15 - i * 1.2,0),
+//     material: boxMaterialCon,
+//     collisionFilterGroup:GROUP2,
+//     collisionFilterMask: GROUP1 | GROUP2 | GROUP3,
+//   });
+//   world.addBody(sphereBody);
+//   physics.push(sphereBody);
+
+
+//   const sphereGeometry = new THREE.SphereGeometry(0.5,12,32);
+//   const sphereMaterial = new THREE.MeshBasicMaterial({
+//     color:0x00ff00
+//   });
+//   const sphereMesh = new THREE.Mesh(sphereGeometry,sphereMaterial);
+//   sphereMesh.position.y = 15 - i * 1.2;
+//   scene.add(sphereMesh);
+//   meshs.push(sphereMesh);
+
+//   if(i > 0) {
+//     const constraint = new CANNON.DistanceConstraint(
+//       previousBody,
+//       sphereBody,
+//       1.2
+//     );
+//     world.addConstraint(constraint);
+//   }
+//   previousBody = sphereBody;
+// }
+
+const rows = 15;
+const cols = 15;
+
+const 
 
 window.addEventListener('click',() => {
   // sphereBody.applyForce(new CANNON.Vec3(0,100,0))
