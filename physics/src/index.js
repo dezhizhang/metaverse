@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Xiaozhi
  * :date created: 2024-12-04 06:44:13
  * :last editor: 张德志
- * :date last edited: 2024-12-06 07:35:36
+ * :date last edited: 2024-12-06 07:50:45
  */
 import * as THREE from "three";
 import * as CANNON from "cannon-es";
@@ -22,13 +22,25 @@ const camera = new THREE.PerspectiveCamera(
   0.1,
   1000
 );
+
+
 camera.position.set(1, 2, 10);
+
+let GROUP1 = 1;
+let GROUP2 = 2;
+let GROUP3 = 4;
+
 
 // 创建渲染器
 const renderer = new THREE.WebGLRenderer({
   antialias: true,
 });
 renderer.setSize(window.innerWidth, window.innerHeight);
+
+
+const boxMaterial = new THREE.MeshBasicMaterial({
+  color:0xff0000,
+})
 
 // 创建物理球
 // const sphere = new THREE
@@ -40,34 +52,60 @@ const boxMaterialCon = new CANNON.Material("boxMaterialCon");
 boxMaterialCon.friction = 0.1;
 boxMaterialCon.restitution = 1;
 
-// 创建物理平面
-const planeShape = new CANNON.Box(new CANNON.Vec3(5, 0.1, 5));
-const planeBody = new CANNON.Body({
-  mass: 0,
-  shape: planeShape,
-  position: new CANNON.Vec3(0, -0.1, 0),
-  material: boxMaterialCon,
+
+// 创建物理球体
+const sphereShape = new CANNON.Sphere(5);
+const sphereBody = new CANNON.Body({
+  mass:0,
+  shape:sphereShape,
+  position: new CANNON.Vec3(0,0,0),
+  material:boxMaterial,
+  collisionFilterGroup:GROUP2,
+  collisionFilterMask: GROUP1 | GROUP2 | GROUP3
 });
+world.addBody(sphereBody);
+physics.push(sphereBody);
 
-planeBody.quaternion.setFromAxisAngle(new CANNON.Vec3(1, 0, 0), -Math.PI / 2);
-world.addBody(planeBody);
-const boxMaterialCon1 = new CANNON.Material("boxMaterialCon1");
-boxMaterialCon.friction = 1;
-boxMaterialCon1.restitution = 1;
+const sphereGeometry = new THREE.SphereGeometry(5,32,32);
+const sphereMaterial = new THREE.MeshBasicMaterial({
+  color:0x000ff00
+});
+const sphereMesh = new THREE.Mesh(sphereGeometry,sphereMaterial);
+sphereMesh.position.set(0,0,0);
+meshs.push(sphereMesh);
+scene.add(sphereMesh);
 
-//-------------------------------------------------
-let GROUP1 = 1;
-let GROUP2 = 2;
-let GROUP3 = 4;
+
+
+
+
+// 创建物理平面
+// const planeShape = new CANNON.Box(new CANNON.Vec3(5, 0.1, 5));
+// const planeBody = new CANNON.Body({
+//   mass: 0,
+//   shape: planeShape,
+//   position: new CANNON.Vec3(0, -0.1, 0),
+//   material: boxMaterialCon,
+// });
+
+// planeBody.quaternion.setFromAxisAngle(new CANNON.Vec3(1, 0, 0), -Math.PI / 2);
+// world.addBody(planeBody);
+// const boxMaterialCon1 = new CANNON.Material("boxMaterialCon1");
+// boxMaterialCon.friction = 1;
+// boxMaterialCon1.restitution = 1;
 
 // 创建渲染平面
-const planeGeometry = new THREE.PlaneGeometry(10, 10);
-const planeMaterial = new THREE.MeshBasicMaterial({
-  color: 0xffff00,
-});
-const planeMesh = new THREE.Mesh(planeGeometry, planeMaterial);
-planeMesh.rotation.x = -Math.PI / 2;
-scene.add(planeMesh);
+// const planeGeometry = new THREE.PlaneGeometry(10, 10);
+// const planeMaterial = new THREE.MeshBasicMaterial({
+//   color: 0xffff00,
+// });
+// const planeMesh = new THREE.Mesh(planeGeometry, planeMaterial);
+// planeMesh.rotation.x = -Math.PI / 2;
+// scene.add(planeMesh);
+
+//-------------------------------------------------
+
+
 
 // 创建篇平立方体
 const boxShape = new CANNON.Box(new CANNON.Vec3(0.5, 0.5, 0.05));
@@ -76,9 +114,7 @@ let cols = 15;
 let rows = 15;
 let bodies = {};
 const boxGeometry = new THREE.SphereGeometry(0.1,32,32);
-const boxMaterial = new THREE.MeshBasicMaterial({
-  color:0xff0000,
-})
+
 const particleShape = new CANNON.Particle();
 
 for (let i = 0; i < cols; i++) {
