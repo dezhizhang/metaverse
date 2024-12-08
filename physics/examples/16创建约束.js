@@ -26,8 +26,6 @@ const camera = new THREE.PerspectiveCamera(
 
 camera.position.set(1, 2, 10);
 
-
-
 // 创建渲染器
 const renderer = new THREE.WebGLRenderer({
   antialias: true,
@@ -93,7 +91,6 @@ window.addEventListener('click',() => {
   meshs.push(sphereMesh);
   scene.add(sphereMesh);
   
-
 })
 
 
