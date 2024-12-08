@@ -1,12 +1,13 @@
 /*
- * :file description:
- * :name: /physics/src/index.js
+ * :file description: 
+ * :name: /physics/examples/15.弹力作用.js
  * :author:张德志
  * :copyright: (c) 2024, Xiaozhi
- * :date created: 2024-12-04 06:44:13
+ * :date created: 2024-12-09 06:05:18
  * :last editor: 张德志
- * :date last edited: 2024-12-09 06:01:55
+ * :date last edited: 2024-12-09 06:05:19
  */
+
 import * as THREE from "three";
 import * as CANNON from "cannon-es";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";

@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Xiaozhi
  * :date created: 2024-11-26 05:55:02
  * :last editor: 张德志
- * :date last edited: 2024-11-28 06:16:09
+ * :date last edited: 2024-12-09 05:49:13
  */
 const path = require("path");
 const htmlWebpackPlugin = require("html-webpack-plugin");
@@ -34,6 +34,6 @@ module.exports = {
     }),
   ],
   devServer: {
-    port: 8001,
+    port: 8000,
   },
 };
