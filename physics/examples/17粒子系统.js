@@ -1,12 +1,13 @@
 /*
- * :file description:
- * :name: /physics/src/index.js
+ * :file description: 
+ * :name: /physics/examples/17粒子系统.js
  * :author:张德志
  * :copyright: (c) 2024, Xiaozhi
- * :date created: 2024-12-04 06:44:13
+ * :date created: 2024-12-11 06:34:09
  * :last editor: 张德志
- * :date last edited: 2024-12-11 06:34:14
+ * :date last edited: 2024-12-11 06:34:10
  */
+
 import * as THREE from "three";
 import * as CANNON from "cannon-es";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
