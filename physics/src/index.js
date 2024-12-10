@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Xiaozhi
  * :date created: 2024-12-04 06:44:13
  * :last editor: 张德志
- * :date last edited: 2024-12-11 06:53:34
+ * :date last edited: 2024-12-11 07:28:40
  */
 import * as THREE from "three";
 import * as CANNON from "cannon-es";
@@ -60,6 +60,79 @@ const groundMesh = new THREE.Mesh(
 groundMesh.rotation.x = -Math.PI / 2;
 scene.add(groundMesh);
 meshs.push(groundMesh);
+
+
+
+// 创建车身
+const chassisShape = new CANNON.Box(
+  new CANNON.Vec3(5,0.5,2)
+);
+
+const chassisBody = new CANNON.Body({
+  mass:1,
+  shape:chassisShape
+});
+chassisBody.position.set(0,1,0);
+world.addBody(chassisBody);
+
+// threejs车身
+const chassisMesh = new THREE.Mesh(
+  new THREE.BoxGeometry(10,1,4),
+  new THREE.MeshBasicMaterial({
+    color:0x660066
+  })
+);
+scene.add(chassisMesh);
+meshs.push(chassisMesh);
+physics.push(chassisBody);
+
+// 创建刚性车轮
+const vehicle = new CANNON.RigidVehicle({
+  chassisBody
+});
+
+// 创建轮子
+const wheelShape = new CANNON.Sphere(1.5);
+const wheelBody = new CANNON.Body({
+  mass:1,
+  shape: wheelShape,
+});
+
+vehicle.addWheel({
+  body:wheelBody,
+  position: new CANNON.Vec3(-3,-0.5,3.5),
+  // 轮子旋转轴
+  axis: new CANNON.Vec3(0,0,-1),
+  direction: new CANNON.Vec3(0,-1,0)
+});
+world.addBody(wheelBody);
+
+// 添加three轮子
+const wheelMesh1 = new THREE.Mesh(
+  new THREE.SphereGeometry(1.5,20,20),
+  new THREE.MeshBasicMaterial({
+    color:0x66000
+  })
+);
+scene.add(wheelMesh1);
+meshs.push(wheelMesh1);
+
+// 添加第二个车轮
+const wheelMesh2 = new CANNON.Body({
+  mass:1,
+  shape:wheelShape
+});
+
+vehicle.addWheel({
+  body: wheelMesh2,
+  position: new CANNON.Vec3(4,-0.5,3.5),
+  axis: new CANNON.Vec3(0,0,-1),
+  direction: new CANNON.Vec3(0,-1,0)
+});
+world.addBody(wheelMesh2);
+physics.push(wheelMesh2);
+scene.add(wheelMesh2);
+meshs.push(wheelMesh2);
 
 
 
