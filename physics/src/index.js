@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Xiaozhi
  * :date created: 2024-12-04 06:44:13
  * :last editor: 张德志
- * :date last edited: 2024-12-11 07:28:40
+ * :date last edited: 2024-12-12 05:34:47
  */
 import * as THREE from "three";
 import * as CANNON from "cannon-es";
@@ -93,19 +93,67 @@ const vehicle = new CANNON.RigidVehicle({
 
 // 创建轮子
 const wheelShape = new CANNON.Sphere(1.5);
-const wheelBody = new CANNON.Body({
+const wheelBody1 = new CANNON.Body({
   mass:1,
   shape: wheelShape,
 });
 
 vehicle.addWheel({
-  body:wheelBody,
+  body:wheelBody1,
   position: new CANNON.Vec3(-3,-0.5,3.5),
   // 轮子旋转轴
   axis: new CANNON.Vec3(0,0,-1),
   direction: new CANNON.Vec3(0,-1,0)
 });
-world.addBody(wheelBody);
+world.addBody(wheelBody1);
+physics.push(wheelBody1);
+
+// 第二个车轮
+const wheelBody2 = new CANNON.Body({
+  mass:1,
+  shape: wheelShape
+});
+
+vehicle.addWheel({
+  body: wheelBody2,
+  position: new CANNON.Vec3(4,-0.5,3.5),
+  axis: new CANNON.Vec3(0,0,-1),
+  direction: new CANNON.Vec3(0,-1,0)
+});
+world.addBody(wheelBody2);
+physics.push(wheelBody2);
+
+
+const wheelBody3 = new CANNON.Body({
+  mass:1,
+  shape:wheelShape
+});
+
+vehicle.addWheel({
+  body: wheelBody3,
+  position: new CANNON.Vec3(-4,-0.5,-3.5),
+  axis: new CANNON.Vec3(0,0,-1),
+  direction: new CANNON.Vec3(0,-1,0)
+});
+world.addBody(wheelBody3);
+physics.push(wheelBody3);
+
+const wheelBody4 = new CANNON.Body({
+  mass:1,
+  shape: wheelShape
+});
+
+vehicle.addWheel({
+  body: wheelBody4,
+  position: new CANNON.Vec3(4,-0.5,-3.5),
+  axis: new CANNON.Vec3(0,0,-1),
+  direction: new CANNON.Vec3(0,-1,0)
+});
+world.addBody(wheelBody4);
+physics.push(wheelBody4);
+
+
+
 
 // 添加three轮子
 const wheelMesh1 = new THREE.Mesh(
@@ -117,22 +165,35 @@ const wheelMesh1 = new THREE.Mesh(
 scene.add(wheelMesh1);
 meshs.push(wheelMesh1);
 
-// 添加第二个车轮
-const wheelMesh2 = new CANNON.Body({
-  mass:1,
-  shape:wheelShape
-});
 
-vehicle.addWheel({
-  body: wheelMesh2,
-  position: new CANNON.Vec3(4,-0.5,3.5),
-  axis: new CANNON.Vec3(0,0,-1),
-  direction: new CANNON.Vec3(0,-1,0)
-});
-world.addBody(wheelMesh2);
-physics.push(wheelMesh2);
+const wheelMesh2 = new THREE.Mesh(
+  new THREE.SphereGeometry(1.5,20,20),
+  new THREE.MeshBasicMaterial({
+    color:0x660000
+  })
+);
 scene.add(wheelMesh2);
 meshs.push(wheelMesh2);
+
+const wheelMesh3 = new THREE.Mesh(
+  new THREE.SphereGeometry(1.5,20,20),
+  new THREE.MeshBasicMaterial({
+    color:0x660000
+  })
+);
+scene.add(wheelMesh3);
+meshs.push(wheelMesh3);
+
+const wheelMesh4 = new THREE.Mesh(
+  new THREE.SphereGeometry(1.5,20,20),
+  new THREE.MeshBasicMaterial({
+    color:0x660000
+  })
+);
+scene.add(wheelMesh4);
+meshs.push(wheelMesh4);
+
+
 
 
 
