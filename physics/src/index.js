@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Xiaozhi
  * :date created: 2024-12-04 06:44:13
  * :last editor: 张德志
- * :date last edited: 2024-12-12 06:11:36
+ * :date last edited: 2024-12-12 06:21:07
  */
 import * as THREE from "three";
 import * as CANNON from "cannon-es";
@@ -66,6 +66,41 @@ const groundMesh = new THREE.Mesh(
   })
 );
 scene.add(groundMesh);
+
+// 创建车身
+const chassisShape = new CANNON.Box(
+  new CANNON.Vec3(2,0.5,1),
+);
+const chassisBody = new CANNON.Body({
+  mass:150,
+  shape: chassisShape,
+});
+
+chassisBody.position.set(0,5,0);
+world.addBody(chassisBody);
+physics.push(chassisBody);
+
+
+// 创建threejs车身
+const chassisMesh = new THREE.Mesh(
+  new THREE.BoxGeometry(4,1,2),
+  new THREE.MeshBasicMaterial({
+    color:0x00ff00
+  })
+);
+scene.add(chassisMesh);
+meshs.push(chassisMesh);
+
+
+// 创建具有悬架的车辆
+const vehicle = new CANNON.RaycastVehicle({
+  chassisBody:chassisBody,
+})
+
+
+
+
+
 
 
 
