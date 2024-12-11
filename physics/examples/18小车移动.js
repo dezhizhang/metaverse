@@ -1,5 +1,6 @@
+
 /*
- * :file description:
+ * :file description: 小车移动
  * :name: /physics/src/index.js
  * :author:张德志
  * :copyright: (c) 2024, Xiaozhi
@@ -219,12 +220,6 @@ window.addEventListener('keyup',() => {
 });
 
 vehicle.addToWorld(world);
-
-
-
-
-
-
 
 scene.add(new THREE.AxesHelper(5));
 
