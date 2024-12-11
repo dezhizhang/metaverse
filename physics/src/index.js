@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Xiaozhi
  * :date created: 2024-12-04 06:44:13
  * :last editor: 张德志
- * :date last edited: 2024-12-12 06:34:18
+ * :date last edited: 2024-12-12 06:55:00
  */
 import * as THREE from "three";
 import * as CANNON from "cannon-es";
@@ -140,24 +140,56 @@ vehicle.addWheel(
   }
 );
 
-vehicle.addToWorld(world);
+// 创建threejs车轮
+const wheelBodies = [];
+
+// 车轮形状
+const wheelShape = new CANNON.Cylinder(1,1,0.2,30);
+const wheelGeometry = new THREE.CylinderGeometry(1,1,0.2,20);
+const wheelMaterial = new THREE.MeshBasicMaterial({
+  color:0x888888
+});
+
+
+for(let i=0;i < vehicle.wheelInfos.length;i++) {
+  const wheel = vehicle.wheelInfos[i];
+  const cylinderBody = new CANNON.Body({
+    mass:0,
+    shape: wheelShape,
+  });
+  cylinderBody.addShape(wheelShape);
+  // cylinderBody.position.copy(wheel.chassisConnectionPointWorld);
+  // cylinderBody.quaternion.copy(chassisBody.quaternion);
+  // world.addBody(chassisBody);
+  physics.push(cylinderBody);
+  wheelBodies.push(cylinderBody);
+  
 
 
 
+  const cylinderMesh = new THREE.Mesh(wheelGeometry,wheelMaterial);
+  const wheelObj = new THREE.Object3D();
+  cylinderMesh.rotation.x = -Math.PI / 2;
+  wheelObj.add(cylinderMesh);
+
+  scene.add(cylinderMesh);
+  meshs.push(cylinderMesh);
+
+  wheelObj.add(cylinderMesh);
 
 
+}
 
-
-
-
-
-
-
-
-
-
-
-
+world.addEventListener('postStep',() => {
+  for(let i=0;i < vehicle.wheelInfos.length;i++) {
+    vehicle.updateWheelTransform(i);
+    const t = vehicle.wheelInfos[i].worldTransform;
+    const wheelBody = wheelBodies[i];
+    wheelBody.position.copy(t.position);
+    wheelBody.quaternion.copy(t.quaternion);
+    
+  }
+})
 
 
 
