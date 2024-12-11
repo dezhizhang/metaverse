@@ -11,6 +11,9 @@ importers:
       cannon-es:
         specifier: ^0.20.0
         version: 0.20.0
+      cannon-es-debugger:
+        specifier: ^1.0.0
+        version: 1.0.0(cannon-es@0.20.0)(three@0.163.0)
       file-loader:
         specifier: ^6.2.0
         version: 6.2.0(webpack@5.96.1)
@@ -309,6 +312,16 @@ packages:
 
   caniuse-lite@1.0.30001684:
     resolution: {integrity: sha512-G1LRwLIQjBQoyq0ZJGqGIJUXzJ8irpbjHLpVRXDvBEScFJ9b17sgK6vlx0GAJFE21okD7zXl08rRRUfq6HdoEQ==}
+
+  cannon-es-debugger@1.0.0:
+    resolution: {integrity: sha512-sE9lDOBAYFKlh+0w+cvWKwUhJef8HYnUSVPWPL0jD15MAuVRQKno4QYZSGxgOoJkMR3mQqxL4bxys2b3RSWH8g==}
+    peerDependencies:
+      cannon-es: 0.x
+      three: 0.x
+      typescript: '>=3.8'
+    peerDependenciesMeta:
+      typescript:
+        optional: true
 
   cannon-es@0.20.0:
     resolution: {integrity: sha512-eZhWTZIkFOnMAJOgfXJa9+b3kVlvG+FX4mdkpePev/w/rP5V8NRquGyEozcjPfEoXUlb+p7d9SUcmDSn14prOA==}
@@ -1729,6 +1742,11 @@ snapshots:
       tslib: 2.8.1
 
   caniuse-lite@1.0.30001684: {}
+
+  cannon-es-debugger@1.0.0(cannon-es@0.20.0)(three@0.163.0):
+    dependencies:
+      cannon-es: 0.20.0
+      three: 0.163.0
 
   cannon-es@0.20.0: {}
 
