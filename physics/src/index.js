@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Xiaozhi
  * :date created: 2024-12-04 06:44:13
  * :last editor: 张德志
- * :date last edited: 2024-12-12 06:21:07
+ * :date last edited: 2024-12-12 06:34:18
  */
 import * as THREE from "three";
 import * as CANNON from "cannon-es";
@@ -95,7 +95,56 @@ meshs.push(chassisMesh);
 // 创建具有悬架的车辆
 const vehicle = new CANNON.RaycastVehicle({
   chassisBody:chassisBody,
-})
+});
+
+// 设置车轮的配置
+const wheelOptions = {
+  radius:1,
+  directionLocal:new CANNON.Vec3(0,-1,0),
+  // 设置悬架的刚度
+  suspensionStiffness:30,
+  // 设置悬架的休息长度
+  suspensionRestLength:0.3,
+  // 设置车轮的滑动摩擦力
+  frictionSlip:1.4,
+  // 设置拉伸的阻尼
+  dampingRelaxation:2.3,
+  // 设置压缩的阻尼
+  dampingCompression:4.4,
+};
+
+vehicle.addWheel(
+  {
+    ...wheelOptions,
+    chassisConnectionPointLocal:new CANNON.Vec3(-1,0,1),
+  }
+);
+vehicle.addWheel(
+  {
+    ...wheelOptions,
+    chassisConnectionPointLocal:new CANNON.Vec3(-1,0,-1),
+  }
+);
+
+vehicle.addWheel(
+  {
+    ...wheelOptions,
+    chassisConnectionPointLocal:new CANNON.Vec3(1,0,1),
+  }
+);
+
+vehicle.addWheel(
+  {
+    ...wheelOptions,
+    chassisConnectionPointLocal:new CANNON.Vec3(1,0,-1),
+  }
+);
+
+vehicle.addToWorld(world);
+
+
+
+
 
 
 
