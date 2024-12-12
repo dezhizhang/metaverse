@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Xiaozhi
  * :date created: 2024-12-04 06:44:13
  * :last editor: 张德志
- * :date last edited: 2024-12-13 06:32:42
+ * :date last edited: 2024-12-13 07:03:14
  */
 import * as THREE from "three";
 import * as CANNON from "cannon-es";
@@ -83,57 +83,26 @@ world.addBody(planeBody);
 
 let objects = [];
 
-
-
-// 创建圆环
-const torus = new THREE.Mesh(
-  new THREE.TorusGeometry(10,3,16,100),
-  new THREE.MeshBasicMaterial({
-    color:0xff0000,
-    side:THREE.DoubleSide
-  })
-);
-torus.position.set(0,20,0);
-scene.add(torus);
-
-
-const vertices = [];
-const indices = [];
-
-const position = torus.geometry.getAttribute('position');
-const indexs = torus.geometry.index;
-
-
-for(let i=0;i < position.count;i++) {
-  vertices.push(
-    position.getX(i),
-    position.getY(i),
-    position.getZ(i)
-  )
-}
-
-for(let i=0;i < indexs.count;i++) {
-  indices.push(
-    indexs.getX(i),
-    indexs.getY(i),
-    indexs.getZ(i),
-  )
-}
-
-const torusShape = new CANNON.Trimesh(vertices,indices);
-const torusBody = new CANNON.Body({
-  mass:1,
-  shape: torusShape
+const groundBody = new CANNON.Body({
+  mass:0,
+  shape: new CANNON.Plane(),
 });
 
-torusBody.position.copy(torus.position);
-world.addBody(torusBody);
+groundBody.quaternion.setFromEuler(-Math.PI / 2,0,0);
+world.addBody(groundBody);
 
-objects.push({
-  body: torusBody,
-  mesh: torus
-})
 
+const boxBody = new CANNON.Body({
+  shape: new CANNON.Box(new CANNON.Vec3(5,5,5)),
+  position: new CANNON.Vec3(0,10,0),
+});
+
+boxBody.quaternion.setFromAxisAngle(
+  new CANNON.Vec3(0,1,0),
+  Math.PI / 4
+);
+
+world.addBody(boxBody);
 
 
 

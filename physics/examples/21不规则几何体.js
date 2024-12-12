@@ -1,11 +1,11 @@
 /*
  * :file description:
- * :name: /physics/src/index.js
+ * :name: /physics/examples/21不规则几何体.js
  * :author:张德志
  * :copyright: (c) 2024, Xiaozhi
  * :date created: 2024-12-04 06:44:13
  * :last editor: 张德志
- * :date last edited: 2024-12-13 06:32:42
+ * :date last edited: 2024-12-13 07:04:27
  */
 import * as THREE from "three";
 import * as CANNON from "cannon-es";
@@ -96,7 +96,7 @@ const torus = new THREE.Mesh(
 torus.position.set(0,20,0);
 scene.add(torus);
 
-
+// 不规则形状
 const vertices = [];
 const indices = [];
 
@@ -133,16 +133,6 @@ objects.push({
   body: torusBody,
   mesh: torus
 })
-
-
-
-
-
-
-
-
-
-
 
 
 
