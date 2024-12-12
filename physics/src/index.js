@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Xiaozhi
  * :date created: 2024-12-04 06:44:13
  * :last editor: 张德志
- * :date last edited: 2024-12-13 06:11:07
+ * :date last edited: 2024-12-13 06:32:42
  */
 import * as THREE from "three";
 import * as CANNON from "cannon-es";
@@ -31,7 +31,6 @@ world.gravity.set(0, -9.82, 0);
 world.allowSleep = true;
 
 const cannonDebugger = new CannonDebugger(scene, world,{
-  color: 0xff0000, // 调试模型的颜色
   onInit:(body, mesh)=> {
     if( body.shapes[0] instanceof CANNON.Plane) {
       mesh.scale.set(10,10,1)
@@ -70,16 +69,82 @@ scene.add(ground);
 
 
 
-// 创建物理平面
 const planeShape = new CANNON.Plane();
 const planeBody = new CANNON.Body({
   mass:0,
-  shape: planeShape,
+  shape:planeShape,
   position: new CANNON.Vec3(0,0,0),
   material: new CANNON.Material,
 });
+
 planeBody.quaternion.setFromAxisAngle(new CANNON.Vec3(1,0,0),-Math.PI / 2);
 world.addBody(planeBody);
+
+
+let objects = [];
+
+
+
+// 创建圆环
+const torus = new THREE.Mesh(
+  new THREE.TorusGeometry(10,3,16,100),
+  new THREE.MeshBasicMaterial({
+    color:0xff0000,
+    side:THREE.DoubleSide
+  })
+);
+torus.position.set(0,20,0);
+scene.add(torus);
+
+
+const vertices = [];
+const indices = [];
+
+const position = torus.geometry.getAttribute('position');
+const indexs = torus.geometry.index;
+
+
+for(let i=0;i < position.count;i++) {
+  vertices.push(
+    position.getX(i),
+    position.getY(i),
+    position.getZ(i)
+  )
+}
+
+for(let i=0;i < indexs.count;i++) {
+  indices.push(
+    indexs.getX(i),
+    indexs.getY(i),
+    indexs.getZ(i),
+  )
+}
+
+const torusShape = new CANNON.Trimesh(vertices,indices);
+const torusBody = new CANNON.Body({
+  mass:1,
+  shape: torusShape
+});
+
+torusBody.position.copy(torus.position);
+world.addBody(torusBody);
+
+objects.push({
+  body: torusBody,
+  mesh: torus
+})
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 scene.add(new THREE.AxesHelper(5));
@@ -104,6 +169,11 @@ function render() {
   renderer.render(scene, camera);
 
   const delta = clock.getDelta();
+
+  objects.forEach(({body,mesh}) => {
+    mesh.position.copy(body.position);
+    mesh.quaternion.copy(body.quaternion);
+  })
 
   world.step(1 / 60, delta);
 
