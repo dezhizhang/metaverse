@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Xiaozhi
  * :date created: 2024-12-04 06:44:13
  * :last editor: 张德志
- * :date last edited: 2024-12-13 07:27:37
+ * :date last edited: 2024-12-16 06:58:17
  */
 import * as THREE from "three";
 import * as CANNON from "cannon-es";
@@ -68,73 +68,7 @@ ground.rotation.x = -Math.PI / 2;
 scene.add(ground);
 
 
-// const material = new CANNON.Material({
-//   restitution:1,
-// })
-
-
-// const planeShape = new CANNON.Plane();
-// const planeBody = new CANNON.Body({
-//   mass:0,
-//   shape:planeShape,
-//   position: new CANNON.Vec3(0,0,0),
-//   material: new CANNON.Material({
-//     restitution:1,
-//   }),
-
-// });
-
-// planeBody.quaternion.setFromAxisAngle(new CANNON.Vec3(1,0,0),-Math.PI / 2);
-// world.addBody(planeBody);
-
-const material = new CANNON.Material({
-  restitution:1,
-});
-
-const planeShape = new CANNON.Plane();
-const planeBody = new CANNON.Body({
-  mass:0,
-  shape:planeShape,
-  position:new CANNON.Vec3(0,0,0),
-  material: new CANNON.Material({
-    restitution:1
-  })
-});
-
-planeBody.quaternion.setFromAxisAngle(new CANNON.Vec3(1,0,0),-Math.PI / 2);
-world.addBody(planeBody);
-
-
 let objects = [];
-
-const groundBody = new CANNON.Body({
-  mass:0,
-  shape: new CANNON.Plane(),
-});
-
-groundBody.quaternion.setFromEuler(-Math.PI / 2,0,0);
-world.addBody(groundBody);
-
-
-const boxBody = new CANNON.Body({
-  mass:1,
-  material:material,
-  shape: new CANNON.Box(new CANNON.Vec3(5,5,5)),
-  position: new CANNON.Vec3(0,10,0),
-});
-
-boxBody.quaternion.setFromAxisAngle(
-  new CANNON.Vec3(0,1,0),
-  Math.PI / 4
-);
-
-world.addBody(boxBody);
-
-
-
-
-
-
 
 
 
