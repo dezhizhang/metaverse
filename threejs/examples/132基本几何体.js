@@ -1,17 +1,14 @@
 /*
- * :file description:
- * :name: /threejs/src/index.js
- * :author: 张德志
- * :copyright: (c) 2024, Tungee
- * :date created: 2023-03-13 05:58:33
+ * :file description: 
+ * :name: /threejs/examples/132基本几何体.js
+ * :author:张德志
+ * :copyright: (c) 2024, Xiaozhi
+ * :date created: 2024-12-22 06:11:03
  * :last editor: 张德志
- * :date last edited: 2024-12-22 06:09:16
+ * :date last edited: 2024-12-22 06:11:04
  */
-
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-
-
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75,window.innerWidth / window.innerHeight,0.1,1000);
@@ -43,7 +40,3 @@ render();
 
 
 document.body.appendChild(renderer.domElement);
-
-
-
-
