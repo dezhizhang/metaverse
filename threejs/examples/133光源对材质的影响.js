@@ -1,13 +1,12 @@
 /*
- * :file description:
- * :name: /threejs/src/index.js
- * :author: 张德志
- * :copyright: (c) 2024, Tungee
- * :date created: 2023-03-13 05:58:33
+ * :file description: 
+ * :name: /threejs/examples/133光源对材质的影响.js
+ * :author:张德志
+ * :copyright: (c) 2024, Xiaozhi
+ * :date created: 2024-12-22 06:41:18
  * :last editor: 张德志
- * :date last edited: 2024-12-22 06:40:29
+ * :date last edited: 2024-12-22 06:41:19
  */
-
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
@@ -52,15 +51,3 @@ render();
 
 
 document.body.appendChild(renderer.domElement);
-
-
-
-
-
-
-
-
-
-
-
-

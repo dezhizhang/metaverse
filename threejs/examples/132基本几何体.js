@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Xiaozhi
  * :date created: 2024-12-22 06:11:03
  * :last editor: 张德志
- * :date last edited: 2024-12-22 06:11:04
+ * :date last edited: 2024-12-22 06:12:27
  */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -17,7 +17,9 @@ camera.lookAt(scene.position);
 
 const geometry = new THREE.BoxGeometry(50,50,50);
 const material = new THREE.MeshBasicMaterial({
-  color:0x00ff00
+  color:0x00ff00,
+  transparent:true,
+  opacity:0.5,
 });
 const mesh = new THREE.Mesh(geometry,material);
 scene.add(mesh);
