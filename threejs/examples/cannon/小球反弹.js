@@ -93,15 +93,3 @@ function render() {
 render();
 
 document.body.appendChild(renderer.domElement);
-
-
-
-
-
-
-
-
-
-
-
-

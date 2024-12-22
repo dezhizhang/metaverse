@@ -15,6 +15,7 @@
     "@tweenjs/tween.js": "^20.0.3",
     "ammo.js": "0.0.10",
     "cannon-es": "0.20.0",
+    "cannon-es-debugger": "^1.0.0",
     "d3": "^7.9.0",
     "dat.gui": "0.7.9",
     "delaunator": "^5.0.1",
