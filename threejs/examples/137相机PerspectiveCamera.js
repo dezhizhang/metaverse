@@ -1,11 +1,11 @@
 /*
  * :file description: 
- * :name: /threejs/src/index.js
+ * :name: /threejs/examples/137相机PerspectiveCamera.js
  * :author:张德志
  * :copyright: (c) 2024, Xiaozhi
- * :date created: 2024-07-27 12:32:40
+ * :date created: 2024-12-22 09:53:15
  * :last editor: 张德志
- * :date last edited: 2024-12-22 09:52:29
+ * :date last edited: 2024-12-22 09:53:45
  */
 import * as THREE from 'three';
 import {
@@ -40,11 +40,8 @@ for (let i = 0; i < 10; i++) {
     const mesh = new THREE.Mesh(geometry, material);
     mesh.position.set(i * 200,j * 200,0);
     scene.add(mesh);
-
   }
-
 }
-
 
 const controls = new OrbitControls(camera, renderer.domElement);
 
