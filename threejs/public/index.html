@@ -5,7 +5,7 @@
  * :copyright: (c) 2022, Tungee
  * :date created: 2022-07-12 07:39:26
  * :last editor: 张德志
- * :date last edited: 2024-05-24 14:36:51
+ * :date last edited: 2024-12-22 22:27:39
 -->
 <!DOCTYPE html>
 <html lang="en">
@@ -22,80 +22,16 @@
 
     }
 
-    #color {
-      position: absolute;
-      bottom: 60px;
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 30px;
-      padding: 12px;
-    }
-
-    .colorChoose {
-      display: inline-block;
-      margin-left: 20px;
-      cursor: pointer;
-    }
-
-    .colorChoose img {
-      width: 50px;
-    }
-
-    #color {
-      width: 314px;
-      position: absolute;
-      bottom: 12px;
-      left: 50%;
-      transform: translateX(-50%);
-
-    }
-
-    #camera {
-      position: absolute;
-      display: flex;
-      /* row是flex-direction默认值,可以不设置，表示主轴为水平方向，从左向右排列*/
-      flex-direction: row;
-      /*space-between表示*/
-      justify-content: space-between;
-      visibility: hidden;
-    }
-
-    #message {
-      color: #fff;
-      background: rgba(0, 0, 0, 0.5);
-      padding: 0px;
-      /* 边框 */
-      background: linear-gradient(#00ffff, #00ffff) left top,
-        linear-gradient(#00ffff, #00ffff) left top,
-        linear-gradient(#00ffff, #00ffff) right bottom,
-        linear-gradient(#00ffff, #00ffff) right bottom;
-      background-repeat: no-repeat;
-      background-size: 2px 20px, 36px 2px;
-      background-color: rgba(255, 255, 255, 0.1);
-      color: #ffffff;
-      font-size: 18px;
-      padding: 8px 12px;
-    }
-
-
-    .pos {
+    #pos {
       position: absolute;
       left: 50%;
       transform: translate(0, -50%);
       bottom: 100px;
       display: flex;
+      color: #fff;
+      cursor: pointer;
     }
 
-    .bu {
-      cursor: pointer;
-      background: rgba(255, 255, 255, 0.1);
-      width: 60px;
-      height: 60px;
-      line-height: 60px;
-      text-align: center;
-      color: #fff;
-      display: inline-block;
-      border-radius: 30px;
-    }
 
     
 
@@ -103,74 +39,7 @@
 </head>
 
 <body>
-  <!-- <div id="color">
-    <div class="colorChoose" id="map1">
-      <img src="/极光蓝.png" />
-    </div>
-    <div class="colorChoose" id="map2">
-      <img src="/幻夜黑.png" />
-    </div>
-    <div class="colorChoose" id="map3">
-      <img src="/珊瑚红.png" />
-    </div>
-    <div class="colorChoose" id="map4">
-      <img src="/极光蓝.png" />
-    </div>
-  </div> -->
-  <!-- <div id="camera">
-    <div>
-      <div style="height:1px;width:130px;background: #00ffff;margin-top:68px"></div>
-    </div>
-    <div id="message" style="width:350px;height:120px;">
-      <div style="padding: 10px 4px;font-size:18px;">双摄像头</div>
-      <div style="padding: 10px 24px;font-size:16px;">后置主摄像头——1300万像素(F/1.8光圈)</div>
-      <div style="padding: 10px 24px;font-size:16px;">后置副摄像头——200万像素的</div>
-    </div>
-    <div style="position:relative;">
-      <div style="position: absolute;left: -30px;top: 10px;">
-        <img id="close" src="/关闭.png" alt="" width="18" style="cursor: pointer;">
-      </div>
-    </div>
-  </div> -->
-  <!-- <div id="heatmap"  style="width:800px; height: 800px;"></div>
-  <div id="greymap" style="width:800px; height: 800px;"></div> -->
-
-  <div class="pos">
-    <span id="x" class="bu">x</span>
-    <span id="y" class="bu" style="margin-left: 10px;">y</span>
-    <span id="z" class="bu" style="margin-left: 10px;">z</span>
-  </div>
-  <script type="x-shader/x-vertex" id="vertexshader">
-
-    varying vec2 vUv;
-
-    void main() {
-
-      vUv = uv;
-
-      gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
-
-    }
-
-  </script>
-
-  <script type="x-shader/x-fragment" id="fragmentshader">
-
-    uniform sampler2D baseTexture;
-    uniform sampler2D bloomTexture;
-
-    varying vec2 vUv;
-
-    void main() {
-
-      gl_FragColor = ( texture2D( baseTexture, vUv ) + vec4( 1.0 ) * texture2D( bloomTexture, vUv ) );
-
-    }
-
-  </script>
-
-
-  <script async src="https://unpkg.com/es-module-shims@1.8.0/dist/es-module-shims.js"></script>
+  <div id="pos">下落</div>
 </body>
 
 </html>

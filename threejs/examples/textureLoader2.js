@@ -1,5 +1,13 @@
+/*
+ * :file description: 
+ * :name: /threejs/examples/TextureLoader2.js
+ * :author:张德志
+ * :copyright: (c) 2024, Xiaozhi
+ * :date created: 2024-12-23 06:11:37
+ * :last editor: 张德志
+ * :date last edited: 2024-12-23 06:11:38
+ */
 import * as THREE from 'three';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
 
@@ -21,24 +29,18 @@ scene.add(new THREE.AxesHelper(100));
 
 scene.add(new THREE.AmbientLight(0xffffff));
 
-const textureCube = new THREE.CubeTextureLoader()
-.setPath('/environment/')
-.load(['px.jpg','nx.jpg','py.jpg','ny.jpg','pz.jpg','nz.jpg'])
 
-// 
-const loader = new GLTFLoader();
-loader.load('./金属.glb',function(gltf) {
-  gltf.scene.traverse(function(obj) {
-    if(obj.isMesh) {
-      obj.material.metalness = 1.0;
-      obj.material.roughness = 0.5;
-      obj.material.envMap = textureCube;
-    }
-  });
-  scene.add(gltf.scene);
-})
+const geometry = new THREE.PlaneGeometry(100,100);
+const loader = new THREE.TextureLoader();
+const texture = loader.load('/earth.png');
 
+const material = new THREE.MeshLambertMaterial({
+  map:texture,
+  side:THREE.DoubleSide,
+});
 
+const mesh = new THREE.Mesh(geometry,material);
+scene.add(mesh);
 
 
 
