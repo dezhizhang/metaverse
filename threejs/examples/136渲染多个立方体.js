@@ -1,11 +1,11 @@
 /*
- * :file description:
- * :name: /threejs/src/index.js
- * :author: 张德志
- * :copyright: (c) 2024, Tungee
- * :date created: 2023-03-13 05:58:33
+ * :file description: 
+ * :name: /threejs/examples/136渲染多个立方体.js
+ * :author:张德志
+ * :copyright: (c) 2024, Xiaozhi
+ * :date created: 2024-12-22 08:58:01
  * :last editor: 张德志
- * :date last edited: 2024-12-22 08:57:29
+ * :date last edited: 2024-12-22 08:58:02
  */
 import * as THREE from 'three';
 import Stats from 'stats.js';
@@ -39,8 +39,6 @@ for(let i=0;i < 10000;i++) {
   mesh.position.set(x,y,z);
   scene.add(mesh);
 }
-
-
 
 const renderer = new THREE.WebGLRenderer({
   antialias:true
@@ -81,5 +79,3 @@ render();
 
 
 document.body.appendChild(renderer.domElement);
-
-
