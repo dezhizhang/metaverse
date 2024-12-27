@@ -1,5 +1,14 @@
 /*
  * :file description: 
+ * :name: /threejs/examples/tween.js
+ * :author:张德志
+ * :copyright: (c) 2024, Xiaozhi
+ * :date created: 2024-12-28 06:54:41
+ * :last editor: 张德志
+ * :date last edited: 2024-12-28 06:54:42
+ */
+/*
+ * :file description: 
  * :name: /threejs/src/index.js
  * :author:张德志
  * :copyright: (c) 2024, Xiaozhi
@@ -63,26 +72,6 @@ window.addEventListener('resize',() => {
 
 
 scene.add(new THREE.AmbientLight(0xffffff));
-
-
-
-
-  
-  
-  
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 new OrbitControls(camera,renderer.domElement);
 
