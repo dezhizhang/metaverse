@@ -1,11 +1,11 @@
 /*
  * :file description: 
- * :name: /threejs/src/index.js
+ * :name: /threejs/examples/axesHelper2.js
  * :author:张德志
  * :copyright: (c) 2024, Xiaozhi
- * :date created: 2024-07-27 12:32:40
+ * :date created: 2024-12-28 07:39:50
  * :last editor: 张德志
- * :date last edited: 2024-12-28 07:39:23
+ * :date last edited: 2024-12-28 07:39:51
  */
 import * as THREE from 'three';
 import * as TWEEN from '@tweenjs/tween.js';
