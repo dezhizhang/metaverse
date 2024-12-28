@@ -1,11 +1,11 @@
 /*
  * :file description: 
- * :name: /threejs/src/index.js
+ * :name: /threejs/examples/法向量.js
  * :author:张德志
  * :copyright: (c) 2024, Xiaozhi
- * :date created: 2024-07-27 12:32:40
+ * :date created: 2024-12-28 08:14:26
  * :last editor: 张德志
- * :date last edited: 2024-12-28 08:14:10
+ * :date last edited: 2024-12-28 08:14:27
  */
 import * as THREE from 'three';
 import * as TWEEN from '@tweenjs/tween.js';
@@ -47,8 +47,6 @@ function createSphereMesh(color,R) {
   return mesh;
 }
 
-
-
 const renderer = new THREE.WebGLRenderer({
   antialias:true,
   logarithmicDepthBuffer:true,
@@ -69,12 +67,7 @@ window.addEventListener('resize',() => {
 
 scene.add(new THREE.AmbientLight(0xffffff));
 
-
-
-
 new OrbitControls(camera,renderer.domElement);
-
-
 
 function render() {
   TWEEN.update();
