@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Xiaozhi
  * :date created: 2024-07-27 12:32:40
  * :last editor: 张德志
- * :date last edited: 2024-12-29 06:17:47
+ * :date last edited: 2024-12-29 05:03:14
  */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -39,36 +39,23 @@ window.addEventListener('resize',() => {
 scene.add(new THREE.AmbientLight(0xffffff));
 scene.add(new THREE.AxesHelper(100));
 
-
-const p1 = new THREE.Vector3(0,0,0);
-const p2 = new THREE.Vector3(20,0,0);
-const p3 = new THREE.Vector3(10,10,0);
-
-
-const a = p3.clone().sub(p1);
-const b = p2.clone().sub(p1);
-
-
-const cos = a.normalize().dot(b.normalize());
-const rad = Math.acos(cos);
-
-const angle = THREE.MathUtils.radToDeg(rad);
-console.log('angle',angle);
+const geometry = new THREE.BoxGeometry(10,10,10);
+geometry.translate(0,5,0);
+const material = new THREE.MeshLambertMaterial({
+  color:0x00ffff
+});
+const mesh = new THREE.Mesh(geometry,material);
+mesh.position.set(-50,0,-50);
+scene.add(mesh);
 
 
-
-
-
-
-
-
-
-
-
-
-
+const v = new THREE.Vector3(10,0,10);
+const clock = new THREE.Clock();
 
 function render() {
+  const spt = clock.getDelta();
+  const dis = v.clone().multiplyScalar(spt);
+  mesh.position.add(dis);
 
   renderer.render(scene,camera);
   requestAnimationFrame(render);

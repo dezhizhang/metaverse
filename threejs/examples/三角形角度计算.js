@@ -57,17 +57,6 @@ console.log('angle',angle);
 
 
 
-
-
-
-
-
-
-
-
-
-
-
 function render() {
 
   renderer.render(scene,camera);
