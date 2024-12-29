@@ -1,55 +1,39 @@
 /*
  * :file description: 
  * :name: /threejs/project/第三人称慢游.js
- * :author: 张德志
- * :copyright: (c) 2024, Tungee
- * :date created: 2024-04-16 05:42:32
+ * :author:张德志
+ * :copyright: (c) 2024, Xiaozhi
+ * :date created: 2024-07-27 12:32:38
  * :last editor: 张德志
- * :date last edited: 2024-04-16 05:42:34
+ * :date last edited: 2024-12-30 07:34:48
  */
-import * as THREE from 'three';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+import * as THREE from "three";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 
 const scene = new THREE.Scene();
 
-const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 10000);
-camera.position.set(0, 1.6, -5.6);
-camera.lookAt(0, 1.6, 0);
+const camera = new THREE.PerspectiveCamera(
+  45,
+  window.innerWidth / window.innerHeight,
+  0.1,
+  3000
+);
 
-const renderer = new THREE.WebGLRenderer();
+const renderer = new THREE.WebGLRenderer({
+  antialias: true,
+  logarithmicDepthBuffer: true,
+});
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setPixelRatio(window.devicePixelRatio);
 document.body.appendChild(renderer.domElement);
 
-const ambientLight = new THREE.AmbientLight(0xffffff, 1);
-scene.add(ambientLight);
+const controls = new OrbitControls(camera, renderer.domElement);
 
-let player = null;
-let mixer = null;
+scene.add(new THREE.AxesHelper(100));
+scene.add(new THREE.AmbientLight(0xffffff));
+scene.add(new THREE.GridHelper(30, 25, 0x004444, 0x004444));
 
-const dracoLoader = new DRACOLoader();
-const gltfLoader = new GLTFLoader();
-dracoLoader.setDecoderPath('/draco/');
-gltfLoader.setDRACOLoader(dracoLoader);
-
-gltfLoader.load('/person.glb', (gltf) => {
-  player = gltf.scene;
-  scene.add(gltf.scene);
-  mixer = new THREE.AnimationMixer(gltf.scene);
-  console.log(gltf);
-
-  const clipAction = mixer.clipAction(gltf.animations[10]);
-  clipAction.play();
-});
-
-// const controls = new OrbitControls(camera, renderer.domElement);
-
-const axesHelper = new THREE.AxesHelper(100);
-scene.add(axesHelper);
-
-// 键盘事件
 const keyStates = {
   W: false,
   A: false,
@@ -57,80 +41,120 @@ const keyStates = {
   D: false,
 };
 
-window.addEventListener('keydown', (event) => {
-  const key = event.key.toUpperCase();
-  console.log('ke', key);
-  keyStates[key] = true;
-});
-
-window.addEventListener('keyup', (event) => {
-  const key = event.key.toUpperCase();
-  keyStates[key] = false;
-});
-
-
 let leftButtonBool = false;
-window.addEventListener('mousedown',(event) => {
+
+window.addEventListener("keydown", (event) => {
+  console.log('event.code',event.code === "KeyA")
+  if (event.code === "KeyW") keyStates.W = true;
+  if (event.code === "KeyA") keyStates.A = true;
+  if (event.code === "KeyS") keyStates.S = true;
+  if (event.code === "KeyD") keyStates.D = true;
+});
+
+window.addEventListener("keyup", (event) => {
+  if (event.code === "KeyW") keyStates.W = false;
+  if (event.code === "KeyA") keyStates.A = false;
+  if (event.code === "KeyS") keyStates.S = false;
+  if (event.code === "KeyD") keyStates.D = false;
+});
+
+const group = new THREE.Group();
+const cameraGroup = new THREE.Group();
+const loader = new GLTFLoader();
+loader.load("/人.glb", (gltf) => {
+  group.add(gltf.scene);
+});
+camera.position.set(0, 1.6, -5.3);
+camera.lookAt(0, 1.6, 0);
+cameraGroup.add(camera);
+group.add(cameraGroup);
+scene.add(group);
+
+const angleMin = THREE.MathUtils.degToRad(-15);
+const angleMax = THREE.MathUtils.degToRad(15);
+
+
+window.addEventListener("mousedown", () => {
   leftButtonBool = true;
+  document.body.requestPointerLock();
 });
 
-window.addEventListener('mouseup',() => {
-  leftButtonBool = false
+window.addEventListener("click", () => {
+  document.exitPointerLock();
 });
 
+window.addEventListener("mousemove", (event) => {
+  if (document.pointerLockElement === document.body) {
+    group.rotation.y -= event.movementX / 600;
+    cameraGroup.rotation.x -= event.movementY / 600;
 
-window.addEventListener('mousemove',(event) => {
-  if(leftButtonBool) {
-    player.rotation.y -= event.movementY / window.innerWidth;
-    player.rotation.x -= event.movementY / window.innerWidth;
-    
+    if(cameraGroup.rotation.x < angleMin) cameraGroup.rotation.x = angleMin;
+    if(cameraGroup.rotation.x > angleMax) cameraGroup.rotation.x = angleMax;
   }
-})
+});
 
-window.addEventListener('resize', () => {
+window.addEventListener("resize", () => {
   camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setPixelRatio(window.devicePixelRatio);
+  camera.updateProjectionMatrix();
 });
 
 const clock = new THREE.Clock();
 const v = new THREE.Vector3(0, 0, 0);
-const a = 12;
+const speed = 12;
+const vMax = 5;
+// 阻尼系数
 const damping = -0.04;
 
 function render() {
+  controls.update();
   const deltaTime = clock.getDelta();
-  if (player && mixer) {
-    // 向前运动
-    if (keyStates.W) {
-      const front = new THREE.Vector3(0, 0, 0);
-      player.getWorldDirection(front);
-      v.add(front.multiplyScalar(a * deltaTime));
 
-      if (v.length() < 5) {
-        v.add(front.multiplyScalar(a * deltaTime));
-      }
-      // 向后运动
-    } else if (keyStates.S) {
-      const front = new THREE.Vector3(0, 0, 0);
-      player.getWorldDirection(front);
-      v.add(front.multiplyScalar(-a * deltaTime));
-
-      if (v.length() < 5) {
-        v.add(front.multiplyScalar(-a * deltaTime));
-      }
+  if (keyStates.W) {
+    const front = new THREE.Vector3(0,0,0);
+    group.getWorldDirection(front);
+    if (v.length() < vMax) {
+      v.add(front.multiplyScalar(speed * deltaTime));
     }
-    // v = v + v * damping;
-    v.addScaledVector(v, damping);
-    const deltaPosition = v.clone().multiplyScalar(deltaTime);
-    player.position.add(deltaPosition);
-    mixer.update(deltaTime);
-    player.add(camera);
   }
 
-  requestAnimationFrame(render);
+  if (keyStates.S) {
+    const front = new THREE.Vector3(0,0,0);
+    group.getWorldDirection(front);
+    if (v.length() < vMax) {
+      v.add(front.multiplyScalar(-speed * deltaTime));
+    }
+  }
+
+  if(keyStates.A) {
+    const front = new THREE.Vector3(0,0,0);
+    const up = new THREE.Vector3(0,1,0);
+    group.getWorldDirection(front);
+    const left = up.clone().cross(front);
+    if(v.length() < vMax) {
+      v.add(left.multiplyScalar(speed * deltaTime))
+    }
+  }
+ 
+  if(keyStates.D) {
+    const front = new THREE.Vector3(0,0,0);
+    const up = new THREE.Vector3(0,1,0);
+    group.getWorldDirection(front);
+    const left = front.cross(up);
+    if(v.length() < vMax) {
+      v.add(left.multiplyScalar(speed * deltaTime))
+    }
+  }
+
+  //v = v * (1 - 0.04) = v * (1 + damping) = v + v * damping
+  v.addScaledVector(v, damping); // 通过阻尼系数，对速度进行减速
+  const deltaPos = v.clone().multiplyScalar(deltaTime);
+  group.position.add(deltaPos); // 更新玩家角色的位置
+
   renderer.render(scene, camera);
+  requestAnimationFrame(render);
 }
 
 render();
+
