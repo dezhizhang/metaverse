@@ -1,6 +1,14 @@
+/*
+ * :file description: 
+ * :name: /threejs/examples/2.求取法向量.js
+ * :author:张德志
+ * :copyright: (c) 2024, Xiaozhi
+ * :date created: 2024-12-29 10:10:28
+ * :last editor: 张德志
+ * :date last edited: 2024-12-29 10:10:29
+ */
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
-import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 
 const scene = new THREE.Scene();
 
