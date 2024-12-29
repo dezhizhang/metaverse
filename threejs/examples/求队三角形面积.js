@@ -1,3 +1,12 @@
+/*
+ * :file description: 
+ * :name: /threejs/examples/求队三角形面积.js
+ * :author:张德志
+ * :copyright: (c) 2024, Xiaozhi
+ * :date created: 2024-12-29 10:24:39
+ * :last editor: 张德志
+ * :date last edited: 2024-12-29 10:24:40
+ */
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
@@ -46,34 +55,19 @@ const material = new THREE.MeshBasicMaterial({
 const mesh = new THREE.Mesh(geometry,material);
 scene.add(mesh);
 
-// const p1 = new THREE.Vector3(0,0,0);
-// const p2 = new THREE.Vector3(50,0,0);
-// const p3 = new THREE.Vector3(0,100,0);
 
-// const a = p2.clone().sub(p1);
-// const b = p3.clone().sub(p2);
-// const c = a.clone().cross(b);
+const p1 = new THREE.Vector3(0,0,0);
+const p2 = new THREE.Vector3(10,0,0);
+const p3 = new THREE.Vector3(0,10,0);
 
-// const arrow = new THREE.ArrowHelper(c.clone().normalize(),p3,50,0x00ff00);
-// scene.add(arrow);
+const a = p2.clone().sub(p1);
+const b = p3.clone().sub(p1);
 
+const c = a.clone().cross(b);
 
-// const p1 = new THREE.Vector3(0,0,0);
-// const p2 = new THREE.Vector3(10,0,0);
-// const p3 = new THREE.Vector3(0,10,0);
+const S = c.length() * 0.5;
 
-// const a = p2.clone().sub(p1);
-// const b = p3.clone().sub(p1);
-
-// const c = a.clone().cross(b);
-
-// const S = c.length() * 0.5;
-
-// console.log('S',S);
-
-
-
-
+console.log('S',S);
 
 
 function render() {
