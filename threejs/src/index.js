@@ -5,7 +5,7 @@
  * :copyright: (c) 2025, Xiaozhi
  * :date created: 2024-07-27 12:32:40
  * :last editor: 张德志
- * :date last edited: 2025-01-01 19:27:28
+ * :date last edited: 2025-01-01 22:55:52
  */
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
@@ -33,24 +33,6 @@ document.body.appendChild(renderer.domElement);
 
 const controls = new OrbitControls(camera, renderer.domElement);
 
-
-const pointsArr = [
-  new THREE.Vector3(0,0,0),
-  new THREE.Vector3(0,100,0),
-  new THREE.Vector3(0,100,100),
-  new THREE.Vector3(0,0,100)
-];
-
-
-const geometry = new THREE.BufferGeometry();
-geometry.setFromPoints(pointsArr);
-
-const material = new THREE.PointsMaterial({
-  color:0x00ff00
-});
-
-const mesh = new THREE.Mesh(geometry,material);
-scene.add(mesh);
 
 
 
