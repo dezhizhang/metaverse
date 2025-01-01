@@ -1,11 +1,11 @@
 /*
- * :file description:
- * :name: /threejs/src/index.js
+ * :file description: 
+ * :name: /threejs/examples/包围盒2.js
  * :author:张德志
  * :copyright: (c) 2025, Xiaozhi
- * :date created: 2024-07-27 12:32:40
+ * :date created: 2025-01-01 18:41:06
  * :last editor: 张德志
- * :date last edited: 2025-01-01 18:43:57
+ * :date last edited: 2025-01-01 18:41:07
  */
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
@@ -45,6 +45,14 @@ box3.expandByObject(mesh);
 
 const scale = new THREE.Vector3();
 box3.getSize(scale);
+
+console.log('sales',scale);
+
+
+
+
+
+
 
 
 function render() {
