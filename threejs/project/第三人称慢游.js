@@ -1,12 +1,3 @@
-/*
- * :file description: 
- * :name: /threejs/project/第三人称慢游.js
- * :author:张德志
- * :copyright: (c) 2024, Xiaozhi
- * :date created: 2024-07-27 12:32:38
- * :last editor: 张德志
- * :date last edited: 2024-12-30 07:34:48
- */
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";

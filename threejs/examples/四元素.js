@@ -1,11 +1,11 @@
 /*
  * :file description: 
- * :name: /threejs/src/index.js
+ * :name: /threejs/examples/四元素.js
  * :author: 张德志
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-03-13 22:44:48
  * :last editor: 张德志
- * :date last edited: 2024-03-22 07:17:48
+ * :date last edited: 2025-01-01 14:43:35
  */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -47,29 +47,6 @@ scene.add(axesHelper);
 
 const controls = new OrbitControls(camera,renderer.domElement);
 
-
-// const gltfLoader = new GLTFLoader();
-// const dracoLoader = new DRACOLoader();
-// dracoLoader.setDecoderPath('/draco/');
-// gltfLoader.setDRACOLoader(dracoLoader);
-
-// gltfLoader.load('/fly.glb',(gltf) => {
-//   const fly = gltf.scene;
-//   fly.position.set(10,10,0);
-
-//   const axesHelper = new THREE.AxesHelper(10);
-//   fly.add(axesHelper);
-
-//   const euler = new THREE.Euler();
-//   euler.x = Math.PI / 3;
-//   euler.y = Math.PI / 3;
-
-//   fly.rotation.copy(euler);
-  
-
-  
-//   scene.add(fly);
-// })
 
 const A = new THREE.Vector3(30,0,0);
 // const group = new THREE.Group();
