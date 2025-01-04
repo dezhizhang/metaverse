@@ -1,11 +1,11 @@
 /*
  * :file description: 
- * :name: /threejs/src/index.js
+ * :name: /threejs/examples/effectComposer/index.js
  * :author:张德志
  * :copyright: (c) 2025, Xiaozhi
- * :date created: 2024-07-27 12:32:40
+ * :date created: 2025-01-04 23:03:28
  * :last editor: 张德志
- * :date last edited: 2025-01-04 23:03:04
+ * :date last edited: 2025-01-04 23:03:28
  */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -49,8 +49,6 @@ composer.addPass(renderPass);
 const outlinePass = new OutlinePass(v2,scene,camera);
 outlinePass.selectedObjects = [mesh];
 composer.addPass(outlinePass);
-
-
 
 
 
