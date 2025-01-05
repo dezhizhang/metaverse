@@ -1,3 +1,12 @@
+/*
+ * :file description: 
+ * :name: /threejs/examples/动画/变形动画.js
+ * :author:张德志
+ * :copyright: (c) 2025, Xiaozhi
+ * :date created: 2025-01-05 12:33:28
+ * :last editor: 张德志
+ * :date last edited: 2025-01-05 12:33:29
+ */
 import * as THREE from 'three';
 
 
@@ -40,8 +49,6 @@ const clipAction = mixer.clipAction(clip);
 clipAction.play();
 
 
-
-
 scene.add(mesh);
 
 const clock = new THREE.Clock();
@@ -53,8 +60,3 @@ function render() {
   requestAnimationFrame(render);
 }
 render();
-
-
-
-
-
