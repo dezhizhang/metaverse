@@ -1,3 +1,12 @@
+/*
+ * :file description: 
+ * :name: /threejs/examples/流动效果.js
+ * :author:张德志
+ * :copyright: (c) 2025, Xiaozhi
+ * :date created: 2024-07-27 12:32:40
+ * :last editor: 张德志
+ * :date last edited: 2025-01-06 07:16:15
+ */
 import * as THREE from 'three';
 import TWEEN from '@tweenjs/tween.js';
 
@@ -16,27 +25,24 @@ renderer.setPixelRatio(window.devicePixelRatio);
 document.body.appendChild(renderer.domElement);
 
 
-const control =new OrbitControls(camera,renderer.domElement);
-const geometry = new THREE.BoxGeometry(10,10,10);
-const material = new THREE.MeshBasicMaterial({
-  color:0x00ff00
-});
-const mesh =new THREE.Mesh(geometry,material);
-scene.add(mesh);
+const control = new OrbitControls(camera,renderer.domElement);
 
-const tween = new TWEEN.Tween(camera.position).to({
-  x:100,
-  y:100
-}).start();
+const pos = {
+    x:0,
+    y:0,
+}
 
-scene.add(new THREE.AxesHelper(100));
+const tween = new TWEEN.Tween(pos);
+console.log('tween',tween);
 
+
+
+
+scene.add(new THREE.AxesHelper(500));
 
 function render() {
-  tween.update();
-  control.update();
-
   renderer.render(scene,camera);
+  texture.offset.y -= 0.02;
   requestAnimationFrame(render);
 }
 
@@ -45,3 +51,6 @@ render();
 
 
 
+
+uvs.push(0,0,1,0,1,1);
+uvs.push(0,0,1,1,0,1);
