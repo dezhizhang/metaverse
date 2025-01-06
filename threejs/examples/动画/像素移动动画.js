@@ -1,11 +1,11 @@
 /*
  * :file description: 
- * :name: /threejs/src/index.js
+ * :name: /threejs/examples/动画/像素移动动画.js
  * :author:张德志
  * :copyright: (c) 2025, Xiaozhi
  * :date created: 2024-07-27 12:32:40
  * :last editor: 张德志
- * :date last edited: 2025-01-07 06:39:26
+ * :date last edited: 2025-01-07 06:39:58
  */
 import * as THREE from 'three';
 import TWEEN from '@tweenjs/tween.js';
@@ -108,7 +108,7 @@ aBtn.addEventListener('click',() => {
   // // })
   
   // .start();
-  
+
 });
 
 
@@ -116,11 +116,6 @@ const allBtn = document.getElementById('all');
 allBtn.addEventListener('click',() => {
   createCameraTween(cameraPos,targetPos);
 });
-
-
-
-
-
 
 scene.add(new THREE.AxesHelper(100));
 
