@@ -1,132 +1,74 @@
-/*
- * :file description: 
- * :name: /threejs/src/index.js
- * :author:张德志
- * :copyright: (c) 2025, Xiaozhi
- * :date created: 2024-07-27 12:32:40
- * :last editor: 张德志
- * :date last edited: 2025-01-08 05:55:24
- */
 import * as THREE from 'three';
-import TWEEN from '@tweenjs/tween.js';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import { CSS2DRenderer,CSS2DObject } from 'three/examples/jsm/renderers/CSS2DRenderer.js';
 
-let tween;
+
+
+
+
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(45,window.innerWidth / window.innerHeight,0.1,1000);
-camera.position.set(200,200,200);
+camera.position.set(10,10,10);
 camera.lookAt(scene.position);
 
-const cameraPos = new THREE.Vector3(200,200,200);
-const targetPos = new THREE.Vector3(0,0,0);
 
 
+const geometry = new THREE.BoxGeometry(2,2,2);
+const material = new THREE.MeshBasicMaterial({
+  color:0x00ff00
+});
+const mesh = new THREE.Mesh(geometry,material);
+scene.add(mesh);
 
-const renderer = new THREE.WebGLRenderer();
+
+const renderer = new THREE.WebGLRenderer({
+  
+});
 renderer.setSize(window.innerWidth,window.innerHeight);
 renderer.setPixelRatio(window.devicePixelRatio);
-document.body.appendChild(renderer.domElement);
 
-
-const control = new OrbitControls(camera,renderer.domElement);
-
-
-scene.add(new THREE.AmbientLight(0xffffff));
-
-const group = new THREE.Group();
-
-
-const loader = new GLTFLoader();
-loader.load('/工厂.glb',(gltf) => {
-  group.add(gltf.scene);
-  scene.add(group);
-});
-
-
-
-function createCameraTween(endPos,endTarget) {
-  tween = new TWEEN.Tween({
-    x:camera.position.x,
-    y:camera.position.y,
-    z:camera.position.z,
-    tx:control.target.x,
-    ty:control.target.y,
-    tz:control.target.z
-  }).to({
-    x:endPos.x,
-    y:endPos.y,
-    z:endPos.z,
-    tx:endTarget.x,
-    ty:endTarget.y,
-    tz:endTarget.z
-  },2000).onUpdate(function(obj) {
-    camera.position.set(obj.x,obj.y,obj.z);
-    control.target.set(obj.tx,obj.ty,obj.tz);
-    control.update();
-  }).start();
-}
+// cssRender
+const cssrender = new CSS2DRenderer();
+cssrender.setSize(window.innerWidth,window.innerHeight);
 
 
 
 
-const aBtn = document.getElementById('A');
-aBtn.addEventListener('click',() => {
-  const A = group.getObjectByName('设备A001')
-  const pos = new THREE.Vector3();
-  A.getWorldPosition(pos);
-
-  const pos2 = pos.clone().addScalar(30);
-
-  createCameraTween(pos2,pos);
-});
-
-
-window.addEventListener('click',(event) => {
-  const sx = event.clientX;
-  const sy = event.clientY;
-
-  const x = (sx / window.innerWidth) * 2 - 1;
-  const y = -(sy / window.innerHeight) * 2 + 1;
-
-  const raycaster = new THREE.Raycaster();
-  raycaster.setFromCamera(new THREE.Vector2(x,y),camera);
-  const intersects = raycaster.intersectObjects([group]);
-  if(intersects.length > 0) {
-    const chooseObj = intersects[0].object;
-
-    const pos = new THREE.Vector3();
-    chooseObj.getWorldPosition(pos);
-    const endPos = pos.clone().addScalar(30);
-    createCameraTween(endPos,pos);
-  }
-});
+const controls = new OrbitControls(camera,renderer.domElement);
 
 
 
+const tag = document.createElement('div');
+tag.style.padding = '10px';
+tag.style.color = '#fff';
+tag.style.background = 'rgba(25,25,25,0.5)';
+tag.style.borderRadius = '5px';
+tag.innerText = '标签'
+tag.style.width = '64px';
+tag.style.zIndex = 10;
 
-const allBtn = document.getElementById('all');
-allBtn.addEventListener('click',() => {
-  createCameraTween(cameraPos,targetPos);
-});
+document.body.appendChild(tag);
 
-scene.add(new THREE.AxesHelper(100));
+
+const tagObj = new CSS2DObject(tag);
+tagObj.position.set(50,0,50);
+scene.add(tagObj);
+
 
 
 function render() {
-  
-  
-  control.update();
-  if(tween) {
-    tween.update();
-  }
-
+  controls.update();
   renderer.render(scene,camera);
-  requestAnimationFrame(render);
+  cssrender.render(scene,camera);
+
+  requestAnimationFrame(render)
 }
 
+document.body.appendChild(renderer.domElement);
+document.body.appendChild(cssrender.domElement);
+
+
+
 render();
-
-
 
 
