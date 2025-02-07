@@ -1,3 +1,12 @@
+/*
+ * :file description: 
+ * :name: /threejs/examples/linebox.js
+ * :author:张德志
+ * :copyright: (c) 2025, Xiaozhi
+ * :date created: 2025-02-07 21:37:29
+ * :last editor: 张德志
+ * :date last edited: 2025-02-07 21:37:30
+ */
 import * as THREE from "three";
 
 import Stats from "three/examples/jsm/libs/stats.module.js";
