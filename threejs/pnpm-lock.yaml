@@ -19,7 +19,7 @@ importers:
         version: 0.20.0
       cannon-es-debugger:
         specifier: ^1.0.0
-        version: 1.0.0(cannon-es@0.20.0)(three@0.162.0)
+        version: 1.0.0(cannon-es@0.20.0)(three@0.169.0)
       d3:
         specifier: ^7.9.0
         version: 7.9.0
@@ -41,6 +41,9 @@ importers:
       html-webpack-plugin:
         specifier: ^5.5.0
         version: 5.6.3(webpack@5.97.1)
+      html2canvas:
+        specifier: ^1.4.1
+        version: 1.4.1
       install:
         specifier: ^0.13.0
         version: 0.13.0
@@ -57,17 +60,17 @@ importers:
         specifier: ^0.17.0
         version: 0.17.0
       three:
-        specifier: ^0.162.0
-        version: 0.162.0
+        specifier: ^0.169.0
+        version: 0.169.0
       three-bvh-csg:
         specifier: 0.0.5
-        version: 0.0.5(three-mesh-bvh@0.5.24(three@0.162.0))(three@0.162.0)
+        version: 0.0.5(three-mesh-bvh@0.5.24(three@0.169.0))(three@0.169.0)
       three-mesh-bvh:
         specifier: ^0.5.23
-        version: 0.5.24(three@0.162.0)
+        version: 0.5.24(three@0.169.0)
       three.quarks:
         specifier: ^0.11.2
-        version: 0.11.2(three@0.162.0)
+        version: 0.11.2(three@0.169.0)
       tween:
         specifier: ^0.9.0
         version: 0.9.0
@@ -1011,6 +1014,10 @@ packages:
   balanced-match@1.0.2:
     resolution: {integrity: sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==}
 
+  base64-arraybuffer@1.0.2:
+    resolution: {integrity: sha512-I3yl4r9QB5ZRY3XuJVEPfc2XhZO6YweFPI+UovAzn+8/hb3oJ6lnysaFcjVpkCPfVWFUDvoZ8kmVDP7WyRtYtQ==}
+    engines: {node: '>= 0.6.0'}
+
   base64-js@1.5.1:
     resolution: {integrity: sha512-AKpaYlHn8t4SVbOHCy+b5+KKgvR4vrsD8vbvrbiQJps7fKDTkjkDry6ji0rUJjC0kzbNePLwzxq8iypo41qeWA==}
 
@@ -1376,6 +1383,9 @@ packages:
   css-declaration-sorter@4.0.1:
     resolution: {integrity: sha512-BcxQSKTSEEQUftYpBVnsH4SF05NTuBokb19/sBt6asXGKZ/6VP7PLG1CBCkFDYOnhXhPh0jMhO6xZ71oYHXHBA==}
     engines: {node: '>4'}
+
+  css-line-break@2.1.0:
+    resolution: {integrity: sha512-FHcKFCZcAha3LwfVBhCQbW2nCNbkZXn7KVUJcsT5/P8YmfsVja0FMPJr0B903j/E69HUphKiV9iQArX8SDYA4w==}
 
   css-modules-loader-core@1.1.0:
     resolution: {integrity: sha512-XWOBwgy5nwBn76aA+6ybUGL/3JBnCtBX9Ay9/OWIpzKYWlVHMazvJ+WtHumfi+xxdPF440cWK7JCYtt8xDifew==}
@@ -2237,6 +2247,10 @@ packages:
         optional: true
       webpack:
         optional: true
+
+  html2canvas@1.4.1:
+    resolution: {integrity: sha512-fPU6BHNpsyIhr8yyMpTLLxAbkaK8ArIBcmZIRiBLiDhjeqvXolaEmDGmELFuX9I4xDcaKKcJl+TKZLqruBbmWA==}
+    engines: {node: '>=8.0.0'}
 
   htmlnano@0.2.9:
     resolution: {integrity: sha512-jWTtP3dCd7R8x/tt9DK3pvpcQd7HDMcRPUqPxr/i9989q2k5RHIhmlRDFeyQ/LSd8IKrteG8Ce5g0Ig4eGIipg==}
@@ -3817,6 +3831,9 @@ packages:
     engines: {node: '>=10'}
     hasBin: true
 
+  text-segmentation@1.0.3:
+    resolution: {integrity: sha512-iOiPUo/BGnZ6+54OsWxZidGCsdU8YbE4PSpdPinp7DeMtUJNJBoJ/ouUSTJjHkh1KntHaltHl/gDs2FC4i5+Nw==}
+
   three-bvh-csg@0.0.5:
     resolution: {integrity: sha512-gxqmaV3HlGHUGB857AV8oLoNxx5Q0T7io1DUs5nrCwmmFqjWZT3a8ue7WapE394wY8awFVAMr+YvdSrzqswpFA==}
     peerDependencies:
@@ -3833,8 +3850,8 @@ packages:
     peerDependencies:
       three: '>=0.157.0'
 
-  three@0.162.0:
-    resolution: {integrity: sha512-xfCYj4RnlozReCmUd+XQzj6/5OjDNHBy5nT6rVwrOKGENAvpXe2z1jL+DZYaMu4/9pNsjH/4Os/VvS9IrH7IOQ==}
+  three@0.169.0:
+    resolution: {integrity: sha512-Ed906MA3dR4TS5riErd4QBsRGPcx+HBDX2O5yYE5GqJeFQTPU+M56Va/f/Oph9X7uZo3W3o4l2ZhBZ6f6qUv0w==}
 
   through2@2.0.5:
     resolution: {integrity: sha512-/mrRod8xqpA+IHSLyGCQ2s8SPHiCDEeQJSep1jqLYeEUClOFG2Qsh+4FU6G9VeqpZnGW/Su8LQGc4YKni5rYSQ==}
@@ -4024,6 +4041,9 @@ packages:
   utils-merge@1.0.1:
     resolution: {integrity: sha512-pMZTvIkT1d+TFGvDOqodOclx0QWkkgi6Tdoa8gC8ffGAAqz9pzPTZWAybbsHHoED/ztMtkv/VoYTYyShUn81hA==}
     engines: {node: '>= 0.4.0'}
+
+  utrie@1.0.2:
+    resolution: {integrity: sha512-1MLa5ouZiOmQzUbjbu9VmjLzn1QLXBhwpUa7kdLUQK+KQ5KA9I1vk5U4YHe/X2Ch7PYnJfWuWT+VbuxbGwljhw==}
 
   uuid@3.4.0:
     resolution: {integrity: sha512-HjSDRw6gZE5JMggctHBcjVak08+KEVhSIiDzFnT9S9aegmp85S/bReBVTb4QTFaRNptJ9kuYaNhnbNEOkbKb/A==}
@@ -5370,6 +5390,8 @@ snapshots:
 
   balanced-match@1.0.2: {}
 
+  base64-arraybuffer@1.0.2: {}
+
   base64-js@1.5.1: {}
 
   base@0.11.2:
@@ -5584,10 +5606,10 @@ snapshots:
 
   caniuse-lite@1.0.30001690: {}
 
-  cannon-es-debugger@1.0.0(cannon-es@0.20.0)(three@0.162.0):
+  cannon-es-debugger@1.0.0(cannon-es@0.20.0)(three@0.169.0):
     dependencies:
       cannon-es: 0.20.0
-      three: 0.162.0
+      three: 0.169.0
 
   cannon-es@0.20.0: {}
 
@@ -5841,6 +5863,10 @@ snapshots:
     dependencies:
       postcss: 7.0.39
       timsort: 0.3.0
+
+  css-line-break@2.1.0:
+    dependencies:
+      utrie: 1.0.2
 
   css-modules-loader-core@1.1.0:
     dependencies:
@@ -6856,6 +6882,11 @@ snapshots:
       tapable: 2.2.1
     optionalDependencies:
       webpack: 5.97.1(webpack-cli@4.10.0)
+
+  html2canvas@1.4.1:
+    dependencies:
+      css-line-break: 2.1.0
+      text-segmentation: 1.0.3
 
   htmlnano@0.2.9:
     dependencies:
@@ -8728,20 +8759,24 @@ snapshots:
       commander: 2.20.3
       source-map-support: 0.5.21
 
-  three-bvh-csg@0.0.5(three-mesh-bvh@0.5.24(three@0.162.0))(three@0.162.0):
+  text-segmentation@1.0.3:
     dependencies:
-      three: 0.162.0
-      three-mesh-bvh: 0.5.24(three@0.162.0)
+      utrie: 1.0.2
 
-  three-mesh-bvh@0.5.24(three@0.162.0):
+  three-bvh-csg@0.0.5(three-mesh-bvh@0.5.24(three@0.169.0))(three@0.169.0):
     dependencies:
-      three: 0.162.0
+      three: 0.169.0
+      three-mesh-bvh: 0.5.24(three@0.169.0)
 
-  three.quarks@0.11.2(three@0.162.0):
+  three-mesh-bvh@0.5.24(three@0.169.0):
     dependencies:
-      three: 0.162.0
+      three: 0.169.0
 
-  three@0.162.0: {}
+  three.quarks@0.11.2(three@0.169.0):
+    dependencies:
+      three: 0.169.0
+
+  three@0.169.0: {}
 
   through2@2.0.5:
     dependencies:
@@ -8950,6 +8985,10 @@ snapshots:
   utila@0.4.0: {}
 
   utils-merge@1.0.1: {}
+
+  utrie@1.0.2:
+    dependencies:
+      base64-arraybuffer: 1.0.2
 
   uuid@3.4.0: {}
 
