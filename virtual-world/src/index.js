@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-04-26 06:15:04
  * :last editor: 张德志
- * :date last edited: 2024-04-26 06:42:01
+ * :date last edited: 2025-02-14 06:33:15
  */
 import * as THREE from 'three';
 import { Octree } from 'three/examples/jsm/math/Octree.js';
@@ -37,13 +37,6 @@ plane.rotation.x = -Math.PI / 2;
 scene.add(plane);
 
 
-const play = new Capsule(
-    new THREE.Vector3(0,0.25,0),
-    new THREE.Vector3(0,1.25,0),
-    0.35
-);
-
-const worldTree = new Octree();
 
 
 const capsuleGeometry = new THREE.CapsuleGeometry(0.35,0.35,32);
