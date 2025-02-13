@@ -5,11 +5,9 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-04-26 06:15:04
  * :last editor: 张德志
- * :date last edited: 2025-02-14 06:33:15
+ * :date last edited: 2025-02-14 07:11:59
  */
 import * as THREE from 'three';
-import { Octree } from 'three/examples/jsm/math/Octree.js';
-import { Capsule } from 'three/examples/jsm/math/Capsule.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
 const scene = new THREE.Scene();
@@ -18,39 +16,38 @@ const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerH
 camera.position.set(200, 200, 200);
 camera.lookAt(scene.position);
 
+
+
+
+const textureLoader = new THREE.TextureLoader();
+const texture = textureLoader.load('earth.png');
+
+
+
+
+const geometry = new THREE.SphereGeometry(100,40,40);
+const material = new THREE.MeshBasicMaterial({
+  map:texture
+});
+
+const mesh = new THREE.Mesh(geometry,material);
+scene.add(mesh);
+
 const renderer = new THREE.WebGLRenderer();
-renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setSize(window.innerWidth,window.innerHeight);
 renderer.setPixelRatio(window.devicePixelRatio);
 document.body.appendChild(renderer.domElement);
 
-const controls = new OrbitControls(camera, renderer.domElement);
 
-const geometry = new THREE.PlaneGeometry(20, 20, 1, 1);
-const material = new THREE.MeshBasicMaterial({
-  color: 0x00ffff,
-  size: THREE.DoubleSide,
-});
-
-const plane = new THREE.Mesh(geometry, material);
-plane.receiveShadow = true;
-plane.rotation.x = -Math.PI / 2;
-scene.add(plane);
+const controls = new OrbitControls(camera,renderer.domElement);
 
 
 
 
-const capsuleGeometry = new THREE.CapsuleGeometry(0.35,0.35,32);
-const material1 = new THREE.MeshBasicMaterial({
-    color:0xffff00,
-    side:THREE.DoubleSide
-});
-
-const  capsule = new THREE.Mesh(capsuleGeometry,material1);
-capsule.position.set(0,0.85,0);
-scene.add(capsule);
 
 
-const axesHelper = new THREE.AxesHelper(100);
+
+const axesHelper = new THREE.AxesHelper(1000);
 scene.add(axesHelper);
 
 function render() {
