@@ -5,9 +5,10 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-04-26 06:15:04
  * :last editor: 张德志
- * :date last edited: 2025-02-16 05:35:06
+ * :date last edited: 2025-02-16 05:48:40
  */
 import * as THREE from "three";
+import delaunator from 'delaunator';
 import pointInPolygon from 'point-in-polygon';
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import polygon from "/public/polygon.json";
@@ -81,7 +82,7 @@ function createPoints() {
       rectPointArr.push([lonMin + i * step, latMin + j * step]);
     }
   }
-  
+
   const pointPolygon = [];
   // 判断点阵是否在点内
   rectPointArr.forEach((coord) => {
@@ -96,18 +97,32 @@ function createPoints() {
   });
 
 
+  const index = delaunator.from([...pointPolygon]).triangles;
+
+
+
   const geometry = new THREE.BufferGeometry();
+  geometry.index = new THREE.BufferAttribute(new Uint16Array(index),1);
   geometry.attributes.position = new THREE.BufferAttribute(
     new Float32Array(pointsArr),3
   );
 
-  const material = new THREE.PointsMaterial({
-    color: 0x00ff00,
-    size: 3,
+  const material = new THREE.MeshBasicMaterial({
+    color:0x004444,
+    side:THREE.DoubleSide
   });
+  const mesh = new THREE.Mesh(geometry,material);
+  mesh.position.z = -0.01;
+  scene.add(mesh);
+  
 
-  const points = new THREE.Points(geometry, material);
-  scene.add(points);
+  // const material = new THREE.PointsMaterial({
+  //   color: 0x00ff00,
+  //   size: 3,
+  // });
+
+  // const points = new THREE.Points(geometry, material);
+  // scene.add(points);
 }
 
 const renderer = new THREE.WebGLRenderer();
