@@ -1,11 +1,11 @@
 /*
- * :file description:
- * :name: /virtual-world/src/index.js
- * :author: 张德志
- * :copyright: (c) 2024, Tungee
- * :date created: 2024-04-26 06:15:04
+ * :file description: 
+ * :name: /virtual-world/src/examples/1.标注飞机场地.js
+ * :author:张德志
+ * :copyright: (c) 2025, Xiaozhi
+ * :date created: 2025-02-15 20:09:27
  * :last editor: 张德志
- * :date last edited: 2025-02-15 20:08:24
+ * :date last edited: 2025-02-15 20:09:28
  */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
