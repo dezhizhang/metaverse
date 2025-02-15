@@ -44,6 +44,9 @@ importers:
       parcel-bundler:
         specifier: ^1.12.5
         version: 1.12.5
+      point-in-polygon:
+        specifier: ^1.1.0
+        version: 1.1.0
       stats:
         specifier: ^1.0.0
         version: 1.0.0
@@ -3061,6 +3064,9 @@ packages:
 
   pn@1.1.0:
     resolution: {integrity: sha512-2qHaIQr2VLRFoxe2nASzsV6ef4yOOH+Fi9FBOVH6cqeSgUnoyySPZkxzLuzd+RYOQTRpROA0ztTMqxROKSb/nA==}
+
+  point-in-polygon@1.1.0:
+    resolution: {integrity: sha512-3ojrFwjnnw8Q9242TzgXuTD+eKiutbzyslcq1ydfu82Db2y+Ogbmyrkpv0Hgj31qwT3lbS9+QAAO/pIQM35XRw==}
 
   posix-character-classes@0.1.1:
     resolution: {integrity: sha512-xTgYBc3fuo7Yt7JbiuFxSYGToMoz8fLoE6TC9Wx1P/u+LfeThMOAqmuyECnlBaaJb+u1m9hHiXUEtwW4OzfUJg==}
@@ -7802,6 +7808,8 @@ snapshots:
       find-up: 4.1.0
 
   pn@1.1.0: {}
+
+  point-in-polygon@1.1.0: {}
 
   posix-character-classes@0.1.1: {}
 

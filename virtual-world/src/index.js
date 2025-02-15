@@ -5,9 +5,10 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-04-26 06:15:04
  * :last editor: 张德志
- * :date last edited: 2025-02-16 05:23:27
+ * :date last edited: 2025-02-16 05:35:06
  */
 import * as THREE from "three";
+import pointInPolygon from 'point-in-polygon';
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import polygon from "/public/polygon.json";
 import { lon2xyz, minMax } from "./utils";
@@ -70,8 +71,6 @@ function createPoints() {
   const [lonMin, lonMax] = minMax(lonArr);
   const [latMin, latMax] = minMax(latArr);
 
-  console.log("latMin,latMax", lonMin, lonMax);
-
   const step = 1;
   const row = Math.ceil((lonMax - lonMin) / step);
   const colum = Math.ceil((latMax - latMin) / step);
@@ -82,15 +81,24 @@ function createPoints() {
       rectPointArr.push([lonMin + i * step, latMin + j * step]);
     }
   }
+  
+  const pointPolygon = [];
+  // 判断点阵是否在点内
+  rectPointArr.forEach((coord) => {
+    if(pointInPolygon(coord,polygon)) {
+      pointPolygon.push(coord);
+    }
+  });
 
   const pointsArr = [];
-  rectPointArr.forEach((elem) => {
+  pointPolygon.forEach((elem) => {
     pointsArr.push(elem[0], elem[1], 0);
   });
 
+
   const geometry = new THREE.BufferGeometry();
   geometry.attributes.position = new THREE.BufferAttribute(
-    new Float32Array(pointsArr)
+    new Float32Array(pointsArr),3
   );
 
   const material = new THREE.PointsMaterial({

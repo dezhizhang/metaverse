@@ -24,6 +24,7 @@
     "html-webpack-plugin": "^5.5.0",
     "install": "^0.13.0",
     "parcel-bundler": "^1.12.5",
+    "point-in-polygon": "^1.1.0",
     "stats": "^1.0.0",
     "stats.js": "^0.17.0",
     "three": "^0.162.0",
