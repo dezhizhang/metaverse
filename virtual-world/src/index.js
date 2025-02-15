@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-04-26 06:15:04
  * :last editor: 张德志
- * :date last edited: 2025-02-14 07:11:59
+ * :date last edited: 2025-02-15 15:51:10
  */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -17,10 +17,22 @@ camera.position.set(200, 200, 200);
 camera.lookAt(scene.position);
 
 
-
+const earthR = 100;
 
 const textureLoader = new THREE.TextureLoader();
 const texture = textureLoader.load('earth.png');
+const textureLight = textureLoader.load('earth-light.png');
+
+
+const spriteMaterial = new THREE.SpriteMaterial({
+  map:textureLight,
+  transparent:true,
+});
+
+const sprite = new THREE.Sprite(spriteMaterial);
+sprite.scale.set(earthR * 3,earthR * 3,1);
+scene.add(sprite);
+
 
 
 
