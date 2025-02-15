@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-04-26 06:15:04
  * :last editor: 张德志
- * :date last edited: 2025-02-15 15:51:10
+ * :date last edited: 2025-02-15 15:59:29
  */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -34,9 +34,6 @@ sprite.scale.set(earthR * 3,earthR * 3,1);
 scene.add(sprite);
 
 
-
-
-
 const geometry = new THREE.SphereGeometry(100,40,40);
 const material = new THREE.MeshBasicMaterial({
   map:texture
@@ -52,10 +49,6 @@ document.body.appendChild(renderer.domElement);
 
 
 const controls = new OrbitControls(camera,renderer.domElement);
-
-
-
-
 
 
 
