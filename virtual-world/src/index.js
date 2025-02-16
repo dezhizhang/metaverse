@@ -5,7 +5,7 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-04-26 06:15:04
  * :last editor: 张德志
- * :date last edited: 2025-02-16 22:58:09
+ * :date last edited: 2025-02-17 04:47:12
  */
 import * as THREE from "three";
 import delaunator from "delaunator";
@@ -14,133 +14,71 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import polygon from "/public/polygon.json";
 import { lon2xyz, minMax } from "./utils";
 
+const R = 100;
+
 const scene = new THREE.Scene();
+
+// 添加光源
+const directionalLight = new THREE.DirectionalLight(0xffffff,0.6);
+directionalLight.position.set(400,200,300);
+scene.add(directionalLight);
+
+const directionalLight2 = new THREE.DirectionalLight(0xffffff,0.6);
+directionalLight2.position.set(-400, -200, -300);
+scene.add(directionalLight2);
+
+// 环境光
+const ambient = new THREE.AmbientLight(0xffffff,1);
+scene.add(ambient);
+
 
 const width = window.innerWidth;
 const height = window.innerHeight;
-const s = 10;
+
 const k = width / height;
+const s = 120;
 
-const camera = new THREE.OrthographicCamera(-s * k, s * k, s, -s, 1, 1000);
-camera.position.set(103, 45, 200);
-camera.lookAt(103, 45, 0);
+const camera = new THREE.OrthographicCamera(-s * k,s * k,s,-s,1,1000);
+camera.position.set(200,300,200);
+camera.lookAt(0,0,0);
 
-const pointArr = [];
 
-polygon.forEach(function (elem) {
-  pointArr.push(elem[0], elem[1], 0);
+
+const geometry = new THREE.SphereGeometry(R,40,40);
+const material = new THREE.MeshLambertMaterial({
+  color:0X00ff00
 });
+const mesh = new THREE.Mesh(geometry,material);
+scene.add(mesh);
 
-scene.add(createPolygon(pointArr));
 
-function createPolygon(pointArr) {
-  const geometry = new THREE.BufferGeometry();
-  const vertices = new Float32Array(pointArr);
-
-  const attribute = new THREE.BufferAttribute(vertices, 3);
-  geometry.attributes.position = attribute;
-
-  const material = new THREE.LineBasicMaterial({
-    color: 0x006666,
-  });
-  const line = new THREE.LineLoop(geometry, material);
-
-  const pointMaterial = new THREE.PointsMaterial({
-    color: 0xffffff,
-    size: 3,
-  });
-  const points = new THREE.Points(geometry, pointMaterial);
-  const group = new THREE.Group();
-  group.add(line, points);
-  return group;
-}
-
-createPoints();
-
-function createPoints() {
-  const lonArr = [];
-  const latArr = [];
-
-  polygon.forEach((elem) => {
-    lonArr.push(elem[0]);
-    latArr.push(elem[1]);
-  });
-
-  const [lonMin, lonMax] = minMax(lonArr);
-  const [latMin, latMax] = minMax(latArr);
-
-  const step = 1;
-  const row = Math.ceil((lonMax - lonMin) / step);
-  const colum = Math.ceil((latMax - latMin) / step);
-
-  const rectPointArr = [];
-  for (let i = 0; i < row + 1; i++) {
-    for (let j = 0; j < colum + 1; j++) {
-      rectPointArr.push([lonMin + i * step, latMin + j * step]);
+// 加载世界地图
+const fileLoader = new THREE.FileLoader();
+fileLoader.setResponseType('json');
+fileLoader.load('https://cdn.shuqin.cc/world.json',function(data) {
+  data.features.forEach((country) => {
+    console.log('country',country);
+    if(country.geometry.type === 'Polygon') {
+      country.geometry.coordinates = [country.geometry.coordinates];
     }
-  }
+  })
+})
 
-  const pointPolygon = [];
-  // 判断点阵是否在点内
-  rectPointArr.forEach((coord) => {
-    if (pointInPolygon(coord, polygon)) {
-      pointPolygon.push(coord);
-    }
-  });
 
-  const pointsArr = [];
-  pointPolygon.forEach((elem) => {
-    pointsArr.push(elem[0], elem[1], 0);
-  });
 
-  const index = delaunator.from([...pointPolygon]).triangles;
 
-  const usefulIndexArr = [];
 
-  for (let i = 0; i < index.length; i += 3) {
-    const p1 = pointPolygon[index[i]];
-    const p2 = pointPolygon[index[i + 1]];
-    const p3 = pointPolygon[index[i + 2]];
 
-    const gravity = [(p1[0] + p2[0] + p3[0]) / 3, (p1[1] + p2[1] + p3[1]) / 3];
 
-    if (pointInPolygon(gravity, polygon)) {
-      usefulIndexArr.push(index[i], index[i + 1], index[i + 2]);
-    }
-  }
+// // R：地球半径
 
-  const geometry = new THREE.BufferGeometry();
-
-  geometry.index = new THREE.BufferAttribute(
-    new Uint16Array(usefulIndexArr),
-    1
-  );
-  geometry.attributes.position = new THREE.BufferAttribute(
-    new Float32Array(pointsArr),
-    3
-  );
-
-  const material = new THREE.MeshBasicMaterial({
-    color: 0x004444,
-    side: THREE.DoubleSide,
-  });
-  const mesh = new THREE.Mesh(geometry, material);
-  mesh.position.z = -0.01;
-  scene.add(mesh);
-
-  const mesh2 = mesh.clone();
-  mesh.material = new THREE.MeshBasicMaterial({
-    color: 0x009999,
-    wireframe: true,
-  });
-  scene.add(mesh2);
-  
-}
 
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setPixelRatio(window.devicePixelRatio);
 document.body.appendChild(renderer.domElement);
+
+new OrbitControls(camera,renderer.domElement);
 
 const axesHelper = new THREE.AxesHelper(1000);
 scene.add(axesHelper);
