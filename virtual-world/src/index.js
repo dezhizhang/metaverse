@@ -5,11 +5,11 @@
  * :copyright: (c) 2024, Tungee
  * :date created: 2024-04-26 06:15:04
  * :last editor: 张德志
- * :date last edited: 2025-02-16 05:48:40
+ * :date last edited: 2025-02-16 22:58:09
  */
 import * as THREE from "three";
-import delaunator from 'delaunator';
-import pointInPolygon from 'point-in-polygon';
+import delaunator from "delaunator";
+import pointInPolygon from "point-in-polygon";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import polygon from "/public/polygon.json";
 import { lon2xyz, minMax } from "./utils";
@@ -25,8 +25,6 @@ const camera = new THREE.OrthographicCamera(-s * k, s * k, s, -s, 1, 1000);
 camera.position.set(103, 45, 200);
 camera.lookAt(103, 45, 0);
 
-
-
 const pointArr = [];
 
 polygon.forEach(function (elem) {
@@ -34,7 +32,6 @@ polygon.forEach(function (elem) {
 });
 
 scene.add(createPolygon(pointArr));
-
 
 function createPolygon(pointArr) {
   const geometry = new THREE.BufferGeometry();
@@ -86,7 +83,7 @@ function createPoints() {
   const pointPolygon = [];
   // 判断点阵是否在点内
   rectPointArr.forEach((coord) => {
-    if(pointInPolygon(coord,polygon)) {
+    if (pointInPolygon(coord, polygon)) {
       pointPolygon.push(coord);
     }
   });
@@ -96,33 +93,48 @@ function createPoints() {
     pointsArr.push(elem[0], elem[1], 0);
   });
 
-
   const index = delaunator.from([...pointPolygon]).triangles;
 
+  const usefulIndexArr = [];
 
+  for (let i = 0; i < index.length; i += 3) {
+    const p1 = pointPolygon[index[i]];
+    const p2 = pointPolygon[index[i + 1]];
+    const p3 = pointPolygon[index[i + 2]];
+
+    const gravity = [(p1[0] + p2[0] + p3[0]) / 3, (p1[1] + p2[1] + p3[1]) / 3];
+
+    if (pointInPolygon(gravity, polygon)) {
+      usefulIndexArr.push(index[i], index[i + 1], index[i + 2]);
+    }
+  }
 
   const geometry = new THREE.BufferGeometry();
-  geometry.index = new THREE.BufferAttribute(new Uint16Array(index),1);
+
+  geometry.index = new THREE.BufferAttribute(
+    new Uint16Array(usefulIndexArr),
+    1
+  );
   geometry.attributes.position = new THREE.BufferAttribute(
-    new Float32Array(pointsArr),3
+    new Float32Array(pointsArr),
+    3
   );
 
   const material = new THREE.MeshBasicMaterial({
-    color:0x004444,
-    side:THREE.DoubleSide
+    color: 0x004444,
+    side: THREE.DoubleSide,
   });
-  const mesh = new THREE.Mesh(geometry,material);
+  const mesh = new THREE.Mesh(geometry, material);
   mesh.position.z = -0.01;
   scene.add(mesh);
+
+  const mesh2 = mesh.clone();
+  mesh.material = new THREE.MeshBasicMaterial({
+    color: 0x009999,
+    wireframe: true,
+  });
+  scene.add(mesh2);
   
-
-  // const material = new THREE.PointsMaterial({
-  //   color: 0x00ff00,
-  //   size: 3,
-  // });
-
-  // const points = new THREE.Points(geometry, material);
-  // scene.add(points);
 }
 
 const renderer = new THREE.WebGLRenderer();
