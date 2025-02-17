@@ -5,7 +5,7 @@
  * :copyright: (c) 2022, Tungee
  * :date created: 2022-07-12 07:39:26
  * :last editor: 张德志
- * :date last edited: 2025-02-12 21:34:50
+ * :date last edited: 2025-02-13 20:58:23
 -->
 <!DOCTYPE html>
 <html lang="en">
@@ -46,12 +46,26 @@
             color: #333;
             border: 2px solid #333;
         }
+        
+        .info-box {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 10px;
+            border-radius: 5px;
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            color: #333;
+            border: 2px solid #333;
+            white-space: nowrap;
+        }
     </style>
   </head>
 
   <body>
-    <div id="label">
-      Box Label
-  </div>
+
+  <div id="info-box" style="display: none;">
+    小车状态：正常<br>
+    速度：0 km/h<br>
+    位置：0, 0, 0
+</div>
   </body>
 </html>

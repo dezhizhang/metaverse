@@ -1,13 +1,12 @@
 /*
- * :file description:
- * :name: /threejs/src/index.js
+ * :file description: 
+ * :name: /threejs/examples/PointsMaterial.js
  * :author:张德志
  * :copyright: (c) 2025, Xiaozhi
- * :date created: 2024-07-27 12:32:40
+ * :date created: 2025-02-18 07:19:00
  * :last editor: 张德志
- * :date last edited: 2025-02-18 07:16:54
+ * :date last edited: 2025-02-18 07:19:01
  */
-
 import * as THREE from "three";
 
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
@@ -53,9 +52,6 @@ const material1 = new THREE.PointsMaterial({
 });
 const point = new THREE.Points(geometry,material1);
 scene.add(point);
-
-
-
 
 function render() {
   renderer.render(scene, camera);
