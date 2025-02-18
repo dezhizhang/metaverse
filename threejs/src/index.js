@@ -5,7 +5,7 @@
  * :copyright: (c) 2025, Xiaozhi
  * :date created: 2024-07-27 12:32:40
  * :last editor: 张德志
- * :date last edited: 2025-02-18 07:49:10
+ * :date last edited: 2025-02-18 08:02:55
  */
 
 import * as THREE from "three";
@@ -34,36 +34,26 @@ scene.add(new THREE.AxesHelper(1000));
 
 const controls = new OrbitControls(camera, renderer.domElement);
 
-const geometry = new THREE.BoxGeometry(10,10,10);
+const geometry = new THREE.PlaneGeometry(100,100);
 const material = new THREE.MeshBasicMaterial({
-  antialias:true
+  stencilWrite:true,
+  colorWrite:false,
+  depthWrite:false,
+  depthTest:false,
+  stencilRef:0,
+  stencilFunc:THREE.AlwaysStencilFunc,
+  stencilZPass:THREE.IncrementStencilOp,
 });
+
 const mesh = new THREE.Mesh(geometry,material);
 scene.add(mesh);
 
 
 
-const width = window.innerWidth;
-const height = window.innerHeight;
-
-renderer.setScissorTest(true);
+// renderer.setScissorTest(true);
 
 function render() {
   renderer.render(scene, camera);
-  
-  renderer.setScissor(0,0,width,height);
-  renderer.setViewport(0,0,width,height);
-  renderer.setClearColor(0x000000,1);
-  renderer.render(scene,camera);
-
-
-  renderer.setScissor(width - width / 3 - 10,height - height / 3- 10,width / 3,height / 3);
-  renderer.setViewport(width - width / 3 - 10,height - height / 3  - 10,width / 3,height / 3);
-  renderer.setClearColor(0x202020,1);
-  renderer.render(scene,camera);
-
-
-  mesh.rotateY(0.01);
   
   
   requestAnimationFrame(render);

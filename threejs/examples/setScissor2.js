@@ -5,7 +5,7 @@
  * :copyright: (c) 2025, Xiaozhi
  * :date created: 2025-02-18 07:49:42
  * :last editor: 张德志
- * :date last edited: 2025-02-18 07:49:43
+ * :date last edited: 2025-02-18 07:57:17
  */
 
 import * as THREE from "three";
@@ -43,30 +43,27 @@ scene.add(mesh);
 
 
 
+
 const width = window.innerWidth;
 const height = window.innerHeight;
 
 renderer.setScissorTest(true);
 
 function render() {
-  renderer.render(scene, camera);
-  
-  renderer.setScissor(0,0,width,height);
-  renderer.setViewport(0,0,width,height);
-  renderer.setClearColor(0x000000,1);
-  renderer.render(scene,camera);
+    renderer.render(scene,camera);
 
+    renderer.setScissor(0,0,width,height);
+    renderer.setViewport(0,0,width,height);
+    renderer.setClearColor(0x000000,1);
+    renderer.render(scene,camera);
 
-  renderer.setScissor(width - width / 3 - 10,height - height / 3- 10,width / 3,height / 3);
-  renderer.setViewport(width - width / 3 - 10,height - height / 3  - 10,width / 3,height / 3);
-  renderer.setClearColor(0x202020,1);
-  renderer.render(scene,camera);
+    renderer.setScissor(width - width / 3 - 10,height - height / 3- 10,width / 3,height / 3);
+    renderer.setViewport(width - width / 3 - 10,height - height / 3  - 10,width / 3,height / 3);
+    renderer.setClearColor(0x202020,1);
+    renderer.render(scene,camera);
 
-
-  mesh.rotateY(0.01);
-  
-  
-  requestAnimationFrame(render);
+    mesh.rotateY(0.01);
+    requestAnimationFrame(render);
 }
 
 render();
