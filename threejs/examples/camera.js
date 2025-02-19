@@ -1,4 +1,13 @@
 /*
+ * :file description: 
+ * :name: /threejs/examples/camera.js
+ * :author:张德志
+ * :copyright: (c) 2025, Xiaozhi
+ * :date created: 2025-02-20 06:36:21
+ * :last editor: 张德志
+ * :date last edited: 2025-02-20 06:36:22
+ */
+/*
  * :file description:
  * :name: /threejs/src/index.js
  * :author:张德志
@@ -43,9 +52,7 @@ const mesh = new THREE.Mesh(box,material);
 scene.add(mesh);
 
 
-
 new OrbitControls(camera,renderer.domElement);
-
 
 
 let angle = 0;
