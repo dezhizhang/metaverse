@@ -1,11 +1,11 @@
 /*
- * :file description:
- * :name: /threejs/src/index.js
+ * :file description: 
+ * :name: /threejs/examples/将模型转换成线框.js
  * :author:张德志
  * :copyright: (c) 2025, Xiaozhi
- * :date created: 2024-07-27 12:32:40
+ * :date created: 2025-02-21 08:04:10
  * :last editor: 张德志
- * :date last edited: 2025-02-21 08:03:41
+ * :date last edited: 2025-02-21 08:04:11
  */
 
 import * as THREE from "three";
