@@ -1,11 +1,11 @@
 /*
- * :file description:
- * :name: /threejs/src/index.js
+ * :file description: 
+ * :name: /threejs/examples/全景图.js
  * :author:张德志
  * :copyright: (c) 2025, Xiaozhi
- * :date created: 2024-07-27 12:32:40
+ * :date created: 2025-02-22 15:26:17
  * :last editor: 张德志
- * :date last edited: 2025-02-22 15:25:59
+ * :date last edited: 2025-02-22 15:26:18
  */
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
@@ -38,9 +38,6 @@ const material = new THREE.MeshBasicMaterial({
 
 const mesh = new THREE.Mesh(geometry,material);
 scene.add(mesh);
-
-
-
 
 
 const axesHelper = new THREE.AxesHelper(300);
