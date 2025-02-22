@@ -1,3 +1,12 @@
+/*
+ * :file description: 
+ * :name: /threejs/examples/样条曲线渐变.js
+ * :author:张德志
+ * :copyright: (c) 2025, Xiaozhi
+ * :date created: 2025-02-22 21:23:55
+ * :last editor: 张德志
+ * :date last edited: 2025-02-22 21:23:56
+ */
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 
@@ -62,6 +71,8 @@ points.forEach((point,index) => {
 });
 
 geometry.setAttribute('color',new THREE.Float32BufferAttribute(colors,3));
+
+
 
 // 创建线段物体
 const material = new THREE.LineBasicMaterial({
