@@ -1,11 +1,11 @@
 /*
- * :file description:
- * :name: /threejs/src/index.js
+ * :file description: 
+ * :name: /threejs/examples/mergeGeometries.js
  * :author:张德志
  * :copyright: (c) 2025, Xiaozhi
- * :date created: 2024-07-27 12:32:40
+ * :date created: 2025-02-22 17:40:06
  * :last editor: 张德志
- * :date last edited: 2025-02-22 17:39:44
+ * :date last edited: 2025-02-22 17:40:07
  */
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
