@@ -1,23 +1,23 @@
-/*
- * :file description: 
- * :name: /threejs/src/index.js
- * :author:张德志
- * :copyright: (c) 2025, Xiaozhi
- * :date created: 2024-07-27 12:32:40
- * :last editor: 张德志
- * :date last edited: 2025-02-24 05:55:55
- */
+
+
 import * as THREE from 'three';
 import * as TWEEN from '@tweenjs/tween.js';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
 const scene = new THREE.Scene();
-
-const camera = new THREE.PerspectiveCamera(45,window.innerWidth / window.innerHeight,1,3000);
+const camera = new THREE.PerspectiveCamera(45,window.innerWidth / window.innerHeight,0.1,1000);
 camera.position.set(200,200,200);
 camera.lookAt(scene.position);
 
 
+const renderer = new THREE.WebGLRenderer({
+  
+});
+renderer.setPixelRatio(window.devicePixelRatio);
+renderer.setSize(window.innerWidth,window.innerHeight);
+document.body.appendChild(renderer.domElement);
+
+
+scene.add(new THREE.AxesHelper(100));
 
 const geometry = new THREE.BoxGeometry(10,10,10);
 const material = new THREE.MeshBasicMaterial({
@@ -26,40 +26,19 @@ const material = new THREE.MeshBasicMaterial({
 const box = new THREE.Mesh(geometry,material);
 scene.add(box);
 
-
-
-const renderer = new THREE.WebGLRenderer({
-  
-});
-renderer.setSize(window.innerWidth,window.innerHeight);
-renderer.setPixelRatio(window.devicePixelRatio);
-document.body.appendChild(renderer.domElement);
-
-
-new OrbitControls(camera,renderer.domElement);
-
-scene.add(new THREE.AxesHelper(100));
-
-
-
-const pos = {
-  x:0,
-  y:0,
-  z:0
+const obj = {
+  r:1,
+  g:0,
+  b:0
 }
 
-const tween = new TWEEN.Tween(pos);
-tween.to({
-  x:100,
-  y:0,
-  z:0
+const tween = new TWEEN.Tween(obj);
+tween.to({r:0,g:1,b:1},2000);
+tween.onUpdate(function() {
+  box.material.color.setRGB(obj.r,obj.g,obj.b);
 });
-
-tween.onUpdate(function(){
-  box.position.set(pos.x,pos.y,pos.z);
-});
-
 tween.start();
+
 
 
 function render() {
@@ -69,6 +48,4 @@ function render() {
 }
 
 render();
-
-
 
