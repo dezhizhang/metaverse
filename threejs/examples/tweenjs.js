@@ -1,11 +1,11 @@
 /*
  * :file description: 
- * :name: /threejs/src/index.js
+ * :name: /threejs/examples/tweenjs.js
  * :author:张德志
  * :copyright: (c) 2025, Xiaozhi
- * :date created: 2024-07-27 12:32:40
+ * :date created: 2025-02-24 05:56:30
  * :last editor: 张德志
- * :date last edited: 2025-02-24 05:55:55
+ * :date last edited: 2025-02-24 05:56:31
  */
 import * as THREE from 'three';
 import * as TWEEN from '@tweenjs/tween.js';
