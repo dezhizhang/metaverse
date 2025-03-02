@@ -1,38 +1,42 @@
 {
-  "private": true,
+  "name": "threejs",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
   "scripts": {
-    "start": "umi dev",
-    "build": "umi build",
-    "postinstall": "umi generate tmp",
-    "prettier": "prettier --write '**/*.{js,jsx,tsx,ts,less,md,json}'",
-    "test": "umi-test",
-    "test:coverage": "umi-test --coverage"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "webpack-dev-server",
+    "build": "webpack"
   },
-  "gitHooks": {
-    "pre-commit": "lint-staged"
-  },
-  "lint-staged": {
-    "*.{js,jsx,less,md,json}": [
-      "prettier --write"
-    ],
-    "*.ts?(x)": [
-      "prettier --parser=typescript --write"
-    ]
-  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
   "dependencies": {
-    "@ant-design/pro-layout": "^6.5.0",
-    "react": "17.x",
-    "react-dom": "17.x",
-    "umi": "^3.5.41"
-  },
-  "devDependencies": {
-    "@types/react": "^17.0.0",
-    "@types/react-dom": "^17.0.0",
-    "@umijs/preset-react": "1.x",
-    "@umijs/test": "^3.5.41",
-    "lint-staged": "^10.0.7",
-    "prettier": "^2.2.0",
-    "typescript": "^4.1.2",
-    "yorkie": "^2.0.0"
+    "@tweenjs/tween.js": "^20.0.3",
+    "ammo.js": "0.0.10",
+    "cannon-es": "0.20.0",
+    "cannon-es-debugger": "^1.0.0",
+    "d3": "^7.9.0",
+    "dat.gui": "0.7.9",
+    "delaunator": "^5.0.1",
+    "file-loader": "^6.2.0",
+    "gsap": "^3.11.3",
+    "heatmap.js": "^2.0.5",
+    "html-webpack-plugin": "^5.5.0",
+    "html2canvas": "^1.4.1",
+    "install": "^0.13.0",
+    "parcel-bundler": "^1.12.5",
+    "point-in-polygon": "^1.1.0",
+    "stats": "^1.0.0",
+    "stats.js": "^0.17.0",
+    "three": "^0.169.0",
+    "three-bvh-csg": "0.0.5",
+    "three-mesh-bvh": "^0.5.23",
+    "three.quarks": "^0.11.2",
+    "tween": "^0.9.0",
+    "webpack": "^5.73.0",
+    "webpack-cli": "^4.10.0",
+    "webpack-dev-server": "^4.9.3",
+    "webpack-glsl-loader": "^1.0.1"
   }
 }
