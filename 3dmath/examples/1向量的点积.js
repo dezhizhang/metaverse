@@ -1,17 +1,13 @@
 /*
- * :file description:
- * :name: /3dmath/src/index.js
+ * :file description: 
+ * :name: /3dmath/examples/1向量的点积.js
  * :author:张德志
  * :copyright: (c) 2025, Xiaozhi
- * :date created: 2025-03-02 10:32:29
+ * :date created: 2025-03-24 06:59:23
  * :last editor: 张德志
- * :date last edited: 2025-03-24 06:59:05
+ * :date last edited: 2025-03-24 06:59:37
  */
-
-// https://www.shadertoy.com/view/WtG3RD
-
 import * as THREE from "three";
-
 
 const v1 = new THREE.Vector3(1, 2, 3);
 const v2 = new THREE.Vector3(4, 5, 6);
