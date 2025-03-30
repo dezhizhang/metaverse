@@ -1,27 +1,17 @@
 /*
- * :file description:
- * :name: /3dmath/src/index.js
+ * :file description: 
+ * :name: /3dmath/examples/3.lerp差值函数.js
  * :author:张德志
  * :copyright: (c) 2025, Xiaozhi
- * :date created: 2025-03-02 10:32:29
+ * :date created: 2025-03-30 13:59:38
  * :last editor: 张德志
- * :date last edited: 2025-03-30 13:59:11
+ * :date last edited: 2025-03-30 13:59:38
  */
-
-// https://www.bilibili.com/video/BV1fjUdYJE3x?spm_id_from=333.788.videopod.episodes&vd_source=10257e657caa8b54111087a9329462e8&p=10
-
 import * as THREE from "three";
-
-
 
 const pos1 = new THREE.Vector3(0,0,0);
 const pos2 = new THREE.Vector3(10,0,0);
 const lerpedPos = pos1.lerp(pos2,0.5);
 console.log('lerpedPos',lerpedPos);
-
-
-
-
-
 
 
