@@ -5,7 +5,7 @@
  * :copyright: (c) 2025, Xiaozhi
  * :date created: 2025-03-24 07:33:01
  * :last editor: 张德志
- * :date last edited: 2025-03-30 22:25:29
+ * :date last edited: 2025-03-30 22:30:35
  */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -24,14 +24,12 @@ document.body.appendChild(renderer.domElement);
 
 new OrbitControls(camera,renderer.domElement);
 
-
 const a = new THREE.Vector3(50,0,0);
 const b = new THREE.Vector3(50,0,30);
 const o = new THREE.Vector3(0,0,0);
 const c = new THREE.Vector3();
 
 c.crossVectors(a,b);
-
 
 const arrowA = new THREE.ArrowHelper(
     a.clone().normalize(),
@@ -45,29 +43,42 @@ const arrowB = new THREE.ArrowHelper(
     b.clone().normalize(),
     o,
     b.length(),
-    0xff00ff
+    0xff00ff 
 );
 scene.add(arrowB);
 
 
-const arrowC = new THREE.ArrowHelper(
-    c.clone().normalize(),
-    o,
-    c.length() / 30,
-    0x00ff00
-);
-scene.add(arrowC);
 
 
-scene.add(new THREE.AxesHelper(100));
 
 
-function render() {
-    renderer.render(scene,camera);
-    requestAnimationFrame(render);
-}
+// const arrowB = new THREE.ArrowHelper(
+//     b.clone().normalize(),
+//     o,
+//     b.length(),
+//     0xff00ff
+// );
+// scene.add(arrowB);
 
-render();
+
+// const arrowC = new THREE.ArrowHelper(
+//     c.clone().normalize(),
+//     o,
+//     c.length() / 30,
+//     0x00ff00
+// );
+// scene.add(arrowC);
+
+
+// scene.add(new THREE.AxesHelper(100));
+
+
+// function render() {
+//     renderer.render(scene,camera);
+//     requestAnimationFrame(render);
+// }
+
+// render();
 
 
 

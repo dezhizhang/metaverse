@@ -5,41 +5,50 @@
  * :copyright: (c) 2025, Xiaozhi
  * :date created: 2025-03-30 15:31:04
  * :last editor: 张德志
- * :date last edited: 2025-03-30 15:34:54
+ * :date last edited: 2025-03-31 07:16:35
  */
-import * as THREE from "three";
+import * as THREE from 'three';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 
 const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(
-  45,
-  window.innerWidth / window.innerHeight,
-  0.1,
-  1000
-);
-// 设置相机的位置
-camera.position.z = 5;
+const camera = new THREE.PerspectiveCamera(45,window.innerWidth / window.innerHeight,0.1,1000);
+camera.position.set(200,200,200);
+camera.lookAt(scene.position);
 
-const renderer = new THREE.WebGLRenderer();
-renderer.setSize(window.innerWidth, window.innerHeight);
-document.body.appendChild(renderer.domElement);
 
-const geometry = new THREE.BoxGeometry(1, 1, 1);
-const material = new THREE.MeshBasicMaterial({
-  color: 0x00ff00,
-});
-const cube = new THREE.Mesh(geometry, material);
-scene.add(cube);
+scene.add(new THREE.AmbientLight(0xffffff,100));
+
+scene.add(new THREE.AxesHelper(100));
+
 
 const quaternion = new THREE.Quaternion();
-quaternion.setFromAxisAngle(new THREE.Vector3(0,1,0),Math.PI / 4);
-
-cube.quaternion.multiplyQuaternions(quaternion,cube.quaternion);
+quaternion.setFromAxisAngle(new THREE.Vector3(0,1,0),Math.PI/2);
 
 
 
-function animate() {
-  requestAnimationFrame(animate);
-  renderer.render(scene, camera);
+
+const loader = new GLTFLoader();
+loader.load('/fly.glb',function(gltf) {
+    const fly = gltf.scene;
+    fly.position.set(10,10,0);
+    const ax = new THREE.AxesHelper(10);
+    fly.add(ax);
+    fly.applyQuaternion(quaternion);
+    
+    scene.add(fly);
+})
+
+const renderer = new THREE.WebGLRenderer();
+renderer.setSize(window.innerWidth,window.innerHeight);
+renderer.setPixelRatio(window.devicePixelRatio);
+document.body.appendChild(renderer.domElement);
+
+new OrbitControls(camera,renderer.domElement);
+
+function render() {
+    requestAnimationFrame(render);
+    renderer.render(scene,camera);
 }
 
-animate();
+render();
