@@ -5,7 +5,7 @@
  * :copyright: (c) 2025, Xiaozhi
  * :date created: 2025-03-02 10:32:29
  * :last editor: 张德志
- * :date last edited: 2025-03-30 19:27:58
+ * :date last edited: 2025-03-30 19:42:41
  */
 import * as THREE from 'three';
 
@@ -32,11 +32,25 @@ scene.add(new THREE.AxesHelper(100));
 
 
 
-const A = new THREE.Vector3(-50,0,-50);
-const B = new THREE.Vector3(100,0,100);
+// const A = new THREE.Vector3(-50,0,-50);
+// const B = new THREE.Vector3(100,0,100);
 
+// const AB = B.clone().sub(A);
+// console.log(AB.normalize());
+
+const A = new THREE.Vector3(-50,0,0);
+const B = new THREE.Vector3(100,0,0);
 const AB = B.clone().sub(A);
-console.log(AB.normalize());
+AB.normalize();
+
+const T = AB.clone().multiplyScalar(100);
+console.log('T',T.length());
+
+
+
+
+
+
 
 
 

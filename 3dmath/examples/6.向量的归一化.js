@@ -5,7 +5,7 @@
  * :copyright: (c) 2025, Xiaozhi
  * :date created: 2025-03-30 19:24:39
  * :last editor: 张德志
- * :date last edited: 2025-03-30 19:28:17
+ * :date last edited: 2025-03-30 19:33:11
  */
 import * as THREE from 'three';
 
@@ -32,11 +32,18 @@ scene.add(new THREE.AxesHelper(100));
 
 
 
+// const A = new THREE.Vector3(-50,0,-50);
+// const B = new THREE.Vector3(100,0,100);
+
+// const AB = B.clone().sub(A);
+// console.log(AB.normalize());
+
 const A = new THREE.Vector3(-50,0,-50);
 const B = new THREE.Vector3(100,0,100);
 
 const AB = B.clone().sub(A);
 console.log(AB.normalize());
+
 
 
 function render() {
