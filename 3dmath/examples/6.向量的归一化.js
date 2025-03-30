@@ -1,11 +1,11 @@
 /*
- * :file description:
- * :name: /3dmath/src/index.js
+ * :file description: 
+ * :name: /3dmath/examples/6.向量的归一化.js
  * :author:张德志
  * :copyright: (c) 2025, Xiaozhi
- * :date created: 2025-03-02 10:32:29
+ * :date created: 2025-03-30 19:24:39
  * :last editor: 张德志
- * :date last edited: 2025-03-30 19:27:58
+ * :date last edited: 2025-03-30 19:28:17
  */
 import * as THREE from 'three';
 
@@ -39,18 +39,11 @@ const AB = B.clone().sub(A);
 console.log(AB.normalize());
 
 
-
 function render() {
     requestAnimationFrame(render);
     renderer.render(scene,camera);
 }
 
 render();
-
-
-
-
-
-
 
 

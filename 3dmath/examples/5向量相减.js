@@ -1,11 +1,11 @@
 /*
- * :file description:
- * :name: /3dmath/src/index.js
+ * :file description: 
+ * :name: /3dmath/examples/5向量相减.js
  * :author:张德志
  * :copyright: (c) 2025, Xiaozhi
- * :date created: 2025-03-02 10:32:29
+ * :date created: 2025-03-30 18:56:49
  * :last editor: 张德志
- * :date last edited: 2025-03-30 19:27:58
+ * :date last edited: 2025-03-30 18:56:50
  */
 import * as THREE from 'three';
 
@@ -30,14 +30,14 @@ scene.add(mesh);
 
 scene.add(new THREE.AxesHelper(100));
 
+const a = new THREE.Vector3(30,30,0);
+const b = new THREE.Vector3(130,80,0);
 
+const ab = new THREE.Vector3();
 
-const A = new THREE.Vector3(-50,0,-50);
-const B = new THREE.Vector3(100,0,100);
+ab.subVectors(a,b);
 
-const AB = B.clone().sub(A);
-console.log(AB.normalize());
-
+console.log('ab',ab.length());
 
 
 function render() {
@@ -46,11 +46,3 @@ function render() {
 }
 
 render();
-
-
-
-
-
-
-
-
