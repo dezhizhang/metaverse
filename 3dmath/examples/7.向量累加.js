@@ -1,11 +1,11 @@
 /*
- * :file description:
- * :name: /3dmath/src/index.js
+ * :file description: 
+ * :name: /3dmath/examples/7.向量累加.js
  * :author:张德志
  * :copyright: (c) 2025, Xiaozhi
- * :date created: 2025-03-02 10:32:29
+ * :date created: 2025-03-30 20:13:51
  * :last editor: 张德志
- * :date last edited: 2025-03-30 20:13:23
+ * :date last edited: 2025-03-30 20:13:51
  */
 import * as THREE from 'three';
 import * as CANNON from 'cannon-es';
@@ -53,4 +53,3 @@ function render() {
 }
 
 render();
-
