@@ -1,12 +1,13 @@
 /*
  * :file description: 
- * :name: /3dmath/src/index.js
+ * :name: /3dmath/examples/13矩阵平移.js
  * :author:张德志
  * :copyright: (c) 2025, Xiaozhi
- * :date created: 2025-03-02 10:32:29
+ * :date created: 2025-04-01 07:11:04
  * :last editor: 张德志
- * :date last edited: 2025-04-01 07:35:42
+ * :date last edited: 2025-04-01 07:11:05
  */
+
 // 导入Three.js库
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -19,21 +20,25 @@ camera.lookAt(scene.position);
 
 scene.add(new THREE.AxesHelper(100));
 
-// const geometry = new THREE.BoxGeometry(10,10,10);
-// const material = new THREE.MeshBasicMaterial({
-//     color:0x00ff00
-// });
-// const mesh = new THREE.Mesh(geometry,material);
-// mesh.position.set(2,3,4);
-// mesh.updateMatrix();
-// console.log('mesh',mesh.matrix);
 
-// scene.add(mesh);
+const mat4 = new THREE.Matrix4();
+mat4.makeTranslation(0,0,0);
+
+const p = new THREE.Vector3(50,0,0);
+p.applyMatrix4(mat4);
+
+console.log('p',p);
 
 
+const geometry = new THREE.SphereGeometry(2);
+const material = new THREE.MeshBasicMaterial({
+    color:0x00ff00
+});
 
+const mesh = new THREE.Mesh(geometry,material);
+mesh.position.copy(p);
 
-
+scene.add(mesh);
 
 
 const renderer = new THREE.WebGLRenderer();

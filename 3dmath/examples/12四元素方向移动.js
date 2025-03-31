@@ -1,11 +1,11 @@
 /*
  * :file description: 
- * :name: /3dmath/src/index.js
+ * :name: /3dmath/examples/12四元素方向移动.js
  * :author:张德志
  * :copyright: (c) 2025, Xiaozhi
  * :date created: 2025-03-02 10:32:29
  * :last editor: 张德志
- * :date last edited: 2025-04-01 07:35:42
+ * :date last edited: 2025-04-01 06:04:52
  */
 // 导入Three.js库
 import * as THREE from 'three';
@@ -17,22 +17,32 @@ const camera = new THREE.PerspectiveCamera(45,window.innerWidth / window.innerHe
 camera.position.set(200,200,200);
 camera.lookAt(scene.position);
 
+
+scene.add(new THREE.AmbientLight(0xffffff,100));
+
 scene.add(new THREE.AxesHelper(100));
 
-// const geometry = new THREE.BoxGeometry(10,10,10);
-// const material = new THREE.MeshBasicMaterial({
-//     color:0x00ff00
-// });
-// const mesh = new THREE.Mesh(geometry,material);
-// mesh.position.set(2,3,4);
-// mesh.updateMatrix();
-// console.log('mesh',mesh.matrix);
 
-// scene.add(mesh);
+const loader = new GLTFLoader();
+loader.load('/fly.glb',function(gltf) {
+    const fly = gltf.scene;
+    fly.position.set(2,0,0);
 
+    const ax = new THREE.AxesHelper(10);
+    fly.add(ax);
 
+    const a = new THREE.Vector3(0,0,-1);
+    const b = new THREE.Vector3(-1,-1,-1).normalize();
 
+    fly.add(new THREE.ArrowHelper(a,fly.position,5,0x00ff00));
+    fly.add(new THREE.ArrowHelper(b,fly.position,5,0xff00ff));
 
+    const quaternion = new THREE.Quaternion();
+    quaternion.setFromUnitVectors(a,b);
+    fly.quaternion.multiply(quaternion);
+    scene.add(fly);
+
+})
 
 
 
