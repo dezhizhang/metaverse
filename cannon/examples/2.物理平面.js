@@ -1,11 +1,11 @@
 /*
- * :file description:
- * :name: /cannon/src/index.js
+ * :file description: 
+ * :name: /cannon/examples/2.物理平面.js
  * :author:张德志
  * :copyright: (c) 2025, Xiaozhi
- * :date created: 2025-04-02 06:25:26
+ * :date created: 2025-04-02 07:07:25
  * :last editor: 张德志
- * :date last edited: 2025-04-02 07:05:45
+ * :date last edited: 2025-04-02 07:07:26
  */
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
