@@ -85,10 +85,8 @@ function render() {
 
   for(let i=0;i < phyMeshes.length;i++) {
     meshes[i].position.copy(phyMeshes[i].position);
-    meshes[i].quaternion.copy(phyMeshes[i].quaternion);
-    
+    meshes[i].quaternion.copy(phyMeshes[i].quaternion); 
   }
-  
   renderer.render(scene, camera);
   requestAnimationFrame(render);
 }
