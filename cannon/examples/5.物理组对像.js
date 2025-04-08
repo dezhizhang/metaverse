@@ -1,11 +1,11 @@
 /*
- * :file description:
- * :name: /cannon/src/index.js
+ * :file description: 
+ * :name: /cannon/examples/5.物理组对像.js
  * :author:张德志
  * :copyright: (c) 2025, Xiaozhi
- * :date created: 2025-04-02 06:25:26
+ * :date created: 2025-04-09 06:33:11
  * :last editor: 张德志
- * :date last edited: 2025-04-09 06:29:11
+ * :date last edited: 2025-04-09 06:33:12
  */
 import * as THREE from "three";
 import CannonDebugger from 'cannon-es-debugger';
