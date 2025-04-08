@@ -1,11 +1,11 @@
 /*
- * :file description:
- * :name: /cannon/src/index.js
+ * :file description: 
+ * :name: /cannon/examples/6.添加组合几何体.js
  * :author:张德志
  * :copyright: (c) 2025, Xiaozhi
- * :date created: 2025-04-02 06:25:26
+ * :date created: 2025-04-09 07:02:02
  * :last editor: 张德志
- * :date last edited: 2025-04-09 07:02:08
+ * :date last edited: 2025-04-09 07:02:03
  */
 import * as THREE from "three";
 import CannonDebugger from "cannon-es-debugger";
