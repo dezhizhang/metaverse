@@ -5,7 +5,7 @@
  * :copyright: (c) 2025, Xiaozhi
  * :date created: 2025-04-09 07:02:02
  * :last editor: 张德志
- * :date last edited: 2025-04-09 07:02:03
+ * :date last edited: 2025-04-09 07:07:27
  */
 import * as THREE from "three";
 import CannonDebugger from "cannon-es-debugger";
@@ -31,18 +31,18 @@ const world = new CANNON.World();
 world.gravity.set(0, -9.82, 0);
 world.allowSleep = true;
 
-const capsuleBody = new CANNON.Body({
-  mass: 1,
-  position: new CANNON.Vec3(0, 0, 0),
-  material: boxMaterialCon,
-});
+// const capsuleBody = new CANNON.Body({
+//   mass: 1,
+//   position: new CANNON.Vec3(0, 0, 0),
+//   material: boxMaterialCon,
+// });
 
-const shpereShape = new CANNON.Sphere(0.5);
-const cylinderShape = new CANNON.Cylinder(0.5,0.5,1.5,20);
-capsuleBody.addShape(shpereShape,new CANNON.Vec3(0,0.75,0));
-capsuleBody.addShape(cylinderShape,new CANNON.Vec3(0,0,0));
-capsuleBody.addShape(shpereShape,new CANNON.Vec3(0,-0.75,0));
-world.addBody(capsuleBody);
+// const shpereShape = new CANNON.Sphere(0.5);
+// const cylinderShape = new CANNON.Cylinder(0.5,0.5,1.5,20);
+// capsuleBody.addShape(shpereShape,new CANNON.Vec3(0,0.75,0));
+// capsuleBody.addShape(cylinderShape,new CANNON.Vec3(0,0,0));
+// capsuleBody.addShape(shpereShape,new CANNON.Vec3(0,-0.75,0));
+// world.addBody(capsuleBody);
 
 
 const boxGeometry = new THREE.BoxGeometry(1, 1, 1);

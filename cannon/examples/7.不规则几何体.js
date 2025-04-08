@@ -1,4 +1,13 @@
 /*
+ * :file description: 
+ * :name: /cannon/examples/7.不规则几何体.js
+ * :author:张德志
+ * :copyright: (c) 2025, Xiaozhi
+ * :date created: 2025-04-09 07:46:07
+ * :last editor: 张德志
+ * :date last edited: 2025-04-09 07:46:08
+ */
+/*
  * :file description:
  * :name: /cannon/src/index.js
  * :author:张德志
@@ -55,9 +64,6 @@ loader.load('/手机.glb',(gltf) => {
     world.addBody(trimesBody);
     scene.add(model);
 })
-
-
-
 
 
 const boxGeometry = new THREE.BoxGeometry(1, 1, 1);
