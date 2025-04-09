@@ -1,11 +1,11 @@
 /*
- * :file description:
- * :name: /cannon/src/index.js
+ * :file description: 
+ * :name: /cannon/examples/9添加约束.js
  * :author:张德志
  * :copyright: (c) 2025, Xiaozhi
- * :date created: 2025-04-02 06:25:26
+ * :date created: 2025-04-09 23:19:58
  * :last editor: 张德志
- * :date last edited: 2025-04-09 23:14:38
+ * :date last edited: 2025-04-09 23:19:59
  */
 import * as THREE from "three";
 import CannonDebugger from "cannon-es-debugger";
@@ -81,7 +81,6 @@ for(let i=0;i < 10;i++) {
   world.addBody(boxBody);
   phyMeshes.push(boxBody);
 
-
   if(previousBody) {
     const constraint = new CANNON.LockConstraint(boxBody,previousBody);
     world.addConstraint(constraint);
@@ -90,9 +89,6 @@ for(let i=0;i < 10;i++) {
   previousBody = boxBody;
 
 }
-
-
-
 
 const renderer = new THREE.WebGLRenderer({});
 renderer.setSize(window.innerWidth, window.innerHeight);
