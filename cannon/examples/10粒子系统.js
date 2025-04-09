@@ -1,12 +1,13 @@
 /*
- * :file description:
- * :name: /cannon/src/index.js
+ * :file description: 
+ * :name: /cannon/examples/10粒子系统.js
  * :author:张德志
  * :copyright: (c) 2025, Xiaozhi
- * :date created: 2025-04-02 06:25:26
+ * :date created: 2025-04-10 05:46:17
  * :last editor: 张德志
- * :date last edited: 2025-04-10 05:45:49
+ * :date last edited: 2025-04-10 05:46:18
  */
+
 import * as THREE from "three";
 import CannonDebugger from "cannon-es-debugger";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
