@@ -1,3 +1,12 @@
+/*
+ * :file description: 
+ * :name: /3dmath/webpack.config.js
+ * :author:张德志
+ * :copyright: (c) 2025, Xiaozhi
+ * :date created: 2025-03-02 10:32:07
+ * :last editor: 张德志
+ * :date last edited: 2025-04-10 06:36:28
+ */
 
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
@@ -10,7 +19,7 @@ module.exports = {
         filename: "build.js"
     },
     devServer: {
-        port: 8000,
+        port: 8082,
         open: true
     },
     module: {
