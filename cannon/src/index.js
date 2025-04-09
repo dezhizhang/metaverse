@@ -5,7 +5,7 @@
  * :copyright: (c) 2025, Xiaozhi
  * :date created: 2025-04-02 06:25:26
  * :last editor: 张德志
- * :date last edited: 2025-04-10 05:45:49
+ * :date last edited: 2025-04-10 06:18:57
  */
 import * as THREE from "three";
 import CannonDebugger from "cannon-es-debugger";
@@ -35,9 +35,6 @@ const world = new CANNON.World();
 world.gravity.set(0, -9.82, 0);
 world.allowSleep = true;
 
-
-
-
 const planeBody = new CANNON.Body({
   mass: 0,
   shape: new CANNON.Plane(),
@@ -48,39 +45,67 @@ planeBody.quaternion.setFromAxisAngle(new CANNON.Vec3(1, 0, 0), -Math.PI / 2);
 world.addBody(planeBody);
 
 
+// 创建车身
+const chassisShape = new CANNON.Box(
+  new CANNON.Vec3(5,0.5,2)
+);
+const chassisBody = new CANNON.Body({
+  mass:1,
+  shape:chassisShape,
+});
 
-const sphSystem = new CANNON.SPHSystem();
-// 流体密度
-sphSystem.density = 1;
-// 流体粘度
-sphSystem.viscosity = 0.01;
-// 流体交互距离
-sphSystem.smoothingRadius = 1;
-world.subsystems.push(sphSystem);
+// 创建刚性车子
+const vehicle = new CANNON.RigidVehicle({
+  chassisBody
+});
 
-const particleShape = new CANNON.Particle();
-for(let i=0;i < 400;i++) {
-  const particleBody = new CANNON.Body({
-    mass:0.01,
-    shape:particleShape,
-    material:boxMaterialCon
-  });
-  particleBody.position.set(Math.random() * -0.5,10 + i,Math.random() * -0.5);
-  world.addBody(particleBody);
-  phyMeshes.push(particleBody);
-  sphSystem.add(particleBody);
+const wheelBody1 = new CANNON.Body({
+  mass:1,
+  shape:new CANNON.Sphere(1.5)
+});
+
+vehicle.addWheel(
+  {
+    body:wheelBody1,
+    position:new CANNON.Vec3(-4,-0.5,3.5),
+    axis: new CANNON.Vec3(0,-1,0),
+  }
+);
+
+world.addBody(wheelBody1);
+
+const wheelMesh1 = new THREE.Mesh(
+  new THREE.SphereGeometry(1.5,20,20),
+  new THREE.MeshBasicMaterial({
+    color:0x00ff00
+  })
+);
+scene.add(wheelMesh1);
+meshes.push(wheelMesh1);
 
 
-  const particleMesh = new THREE.Mesh(
-    new THREE.SphereGeometry(0.1,10,10),
-    new THREE.MeshBasicMaterial({
-      color:0x666666,
-    })
-  );
-  scene.add(particleMesh);
-  meshes.push(particleMesh);
 
-}
+
+
+world.addBody(chassisBody);
+phyMeshes.push(chassisBody);
+
+
+// 创建刚性车子
+const chassisMesh = new THREE.Mesh(
+  new THREE.BoxGeometry(10,1,4),
+  new THREE.MeshBasicMaterial({
+    color:0x660066
+  })
+)
+scene.add(chassisMesh);
+meshes.push(chassisMesh);
+
+
+
+
+
+
 
 
 const renderer = new THREE.WebGLRenderer({});
