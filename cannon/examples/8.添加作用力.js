@@ -1,18 +1,18 @@
 /*
- * :file description:
- * :name: /cannon/src/index.js
+ * :file description: 
+ * :name: /cannon/examples/8.添加作用力.js
  * :author:张德志
  * :copyright: (c) 2025, Xiaozhi
- * :date created: 2025-04-02 06:25:26
+ * :date created: 2025-04-09 23:03:27
  * :last editor: 张德志
- * :date last edited: 2025-04-09 23:03:14
+ * :date last edited: 2025-04-09 23:03:28
  */
+
 import * as THREE from "three";
 import CannonDebugger from "cannon-es-debugger";
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import * as CANNON from "cannon-es";
-
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(
