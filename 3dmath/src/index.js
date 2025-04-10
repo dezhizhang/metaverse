@@ -5,7 +5,7 @@
  * :copyright: (c) 2025, Xiaozhi
  * :date created: 2025-03-02 10:32:29
  * :last editor: 张德志
- * :date last edited: 2025-04-10 07:39:54
+ * :date last edited: 2025-04-10 08:00:59
  */
 // 导入Three.js库
 import * as THREE from 'three';
@@ -19,18 +19,18 @@ camera.lookAt(scene.position);
 scene.add(new THREE.AxesHelper(100));
 
 
-const p = new THREE.Vector3(50,0,0);
 
+const p = new THREE.Vector3(50,0,0);
 const t = new THREE.Matrix4();
 t.makeTranslation(50,0,0);
-
 
 const r = new THREE.Matrix4();
 r.makeRotationZ(Math.PI/2);
 
-
 const modelMatrix = r.clone().multiply(t);
 p.applyMatrix4(modelMatrix);
+
+
 
 
 const geometry = new THREE.SphereGeometry(2);
