@@ -5,7 +5,7 @@
  * :copyright: (c) 2025, Xiaozhi
  * :date created: 2025-03-02 10:32:29
  * :last editor: 张德志
- * :date last edited: 2025-04-10 08:00:59
+ * :date last edited: 2025-04-13 23:07:17
  */
 // 导入Three.js库
 import * as THREE from 'three';
@@ -20,15 +20,22 @@ scene.add(new THREE.AxesHelper(100));
 
 
 
-const p = new THREE.Vector3(50,0,0);
-const t = new THREE.Matrix4();
-t.makeTranslation(50,0,0);
+// function multiplyMatrixByScalar(matrix, scalar) {
+//     const result = matrix.clone(); // 克隆一个新矩阵
+//     const e = result.elements;
+  
+//     for (let i = 0; i < 16; i++) {
+//       e[i] *= scalar;
+//     }
+  
+//     return result;
+//   }
 
-const r = new THREE.Matrix4();
-r.makeRotationZ(Math.PI/2);
 
-const modelMatrix = r.clone().multiply(t);
-p.applyMatrix4(modelMatrix);
+//   const m = new THREE.Matrix4().makeScale(1, 2, 3);
+// const scaled = multiplyMatrixByScalar(m, 2); // 所有元素乘2
+// console.log(scaled);
+
 
 
 
